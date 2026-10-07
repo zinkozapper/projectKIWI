@@ -2,6 +2,7 @@
 Lorem Ipsum
 
 ## ERD
+![ERD](./assets/ERD.png)
 
 ## Tech Stack
 
