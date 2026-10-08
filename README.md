@@ -32,3 +32,4 @@ Open the local URL printed by Vite, usually `http://localhost:5173`.
 
 
 ## Verify vertical slice
+On home page, fill out account information and select 'Create Account.' The app will send you an email to verify your account. Click on the link in the email and then you will be logged in! You can also select logout in the bottom left hand corner of the screen and log back in using the email and password you provided.
