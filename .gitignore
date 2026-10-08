@@ -1,2 +1,17 @@
 .env
 node_modules/
+.env.*
+!.env.example
+dist/
+.output/
+.wrangler/
+.nitro/
+.vite/
+coverage/
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+.idea/
