@@ -15,6 +15,13 @@
       "when": 1791495508384,
       "tag": "0001_kiwi_erd_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791500000000,
+      "tag": "0002_kiwi_user_names",
+      "breakpoints": true
     }
   ]
 }
