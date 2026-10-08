@@ -5,15 +5,30 @@ Kiwi is a mobile app to help those who don't have much time know how to eat heal
 ![ERD](./assets/ERD.png)
 
 ## Tech Stack
-### Frontend/Backend
-Loveable for frontend and backend due to it's simplicity and generous free tier.
-### Database
-We are using supabase for backend due to simplicity and easy scalable as the app grows bigger.
+- Frontend: React, TypeScript, Vite
+- Application: TanStack Start and TanStack Router
+- UI: Tailwind CSS and Radix UI
+- Backend, authentication, and database: Supabase
 
 ## How to run
 
+```bash
+npm install
+```
+
+Create a root `.env` file from the example and add your Supabase values:
+
+```bash
+cp .env.example .env
+```
+
+Start the app:
+
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite, usually `http://localhost:5173`.
 
 
 ## Verify vertical slice
-
-
