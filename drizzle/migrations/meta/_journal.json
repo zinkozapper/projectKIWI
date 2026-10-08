@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790897738021,
+      "tag": "0000_kiwi_profiles_and_grocery_lists",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791495508384,
+      "tag": "0001_kiwi_erd_schema",
+      "breakpoints": true
+    }
+  ]
+}
