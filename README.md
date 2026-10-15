@@ -11,15 +11,17 @@ Kiwi is a mobile app to help those who don't have much time know how to eat heal
 - Backend, authentication, and database: Supabase
 
 ## How to run
-
+### First time
 ```bash
+git clone https://github.com/zinkozapper/projectKIWI
 npm install
 ```
 
-Create a root `.env` file from the example and add your Supabase values:
+Copy the `.env` file from the example and add the Supabase values:
 
 ```bash
 cp .env.example .env
+vi .env
 ```
 
 Start the app:
@@ -28,8 +30,16 @@ Start the app:
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually `http://localhost:5173`.
+Open the local URL printed by Vite, usually `http://localhost:8080`.
 
+### Update app
+
+Simply pull the latest repo then run it
+
+```bash
+git pull
+npm run dev
+```
 
 ## Verify vertical slice
 On home page, fill out account information and select 'Create Account.' The app will send you an email to verify your account. Click on the link in the email and then you will be logged in! You can also select logout in the bottom left hand corner of the screen and log back in using the email and password you provided.
