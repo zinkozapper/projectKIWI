@@ -16,10 +16,10 @@ import { Route as ErrorRouteImport } from './routes/error'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedPlanRouteRouteImport } from './routes/_authenticated/plan/route'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPlanIndexRouteImport } from './routes/_authenticated/plan/index'
 import { Route as AuthenticatedPlanHistoryRouteImport } from './routes/_authenticated/plan/history'
 import { Route as AuthenticatedPlanPantryRouteImport } from './routes/_authenticated/plan/pantry'
-import { Route as AuthenticatedPlanProfileRouteImport } from './routes/_authenticated/plan/profile'
 import { Route as AuthenticatedPlanShopRouteImport } from './routes/_authenticated/plan/shop'
 
 const IndexRoute = IndexRouteImport.update({
@@ -56,6 +56,11 @@ const AuthenticatedPlanRouteRoute = AuthenticatedPlanRouteRouteImport.update({
   path: '/plan',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPlanIndexRoute = AuthenticatedPlanIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -72,12 +77,6 @@ const AuthenticatedPlanPantryRoute = AuthenticatedPlanPantryRouteImport.update({
   path: '/pantry',
   getParentRoute: () => AuthenticatedPlanRouteRoute,
 } as any)
-const AuthenticatedPlanProfileRoute =
-  AuthenticatedPlanProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => AuthenticatedPlanRouteRoute,
-  } as any)
 const AuthenticatedPlanShopRoute = AuthenticatedPlanShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -91,9 +90,9 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/plan': typeof AuthenticatedPlanRouteRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
-  '/plan/profile': typeof AuthenticatedPlanProfileRoute
   '/plan/shop': typeof AuthenticatedPlanShopRoute
   '/plan/': typeof AuthenticatedPlanIndexRoute
 }
@@ -103,9 +102,9 @@ export interface FileRoutesByTo {
   '/error': typeof ErrorRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
-  '/plan/profile': typeof AuthenticatedPlanProfileRoute
   '/plan/shop': typeof AuthenticatedPlanShopRoute
   '/plan': typeof AuthenticatedPlanIndexRoute
 }
@@ -118,9 +117,9 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/plan': typeof AuthenticatedPlanRouteRouteWithChildren
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/_authenticated/plan/pantry': typeof AuthenticatedPlanPantryRoute
-  '/_authenticated/plan/profile': typeof AuthenticatedPlanProfileRoute
   '/_authenticated/plan/shop': typeof AuthenticatedPlanShopRoute
   '/_authenticated/plan/': typeof AuthenticatedPlanIndexRoute
 }
@@ -133,9 +132,9 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/plan'
+    | '/profile'
     | '/plan/history'
     | '/plan/pantry'
-    | '/plan/profile'
     | '/plan/shop'
     | '/plan/'
   fileRoutesByTo: FileRoutesByTo
@@ -145,9 +144,9 @@ export interface FileRouteTypes {
     | '/error'
     | '/forgot-password'
     | '/reset-password'
+    | '/profile'
     | '/plan/history'
     | '/plan/pantry'
-    | '/plan/profile'
     | '/plan/shop'
     | '/plan'
   id:
@@ -159,9 +158,9 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/_authenticated/plan'
+    | '/_authenticated/profile'
     | '/_authenticated/plan/history'
     | '/_authenticated/plan/pantry'
-    | '/_authenticated/plan/profile'
     | '/_authenticated/plan/shop'
     | '/_authenticated/plan/'
   fileRoutesById: FileRoutesById
@@ -226,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlanRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/plan/': {
       id: '/_authenticated/plan/'
       path: '/'
@@ -247,13 +253,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlanPantryRouteImport
       parentRoute: typeof AuthenticatedPlanRouteRoute
     }
-    '/_authenticated/plan/profile': {
-      id: '/_authenticated/plan/profile'
-      path: '/profile'
-      fullPath: '/plan/profile'
-      preLoaderRoute: typeof AuthenticatedPlanProfileRouteImport
-      parentRoute: typeof AuthenticatedPlanRouteRoute
-    }
     '/_authenticated/plan/shop': {
       id: '/_authenticated/plan/shop'
       path: '/shop'
@@ -267,7 +266,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedPlanRouteRouteChildren {
   AuthenticatedPlanHistoryRoute: typeof AuthenticatedPlanHistoryRoute
   AuthenticatedPlanPantryRoute: typeof AuthenticatedPlanPantryRoute
-  AuthenticatedPlanProfileRoute: typeof AuthenticatedPlanProfileRoute
   AuthenticatedPlanShopRoute: typeof AuthenticatedPlanShopRoute
   AuthenticatedPlanIndexRoute: typeof AuthenticatedPlanIndexRoute
 }
@@ -276,7 +274,6 @@ const AuthenticatedPlanRouteRouteChildren: AuthenticatedPlanRouteRouteChildren =
   {
     AuthenticatedPlanHistoryRoute: AuthenticatedPlanHistoryRoute,
     AuthenticatedPlanPantryRoute: AuthenticatedPlanPantryRoute,
-    AuthenticatedPlanProfileRoute: AuthenticatedPlanProfileRoute,
     AuthenticatedPlanShopRoute: AuthenticatedPlanShopRoute,
     AuthenticatedPlanIndexRoute: AuthenticatedPlanIndexRoute,
   }
@@ -288,10 +285,12 @@ const AuthenticatedPlanRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedPlanRouteRoute: typeof AuthenticatedPlanRouteRouteWithChildren
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPlanRouteRoute: AuthenticatedPlanRouteRouteWithChildren,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

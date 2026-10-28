@@ -2,6 +2,34 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+const REMEMBER_ME_KEY = 'kiwi:remember-me';
+
+export function getRememberMePreference() {
+  return typeof window !== 'undefined' && window.localStorage.getItem(REMEMBER_ME_KEY) === 'true';
+}
+
+export function setRememberMePreference(remember: boolean) {
+  if (typeof window !== 'undefined') window.localStorage.setItem(REMEMBER_ME_KEY, String(remember));
+}
+
+const authStorage = {
+  getItem(key: string) {
+    if (typeof window === 'undefined') return null;
+    const storage = getRememberMePreference() ? window.localStorage : window.sessionStorage;
+    return storage.getItem(key);
+  },
+  setItem(key: string, value: string) {
+    if (typeof window === 'undefined') return;
+    const storage = getRememberMePreference() ? window.localStorage : window.sessionStorage;
+    storage.setItem(key, value);
+  },
+  removeItem(key: string) {
+    if (typeof window === 'undefined') return;
+    window.localStorage.removeItem(key);
+    window.sessionStorage.removeItem(key);
+  },
+};
+
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
 }
@@ -39,7 +67,6 @@ function createSupabaseClient() {
       ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
     ];
     const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Configure Supabase credentials in your deployment settings.`;
-    console.error(`[Supabase] ${message}`);
     throw new Error(message);
   }
 
@@ -48,6 +75,7 @@ function createSupabaseClient() {
       fetch: createSupabaseFetch(SUPABASE_PUBLISHABLE_KEY),
     },
     auth: {
+      storage: authStorage,
       persistSession: true,
       autoRefreshToken: true,
     },

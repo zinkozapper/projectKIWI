@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
 import { createMemoryHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -6,10 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 
 function renderAt(path: string) {
-  const queryClient = new QueryClient();
   const router = createRouter({
     routeTree,
-    context: { queryClient },
     history: createMemoryHistory({ initialEntries: [path] }),
   });
   return render(<RouterProvider router={router} />);

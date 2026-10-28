@@ -94,21 +94,42 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    let timedOut = false;
+    const timeout = window.setTimeout(() => {
+      timedOut = true;
+      if (mounted) {
+        setError('Could not load content');
+        setLoading(false);
+      }
+    }, 15_000);
     (async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) return;
-      const id = data.user.id;
-      await supabase.from('users').upsert({ user_id: id, email: data.user.email || '' }, { onConflict: 'user_id', ignoreDuplicates: true });
-      let pRow = (await supabase.from('pantry').select('pantry_id').eq('user_id', id).maybeSingle()).data;
-      if (!pRow) pRow = (await supabase.from('pantry').insert({ user_id: id }).select('pantry_id').single()).data;
-      const [, pr, tr, ti, pa] = await Promise.all([
-        loadCatalog(),
+      const { data } = await supabase.auth.getSession();
+      if (!data.session?.user) {
+        if (mounted) setLoading(false);
+        return;
+      }
+      const user = data.session.user;
+      const id = user.id;
+      const [, pantryResult, pr, tr] = await Promise.all([
+        supabase.from('users').upsert({ user_id: id, email: user.email || '' }, { onConflict: 'user_id', ignoreDuplicates: true }),
+        supabase.from('pantry').select('pantry_id').eq('user_id', id).maybeSingle(),
         supabase.from('profiles').select('*').eq('user_id', id).maybeSingle(),
         supabase.from('shopping_list').select('*').eq('user_id', id).order('created_at', { ascending: false }),
-        supabase.from('shopping_list_item').select('*'),
-        supabase.from('pantry_item').select('*'),
       ]);
-      if (!mounted) return;
+      let pRow = pantryResult.data;
+      if (!pRow) pRow = (await supabase.from('pantry').insert({ user_id: id }).select('pantry_id').single()).data;
+      const tripIds = (tr.data || []).map(t => t.shopping_list_id);
+      const [catalog, ti, pa] = await Promise.all([
+        loadCatalog(),
+        tripIds.length
+          ? supabase.from('shopping_list_item').select('*').in('shopping_list_id', tripIds)
+          : Promise.resolve({ data: [], error: null }),
+        pRow
+          ? supabase.from('pantry_item').select('*').eq('pantry_id', pRow.pantry_id)
+          : Promise.resolve({ data: [], error: null }),
+      ]);
+      void catalog;
+      if (!mounted || timedOut) return;
       setUserId(id);
       setPantryId(pRow?.pantry_id ?? null);
       if (pr.data) {
@@ -117,17 +138,18 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setBudget(Number(p.budget));
         setProfileDraft({ display_name: p.display_name || '', age: String(p.age || ''), ...toFeetInches(p.height_cm), weight_lb: p.weight_kg ? String(Math.round(Number(p.weight_kg) * LB_PER_KG)) : '', gender: p.gender || '', activity: p.activity || 'moderate', goal: p.goal || 'maintain', budget: String(p.budget || 75) });
       } else {
-        navigate({ to: '/plan/profile', replace: true });
+        navigate({ to: '/profile', replace: true });
       }
       setTrips((tr.data || []).map(toTrip));
       setItems((ti.data || []).map(toItem));
       setPantry((pa.data || []).map(toPantry));
       setLoading(false);
     })().catch(e => {
+      if (!mounted || timedOut) return;
       setError(String(e?.message || e));
       setLoading(false);
-    });
-    return () => { mounted = false; };
+    }).finally(() => window.clearTimeout(timeout));
+    return () => { mounted = false; window.clearTimeout(timeout); };
   }, [navigate]);
 
   useEffect(() => {

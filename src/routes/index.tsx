@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { getRememberMePreference, setRememberMePreference, supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { KeyRound, Leaf } from 'lucide-react';
@@ -14,6 +14,7 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [shake, setShake] = useState(false);
@@ -21,6 +22,8 @@ function Login() {
 
   useEffect(() => {
     setPasskeySupported('PublicKeyCredential' in window);
+    const rememberPreference = getRememberMePreference();
+    setRememberMe(rememberPreference);
     const params = new URLSearchParams(window.location.search);
     if (params.get('error') || params.get('error_code')) {
       navigate({ to: '/error', replace: true });
@@ -42,6 +45,7 @@ function Login() {
       return;
     }
     setBusy(true);
+    setRememberMePreference(rememberMe);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
@@ -55,6 +59,7 @@ function Login() {
 
   async function google() {
     setError('');
+    setRememberMePreference(rememberMe);
     const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/error` } });
     if (error) navigate({ to: '/error' });
   }
@@ -62,6 +67,7 @@ function Login() {
   async function passkey() {
     setError('');
     setBusy(true);
+    setRememberMePreference(rememberMe);
     const { error } = await supabase.auth.signInWithPasskey();
     setBusy(false);
     if (error) navigate({ to: '/error' });
@@ -79,6 +85,7 @@ function Login() {
             <label>Email address<input type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} /></label>
             <div className="login-password-label"><label htmlFor="login-password">Password</label><Link className="text-link" to="/forgot-password">Forgot password?</Link></div>
             <input id="login-password" className="login-password-input" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} />
+            <label className="remember-me"><input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} /> Remember me</label>
             {error && <p className="form-error" role="alert">{error}</p>}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'One moment…' : 'Sign in'}</Button>
           </form>
@@ -90,7 +97,7 @@ function Login() {
           </div>
         </section>
       </div>
-      <div className="auth-photo login-photo"><img src={groceries} width={800} height={1000} fetchPriority="high" decoding="async" alt="A balanced grocery haul with fresh produce and pantry staples" /><div className="photo-caption"><span className="photo-sparkle">✳</span><span>Good food.<br />Good days.</span></div></div>
+      <div className="auth-photo login-photo"><img src={groceries} width={800} height={1000} fetchPriority="high" decoding="async" alt="A balanced grocery haul with fresh produce and pantry staples" /></div>
     </div>
   );
 }

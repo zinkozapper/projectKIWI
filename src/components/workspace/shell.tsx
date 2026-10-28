@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState } from '@tanstack/react-router';
-import { ClipboardList, History, House, Leaf, LogOut, ShoppingBasket, UserRound } from 'lucide-react';
+import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShoppingBasket, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 
@@ -8,7 +8,7 @@ const nav = [
   { id: 'pantry', label: 'My pantry', to: '/plan/pantry', icon: House },
   { id: 'shop', label: 'Shopping mode', to: '/plan/shop', icon: ShoppingBasket },
   { id: 'history', label: 'History', to: '/plan/history', icon: History },
-  { id: 'profile', label: 'Profile', to: '/plan/profile', icon: UserRound },
+  { id: 'profile', label: 'Profile', to: '/profile', icon: UserRound },
 ] as const;
 
 const isHere = (pathname: string, to: string) => pathname === to || pathname === `${to}/`;
@@ -17,11 +17,8 @@ export function WorkspaceShell() {
   const { loading, error, clearError, profile, listItems, signOut } = useWorkspace();
   const pathname = useRouterState({ select: s => s.location.pathname });
 
-  if (loading) {
-    return <div className="loading-screen"><span className="brand-icon"><Leaf /></span><p>Getting your groceries ready…</p></div>;
-  }
-
   const current = nav.find(item => isHere(pathname, item.to)) ?? nav[0];
+  const loadFailed = error === 'Could not load content';
 
   return (
     <div className="app-shell">
@@ -50,8 +47,9 @@ export function WorkspaceShell() {
           <span className="topbar-breadcrumb">YOUR SPACE <span>/</span> {current.label.toUpperCase()}</span>
           <div className="topbar-user">Hi, {profile?.display_name?.split(' ')[0] || 'there'} <span className="avatar">{(profile?.display_name || 'K').charAt(0).toUpperCase()}</span></div>
         </header>
-        {error && <div className="toast-error" role="alert">{error}<Button variant="ghost" size="icon" onClick={clearError}>×</Button></div>}
+        {error && <div className={loadFailed ? 'toast-error load-error' : 'toast-error'} role="alert">{error}{!loadFailed && <Button variant="ghost" size="icon" onClick={clearError}>×</Button>}</div>}
         <main className="workspace">
+          {loading && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading content…</div>}
           <Outlet />
         </main>
       </div>

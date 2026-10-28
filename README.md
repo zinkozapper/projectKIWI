@@ -32,6 +32,17 @@ npm run dev
 
 Open the local URL printed by Vite, usually `http://localhost:8080`.
 
+### Lighthouse performance testing
+
+Use the production build for Lighthouse; the development server includes HMR and development-only code that can distort performance results.
+
+```bash
+npm run build
+npm run preview
+```
+
+Open the preview URL printed by Vite, usually `http://localhost:4173`, and run Lighthouse against that URL. Sign in before testing account-gated pages such as `/plan` and `/profile`.
+
 ### Update app
 
 Simply pull the latest repo then run it

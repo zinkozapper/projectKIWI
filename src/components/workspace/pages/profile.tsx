@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import { ArrowRight, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -122,6 +123,13 @@ export function ProfilePage() {
             <Button variant="outline" onClick={() => removePasskey(p.id)}>Remove</Button>
           </div>
         )) : <p className="empty-inline">No passkeys yet. Add one to sign in without your password.</p>}
+      </section>
+      <section className="section-block passkey-block">
+        <div className="section-title">
+          <div><span className="section-kicker">PASSWORD</span><h2>Password</h2></div>
+          <Button asChild variant="outline"><Link to="/reset-password">Change password <ArrowRight size={16} /></Link></Button>
+        </div>
+        <p className="section-note">Pick a new password whenever you like. You'll stay signed in on this device.</p>
       </section>
     </>
   );

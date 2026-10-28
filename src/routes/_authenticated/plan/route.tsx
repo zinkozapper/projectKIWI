@@ -1,15 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { WorkspaceProvider } from '@/components/workspace/context';
-import { WorkspaceShell } from '@/components/workspace/shell';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated/plan')({
-  component: PlanLayout,
+  component: () => <Outlet />,
 });
-
-function PlanLayout() {
-  return (
-    <WorkspaceProvider>
-      <WorkspaceShell />
-    </WorkspaceProvider>
-  );
-}
