@@ -1,5 +1,9 @@
 ## Summary
-Kiwi is a mobile app to help those who don't have much time know how to eat healthy. The app displays nutrient information of foods you are already eating and gives recommendations on what to eat. It helps users identify nutritional gaps and makes plans to help close those gaps. This app also helps users to shop for healthier foods. It keeps in mind budget concerns while you eat healthier and live happily. 
+Eat healthy, live happy.
+
+Kiwi is an app that provides recommendations to users on how to eat healthier. 
+
+The app displays nutrient information of foods you are already eating and gives recommendations on what to eat. It helps users identify nutritional gaps and makes plans to help close those gaps. This app also helps users to shop for healthier foods.
 
 ## ERD
 ![ERD](./assets/ERD.png)
@@ -11,7 +15,7 @@ Kiwi is a mobile app to help those who don't have much time know how to eat heal
 - Backend, authentication, and database: Supabase
 
 ## How to run
-### First time
+### First time install (DEV)
 ```bash
 git clone https://github.com/zinkozapper/projectKIWI
 npm install
@@ -34,14 +38,14 @@ Open the local URL printed by Vite, usually `http://localhost:8080`.
 
 ### Lighthouse performance testing
 
-Use the production build for Lighthouse; the development server includes HMR and development-only code that can distort performance results.
+Use the production build when testing Lighthouse; the development server includes HMR and development-only code that can distort performance results.
 
 ```bash
 npm run build
 npm run preview
 ```
 
-Open the preview URL printed by Vite, usually `http://localhost:4173`, and run Lighthouse against that URL. Sign in before testing account-gated pages such as `/plan` and `/profile`.
+Open the preview URL printed by Vite, usually `http://localhost:4173`, and run Lighthouse against that URL.
 
 ### Update app
 
@@ -52,5 +56,6 @@ git pull
 npm run dev
 ```
 
-## Verify vertical slice
+### Verify vertical slice
 On home page, fill out account information and select 'Create Account.' The app will send you an email to verify your account. Click on the link in the email and then you will be logged in! You can also select logout in the bottom left hand corner of the screen and log back in using the email and password you provided.
+
