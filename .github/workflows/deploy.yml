@@ -1,0 +1,88 @@
+# Automatic deployment to AWS Elastic Beanstalk.
+# Every push to main builds the app and deploys it as a new EB application version.
+# It can also be started by hand from the Actions tab ("Run workflow").
+name: Deploy to Elastic Beanstalk
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only one deploy at a time; a newer push waits for the running one to finish.
+concurrency:
+  group: eb-deploy
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-2
+  EB_APP_NAME: kiwi-nitrition
+  EB_ENV_NAME: Kiwi-nitrition-env
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      # The VITE_ values are baked into the browser bundle at build time,
+      # so they come from GitHub secrets instead of the gitignored .env file.
+      - name: Build (Node server preset)
+        run: npm run build
+        env:
+          NITRO_PRESET: node-server
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+
+      - name: Package for Elastic Beanstalk
+        run: |
+          echo "web: node server/index.mjs" > .output/Procfile
+          cd .output
+          zip -r ../deploy.zip Procfile server public
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload and deploy
+        run: |
+          VERSION="gh-${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}"
+          # EB's own S3 bucket for this account and region (created if missing).
+          BUCKET=$(aws elasticbeanstalk create-storage-location --query S3Bucket --output text)
+          KEY="${EB_APP_NAME}/${VERSION}.zip"
+
+          aws s3 cp deploy.zip "s3://${BUCKET}/${KEY}"
+
+          aws elasticbeanstalk create-application-version \
+            --application-name "$EB_APP_NAME" \
+            --version-label "$VERSION" \
+            --description "${GITHUB_SHA}" \
+            --source-bundle S3Bucket="$BUCKET",S3Key="$KEY"
+
+          aws elasticbeanstalk update-environment \
+            --environment-name "$EB_ENV_NAME" \
+            --version-label "$VERSION"
+
+          echo "Waiting for $EB_ENV_NAME to finish updating..."
+          aws elasticbeanstalk wait environment-updated --environment-names "$EB_ENV_NAME"
+
+          HEALTH=$(aws elasticbeanstalk describe-environments --environment-names "$EB_ENV_NAME" \
+            --query "Environments[0].Health" --output text)
+          echo "Environment health: $HEALTH"
+          if [ "$HEALTH" = "Red" ]; then
+            echo "Deploy finished but the environment is unhealthy."
+            exit 1
+          fi
