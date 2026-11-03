@@ -1,0 +1,411 @@
+{
+  "_doc": "Marshall's KIWI 100-food list (KIWI-100-Foods.docx) \u2014 canonical names and categories",
+  "foods": [
+    {
+      "name": "Chicken breast",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Chicken thighs",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Pork Tenderloin",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Pork Butt/Shoulder",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Sirloin",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Chuck",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Ground beef 90/10",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Ribeye Whole",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Tilapia",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Salmon",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Tuna",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Sardines",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Oysters",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Ground Turkey",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Chicken Liver",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Liver",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Shrimp",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Chickpeas / Garbanzo Beans",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Lentils",
+      "category": "Proteins & Seafood"
+    },
+    {
+      "name": "Bagels",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Pasta",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Whole Wheat Pasta",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Rice",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Quinoa",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Rolled oats",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Multi-grain Bread",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Brown Rice",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Whole Wheat Tortillas",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Sourdough Bread",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Couscous",
+      "category": "Grains & Carbohydrates"
+    },
+    {
+      "name": "Mandarin Oranges",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Dates",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Bananas",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Peaches",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Blueberries",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Blackberries",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Raspberries",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Strawberries",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Kiwis",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Acerola Juice",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Cantaloupe",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Apples",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Lemon",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Lime",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Frozen Mixed Berries",
+      "category": "Fruits & Citrus"
+    },
+    {
+      "name": "Broccoli",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Cauliflower",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Butternut squash",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Red Bell Pepper",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Asparagus",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Brussels Sprouts",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Potato",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Sweet Potato",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Carrot",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Spinach",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Avocado",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Beets",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Black Beans",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Edamame",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Tofu",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Kimchi",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Yellow Onion",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Garlic",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Tomatoes",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Cucumber",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Kale",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Zucchini",
+      "category": "Vegetables & Aromatics"
+    },
+    {
+      "name": "Skim Milk",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Almond Milk",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Nonfat Greek yogurt",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Low-fat Cottage Cheese",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Parmesan Cheese",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Egg",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Egg white",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Cheese",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Nonfat Cheese",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Butter",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Whole Milk",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Cheddar Cheese",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Mozzarella Cheese",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "Protein Powder",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Powdered Peanut Butter",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Peanut Butter",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Peanuts",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Cocoa Powder",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Almond Butter",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Walnuts",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Chia Seeds",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Hemp Seeds",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Pumpkin Seeds",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Dark Chocolate",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Avocado Oil",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Olive Oil",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Ground Flax Seeds",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Cashews",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Sunflower Seeds",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Apple Cider Vinegar",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Soy Sauce / Tamari",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Honey",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    },
+    {
+      "name": "Maple Syrup",
+      "category": "Nuts, Seeds, Fats & Miscellaneous"
+    }
+  ],
+  "aliases": {
+    "Pork Shoulder": "Pork Butt/Shoulder",
+    "Ribeye": "Ribeye Whole",
+    "Jack Cheese": "Cheese",
+    "Soy Sauce": "Soy Sauce / Tamari"
+  }
+}

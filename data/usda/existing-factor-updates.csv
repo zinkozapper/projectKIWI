@@ -1,0 +1,26 @@
+food,serving,serving_g,factor,portion_fdc_id,portion_description,serving_source,portions_on_record
+Mandarin Oranges,1 unit,88.0,0.88,169105,"Tangerines, (mandarin oranges), raw","unit (medium): ""1 medium (2-1/2"" dia)"" = 88 g","1 medium (2-1/2"" dia) = 88 g | 1 small (2-1/4"" dia) = 76 g | 1 large (2-3/4"" dia) = 120 g | 1 cup, sections = 195 g | 1 NLEA serving = 109 g"
+Bananas,1 unit,118.0,1.18,173944,"Bananas, raw","unit (medium): ""1 medium (7"" to 7-7/8"" long)"" = 118 g","1 NLEA serving = 126 g | 1 extra large (9"" or longer) = 152 g | 1 large (8"" to 8-7/8"" long) = 136 g | 1 cup, sliced = 150 g | 1 small (6"" to 6-7/8"" long) = 101 g | 1 extra small (less than 6"" long) = 81 g | 1 medium (7"" to 7-7/8"" long) = 118 g | 1 cup, mashed = 225 g"
+Peaches,1 unit,150.0,1.50,169928,"Peaches, yellow, raw","unit (medium): ""1 medium (2-2/3"" dia)"" = 150 g","1 small (2-1/2"" dia) = 130 g | 1 NLEA serving = 147 g | 1 large (2-3/4"" dia) = 175 g | 1 medium (2-2/3"" dia) = 150 g | 1 cup slices = 154 g | 1 extra large (3"" dia) = 224 g"
+Kiwis,1 unit,69.0,0.69,168153,"Kiwifruit, green, raw","unit: ""1 fruit (2"" dia)"" = 69 g","1 fruit (2"" dia) = 69 g | 1 NLEA serving = 148 g | 1 cup, sliced = 180 g"
+Cantaloupe,1 unit,552.0,5.52,169092,"Melons, cantaloupe, raw","unit (medium): ""1 melon, medium (about 5"" dia)"" = 552 g","1 melon, small (about 4-1/4"" dia) = 441 g | 1 wedge, large (1/8 of large melon) = 102 g | 1 wedge, medium (1/8 of medium melon) = 69 g | 1 cup, cubes = 160 g | 1 cup, diced = 156 g | 1 melon, large (about 6-1/2"" dia) = 814 g | 1 NLEA serving = 134 g | 1 melon, medium (about 5"" dia) = 552 g | 1 cup, balls = 177 g | 1 wedge, small (1/8 of small melon) = 55 g | 10 cantaloupe balls = 138 g"
+Red Bell Pepper,1 unit,119.0,1.19,170108,"Peppers, sweet, red, raw","unit (medium): ""1 medium (approx 2-3/4"" long, 2-1/2 dia.)"" = 119 g","1 large (2-1/4 per pound, approx 3-3/4"" long, 3"" dia.) = 164 g | 1 tablespoon = 9.3 g | 1 cup, sliced = 92 g | 1 cup, chopped = 149 g | 1 ring (3"" dia., 1/4"" thick) = 10 g | 1 medium (approx 2-3/4"" long, 2-1/2 dia.) = 119 g | 1 small = 74 g"
+Potato,1 unit,213.0,2.13,170026,"Potatoes, flesh and skin, raw","unit (medium): ""1 Potato medium (2-1/4"" to 3-1/4"" dia)"" = 213 g","1 Potato small (1-3/4"" to 2-1/2"" dia) = 170 g | 0.5 cup, diced = 75 g | 1 Potato large (3"" to 4-1/4"" dia) = 369 g | 1 Potato medium (2-1/4"" to 3-1/4"" dia) = 213 g"
+Sweet Potato,1 unit,130.0,1.30,168482,"Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)","unit: ""1 sweetpotato, 5"" long"" = 130 g","1 cup, cubes = 133 g | 1 sweetpotato, 5"" long = 130 g"
+Avocado,1 unit,136.0,1.36,171706,"Avocados, raw, California","unit: ""1 fruit, without skin and seed"" = 136 g","1 fruit, without skin and seed = 136 g | 1 cup, pureed = 230 g | 1 NLEA serving = 50 g"
+Butternut Squash,100 g,100.0,1.00,,,fixed,
+Cauliflower,1 unit,588.0,5.88,169986,"Cauliflower, raw","unit (medium): ""1 head medium (5-6"" dia.)"" = 588 g","1 floweret = 13 g | 1 head medium (5-6"" dia.) = 588 g | 1 head small (4"" dia.) = 265 g | 1 head large (6-7"" dia.) = 840 g | 1 cup chopped (1/2"" pieces) = 107 g"
+Blueberries,100 g,100.0,1.00,,,fixed,
+Blackberries,100 g,100.0,1.00,,,fixed,
+Raspberries,100 g,100.0,1.00,,,fixed,
+Strawberries,100 g,100.0,1.00,,,fixed,
+Dates,100 g,100.0,1.00,,,fixed,
+Broccoli,100 g,100.0,1.00,,,fixed,
+Asparagus,100 g,100.0,1.00,,,fixed,
+Brussels Sprouts,100 g,100.0,1.00,,,fixed,
+Carrot,100 g,100.0,1.00,,,fixed,
+Spinach,100 g,100.0,1.00,,,fixed,
+Beets,100 g,100.0,1.00,,,fixed,
+Edamame,100 g,100.0,1.00,,,fixed,
+Tofu,100 g,100.0,1.00,,,fixed,
+Kimchi,100 g,100.0,1.00,,,fixed,

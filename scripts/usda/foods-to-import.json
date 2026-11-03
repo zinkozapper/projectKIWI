@@ -1,0 +1,661 @@
+{
+  "_doc": "Food-group rules + foods to pull from USDA FoodData Central. See docs/usda-record-selection-rules.md. must = every term must appear in the record description; exclude = none may appear (case-insensitive). raw* = same for the raw/dry reference record. Optional servingGrams overrides the gram weight when the record has no usable portion.",
+  "groups": {
+    "meat": {
+      "mode": "prepared",
+      "serving": "4 oz",
+      "note": "Cooked (no added fat) and raw records from the SAME dataset so the calorie ratio reflects real cooking yield; scale to 4 oz raw",
+      "dataTypes": [
+        "SR Legacy",
+        "Foundation"
+      ],
+      "sameDataset": true
+    },
+    "seafood": {
+      "mode": "prepared",
+      "serving": "4 oz",
+      "note": "Cooked (no added fat) and raw records from the SAME dataset so the calorie ratio reflects real cooking yield; scale to 4 oz raw",
+      "dataTypes": [
+        "SR Legacy",
+        "Foundation"
+      ],
+      "sameDataset": true
+    },
+    "grain": {
+      "mode": "prepared",
+      "serving": "1/4 cup",
+      "note": "Pull cooked, no added fat; scale to 1/4 cup dry via dry/cooked calorie ratio"
+    },
+    "legume": {
+      "mode": "prepared",
+      "serving": "1/4 cup",
+      "note": "Pull cooked from dried, no added fat; scale to 1/4 cup dry"
+    },
+    "bread": {
+      "mode": "as_sold",
+      "note": "Ready to eat; serving = 1 unit (slice, tortilla)"
+    },
+    "fruit": {
+      "mode": "raw",
+      "note": "Raw; per unit (1 medium) when bought individually, grams when bought by weight/container (berries)"
+    },
+    "vegetable": {
+      "mode": "raw",
+      "serving": "100 g",
+      "note": "Raw; 100 g by default, per unit (1 medium, 1 clove) when bought individually"
+    },
+    "dairy": {
+      "mode": "as_sold",
+      "note": "Serving per item (1 cup milk, 1 oz cheese)"
+    },
+    "nut_seed": {
+      "mode": "as_sold",
+      "serving": "1 oz"
+    },
+    "condiment": {
+      "mode": "as_sold",
+      "serving": "1 tbsp"
+    }
+  },
+  "foods": [
+    {
+      "name": "Shrimp",
+      "group": "seafood",
+      "query": "shrimp cooked",
+      "rawQuery": "shrimp raw",
+      "must": [
+        "shrimp",
+        "cooked"
+      ],
+      "rawMust": [
+        "shrimp",
+        "raw"
+      ],
+      "rawExclude": [
+        "additives",
+        "cracker",
+        "farm raised"
+      ],
+      "exclude": [
+        "breaded",
+        "fried",
+        "imitation",
+        "canned"
+      ]
+    },
+    {
+      "name": "Chickpeas / Garbanzo Beans",
+      "group": "legume",
+      "query": "chickpeas from dried no added fat",
+      "rawQuery": "chickpeas mature seeds raw",
+      "must": [
+        "chickpeas",
+        "from dried"
+      ],
+      "rawMust": [
+        "chickpeas",
+        "raw"
+      ]
+    },
+    {
+      "name": "Lentils",
+      "group": "legume",
+      "query": "lentils from dried no added fat",
+      "rawQuery": "lentils raw",
+      "must": [
+        "lentils",
+        "from dried"
+      ],
+      "rawMust": [
+        "lentils, raw"
+      ]
+    },
+    {
+      "name": "Brown Rice",
+      "group": "grain",
+      "query": "rice brown cooked no added fat",
+      "rawQuery": "rice brown long-grain raw",
+      "must": [
+        "rice, brown",
+        "cooked"
+      ],
+      "exclude": [
+        "wild",
+        "peas",
+        "carrots",
+        "corn"
+      ],
+      "rawMust": [
+        "rice, brown",
+        "raw"
+      ]
+    },
+    {
+      "name": "Couscous",
+      "group": "grain",
+      "query": "couscous cooked",
+      "rawQuery": "couscous dry",
+      "must": [
+        "couscous",
+        "cooked"
+      ],
+      "rawMust": [
+        "couscous, dry"
+      ]
+    },
+    {
+      "name": "Whole Wheat Tortillas",
+      "group": "bread",
+      "query": "tortilla whole wheat",
+      "serving": "1 unit",
+      "must": [
+        "tortilla",
+        "whole wheat"
+      ]
+    },
+    {
+      "name": "Sourdough Bread",
+      "group": "bread",
+      "query": "bread sourdough",
+      "serving": "2 oz",
+      "must": [
+        "sourdough"
+      ],
+      "exclude": [
+        "toasted",
+        "muffin"
+      ]
+    },
+    {
+      "name": "Apples",
+      "group": "fruit",
+      "query": "apple raw with skin",
+      "serving": "1 unit",
+      "must": [
+        "apple",
+        "raw"
+      ],
+      "exclude": [
+        "without skin",
+        "cooked",
+        "juice",
+        "cider",
+        "apricot"
+      ]
+    },
+    {
+      "name": "Lemon",
+      "group": "fruit",
+      "query": "lemon raw",
+      "serving": "1 unit",
+      "must": [
+        "lemon",
+        "raw"
+      ],
+      "exclude": [
+        "juice",
+        "peel",
+        "grass"
+      ]
+    },
+    {
+      "name": "Lime",
+      "group": "fruit",
+      "query": "lime raw",
+      "serving": "1 unit",
+      "must": [
+        "lime",
+        "raw"
+      ],
+      "exclude": [
+        "juice",
+        "peel"
+      ]
+    },
+    {
+      "name": "Frozen Mixed Berries",
+      "group": "fruit",
+      "query": "frozen mixed berries",
+      "serving": "100 g",
+      "dataTypes": [
+        "Branded"
+      ],
+      "must": [
+        "mixed berr",
+        "frozen"
+      ],
+      "exclude": [
+        "yogurt",
+        "confection",
+        "dessert",
+        "drink",
+        "wine",
+        "pops"
+      ]
+    },
+    {
+      "name": "Yellow Onion",
+      "group": "vegetable",
+      "query": "onions raw",
+      "must": [
+        "onion",
+        "raw"
+      ],
+      "exclude": [
+        "green",
+        "red",
+        "sweet",
+        "welsh",
+        "white",
+        "spring",
+        "scallion"
+      ],
+      "serving": "1 unit"
+    },
+    {
+      "name": "Garlic",
+      "group": "vegetable",
+      "query": "garlic raw",
+      "must": [
+        "garlic",
+        "raw"
+      ],
+      "serving": "1 clove"
+    },
+    {
+      "name": "Tomatoes",
+      "group": "vegetable",
+      "query": "tomatoes red raw",
+      "must": [
+        "tomatoes",
+        "raw"
+      ],
+      "exclude": [
+        "green",
+        "orange",
+        "grape",
+        "cherry"
+      ],
+      "serving": "1 unit"
+    },
+    {
+      "name": "Cucumber",
+      "group": "vegetable",
+      "query": "cucumber with peel raw",
+      "must": [
+        "cucumber",
+        "raw"
+      ],
+      "exclude": [
+        "peeled"
+      ],
+      "serving": "1 unit"
+    },
+    {
+      "name": "Kale",
+      "group": "vegetable",
+      "query": "kale raw",
+      "must": [
+        "kale",
+        "raw"
+      ]
+    },
+    {
+      "name": "Zucchini",
+      "group": "vegetable",
+      "query": "zucchini raw",
+      "must": [
+        "zucchini",
+        "raw"
+      ],
+      "exclude": [
+        "baby"
+      ],
+      "serving": "1 unit"
+    },
+    {
+      "name": "Whole Milk",
+      "group": "dairy",
+      "query": "milk whole",
+      "serving": "1 cup",
+      "must": [
+        "milk, whole"
+      ],
+      "exclude": [
+        "evaporated",
+        "dry",
+        "lactose",
+        "buttermilk"
+      ]
+    },
+    {
+      "name": "Cheddar Cheese",
+      "group": "dairy",
+      "query": "cheese cheddar",
+      "serving": "1 oz",
+      "must": [
+        "cheddar"
+      ],
+      "exclude": [
+        "reduced",
+        "spread",
+        "sandwich",
+        "imitation",
+        "grilled"
+      ]
+    },
+    {
+      "name": "Mozzarella Cheese",
+      "group": "dairy",
+      "query": "cheese mozzarella",
+      "serving": "1 oz",
+      "must": [
+        "mozzarella",
+        "part skim"
+      ],
+      "exclude": [
+        "substitute",
+        "sticks",
+        "low sodium",
+        "reduced sodium"
+      ]
+    },
+    {
+      "name": "Ground Flax Seeds",
+      "group": "nut_seed",
+      "query": "flaxseed ground",
+      "must": [
+        "flaxseed"
+      ],
+      "exclude": [
+        "oil"
+      ]
+    },
+    {
+      "name": "Cashews",
+      "group": "nut_seed",
+      "query": "cashew nuts",
+      "must": [
+        "cashew"
+      ],
+      "exclude": [
+        "butter",
+        "oil roasted",
+        "honey"
+      ]
+    },
+    {
+      "name": "Sunflower Seeds",
+      "group": "nut_seed",
+      "query": "sunflower seed kernels",
+      "must": [
+        "sunflower seed kernels",
+        "dry roasted"
+      ],
+      "exclude": [
+        "from shell"
+      ]
+    },
+    {
+      "name": "Apple Cider Vinegar",
+      "group": "condiment",
+      "query": "vinegar cider",
+      "must": [
+        "vinegar, cider"
+      ]
+    },
+    {
+      "name": "Soy Sauce",
+      "group": "condiment",
+      "query": "soy sauce",
+      "must": [
+        "soy sauce"
+      ],
+      "exclude": [
+        "reduced",
+        "low sodium",
+        "gravy",
+        "beef",
+        "pork",
+        "chicken",
+        "tamari"
+      ]
+    },
+    {
+      "name": "Honey",
+      "group": "condiment",
+      "query": "honey",
+      "must": [
+        "honey"
+      ],
+      "exclude": [
+        "butter",
+        "mustard",
+        "roasted",
+        "cereal"
+      ]
+    },
+    {
+      "name": "Maple Syrup",
+      "group": "condiment",
+      "query": "maple syrup",
+      "must": [
+        "maple"
+      ],
+      "exclude": [
+        "pancake",
+        "table blend",
+        "sugars",
+        "canadian"
+      ]
+    }
+  ],
+  "excludePrepared": [
+    "fat added",
+    "made with oil",
+    "made with butter",
+    "fried"
+  ],
+  "rescaleExisting": {
+    "_doc": "Existing Nutrient Map rows: only the serving/factor is recomputed (nutrient values unchanged). Per-unit items get grams from a USDA portion record; grams items use 100 g.",
+    "items": [
+      {
+        "name": "Mandarin Oranges",
+        "serving": "1 unit",
+        "query": "tangerines mandarin oranges raw",
+        "must": [
+          "tangerine",
+          "raw"
+        ],
+        "exclude": [
+          "canned",
+          "juice"
+        ]
+      },
+      {
+        "name": "Bananas",
+        "serving": "1 unit",
+        "query": "banana raw",
+        "must": [
+          "banana",
+          "raw"
+        ],
+        "exclude": [
+          "dried",
+          "chips",
+          "plantain"
+        ]
+      },
+      {
+        "name": "Peaches",
+        "serving": "1 unit",
+        "query": "peach raw",
+        "must": [
+          "peach",
+          "raw"
+        ],
+        "exclude": [
+          "canned",
+          "dried",
+          "frozen"
+        ]
+      },
+      {
+        "name": "Kiwis",
+        "serving": "1 unit",
+        "query": "kiwifruit green raw",
+        "must": [
+          "kiwi",
+          "raw"
+        ],
+        "exclude": [
+          "juice",
+          "drink",
+          "beverage",
+          "dried",
+          "babyfood"
+        ]
+      },
+      {
+        "name": "Cantaloupe",
+        "serving": "1 unit",
+        "query": "cantaloupe raw",
+        "must": [
+          "cantaloupe",
+          "raw"
+        ]
+      },
+      {
+        "name": "Red Bell Pepper",
+        "serving": "1 unit",
+        "query": "peppers sweet red raw",
+        "must": [
+          "red",
+          "raw"
+        ],
+        "exclude": [
+          "cooked",
+          "canned"
+        ]
+      },
+      {
+        "name": "Potato",
+        "serving": "1 unit",
+        "query": "potato raw",
+        "must": [
+          "potatoes",
+          "flesh and skin",
+          "raw"
+        ],
+        "exclude": [
+          "sweet",
+          "red",
+          "russet",
+          "white"
+        ]
+      },
+      {
+        "name": "Sweet Potato",
+        "serving": "1 unit",
+        "query": "sweet potato raw unprepared",
+        "must": [
+          "sweet potato",
+          "raw"
+        ],
+        "exclude": [
+          "leaves",
+          "canned",
+          "without skin"
+        ]
+      },
+      {
+        "name": "Avocado",
+        "serving": "1 unit",
+        "query": "avocado raw",
+        "must": [
+          "avocado",
+          "raw"
+        ],
+        "exclude": [
+          "oil"
+        ]
+      },
+      {
+        "name": "Butternut Squash",
+        "serving": "100 g"
+      },
+      {
+        "name": "Cauliflower",
+        "serving": "1 unit",
+        "query": "cauliflower raw",
+        "must": [
+          "cauliflower",
+          "raw"
+        ],
+        "exclude": [
+          "green"
+        ]
+      },
+      {
+        "name": "Blueberries",
+        "serving": "100 g"
+      },
+      {
+        "name": "Blackberries",
+        "serving": "100 g"
+      },
+      {
+        "name": "Raspberries",
+        "serving": "100 g"
+      },
+      {
+        "name": "Strawberries",
+        "serving": "100 g"
+      },
+      {
+        "name": "Dates",
+        "serving": "100 g"
+      },
+      {
+        "name": "Broccoli",
+        "serving": "100 g"
+      },
+      {
+        "name": "Asparagus",
+        "serving": "100 g"
+      },
+      {
+        "name": "Brussels Sprouts",
+        "serving": "100 g"
+      },
+      {
+        "name": "Carrot",
+        "serving": "100 g"
+      },
+      {
+        "name": "Spinach",
+        "serving": "100 g"
+      },
+      {
+        "name": "Beets",
+        "serving": "100 g"
+      },
+      {
+        "name": "Edamame",
+        "serving": "100 g"
+      },
+      {
+        "name": "Tofu",
+        "serving": "100 g"
+      },
+      {
+        "name": "Kimchi",
+        "serving": "100 g"
+      }
+    ],
+    "unchanged": [
+      "Acerola Juice (not produce)",
+      "Black Beans (legume rule pending)"
+    ]
+  }
+}

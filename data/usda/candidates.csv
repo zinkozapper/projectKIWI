@@ -1,0 +1,631 @@
+food,role,selected,fdc_id,data_type,description,brand,coverage_of_27,kcal_per_100g
+Shrimp,nutrients,,175180,SR Legacy,"Crustaceans, shrimp, cooked",,14,99.0
+Shrimp,nutrients,,171970,SR Legacy,"Crustaceans, shrimp, mixed species, cooked, breaded and fried",,27,242.0
+Shrimp,nutrients,x,171971,SR Legacy,"Crustaceans, shrimp, mixed species, cooked, moist heat (may contain additives to retain moisture)",,27,119.0
+Shrimp,nutrients,,175179,SR Legacy,"Crustaceans, shrimp, raw",,14,85.0
+Shrimp,nutrients,,173160,SR Legacy,"Snacks, shrimp cracker",,27,426.0
+Shrimp,nutrients,,169008,SR Legacy,"APPLEBEE'S, Double Crunch Shrimp",,26,323.0
+Shrimp,nutrients,,168077,SR Legacy,"DENNY'S, golden fried shrimp",,25,319.0
+Shrimp,nutrients,,168080,SR Legacy,"Restaurant, Chinese, shrimp and vegetables",,26,78.0
+Shrimp,nutrients,,170287,SR Legacy,"Bulgur, cooked",,27,83.0
+Shrimp,nutrients,,169700,SR Legacy,"Couscous, cooked",,27,112.0
+Shrimp,nutrients,,168871,SR Legacy,"Millet, cooked",,27,119.0
+Shrimp,nutrients,,168917,SR Legacy,"Quinoa, cooked",,27,120.0
+Shrimp,nutrients,,169746,SR Legacy,"Spelt, cooked",,23,127.0
+Shrimp,nutrients,,168918,SR Legacy,"Teff, cooked",,20,101.0
+Shrimp,nutrients,,172467,SR Legacy,"Tempeh, cooked",,21,195.0
+Shrimp,raw_reference,x,175179,SR Legacy,"Crustaceans, shrimp, raw",,14,85.0
+Shrimp,raw_reference,,2684443,Foundation,"Crustaceans, shrimp, farm raised, raw",,14,75.7
+Shrimp,raw_reference,,174210,SR Legacy,"Crustaceans, shrimp, mixed species, raw (may contain additives to retain moisture)",,27,71.0
+Shrimp,raw_reference,,175180,SR Legacy,"Crustaceans, shrimp, cooked",,14,99.0
+Shrimp,raw_reference,,173160,SR Legacy,"Snacks, shrimp cracker",,27,426.0
+Shrimp,raw_reference,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Shrimp,raw_reference,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Shrimp,raw_reference,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Shrimp,raw_reference,,168490,SR Legacy,"Arrowroot, raw",,24,65.0
+Shrimp,raw_reference,,169387,SR Legacy,"Arugula, raw",,27,25.0
+Shrimp,raw_reference,,168389,SR Legacy,"Asparagus, raw",,27,20.0
+Shrimp,raw_reference,,173944,SR Legacy,"Bananas, raw",,27,89.0
+Shrimp,raw_reference,,2685576,Foundation,"Beets, raw",,15,41.0
+Shrimp,raw_reference,,169145,SR Legacy,"Beets, raw",,27,43.0
+Shrimp,raw_reference,,173946,SR Legacy,"Blackberries, raw",,27,43.0
+Chickpeas / Garbanzo Beans,nutrients,,2707415,Survey (FNDDS),"Chickpeas, from dried, fat added",,27,211.0
+Chickpeas / Garbanzo Beans,nutrients,x,2707416,Survey (FNDDS),"Chickpeas, from dried, no added fat",,27,163.0
+Chickpeas / Garbanzo Beans,nutrients,,2707417,Survey (FNDDS),"Chickpeas, from canned, fat added",,27,197.0
+Chickpeas / Garbanzo Beans,nutrients,,2707418,Survey (FNDDS),"Chickpeas, from canned, no added fat",,27,146.0
+Chickpeas / Garbanzo Beans,nutrients,,2707424,Survey (FNDDS),"Lentils, from dried, fat added",,27,166.0
+Chickpeas / Garbanzo Beans,nutrients,,2707425,Survey (FNDDS),"Lentils, from dried, no added fat",,27,115.0
+Chickpeas / Garbanzo Beans,nutrients,,2707360,Survey (FNDDS),"Black beans, from dried, fat added",,27,181.0
+Chickpeas / Garbanzo Beans,nutrients,,2707421,Survey (FNDDS),"Split peas, from dried, fat added",,27,168.0
+Chickpeas / Garbanzo Beans,nutrients,,2707380,Survey (FNDDS),"Kidney beans, from dried, fat added",,27,177.0
+Chickpeas / Garbanzo Beans,nutrients,,2707372,Survey (FNDDS),"Pinto beans, from dried, fat added",,27,191.0
+Chickpeas / Garbanzo Beans,nutrients,,2707354,Survey (FNDDS),"White beans, from dried, fat added",,27,188.0
+Chickpeas / Garbanzo Beans,nutrients,,2707361,Survey (FNDDS),"Black beans, from dried, no added fat",,27,131.0
+Chickpeas / Garbanzo Beans,nutrients,,2707381,Survey (FNDDS),"Kidney beans, from dried, no added fat",,27,126.0
+Chickpeas / Garbanzo Beans,nutrients,,2707373,Survey (FNDDS),"Pinto beans, from dried, no added fat",,27,142.0
+Chickpeas / Garbanzo Beans,nutrients,,2707420,Survey (FNDDS),"Split peas, from dried, no added fat",,27,117.0
+Chickpeas / Garbanzo Beans,raw_reference,x,173756,SR Legacy,"Chickpeas (garbanzo beans, bengal gram), mature seeds, raw",,27,378.0
+Chickpeas / Garbanzo Beans,raw_reference,,172423,SR Legacy,"Lupins, mature seeds, raw",,24,371.0
+Chickpeas / Garbanzo Beans,raw_reference,,172425,SR Legacy,"Mothbeans, mature seeds, raw",,23,343.0
+Chickpeas / Garbanzo Beans,raw_reference,,174270,SR Legacy,"Soybeans, mature seeds, raw",,27,446.0
+Chickpeas / Garbanzo Beans,raw_reference,,173727,SR Legacy,"Beans, adzuki, mature seeds, raw",,23,329.0
+Chickpeas / Garbanzo Beans,raw_reference,,173734,SR Legacy,"Beans, black, mature seeds, raw",,27,341.0
+Chickpeas / Garbanzo Beans,raw_reference,,173738,SR Legacy,"Beans, french, mature seeds, raw",,24,343.0
+Chickpeas / Garbanzo Beans,raw_reference,,173745,SR Legacy,"Beans, navy, mature seeds, raw",,26,337.0
+Chickpeas / Garbanzo Beans,raw_reference,,173748,SR Legacy,"Beans, pink, mature seeds, raw",,27,343.0
+Chickpeas / Garbanzo Beans,raw_reference,,175202,SR Legacy,"Beans, white, mature seeds, raw",,27,333.0
+Chickpeas / Garbanzo Beans,raw_reference,,173751,SR Legacy,"Beans, yellow, mature seeds, raw",,24,345.0
+Chickpeas / Garbanzo Beans,raw_reference,,175208,SR Legacy,"Cowpeas, catjang, mature seeds, raw",,24,343.0
+Chickpeas / Garbanzo Beans,raw_reference,,175210,SR Legacy,"Hyacinth beans, mature seeds, raw",,23,344.0
+Chickpeas / Garbanzo Beans,raw_reference,,174256,SR Legacy,"Mung beans, mature seeds, raw",,27,347.0
+Chickpeas / Garbanzo Beans,raw_reference,,174259,SR Legacy,"Mungo beans, mature seeds, raw",,24,341.0
+Lentils,nutrients,,2707424,Survey (FNDDS),"Lentils, from dried, fat added",,27,166.0
+Lentils,nutrients,x,2707425,Survey (FNDDS),"Lentils, from dried, no added fat",,27,115.0
+Lentils,nutrients,,2707415,Survey (FNDDS),"Chickpeas, from dried, fat added",,27,211.0
+Lentils,nutrients,,2707416,Survey (FNDDS),"Chickpeas, from dried, no added fat",,27,163.0
+Lentils,nutrients,,2707360,Survey (FNDDS),"Black beans, from dried, fat added",,27,181.0
+Lentils,nutrients,,2707421,Survey (FNDDS),"Split peas, from dried, fat added",,27,168.0
+Lentils,nutrients,,2707380,Survey (FNDDS),"Kidney beans, from dried, fat added",,27,177.0
+Lentils,nutrients,,2707372,Survey (FNDDS),"Pinto beans, from dried, fat added",,27,191.0
+Lentils,nutrients,,2707354,Survey (FNDDS),"White beans, from dried, fat added",,27,188.0
+Lentils,nutrients,,2707361,Survey (FNDDS),"Black beans, from dried, no added fat",,27,131.0
+Lentils,nutrients,,2707381,Survey (FNDDS),"Kidney beans, from dried, no added fat",,27,126.0
+Lentils,nutrients,,2707373,Survey (FNDDS),"Pinto beans, from dried, no added fat",,27,142.0
+Lentils,nutrients,,2707420,Survey (FNDDS),"Split peas, from dried, no added fat",,27,117.0
+Lentils,nutrients,,2707355,Survey (FNDDS),"White beans, from dried, no added fat",,27,138.0
+Lentils,nutrients,,2707348,Survey (FNDDS),"Beans, from dried, NS as to type, fat added",,27,189.0
+Lentils,raw_reference,x,172420,SR Legacy,"Lentils, raw",,27,352.0
+Lentils,raw_reference,,168427,SR Legacy,"Lentils, sprouted, raw",,23,106.0
+Lentils,raw_reference,,174284,SR Legacy,"Lentils, pink or red, raw",,24,358.0
+Lentils,raw_reference,,2644283,Foundation,"Lentils, dry",,12,351.0
+Lentils,raw_reference,,171577,SR Legacy,"SMART SOUP, French Lentil",,9,53.0
+Lentils,raw_reference,,175254,SR Legacy,"Lentils, mature seeds, cooked, boiled, with salt",,27,114.0
+Lentils,raw_reference,,168551,SR Legacy,"Lentils, sprouted, cooked, stir-fried, with salt",,23,101.0
+Lentils,raw_reference,,171549,SR Legacy,"Soup, lentil with ham, canned, ready-to-serve",,23,56.0
+Lentils,raw_reference,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Lentils,raw_reference,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Lentils,raw_reference,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Lentils,raw_reference,,168490,SR Legacy,"Arrowroot, raw",,24,65.0
+Lentils,raw_reference,,169387,SR Legacy,"Arugula, raw",,27,25.0
+Lentils,raw_reference,,168389,SR Legacy,"Asparagus, raw",,27,20.0
+Lentils,raw_reference,,173944,SR Legacy,"Bananas, raw",,27,89.0
+Brown Rice,nutrients,x,2708414,Survey (FNDDS),"Rice, brown, cooked, no added fat",,27,123.0
+Brown Rice,nutrients,,2708430,Survey (FNDDS),"Rice, brown and wild, cooked, fat added",,27,138.0
+Brown Rice,nutrients,,2708427,Survey (FNDDS),"Rice, brown and wild, cooked, no added fat",,27,120.0
+Brown Rice,nutrients,,2708413,Survey (FNDDS),"Rice, brown, cooked, fat added, NS as to fat type",,27,138.0
+Brown Rice,nutrients,,2708410,Survey (FNDDS),"Rice, brown, cooked, fat added, made with oil",,27,141.0
+Brown Rice,nutrients,,2709042,Survey (FNDDS),"Rice, brown, with peas, fat added",,27,127.0
+Brown Rice,nutrients,,2709041,Survey (FNDDS),"Rice, brown, with peas, no added fat",,27,113.0
+Brown Rice,nutrients,,2709045,Survey (FNDDS),"Rice, brown, with carrots, fat added",,27,119.0
+Brown Rice,nutrients,,2709044,Survey (FNDDS),"Rice, brown, with carrots, no added fat",,27,104.0
+Brown Rice,nutrients,,2709039,Survey (FNDDS),"Rice, brown, with corn, fat added",,27,128.0
+Brown Rice,nutrients,,2709038,Survey (FNDDS),"Rice, brown, with corn, no added fat",,27,113.0
+Brown Rice,nutrients,,2709106,Survey (FNDDS),"Rice, brown, with gravy, fat added",,27,114.0
+Brown Rice,nutrients,,2709105,Survey (FNDDS),"Rice, brown, with gravy, no added fat",,27,101.0
+Brown Rice,nutrients,,2708408,Survey (FNDDS),"Rice, white, cooked, no added fat",,27,129.0
+Brown Rice,nutrients,,2708421,Survey (FNDDS),"Yellow rice, cooked, fat added",,27,103.0
+Brown Rice,raw_reference,,2512380,Foundation,"Rice, brown, long grain, unenriched, raw",,18,368.0
+Brown Rice,raw_reference,,2512381,Foundation,"Rice, white, long grain, unenriched, raw",,18,370.0
+Brown Rice,raw_reference,x,169703,SR Legacy,"Rice, brown, long-grain, raw (Includes foods for USDA's Food Distribution Program)",,27,367.0
+Brown Rice,raw_reference,,168877,SR Legacy,"Rice, white, long-grain, regular, raw, enriched",,27,365.0
+Brown Rice,raw_reference,,169756,SR Legacy,"Rice, white, long-grain, regular, raw, unenriched",,27,365.0
+Brown Rice,raw_reference,,169704,SR Legacy,"Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",,27,123.0
+Brown Rice,raw_reference,,169708,SR Legacy,"Rice, white, long-grain, parboiled, enriched, cooked",,27,123.0
+Brown Rice,raw_reference,,169707,SR Legacy,"Rice, white, long-grain, parboiled, enriched, dry",,27,374.0
+Brown Rice,raw_reference,,169759,SR Legacy,"Rice, white, long-grain, parboiled, unenriched, cooked",,25,123.0
+Brown Rice,raw_reference,,169758,SR Legacy,"Rice, white, long-grain, parboiled, unenriched, dry",,25,374.0
+Brown Rice,raw_reference,,168878,SR Legacy,"Rice, white, long-grain, regular, enriched, cooked",,27,130.0
+Brown Rice,raw_reference,,169706,SR Legacy,"Rice, brown, medium-grain, raw (Includes foods for USDA's Food Distribution Program)",,23,362.0
+Brown Rice,raw_reference,,168879,SR Legacy,"Rice, white, medium-grain, raw, enriched",,25,360.0
+Brown Rice,raw_reference,,169760,SR Legacy,"Rice, white, medium-grain, raw, unenriched",,21,360.0
+Brown Rice,raw_reference,,168931,SR Legacy,"Rice, white, short-grain, raw, unenriched",,21,358.0
+Couscous,nutrients,,169700,SR Legacy,"Couscous, cooked",,27,112.0
+Couscous,nutrients,x,2708441,Survey (FNDDS),"Couscous, plain, cooked",,27,111.0
+Couscous,nutrients,,169699,SR Legacy,"Couscous, dry",,23,376.0
+Couscous,nutrients,,2706147,Survey (FNDDS),"Dove, cooked, NS as to cooking method",,27,212.0
+Couscous,nutrients,,2706333,Survey (FNDDS),"Calamari, cooked",,27,155.0
+Couscous,nutrients,,2706348,Survey (FNDDS),"Crayfish, cooked",,27,97.0
+Couscous,nutrients,,2709879,Survey (FNDDS),"Breadfruit, cooked",,27,123.0
+Couscous,nutrients,,2709880,Survey (FNDDS),"Broccoflower, cooked",,27,55.0
+Couscous,nutrients,,170287,SR Legacy,"Bulgur, cooked",,27,83.0
+Couscous,nutrients,,2709886,Survey (FNDDS),"Burdock, cooked",,27,100.0
+Couscous,nutrients,,2709564,Survey (FNDDS),"Cassava, cooked",,27,191.0
+Couscous,nutrients,,2709906,Survey (FNDDS),"Celery, cooked",,27,42.0
+Couscous,nutrients,,2709575,Survey (FNDDS),"Chard, cooked",,27,44.0
+Couscous,nutrients,,2709908,Survey (FNDDS),"Christophine, cooked",,27,44.0
+Couscous,nutrients,,2709587,Survey (FNDDS),"Cress, cooked",,27,58.0
+Couscous,raw_reference,x,169699,SR Legacy,"Couscous, dry",,23,376.0
+Couscous,raw_reference,,169700,SR Legacy,"Couscous, cooked",,27,112.0
+Couscous,raw_reference,,170688,SR Legacy,"Bulgur, dry",,27,342.0
+Couscous,raw_reference,,2644283,Foundation,"Lentils, dry",,12,351.0
+Couscous,raw_reference,,2644281,Foundation,"Beans, cannellini, dry",,12,337.0
+Couscous,raw_reference,,2644284,Foundation,"Blackeye pea, dry",,12,346.0
+Couscous,raw_reference,,2710820,Foundation,"Bulgur, dry, raw",,16,349.0
+Couscous,raw_reference,,171665,SR Legacy,"Cereals, WHEATENA, dry",,26,357.0
+Couscous,raw_reference,,171565,SR Legacy,"Gravy, brown, dry",,24,367.0
+Couscous,raw_reference,,171567,SR Legacy,"Gravy, chicken, dry",,23,381.0
+Couscous,raw_reference,,171569,SR Legacy,"Gravy, turkey, dry",,23,367.0
+Couscous,raw_reference,,169736,SR Legacy,"Pasta, dry, enriched",,27,371.0
+Couscous,raw_reference,,168927,SR Legacy,"Pasta, dry, unenriched",,26,371.0
+Couscous,raw_reference,,169742,SR Legacy,"Rice noodles, dry",,27,364.0
+Couscous,raw_reference,,168911,SR Legacy,"Spaghetti, spinach, dry",,27,372.0
+Whole Wheat Tortillas,nutrients,x,2707825,Survey (FNDDS),"Tortilla, whole wheat",,27,310.0
+Whole Wheat Tortillas,nutrients,,174081,SR Legacy,"Tortillas, ready-to-bake or -fry, whole wheat",,27,310.0
+Whole Wheat Tortillas,nutrients,,2707733,Survey (FNDDS),"Bagel, whole wheat",,27,250.0
+Whole Wheat Tortillas,nutrients,,2707709,Survey (FNDDS),"Bread, whole wheat",,27,254.0
+Whole Wheat Tortillas,nutrients,,2707749,Survey (FNDDS),"Roll, whole wheat",,27,273.0
+Whole Wheat Tortillas,nutrients,,172749,SR Legacy,"Crackers, whole-wheat",,27,427.0
+Whole Wheat Tortillas,nutrients,,2707834,Survey (FNDDS),"Muffin, whole wheat",,27,372.0
+Whole Wheat Tortillas,nutrients,,168944,SR Legacy,"Wheat flour, whole-grain, soft wheat",,24,332.0
+Whole Wheat Tortillas,nutrients,,2758996,Foundation,"Tortilla, wheat flour, shelf stable",,21,299.0
+Whole Wheat Tortillas,nutrients,,2707741,Survey (FNDDS),"Muffin, English, whole wheat",,27,223.0
+Whole Wheat Tortillas,nutrients,,2707730,Survey (FNDDS),"Bread, pita, whole wheat",,27,262.0
+Whole Wheat Tortillas,nutrients,,2707745,Survey (FNDDS),"Breadsticks, hard, whole wheat",,27,425.0
+Whole Wheat Tortillas,nutrients,,2707735,Survey (FNDDS),"Bagel, whole wheat, with raisins",,27,255.0
+Whole Wheat Tortillas,nutrients,,2707716,Survey (FNDDS),"Bread, whole wheat, with raisins",,27,290.0
+Whole Wheat Tortillas,nutrients,,2707710,Survey (FNDDS),"Bread, whole wheat, toasted",,27,279.0
+Sourdough Bread,nutrients,x,172675,SR Legacy,"Bread, french or vienna (includes sourdough)",,27,272.0
+Sourdough Bread,nutrients,,174911,SR Legacy,"Bread, french or vienna, toasted (includes sourdough)",,27,319.0
+Sourdough Bread,nutrients,,172828,SR Legacy,"English muffins, plain, unenriched, with calcium propionate (includes sourdough)",,23,235.0
+Sourdough Bread,nutrients,,174994,SR Legacy,"Muffins, English, plain, enriched, with ca prop (includes sourdough)",,27,227.0
+Sourdough Bread,nutrients,,2707850,Survey (FNDDS),"Bread, fruit",,27,374.0
+Sourdough Bread,nutrients,,2707613,Survey (FNDDS),"Bread, naan",,27,311.0
+Sourdough Bread,nutrients,,2707851,Survey (FNDDS),"Bread, zucchini",,27,306.0
+Sourdough Bread,nutrients,,2707714,Survey (FNDDS),"Bread, puri",,27,409.0
+Sourdough Bread,nutrients,,2707849,Survey (FNDDS),"Bread, pumpkin",,27,305.0
+Sourdough Bread,nutrients,,2707755,Survey (FNDDS),"Bread, rye",,27,259.0
+Sourdough Bread,nutrients,,2707650,Survey (FNDDS),"Bread, vegetable",,27,259.0
+Sourdough Bread,nutrients,,2707598,Survey (FNDDS),"Bread, white",,27,267.0
+Sourdough Bread,nutrients,,2707687,Survey (FNDDS),Bread stuffing,,27,177.0
+Sourdough Bread,nutrients,,2707788,Survey (FNDDS),"Bread, barley",,27,274.0
+Sourdough Bread,nutrients,,2707764,Survey (FNDDS),"Bread, black",,27,250.0
+Apples,nutrients,,1750340,Foundation,"Apples, fuji, with skin, raw",,18,58.2
+Apples,nutrients,,1750341,Foundation,"Apples, gala, with skin, raw",,18,54.9
+Apples,nutrients,,1750343,Foundation,"Apples, honeycrisp, with skin, raw",,18,54.0
+Apples,nutrients,,171689,SR Legacy,"Apples, raw, without skin",,27,48.0
+Apples,nutrients,,1750342,Foundation,"Apples, granny smith, with skin, raw",,18,53.0
+Apples,nutrients,x,168202,SR Legacy,"Apples, raw, golden delicious, with skin",,23,57.0
+Apples,nutrients,,1750339,Foundation,"Apples, red delicious, with skin, raw",,18,55.6
+Apples,nutrients,,173928,SR Legacy,"Apples, raw, without skin, cooked, boiled",,27,53.0
+Apples,nutrients,,173929,SR Legacy,"Apples, raw, without skin, cooked, microwave",,27,56.0
+Apples,nutrients,,2710815,Foundation,"Apricot, with skin, raw",,14,43.5
+Apples,nutrients,,170032,SR Legacy,"Potatoes, raw, skin",,24,58.0
+Apples,nutrients,,174472,SR Legacy,"Pheasant, raw, meat and skin",,24,181.0
+Apples,nutrients,,2710837,Foundation,"Plum, black, with skin, raw",,14,52.7
+Apples,nutrients,,2727576,Foundation,"Pork, belly, with skin, raw",,12,385.0
+Apples,nutrients,,170026,SR Legacy,"Potatoes, flesh and skin, raw",,27,77.0
+Lemon,nutrients,x,2709168,Survey (FNDDS),"Lemon, raw",,27,29.0
+Lemon,nutrients,,167747,SR Legacy,"Lemon juice, raw",,27,22.0
+Lemon,nutrients,,167749,SR Legacy,"Lemon peel, raw",,27,47.0
+Lemon,nutrients,,168573,SR Legacy,"Lemon grass (citronella), raw",,23,99.0
+Lemon,nutrients,,167746,SR Legacy,"Lemons, raw, without peel",,27,29.0
+Lemon,nutrients,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Lemon,nutrients,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Lemon,nutrients,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Lemon,nutrients,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Lemon,nutrients,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Lemon,nutrients,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Lemon,nutrients,,168490,SR Legacy,"Arrowroot, raw",,24,65.0
+Lemon,nutrients,,169387,SR Legacy,"Arugula, raw",,27,25.0
+Lemon,nutrients,,168389,SR Legacy,"Asparagus, raw",,27,20.0
+Lemon,nutrients,,2709767,Survey (FNDDS),"Asparagus, raw",,27,20.0
+Lime,nutrients,x,2709170,Survey (FNDDS),"Lime, raw",,27,30.0
+Lime,nutrients,,168155,SR Legacy,"Limes, raw",,27,30.0
+Lime,nutrients,,168156,SR Legacy,"Lime juice, raw",,27,25.0
+Lime,nutrients,,2709306,Survey (FNDDS),Lime souffle,,27,328.0
+Lime,nutrients,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Lime,nutrients,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Lime,nutrients,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Lime,nutrients,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Lime,nutrients,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Lime,nutrients,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Lime,nutrients,,168490,SR Legacy,"Arrowroot, raw",,24,65.0
+Lime,nutrients,,169387,SR Legacy,"Arugula, raw",,27,25.0
+Lime,nutrients,,168389,SR Legacy,"Asparagus, raw",,27,20.0
+Lime,nutrients,,2709767,Survey (FNDDS),"Asparagus, raw",,27,20.0
+Lime,nutrients,,2709223,Survey (FNDDS),"Avocado, raw",,27,160.0
+Frozen Mixed Berries,nutrients,,2453702,Branded,FROZEN MIXED BERRIES,"Lowe's Food Stores, Inc.",9,49.0
+Frozen Mixed Berries,nutrients,,2485757,Branded,"BERRY MIX FROZEN YOGURT, BERRY","Spinazzola Direct, LLC",9,179.0
+Frozen Mixed Berries,nutrients,x,2383200,Branded,"MIXED BERRIES FROZEN STRAWBERRY, BLACKBERRY, RASPBERRY AND BLUEBERRY, MIXED BERRIES",Profusa Products Inc,11,43.0
+Frozen Mixed Berries,nutrients,,1806253,Branded,"BERRY POMEGRANATE FROZEN WINE SLUSHIE MIX, BERRY POMEGRANATE",Three Brothers Winery and Estates LLC ,5,380.0
+Frozen Mixed Berries,nutrients,,1920339,Branded,"FROZEN CONFECTION, CHERRY, ORANGE & MIXED BERRY","Wells Enterprises, Inc.",10,106.0
+Frozen Mixed Berries,nutrients,,2544591,Branded,"CHERRY, ORANGE AND MIXED BERRY FLAVORED FROZEN CONFECTION, CHERRY, ORANGE AND MIXED BERRY","Wells Enterprises, Inc.",9,118.0
+Frozen Mixed Berries,nutrients,,1869345,Branded,"OREGON MIXED BERRY COCONUTMILK NON-DAIRY FROZEN DESSERT, OREGON MIXED BERRY","Danone US, LLC",9,188.0
+Frozen Mixed Berries,nutrients,,2448528,Branded,"BERRY FROZEN FRUIT BLEND, BERRY",Dreyer's Grand Ice Cream Inc.,9,93.0
+Frozen Mixed Berries,nutrients,,2101910,Branded,"ASSORTED BERRY POPS QUIESCENTLY FROZEN CONFECTIONS, STRAWBERRY, RASPBERRY, MIXED BERRY","Hy-Vee, Inc.",9,85.0
+Frozen Mixed Berries,nutrients,,2661556,Branded,"MIXED BERRY DRINK MIX, MIXED BERRY",Target Stores,5,333.0
+Frozen Mixed Berries,nutrients,,2447707,Branded,"APPLESAUCE WITH MIXED BERRIES, MIXED BERRIES",Harris-Teeter Inc.,9,44.0
+Frozen Mixed Berries,nutrients,,2114585,Branded,"MIXED BERRIES KOMBUCHA, MIXED BERRIES","Suja Life, LLC",7,15.0
+Frozen Mixed Berries,nutrients,,1851373,Branded,"MIXED BERRIES PRESERVES, MIXED BERRIES",Andros S.A.,5,250.0
+Frozen Mixed Berries,nutrients,,2639312,Branded,"MIXED BERRY APPLESAUCE, MIXED BERRY","Meijer, Inc.",10,71.0
+Frozen Mixed Berries,nutrients,,2280106,Branded,"MIXED BERRY APPLESAUCE, MIXED BERRY","Associated Wholesale Grocers, Inc.",10,71.0
+Yellow Onion,nutrients,x,2709795,Survey (FNDDS),"Onions, raw",,27,38.0
+Yellow Onion,nutrients,,170000,SR Legacy,"Onions, raw",,27,40.0
+Yellow Onion,nutrients,,2709794,Survey (FNDDS),"Onions, green, raw",,27,32.0
+Yellow Onion,nutrients,,790577,Foundation,"Onions, red, raw",,15,44.0
+Yellow Onion,nutrients,,170008,SR Legacy,"Onions, sweet, raw",,24,32.0
+Yellow Onion,nutrients,,170007,SR Legacy,"Onions, welsh, raw",,26,34.0
+Yellow Onion,nutrients,,1104962,Foundation,"Onions, white, raw",,14,35.0
+Yellow Onion,nutrients,,790646,Foundation,"Onions, yellow, raw",,15,38.0
+Yellow Onion,nutrients,,170005,SR Legacy,"Onions, spring or scallions (includes tops and bulb), raw",,27,32.0
+Yellow Onion,nutrients,,2727585,Foundation,"Green onion, (scallion), bulb and greens, root removed, raw",,10,
+Yellow Onion,nutrients,,2707633,Survey (FNDDS),"Bread, onion",,27,238.0
+Yellow Onion,nutrients,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Yellow Onion,nutrients,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Yellow Onion,nutrients,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Yellow Onion,nutrients,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Garlic,nutrients,x,2709786,Survey (FNDDS),"Garlic, raw",,27,143.0
+Garlic,nutrients,,1104647,Foundation,"Garlic, raw",,7,143.0
+Garlic,nutrients,,169230,SR Legacy,"Garlic, raw",,27,149.0
+Garlic,nutrients,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Garlic,nutrients,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Garlic,nutrients,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Garlic,nutrients,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Garlic,nutrients,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Garlic,nutrients,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Garlic,nutrients,,168490,SR Legacy,"Arrowroot, raw",,24,65.0
+Garlic,nutrients,,169387,SR Legacy,"Arugula, raw",,27,25.0
+Garlic,nutrients,,168389,SR Legacy,"Asparagus, raw",,27,20.0
+Garlic,nutrients,,2709767,Survey (FNDDS),"Asparagus, raw",,27,20.0
+Garlic,nutrients,,2709223,Survey (FNDDS),"Avocado, raw",,27,160.0
+Garlic,nutrients,,2709224,Survey (FNDDS),"Banana, raw",,27,97.0
+Tomatoes,nutrients,x,2709719,Survey (FNDDS),"Tomatoes, raw",,27,20.0
+Tomatoes,nutrients,,170457,SR Legacy,"Tomatoes, red, ripe, raw, year round average",,27,18.0
+Tomatoes,nutrients,,2346408,Foundation,"Cabbage, red, raw",,15,29.9
+Tomatoes,nutrients,,169977,SR Legacy,"Cabbage, red, raw",,27,31.0
+Tomatoes,nutrients,,2709775,Survey (FNDDS),"Cabbage, red, raw",,27,34.0
+Tomatoes,nutrients,,790577,Foundation,"Onions, red, raw",,15,44.0
+Tomatoes,nutrients,,2747665,Foundation,"Radishes, red, raw",,16,19.6
+Tomatoes,nutrients,,321360,Foundation,"Tomatoes, grape, raw",,22,27.0
+Tomatoes,nutrients,,170456,SR Legacy,"Tomatoes, green, raw",,27,23.0
+Tomatoes,nutrients,,170502,SR Legacy,"Tomatoes, orange, raw",,24,16.0
+Tomatoes,nutrients,,170096,SR Legacy,"Tomatoes, yellow, raw",,24,15.0
+Tomatoes,nutrients,,173954,SR Legacy,"Cherries, sour, red, raw",,27,50.0
+Tomatoes,nutrients,,173964,SR Legacy,"Currants, red and white, raw",,27,56.0
+Tomatoes,nutrients,,2346412,Foundation,"Grapes, red, seedless, raw",,13,77.2
+Tomatoes,nutrients,,174284,SR Legacy,"Lentils, pink or red, raw",,24,358.0
+Cucumber,nutrients,,169225,SR Legacy,"Cucumber, peeled, raw",,27,10.0
+Cucumber,nutrients,,2346406,Foundation,"Cucumber, with peel, raw",,13,13.9
+Cucumber,nutrients,,168409,SR Legacy,"Cucumber, with peel, raw",,27,15.0
+Cucumber,nutrients,x,2709784,Survey (FNDDS),"Cucumber, raw",,27,16.0
+Cucumber,nutrients,,167749,SR Legacy,"Lemon peel, raw",,27,47.0
+Cucumber,nutrients,,169103,SR Legacy,"Orange peel, raw",,25,97.0
+Cucumber,nutrients,,169919,SR Legacy,"Oranges, raw, with peel",,24,63.0
+Cucumber,nutrients,,2727580,Foundation,"Rutabaga, peeled, raw",,11,
+Cucumber,nutrients,,2710824,Foundation,"Avocado, Hass, peeled, raw",,17,206.0
+Cucumber,nutrients,,167746,SR Legacy,"Lemons, raw, without peel",,27,29.0
+Cucumber,nutrients,,2710832,Foundation,"Mandarin, seedless, peeled, raw",,14,55.6
+Cucumber,nutrients,,2710834,Foundation,"Mango, Ataulfo, peeled, raw",,15,70.6
+Cucumber,nutrients,,2727577,Foundation,"Pawpaw, peeled, seeded, raw",,12,
+Cucumber,nutrients,,2710831,Foundation,"Kiwifruit (kiwi), green, peeled, raw",,15,58.5
+Cucumber,nutrients,,2710833,Foundation,"Mango, Tommy Atkins, peeled, raw",,15,61.6
+Kale,nutrients,,168421,SR Legacy,"Kale, raw",,27,35.0
+Kale,nutrients,x,2709599,Survey (FNDDS),"Kale, raw",,27,43.0
+Kale,nutrients,,323505,Foundation,"Kale, raw",,22,35.0
+Kale,nutrients,,169239,SR Legacy,"Kale, frozen, unprepared",,27,28.0
+Kale,nutrients,,2709602,Survey (FNDDS),"Kale, NS as to form, cooked",,27,69.0
+Kale,nutrients,,169355,SR Legacy,"Kale, cooked, boiled, drained, with salt",,27,44.0
+Kale,nutrients,,2709603,Survey (FNDDS),"Kale, fresh, cooked, fat added",,27,69.0
+Kale,nutrients,,2709600,Survey (FNDDS),"Kale, fresh, cooked, no added fat",,27,46.0
+Kale,nutrients,,2709604,Survey (FNDDS),"Kale, frozen, cooked, fat added",,27,66.0
+Kale,nutrients,,2709601,Survey (FNDDS),"Kale, frozen, cooked, no added fat",,27,44.0
+Kale,nutrients,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Kale,nutrients,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Kale,nutrients,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Kale,nutrients,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Kale,nutrients,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Zucchini,nutrients,,168565,SR Legacy,"Squash, zucchini, baby, raw",,24,21.0
+Zucchini,nutrients,x,169291,SR Legacy,"Squash, summer, zucchini, includes skin, raw",,27,17.0
+Zucchini,nutrients,,2685568,Foundation,"Squash, summer, green, zucchini, includes skin, raw",,15,16.0
+Zucchini,nutrients,,2707851,Survey (FNDDS),"Bread, zucchini",,27,306.0
+Zucchini,nutrients,,2707844,Survey (FNDDS),"Muffin, zucchini",,27,306.0
+Zucchini,nutrients,,2710104,Survey (FNDDS),"Zucchini, pickled",,27,35.0
+Zucchini,nutrients,,2707897,Survey (FNDDS),"Cake or cupcake, zucchini",,27,371.0
+Zucchini,nutrients,,168471,SR Legacy,"Squash, summer, zucchini, italian style, canned",,23,29.0
+Zucchini,nutrients,,168469,SR Legacy,"Squash, summer, zucchini, includes skin, frozen, unprepared",,26,17.0
+Zucchini,nutrients,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Zucchini,nutrients,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Zucchini,nutrients,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Zucchini,nutrients,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Zucchini,nutrients,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Zucchini,nutrients,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Whole Milk,nutrients,x,2705385,Survey (FNDDS),"Milk, whole",,27,61.0
+Whole Milk,nutrients,,2705399,Survey (FNDDS),"Milk, evaporated, whole",,27,134.0
+Whole Milk,nutrients,,2705467,Survey (FNDDS),"Chocolate milk, whole",,27,83.0
+Whole Milk,nutrients,,2705496,Survey (FNDDS),"Strawberry milk, whole",,27,86.0
+Whole Milk,nutrients,,2705397,Survey (FNDDS),"Milk, dry, reconstituted, whole",,27,76.0
+Whole Milk,nutrients,,2705392,Survey (FNDDS),"Milk, lactose free, whole",,27,61.0
+Whole Milk,nutrients,,170845,SR Legacy,"Cheese, mozzarella, whole milk",,27,299.0
+Whole Milk,nutrients,,746766,Foundation,"Cheese, ricotta, whole milk",,24,157.0
+Whole Milk,nutrients,,170851,SR Legacy,"Cheese, ricotta, whole milk",,27,150.0
+Whole Milk,nutrients,,172225,SR Legacy,"Milk, buttermilk, fluid, whole",,27,62.0
+Whole Milk,nutrients,,2259793,Foundation,"Yogurt, plain, whole milk",,18,77.3
+Whole Milk,nutrients,,171284,SR Legacy,"Yogurt, plain, whole milk",,27,61.0
+Whole Milk,nutrients,,2705426,Survey (FNDDS),"Yogurt, whole milk, fruit",,27,106.0
+Whole Milk,nutrients,,2705418,Survey (FNDDS),"Yogurt, whole milk, plain",,27,78.0
+Whole Milk,nutrients,,2705479,Survey (FNDDS),"Chocolate milk, reduced sugar, whole",,27,73.0
+Cheddar Cheese,nutrients,x,2705709,Survey (FNDDS),"Cheese, Cheddar",,27,409.0
+Cheddar Cheese,nutrients,,328637,Foundation,"Cheese, cheddar",,24,408.0
+Cheddar Cheese,nutrients,,2705710,Survey (FNDDS),"Cheese, Cheddar, reduced fat",,27,316.0
+Cheddar Cheese,nutrients,,2705773,Survey (FNDDS),"Cheese spread, American or Cheddar cheese base",,27,290.0
+Cheddar Cheese,nutrients,,2705797,Survey (FNDDS),"Cheese sandwich, cheddar cheese, on white bread",,27,325.0
+Cheddar Cheese,nutrients,,2705798,Survey (FNDDS),"Cheese sandwich, cheddar cheese, on wheat bread",,27,323.0
+Cheddar Cheese,nutrients,,169901,SR Legacy,"Cheese, american cheddar, imitation",,27,239.0
+Cheddar Cheese,nutrients,,2705739,Survey (FNDDS),"Cheese, Cheddar, reduced sodium",,27,398.0
+Cheddar Cheese,nutrients,,170899,SR Legacy,"Cheese, cheddar, sharp, sliced",,27,410.0
+Cheddar Cheese,nutrients,,2705804,Survey (FNDDS),"Grilled cheese sandwich, cheddar cheese, on white bread",,27,368.0
+Cheddar Cheese,nutrients,,2705805,Survey (FNDDS),"Grilled cheese sandwich, cheddar cheese, on wheat bread",,27,366.0
+Cheddar Cheese,nutrients,,2705711,Survey (FNDDS),"Cheese, Cheddar, nonfat or fat free",,27,157.0
+Cheddar Cheese,nutrients,,171295,SR Legacy,"Cheese, cheddar, nonfat or fat free",,27,157.0
+Cheddar Cheese,nutrients,,173439,SR Legacy,"Cheese, low fat, cheddar or colby",,27,173.0
+Cheddar Cheese,nutrients,,173440,SR Legacy,"Cheese, low-sodium, cheddar or colby",,27,398.0
+Mozzarella Cheese,nutrients,,2705722,Survey (FNDDS),"Cheese, Mozzarella, NFS",,27,296.0
+Mozzarella Cheese,nutrients,,172198,SR Legacy,"Cheese substitute, mozzarella",,27,248.0
+Mozzarella Cheese,nutrients,,169051,SR Legacy,"Cheese, mozzarella, nonfat",,27,141.0
+Mozzarella Cheese,nutrients,x,2705723,Survey (FNDDS),"Cheese, Mozzarella, part skim",,27,296.0
+Mozzarella Cheese,nutrients,,2705724,Survey (FNDDS),"Cheese, Mozzarella, reduced sodium",,27,280.0
+Mozzarella Cheese,nutrients,,167735,SR Legacy,"Cheese, mozzarella, low sodium",,27,280.0
+Mozzarella Cheese,nutrients,,170845,SR Legacy,"Cheese, mozzarella, whole milk",,27,299.0
+Mozzarella Cheese,nutrients,,168076,SR Legacy,"DENNY'S, mozzarella cheese sticks",,25,324.0
+Mozzarella Cheese,nutrients,,2705725,Survey (FNDDS),"Cheese, Mozzarella, nonfat or fat free",,27,141.0
+Mozzarella Cheese,nutrients,,170847,SR Legacy,"Cheese, mozzarella, part skim milk",,27,254.0
+Mozzarella Cheese,nutrients,,329370,Foundation,"Cheese, mozzarella, low moisture, part-skim",,25,298.0
+Mozzarella Cheese,nutrients,,171244,SR Legacy,"Cheese, mozzarella, low moisture, part-skim",,27,295.0
+Mozzarella Cheese,nutrients,,170846,SR Legacy,"Cheese, mozzarella, whole milk, low moisture",,27,318.0
+Mozzarella Cheese,nutrients,,170900,SR Legacy,"Cheese, mozzarella, low moisture, part-skim, shredded",,27,304.0
+Mozzarella Cheese,nutrients,,2705818,Survey (FNDDS),"Mozzarella cheese, tomato, and basil, with oil and vinegar dressing",,27,139.0
+Ground Flax Seeds,nutrients,,2262075,Foundation,"Flaxseed, ground",,22,514.0
+Ground Flax Seeds,nutrients,,2710185,Survey (FNDDS),Flaxseed oil,,27,884.0
+Ground Flax Seeds,nutrients,x,169414,SR Legacy,"Seeds, flaxseed",,27,534.0
+Ground Flax Seeds,nutrients,,171442,SR Legacy,"Oil, flaxseed, contains added sliced flaxseed",,16,878.0
+Ground Flax Seeds,nutrients,,167702,SR Legacy,"Oil, flaxseed, cold pressed",,27,884.0
+Ground Flax Seeds,nutrients,,2705854,Survey (FNDDS),"Beef, ground",,27,261.0
+Ground Flax Seeds,nutrients,,2705910,Survey (FNDDS),"Veal, ground",,27,213.0
+Ground Flax Seeds,nutrients,,2706091,Survey (FNDDS),"Chicken, ground",,27,201.0
+Ground Flax Seeds,nutrients,,2705881,Survey (FNDDS),"Ham, ground",,27,167.0
+Ground Flax Seeds,nutrients,,2705907,Survey (FNDDS),"Lamb, ground",,27,281.0
+Ground Flax Seeds,nutrients,,2705863,Survey (FNDDS),"Pork, ground",,27,299.0
+Ground Flax Seeds,nutrients,,2706133,Survey (FNDDS),"Turkey, ground",,27,211.0
+Ground Flax Seeds,nutrients,,2705855,Survey (FNDDS),"Beef, ground, patty",,27,272.0
+Ground Flax Seeds,nutrients,,2705853,Survey (FNDDS),"Beef, ground, raw",,27,213.0
+Ground Flax Seeds,nutrients,,2705820,Survey (FNDDS),"Meat, ground, NFS",,27,262.0
+Cashews,nutrients,,2515374,Foundation,"Nuts, cashew nuts, raw",,14,533.0
+Cashews,nutrients,,170162,SR Legacy,"Nuts, cashew nuts, raw",,26,553.0
+Cashews,nutrients,x,169421,SR Legacy,"Nuts, cashew nuts, dry roasted, with salt added",,27,574.0
+Cashews,nutrients,,169422,SR Legacy,"Nuts, cashew nuts, oil roasted, with salt added",,27,581.0
+Cashews,nutrients,,170571,SR Legacy,"Nuts, cashew nuts, dry roasted, without salt added",,27,574.0
+Cashews,nutrients,,170572,SR Legacy,"Nuts, cashew nuts, oil roasted, without salt added",,27,580.0
+Cashews,nutrients,,168597,SR Legacy,"Nuts, cashew butter, plain, with salt added",,27,609.0
+Cashews,nutrients,,170163,SR Legacy,"Nuts, cashew butter, plain, without salt added",,24,587.0
+Cashews,nutrients,,170176,SR Legacy,"Nuts, ginkgo nuts, canned",,24,111.0
+Cashews,nutrients,,170175,SR Legacy,"Nuts, ginkgo nuts, dried",,22,348.0
+Cashews,nutrients,,170584,SR Legacy,"Nuts, ginkgo nuts, raw",,22,182.0
+Cashews,nutrients,,170178,SR Legacy,"Nuts, macadamia nuts, raw",,25,718.0
+Cashews,nutrients,,2515378,Foundation,"Nuts, macadamia nuts, raw",,14,669.0
+Cashews,nutrients,,170591,SR Legacy,"Nuts, pine nuts, dried",,27,673.0
+Cashews,nutrients,,2346392,Foundation,"Nuts, pine nuts, raw",,17,643.0
+Sunflower Seeds,nutrients,,170562,SR Legacy,"Seeds, sunflower seed kernels, dried",,27,584.0
+Sunflower Seeds,nutrients,,2515381,Foundation,"Seeds, sunflower seed, kernel, raw",,14,571.0
+Sunflower Seeds,nutrients,,168594,SR Legacy,"Seeds, sunflower seed kernels, toasted, with salt added",,24,619.0
+Sunflower Seeds,nutrients,,170154,SR Legacy,"Seeds, sunflower seed kernels, toasted, without salt",,23,619.0
+Sunflower Seeds,nutrients,x,169418,SR Legacy,"Seeds, sunflower seed kernels, dry roasted, with salt added",,27,582.0
+Sunflower Seeds,nutrients,,325524,Foundation,"Seeds, sunflower seed kernels, dry roasted, with salt added",,26,612.0
+Sunflower Seeds,nutrients,,170563,SR Legacy,"Seeds, sunflower seed kernels, dry roasted, without salt",,27,582.0
+Sunflower Seeds,nutrients,,168593,SR Legacy,"Seeds, sunflower seed kernels, oil roasted, with salt added",,27,592.0
+Sunflower Seeds,nutrients,,170564,SR Legacy,"Seeds, sunflower seed kernels, oil roasted, without salt",,27,592.0
+Sunflower Seeds,nutrients,,169417,SR Legacy,"Seeds, sunflower seed kernels from shell, dry roasted, with salt added",,27,546.0
+Sunflower Seeds,nutrients,,2707584,Survey (FNDDS),"Sunflower seeds, flavored",,27,567.0
+Sunflower Seeds,nutrients,,2707585,Survey (FNDDS),"Sunflower seeds, NFS",,27,582.0
+Sunflower Seeds,nutrients,,170558,SR Legacy,"Seeds, safflower seed kernels, dried",,22,517.0
+Sunflower Seeds,nutrients,,169407,SR Legacy,"Seeds, watermelon seed kernels, dried",,21,557.0
+Sunflower Seeds,nutrients,,170556,SR Legacy,"Seeds, pumpkin and squash seed kernels, dried",,27,559.0
+Apple Cider Vinegar,nutrients,x,173469,SR Legacy,"Vinegar, cider",,27,21.0
+Apple Cider Vinegar,nutrients,,2709319,Survey (FNDDS),Apple cider,,27,46.0
+Apple Cider Vinegar,nutrients,,2710621,Survey (FNDDS),Hard cider,,27,56.0
+Apple Cider Vinegar,nutrients,,2709351,Survey (FNDDS),Vinegar,,27,21.0
+Apple Cider Vinegar,nutrients,,172241,SR Legacy,"Vinegar, balsamic",,14,88.0
+Apple Cider Vinegar,nutrients,,172237,SR Legacy,"Vinegar, distilled",,27,18.0
+Apple Cider Vinegar,nutrients,,174146,SR Legacy,"Beverages, AMBER, hard cider",,27,56.0
+Apple Cider Vinegar,nutrients,,172240,SR Legacy,"Vinegar, red wine",,15,19.0
+Apple Cider Vinegar,nutrients,,2710203,Survey (FNDDS),"Italian dressing, made with vinegar and oil",,27,240.0
+Apple Cider Vinegar,nutrients,,2709821,Survey (FNDDS),Cucumber salad made with cucumber and vinegar,,27,34.0
+Apple Cider Vinegar,nutrients,,171417,SR Legacy,"Salad dressing, home recipe, vinegar and oil",,27,449.0
+Apple Cider Vinegar,nutrients,,2705818,Survey (FNDDS),"Mozzarella cheese, tomato, and basil, with oil and vinegar dressing",,27,139.0
+Apple Cider Vinegar,nutrients,,2709756,Survey (FNDDS),"Tomato and cucumber salad made with tomato, cucumber, oil, and vinegar",,27,122.0
+Apple Cider Vinegar,nutrients,,2709818,Survey (FNDDS),Cucumber and vegetable namasu,,27,56.0
+Apple Cider Vinegar,nutrients,,2706807,Survey (FNDDS),"Chicken or turkey salad, made with Italian dressing",,27,146.0
+Soy Sauce,nutrients,x,2707442,Survey (FNDDS),Soy sauce,,27,53.0
+Soy Sauce,nutrients,,174278,SR Legacy,Soy sauce made from soy (tamari),,27,60.0
+Soy Sauce,nutrients,,174277,SR Legacy,Soy sauce made from soy and wheat (shoyu),,27,53.0
+Soy Sauce,nutrients,,2707148,Survey (FNDDS),"Gravy, made with soy sauce",,27,46.0
+Soy Sauce,nutrients,,2706386,Survey (FNDDS),Beef with soy-based sauce,,27,187.0
+Soy Sauce,nutrients,,2707443,Survey (FNDDS),"Soy sauce, reduced sodium",,27,57.0
+Soy Sauce,nutrients,,172473,SR Legacy,"Soy sauce made from soy and wheat (shoyu), low sodium",,27,57.0
+Soy Sauce,nutrients,,2706488,Survey (FNDDS),Beef and noodles with soy-based sauce,,27,173.0
+Soy Sauce,nutrients,,2706497,Survey (FNDDS),Beef and rice with soy-based sauce,,27,178.0
+Soy Sauce,nutrients,,2706765,Survey (FNDDS),Pork and onions with soy-based sauce,,27,149.0
+Soy Sauce,nutrients,,2706762,Survey (FNDDS),Pork and watercress with soy-based sauce,,27,190.0
+Soy Sauce,nutrients,,2706408,Survey (FNDDS),Pork or ham with soy-based sauce,,27,190.0
+Soy Sauce,nutrients,,2706557,Survey (FNDDS),Shrimp and noodles with soy-based sauce,,27,141.0
+Soy Sauce,nutrients,,2710246,Survey (FNDDS),"Soy based sauce, for use with vegetables",,27,89.0
+Soy Sauce,nutrients,,2706536,Survey (FNDDS),Chicken or turkey and noodles with soy-based sauce,,27,157.0
+Honey,nutrients,,169640,SR Legacy,Honey,,27,304.0
+Honey,nutrients,x,2710281,Survey (FNDDS),Honey,,27,304.0
+Honey,nutrients,,2710179,Survey (FNDDS),Honey butter,,27,485.0
+Honey,nutrients,,2710202,Survey (FNDDS),Honey mustard dressing,,27,464.0
+Honey,nutrients,,2710086,Survey (FNDDS),Honey mustard dip,,27,275.0
+Honey,nutrients,,2707491,Survey (FNDDS),"Almonds, honey roasted",,27,579.0
+Honey,nutrients,,2707498,Survey (FNDDS),"Cashews, honey roasted",,27,563.0
+Honey,nutrients,,2708486,Survey (FNDDS),"Cereal, other, honey",,27,388.0
+Honey,nutrients,,2707520,Survey (FNDDS),"Peanuts, honey roasted",,27,574.0
+Honey,nutrients,,2707525,Survey (FNDDS),"Pecans, honey roasted",,27,681.0
+Honey,nutrients,,2708035,Survey (FNDDS),Sopaipilla with syrup or honey,,27,361.0
+Honey,nutrients,,2707532,Survey (FNDDS),"Walnuts, honey roasted",,27,668.0
+Honey,nutrients,,2708464,Survey (FNDDS),"Cereal, O's, honey nut",,27,385.0
+Honey,nutrients,,168138,SR Legacy,"Cereals ready-to-eat, POST, HONEY BUNCHES OF OATS, honey roasted",,27,401.0
+Honey,nutrients,,2710223,Survey (FNDDS),"Honey mustard dressing, light",,27,207.0
+Maple Syrup,nutrients,x,169661,SR Legacy,"Syrups, maple",,27,260.0
+Maple Syrup,nutrients,,170276,SR Legacy,"Syrup, maple, Canadian",,17,270.0
+Maple Syrup,nutrients,,168838,SR Legacy,"Syrups, table blends, pancake, with 2% maple",,27,265.0
+Maple Syrup,nutrients,,170646,SR Legacy,"Syrups, table blends, pancake, with 2% maple, with added potassium",,22,265.0
+Maple Syrup,nutrients,,2710273,Survey (FNDDS),Pancake syrup,,27,265.0
+Maple Syrup,nutrients,,169658,SR Legacy,"Sugars, maple",,27,354.0
+Maple Syrup,nutrients,,2710275,Survey (FNDDS),Blueberry syrup,,27,341.0
+Maple Syrup,nutrients,,2710276,Survey (FNDDS),Chocolate syrup,,27,269.0
+Maple Syrup,nutrients,,2710274,Survey (FNDDS),Corn syrup,,27,283.0
+Maple Syrup,nutrients,,167953,SR Legacy,Fruit syrup,,27,341.0
+Maple Syrup,nutrients,,2710278,Survey (FNDDS),Simple syrup,,27,184.0
+Maple Syrup,nutrients,,167743,SR Legacy,"Syrup, Cane",,26,269.0
+Maple Syrup,nutrients,,2710272,Survey (FNDDS),"Syrup, NFS",,27,265.0
+Maple Syrup,nutrients,,168088,SR Legacy,"Syrups, grenadine",,27,268.0
+Maple Syrup,nutrients,,169660,SR Legacy,"Syrups, malt",,22,318.0
+Mandarin Oranges,portion,x,169105,SR Legacy,"Tangerines, (mandarin oranges), raw",,27,53.0
+Mandarin Oranges,portion,,169106,SR Legacy,"Tangerines, (mandarin oranges), canned, juice pack",,27,37.0
+Mandarin Oranges,portion,,168184,SR Legacy,"Tangerines, (mandarin oranges), canned, juice pack, drained",,27,38.0
+Mandarin Oranges,portion,,169924,SR Legacy,"Tangerines, (mandarin oranges), canned, light syrup pack",,27,61.0
+Mandarin Oranges,portion,,2709175,Survey (FNDDS),"Tangerine, raw",,27,53.0
+Mandarin Oranges,portion,,169925,SR Legacy,"Tangerine juice, raw",,27,43.0
+Mandarin Oranges,portion,,2710832,Foundation,"Mandarin, seedless, peeled, raw",,14,55.6
+Mandarin Oranges,portion,,2709171,Survey (FNDDS),"Orange, raw",,27,50.0
+Mandarin Oranges,portion,,169103,SR Legacy,"Orange peel, raw",,25,97.0
+Mandarin Oranges,portion,,169918,SR Legacy,"Oranges, raw, Florida",,27,46.0
+Mandarin Oranges,portion,,746771,Foundation,"Oranges, raw, navels",,21,47.0
+Mandarin Oranges,portion,,169919,SR Legacy,"Oranges, raw, with peel",,24,63.0
+Mandarin Oranges,portion,,170502,SR Legacy,"Tomatoes, orange, raw",,24,16.0
+Mandarin Oranges,portion,,175133,SR Legacy,"Fish, roughy, orange, raw",,26,76.0
+Mandarin Oranges,portion,,169916,SR Legacy,"Oranges, raw, California, valencias",,23,49.0
+Bananas,portion,,2709224,Survey (FNDDS),"Banana, raw",,27,97.0
+Bananas,portion,x,173944,SR Legacy,"Bananas, raw",,27,89.0
+Bananas,portion,,1105073,Foundation,"Bananas, overripe, raw",,13,85.0
+Bananas,portion,,169394,SR Legacy,"Pepper, banana, raw",,27,27.0
+Bananas,portion,,2709802,Survey (FNDDS),"Peppers, banana, raw",,27,27.0
+Bananas,portion,,1105314,Foundation,"Bananas, ripe and slightly ripe, raw",,22,97.0
+Bananas,portion,,2747660,Foundation,"Peppers, banana or Hungarian wax, seeded, raw",,17,23.9
+Bananas,portion,,173945,SR Legacy,"Bananas, dehydrated, or banana powder",,27,346.0
+Bananas,portion,,2709225,Survey (FNDDS),"Banana, baked",,27,161.0
+Bananas,portion,,2709200,Survey (FNDDS),Banana chips,,27,519.0
+Bananas,portion,,2709342,Survey (FNDDS),Banana nectar,,27,74.0
+Bananas,portion,,2705697,Survey (FNDDS),Banana pudding,,27,160.0
+Bananas,portion,,2705660,Survey (FNDDS),Banana split,,27,199.0
+Bananas,portion,,2709560,Survey (FNDDS),"Plantain, raw",,27,122.0
+Bananas,portion,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Peaches,portion,,2709249,Survey (FNDDS),"Peach, raw",,27,46.0
+Peaches,portion,,325430,Foundation,"Peaches, yellow, raw",,22,42.0
+Peaches,portion,x,169928,SR Legacy,"Peaches, yellow, raw",,27,39.0
+Peaches,portion,,2709253,Survey (FNDDS),"Peach, frozen",,27,46.0
+Peaches,portion,,2708022,Survey (FNDDS),"Cobbler, peach",,27,217.0
+Peaches,portion,,2708028,Survey (FNDDS),"Crisp, peach",,27,214.0
+Peaches,portion,,2709346,Survey (FNDDS),Peach nectar,,27,49.0
+Peaches,portion,,2709207,Survey (FNDDS),"Peach, dried",,27,239.0
+Peaches,portion,,2708002,Survey (FNDDS),"Pie, peach",,27,296.0
+Peaches,portion,,175020,SR Legacy,"Pie, peach",,27,224.0
+Peaches,portion,,2708043,Survey (FNDDS),"Strudel, peach",,27,281.0
+Peaches,portion,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Peaches,portion,,2709245,Survey (FNDDS),"Nectarine, raw",,27,43.0
+Peaches,portion,,2709251,Survey (FNDDS),"Peach, canned, in syrup",,27,54.0
+Peaches,portion,,2709250,Survey (FNDDS),"Peach, canned, NFS",,27,48.0
+Kiwis,portion,,327046,Foundation,"Kiwifruit, green, raw",,23,58.0
+Kiwis,portion,x,168153,SR Legacy,"Kiwifruit, green, raw",,27,61.0
+Kiwis,portion,,2710831,Foundation,"Kiwifruit (kiwi), green, peeled, raw",,15,58.5
+Kiwis,portion,,168211,SR Legacy,"Kiwifruit, ZESPRI SunGold, raw",,27,63.0
+Kiwis,portion,,2710823,Foundation,"Asparagus, green, raw",,18,23.5
+Kiwis,portion,,2709570,Survey (FNDDS),"Beet greens, raw",,27,22.0
+Kiwis,portion,,170375,SR Legacy,"Beet greens, raw",,27,22.0
+Kiwis,portion,,2747653,Foundation,"Beet greens, raw",,18,26.4
+Kiwis,portion,,2709773,Survey (FNDDS),"Cabbage, green, raw",,27,31.0
+Kiwis,portion,,2346407,Foundation,"Cabbage, green, raw",,15,27.9
+Kiwis,portion,,169389,SR Legacy,"Cauliflower, green, raw",,27,31.0
+Kiwis,portion,,169992,SR Legacy,"Chicory greens, raw",,27,23.0
+Kiwis,portion,,2709588,Survey (FNDDS),"Dandelion greens, raw",,27,45.0
+Kiwis,portion,,169226,SR Legacy,"Dandelion greens, raw",,27,45.0
+Kiwis,portion,,2709769,Survey (FNDDS),"Green beans, raw",,27,40.0
+Cantaloupe,portion,,2709226,Survey (FNDDS),"Cantaloupe, raw",,27,38.0
+Cantaloupe,portion,,746770,Foundation,"Melons, cantaloupe, raw",,22,34.0
+Cantaloupe,portion,x,169092,SR Legacy,"Melons, cantaloupe, raw",,27,34.0
+Cantaloupe,portion,,2709343,Survey (FNDDS),Cantaloupe nectar,,27,65.0
+Cantaloupe,portion,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Cantaloupe,portion,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Cantaloupe,portion,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Cantaloupe,portion,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Cantaloupe,portion,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Cantaloupe,portion,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Cantaloupe,portion,,168490,SR Legacy,"Arrowroot, raw",,24,65.0
+Cantaloupe,portion,,169387,SR Legacy,"Arugula, raw",,27,25.0
+Cantaloupe,portion,,168389,SR Legacy,"Asparagus, raw",,27,20.0
+Cantaloupe,portion,,2709767,Survey (FNDDS),"Asparagus, raw",,27,20.0
+Cantaloupe,portion,,2709223,Survey (FNDDS),"Avocado, raw",,27,160.0
+Red Bell Pepper,portion,x,170108,SR Legacy,"Peppers, sweet, red, raw",,27,26.0
+Red Bell Pepper,portion,,2709801,Survey (FNDDS),"Peppers, sweet, red, raw",,27,31.0
+Red Bell Pepper,portion,,2258590,Foundation,"Peppers, bell, red, raw",,20,27.0
+Red Bell Pepper,portion,,2709800,Survey (FNDDS),"Peppers, sweet, green, raw",,27,23.0
+Red Bell Pepper,portion,,170427,SR Legacy,"Peppers, sweet, green, raw",,27,20.0
+Red Bell Pepper,portion,,169383,SR Legacy,"Peppers, sweet, yellow, raw",,22,27.0
+Red Bell Pepper,portion,,168550,SR Legacy,"Peppers, sweet, red, sauteed",,26,133.0
+Red Bell Pepper,portion,,170106,SR Legacy,"Peppers, hot chili, red, raw",,27,40.0
+Red Bell Pepper,portion,,2346399,Foundation,"Cherries, sweet, dark red, raw",,14,63.3
+Red Bell Pepper,portion,,169373,SR Legacy,"Peppers, sweet, red, freeze-dried",,26,314.0
+Red Bell Pepper,portion,,168546,SR Legacy,"Peppers, sweet, red, canned, solids and liquids",,24,18.0
+Red Bell Pepper,portion,,168547,SR Legacy,"Peppers, sweet, red, frozen, chopped, unprepared",,27,20.0
+Red Bell Pepper,portion,,170515,SR Legacy,"Peppers, sweet, red, cooked, boiled, drained, with salt",,27,26.0
+Red Bell Pepper,portion,,2709802,Survey (FNDDS),"Peppers, banana, raw",,27,27.0
+Red Bell Pepper,portion,,2709798,Survey (FNDDS),"Peppers, hot, raw",,27,34.0
+Potato,portion,,170032,SR Legacy,"Potatoes, raw, skin",,24,58.0
+Potato,portion,x,170026,SR Legacy,"Potatoes, flesh and skin, raw",,27,77.0
+Potato,portion,,169303,SR Legacy,"Sweet potato leaves, raw",,23,42.0
+Potato,portion,,2346403,Foundation,"Potatoes, gold, without skin, raw",,18,71.6
+Potato,portion,,170029,SR Legacy,"Potatoes, red, flesh and skin, raw",,27,70.0
+Potato,portion,,2346402,Foundation,"Potatoes, red, without skin, raw",,18,73.4
+Potato,portion,,2346401,Foundation,"Potatoes, russet, without skin, raw",,18,81.0
+Potato,portion,,170028,SR Legacy,"Potatoes, white, flesh and skin, raw",,27,69.0
+Potato,portion,,2346404,Foundation,"Sweet potatoes, orange flesh, without skin, raw",,18,77.4
+Potato,portion,,168482,SR Legacy,"Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)",,27,86.0
+Potato,portion,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Potato,portion,,170027,SR Legacy,"Potatoes, russet, flesh and skin, raw (Includes foods for USDA's Food Distribution Program)",,27,79.0
+Potato,portion,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Potato,portion,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Potato,portion,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Sweet Potato,portion,,168016,SR Legacy,"Sweet Potato puffs, frozen, unprepared",,10,161.0
+Sweet Potato,portion,x,168482,SR Legacy,"Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)",,27,86.0
+Sweet Potato,portion,,168015,SR Legacy,"Sweet Potatoes, french fried, crosscut, frozen, unprepared",,10,209.0
+Sweet Potato,portion,,169303,SR Legacy,"Sweet potato leaves, raw",,23,42.0
+Sweet Potato,portion,,170047,SR Legacy,"Potato puffs, frozen, unprepared",,27,178.0
+Sweet Potato,portion,,170453,SR Legacy,"Potatoes, o'brien, frozen, unprepared",,24,76.0
+Sweet Potato,portion,,167604,SR Legacy,"Potatoes, hash brown, refrigerated, unprepared",,23,84.0
+Sweet Potato,portion,,170449,SR Legacy,"Potatoes, scalloped, dry mix, unprepared",,24,358.0
+Sweet Potato,portion,,169306,SR Legacy,"Sweet potato, frozen, unprepared (Includes foods for USDA's Food Distribution Program)",,24,96.0
+Sweet Potato,portion,,170043,SR Legacy,"Potatoes, hash brown, frozen, plain, unprepared",,24,82.0
+Sweet Potato,portion,,170022,SR Legacy,"Peppers, sweet, green, frozen, chopped, unprepared",,24,20.0
+Sweet Potato,portion,,168547,SR Legacy,"Peppers, sweet, red, frozen, chopped, unprepared",,27,20.0
+Sweet Potato,portion,,170447,SR Legacy,"Potatoes, au gratin, dry mix, unprepared",,24,314.0
+Sweet Potato,portion,,170045,SR Legacy,"Potatoes, hash brown, frozen, with butter sauce, unprepared",,24,135.0
+Sweet Potato,portion,,2346404,Foundation,"Sweet potatoes, orange flesh, without skin, raw",,18,77.4
+Avocado,portion,,2709223,Survey (FNDDS),"Avocado, raw",,27,160.0
+Avocado,portion,x,171706,SR Legacy,"Avocados, raw, California",,27,167.0
+Avocado,portion,,171707,SR Legacy,"Avocados, raw, Florida",,24,120.0
+Avocado,portion,,2710824,Foundation,"Avocado, Hass, peeled, raw",,17,206.0
+Avocado,portion,,171705,SR Legacy,"Avocados, raw, all commercial varieties",,27,160.0
+Avocado,portion,,2710208,Survey (FNDDS),Avocado dressing,,27,427.0
+Avocado,portion,,173573,SR Legacy,"Oil, avocado",,24,884.0
+Avocado,portion,,2710248,Survey (FNDDS),"Avocado, for use on a sandwich",,27,160.0
+Avocado,portion,,2708960,Survey (FNDDS),"Sushi roll, avocado",,27,93.0
+Avocado,portion,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Avocado,portion,,167782,SR Legacy,"Abiyuch, raw",,15,69.0
+Avocado,portion,,2709215,Survey (FNDDS),"Apple, raw",,27,61.0
+Avocado,portion,,2709221,Survey (FNDDS),"Apricot, raw",,27,48.0
+Avocado,portion,,171697,SR Legacy,"Apricots, raw",,27,48.0
+Avocado,portion,,169203,SR Legacy,"Arrowhead, raw",,21,99.0
+Cauliflower,portion,,2685573,Foundation,"Cauliflower, raw",,15,22.9
+Cauliflower,portion,x,169986,SR Legacy,"Cauliflower, raw",,27,25.0
+Cauliflower,portion,,2709777,Survey (FNDDS),"Cauliflower, raw",,27,25.0
+Cauliflower,portion,,169389,SR Legacy,"Cauliflower, green, raw",,27,31.0
+Cauliflower,portion,,2710042,Survey (FNDDS),Fried cauliflower,,27,218.0
+Cauliflower,portion,,2710074,Survey (FNDDS),"Cauliflower, pickled",,27,41.0
+Cauliflower,portion,,2710801,Survey (FNDDS),"Cauliflower, cooked, as ingredient",,27,26.0
+Cauliflower,portion,,170398,SR Legacy,"Cauliflower, frozen, unprepared",,27,24.0
+Cauliflower,portion,,2709902,Survey (FNDDS),"Cauliflower, fresh, cooked with oil",,27,52.0
+Cauliflower,portion,,2709904,Survey (FNDDS),"Cauliflower, frozen, cooked with oil",,27,45.0
+Cauliflower,portion,,169391,SR Legacy,"Cauliflower, green, cooked, with salt",,24,32.0
+Cauliflower,portion,,2709899,Survey (FNDDS),"Cauliflower, NS as to form, cooked",,27,49.0
+Cauliflower,portion,,2709164,Survey (FNDDS),"Clementine, raw",,27,53.0
+Cauliflower,portion,,2710032,Survey (FNDDS),"Broccoli and cauliflower, cooked, fat added",,27,46.0
+Cauliflower,portion,,2710031,Survey (FNDDS),"Broccoli and cauliflower, cooked, no added fat",,27,23.0
