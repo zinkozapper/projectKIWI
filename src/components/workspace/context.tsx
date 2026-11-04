@@ -3,11 +3,12 @@ import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
 import { foods, foodById, totals, targets, nutrientKeys, nutrientLabels, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
+import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
 export type PantryItem = { id: string; food_id: string; quantity: number };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null };
-export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string };
+export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string };
 export type FoodSuggestion = { food: typeof foods[number]; score: number; reasons: string[] };
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
@@ -16,6 +17,16 @@ const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days
 
 export const CM_PER_INCH = 2.54;
 export const LB_PER_KG = 2.20462;
+const BUDGET_WEEKS_KEY = 'kiwi:budget-weeks';
+
+function getBudgetWeeks() {
+  try {
+    const weeks = Number(window.localStorage.getItem(BUDGET_WEEKS_KEY));
+    return weeks === 2 || weeks === 4 ? weeks : 1;
+  } catch {
+    return 1;
+  }
+}
 
 const toFeetInches = (cm: number | null) => {
   if (!cm) return { height_ft: '', height_in: '' };
@@ -47,8 +58,6 @@ type WorkspaceValue = {
   coverage: number;
   biggestGaps: typeof nutrientKeys;
   suggestions: FoodSuggestion[];
-  setDays: (days: number) => void;
-  setBudget: (budget: number) => void;
   setProfileDraft: (draft: ProfileDraft) => void;
   setSearch: (search: string) => void;
   setSelected: (id: string) => void;
@@ -89,7 +98,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [selected, setSelected] = useState('1');
   const [days, setDays] = useState(7);
   const [budget, setBudget] = useState(75);
-  const [profileDraft, setProfileDraft] = useState<ProfileDraft>({ display_name: '', age: '', height_ft: '', height_in: '', weight_lb: '', gender: '', activity: 'moderate', goal: 'maintain', budget: '75' });
+  const [profileDraft, setProfileDraft] = useState<ProfileDraft>({ display_name: '', age: '', height_ft: '', height_in: '', weight_lb: '', gender: '', activity: 'moderate', goal: 'maintain', budget: '75', budget_weeks: '1' });
   const [profileErrors, setProfileErrors] = useState<string[]>([]);
   const active = trips.find(t => t.status === 'active');
 
@@ -146,7 +155,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         const p = pr.data as Profile;
         setProfile(p);
         setBudget(Number(p.budget));
-        setProfileDraft({ display_name: p.display_name || '', age: String(p.age || ''), ...toFeetInches(p.height_cm), weight_lb: p.weight_kg ? String(Math.round(Number(p.weight_kg) * LB_PER_KG)) : '', gender: p.gender || '', activity: p.activity || 'moderate', goal: p.goal || 'maintain', budget: String(p.budget || 75) });
+        setProfileDraft({ display_name: p.display_name || '', age: String(p.age || ''), ...toFeetInches(p.height_cm), weight_lb: p.weight_kg ? String(Math.round(Number(p.weight_kg) * LB_PER_KG)) : '', gender: p.gender || '', activity: p.activity || 'moderate', goal: p.goal || 'maintain', budget: String(p.budget ?? 75), budget_weeks: String(getBudgetWeeks()) });
       } else {
         navigate({ to: '/profile', replace: true });
       }
@@ -166,10 +175,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (active) {
-      setDays(active.days);
-      setBudget(Number(active.budget));
+      setDays(getBudgetWeeks() * 7);
+      setBudget(Number(profile?.budget ?? active.budget));
     }
-  }, [active?.id]);
+  }, [active?.id, profile?.budget]);
 
   const listItems = items.filter(i => i.trip_id === active?.id && !i.purchased);
   const purchased = items.filter(i => i.trip_id === active?.id && i.purchased);
@@ -302,8 +311,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       fail('Please fill in the highlighted fields.');
       return;
     }
-    const age = Number(profileDraft.age), inchPart = Number(profileDraft.height_in || 0), height = Math.round((Number(profileDraft.height_ft) * 12 + inchPart) * CM_PER_INCH * 10) / 10, weight = Math.round(Number(profileDraft.weight_lb) / LB_PER_KG * 10) / 10, cash = Number(profileDraft.budget);
-    if (age < 18 || age > 100 || inchPart < 0 || inchPart >= 12 || height < 90 || height > 250 || weight < 25 || weight > 350 || cash < 0) {
+    const age = Number(profileDraft.age), inchPart = Number(profileDraft.height_in || 0), height = Math.round((Number(profileDraft.height_ft) * 12 + inchPart) * CM_PER_INCH * 10) / 10, weight = Math.round(Number(profileDraft.weight_lb) / LB_PER_KG * 10) / 10, cash = Number(profileDraft.budget), weeks = Number(profileDraft.budget_weeks);
+    if (age < 18 || age > 100 || inchPart < 0 || inchPart >= 12 || height < 90 || height > 250 || weight < 25 || weight > 350 || cash < 0 || ![1, 2, 4].includes(weeks)) {
       fail('Check your age, height, weight and budget for valid values.');
       return;
     }
@@ -313,7 +322,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     else {
       setProfile(data as Profile);
       setProfileErrors([]);
-      setBudget(cash);
+      try {
+        window.localStorage.setItem(BUDGET_WEEKS_KEY, String(weeks));
+      } catch {
+        // Keep the selection for this session if local storage is unavailable.
+      }
+      await saveTripSettings(weeks * 7, cash);
       navigate({ to: '/plan/pantry' });
     }
   }
@@ -351,6 +365,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     await supabase.auth.signOut();
+    applyTheme('light');
+    applyScheme(DEFAULT_SCHEME);
     navigate({ to: '/', replace: true });
   }
 
@@ -358,7 +374,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     profile, trips, items, pantry, active, listItems, purchased, days, budget,
     profileDraft, profileErrors, loading, error, search, results, selected,
     pantryTotals, combined, daily, spend, coverage, biggestGaps, suggestions,
-    setDays, setBudget, setProfileDraft, setSearch, setSelected, clearError, fail,
+    setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry, saveProfile, finishTrip, repeatTrip, signOut,
   };

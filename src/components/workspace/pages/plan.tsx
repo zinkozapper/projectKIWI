@@ -10,8 +10,8 @@ export function PlanPage() {
   const navigate = useNavigate();
   const {
     days, budget, search, selected, results, listItems, pantry, combined, daily, spend, coverage,
-    suggestions, setDays, setBudget, setSearch, setSelected, fail,
-    addFood, updateQuantity, removeItem, saveTripSettings,
+    suggestions, setSearch, setSelected, fail,
+    addFood, updateQuantity, removeItem,
   } = useWorkspace();
 
   const pairingSuggestions = getFoodPairings(
@@ -25,55 +25,21 @@ export function PlanPage() {
     <>
       <div className="page-heading">
         <div>
-          <div className="eyebrow">THE EASY WAY TO EAT WELL</div>
           <h1>Your grocery plan<span className="brand-dot">.</span></h1>
-          <p>Build a balanced week, one good choice at a time.</p>
+          <p>Build a balanced grocery list within your budget.</p>
         </div>
         <Button className="shop-action" onClick={() => navigate({ to: '/plan/shop' })}>
           <ShoppingBasket size={17} /> Shop this list <ArrowRight size={16} />
         </Button>
       </div>
 
-      <div className="plan-controls">
-        <div>
-          <span className="control-label">SHOPPING FOR</span>
-          <div className="segmented">
-            {[3, 5, 7, 14].map(d => (
-              <Button
-                key={d}
-                variant="ghost"
-                className={days === d ? 'selected' : ''}
-                onClick={() => saveTripSettings(d, budget)}
-              >
-                {d} days
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <div className="budget-setting">
-          <span className="control-label">YOUR BUDGET</span>
-          <label className="budget-input">
-            <span>$</span>
-            <input
-              aria-label="Trip budget"
-              type="number"
-              min="0"
-              value={budget}
-              onChange={e => setBudget(Number(e.target.value))}
-              onBlur={() => saveTripSettings(days, Math.max(0, budget))}
-            />
-          </label>
-        </div>
-
-        <div className="budget-progress">
-          <span>${spend.toFixed(2)} of ${budget.toFixed(0)} estimated</span>
-          <div className="track">
-            <div
-              className={spend > budget ? 'fill warning' : 'fill'}
-              style={{ width: `${Math.min(100, budget ? spend / budget * 100 : 0)}%` }}
-            />
-          </div>
+      <div className="budget-progress plan-budget-progress">
+        <span>${spend.toFixed(2)} of ${budget.toFixed(0)} estimated for {days / 7} {days === 7 ? 'week' : 'weeks'}</span>
+        <div className="track">
+          <div
+            className={spend > budget ? 'fill warning' : 'fill'}
+            style={{ width: `${Math.min(100, budget ? spend / budget * 100 : 0)}%` }}
+          />
         </div>
       </div>
 
@@ -82,7 +48,6 @@ export function PlanPage() {
           <section className="section-block">
             <div className="section-title">
               <div>
-                <span className="section-kicker">01 / BUILD YOUR LIST</span>
                 <h2>What’s going in your cart?</h2>
               </div>
               <span className="count-pill">{listItems.length} items</span>
@@ -96,7 +61,6 @@ export function PlanPage() {
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search foods, like eggs or spinach…"
               />
-              <span className="search-shortcut">FOOD SEARCH</span>
             </div>
 
             {search && (
@@ -203,7 +167,6 @@ export function PlanPage() {
           <section className="section-block suggestions-block">
             <div className="section-title">
               <div>
-                <span className="section-kicker">02 / SMART ADDITIONS</span>
                 <h2>Good things to add</h2>
               </div>
             </div>
@@ -244,7 +207,6 @@ export function PlanPage() {
           <section className="section-block pairing-block">
             <div className="section-title">
               <div>
-                <span className="section-kicker">03 / BETTER TOGETHER</span>
                 <h2>Pairs well with {foodById(selected)?.name || 'your list'}</h2>
               </div>
             </div>
@@ -283,7 +245,6 @@ export function PlanPage() {
 
         <div className="right-column">
           <section className="nutrition-panel">
-            <div className="section-kicker">YOUR NUTRITION SNAPSHOT</div>
             <h2>How’s your list looking?</h2>
             <p>Estimated daily average across {days} days, including your pantry.</p>
 
