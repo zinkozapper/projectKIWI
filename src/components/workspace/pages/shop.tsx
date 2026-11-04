@@ -42,7 +42,7 @@ export function ShopPage() {
             <h3>In your cart · {purchased.length}</h3>
             {purchased.map(i => {
               const f = foodById(i.food_id);
-              return f ? <div key={i.id}>{f.emoji} {f.name}<Button variant="ghost" size="sm" onClick={() => undoPurchase(i)}>Undo</Button></div> : null;
+              return f ? <div key={i.id}>{f.emoji} {f.name}<Button variant="outline" size="sm" className="font-normal" onClick={() => undoPurchase(i)}>Undo</Button></div> : null;
             })}
           </div>
         )}
