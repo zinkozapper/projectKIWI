@@ -14,6 +14,9 @@ The app displays nutrient information of foods you are already eating and gives 
 - UI: Tailwind CSS and Radix UI
 - Backend, authentication, and database: Supabase
 
+## System Architecture Diagram
+![System Architecture Diagram](./assets/kiwi-architecture.png)
+
 ## How to run
 ### First time install (DEV)
 ```bash
