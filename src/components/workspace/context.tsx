@@ -1,21 +1,22 @@
 import { createContext, useContext, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { foods,foodById,totals,targets,nutrientKeys,type Profile } from '@/lib/foods';
+import { foods, foodById, totals, targets, nutrientKeys, nutrientLabels, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
 export type PantryItem = { id: string; food_id: string; quantity: number };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null };
 export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string };
+export type FoodSuggestion = { food: typeof foods[number]; score: number; reasons: string[] };
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
 const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity) });
 const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at });
 
-// Profiles are stored in cm and kg; the form shows feet, inches and pounds.
 export const CM_PER_INCH = 2.54;
 export const LB_PER_KG = 2.20462;
+
 const toFeetInches = (cm: number | null) => {
   if (!cm) return { height_ft: '', height_in: '' };
   const total = Math.round(Number(cm) / CM_PER_INCH);
@@ -45,7 +46,7 @@ type WorkspaceValue = {
   spend: number;
   coverage: number;
   biggestGaps: typeof nutrientKeys;
-  suggestions: typeof foods;
+  suggestions: FoodSuggestion[];
   setDays: (days: number) => void;
   setBudget: (budget: number) => void;
   setProfileDraft: (draft: ProfileDraft) => void;
@@ -102,23 +103,29 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     }, 15_000);
+
     (async () => {
       const { data } = await supabase.auth.getSession();
       if (!data.session?.user) {
         if (mounted) setLoading(false);
         return;
       }
+
       const user = data.session.user;
       const id = user.id;
+
       const [, pantryResult, pr, tr] = await Promise.all([
         supabase.from('users').upsert({ user_id: id, email: user.email || '' }, { onConflict: 'user_id', ignoreDuplicates: true }),
         supabase.from('pantry').select('pantry_id').eq('user_id', id).maybeSingle(),
         supabase.from('profiles').select('*').eq('user_id', id).maybeSingle(),
         supabase.from('shopping_list').select('*').eq('user_id', id).order('created_at', { ascending: false }),
       ]);
+
       let pRow = pantryResult.data;
       if (!pRow) pRow = (await supabase.from('pantry').insert({ user_id: id }).select('pantry_id').single()).data;
+
       const tripIds = (tr.data || []).map(t => t.shopping_list_id);
+
       const [catalog, ti, pa] = await Promise.all([
         loadCatalog(),
         tripIds.length
@@ -128,10 +135,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           ? supabase.from('pantry_item').select('*').eq('pantry_id', pRow.pantry_id)
           : Promise.resolve({ data: [], error: null }),
       ]);
+
       void catalog;
       if (!mounted || timedOut) return;
+
       setUserId(id);
       setPantryId(pRow?.pantry_id ?? null);
+
       if (pr.data) {
         const p = pr.data as Profile;
         setProfile(p);
@@ -140,6 +150,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       } else {
         navigate({ to: '/profile', replace: true });
       }
+
       setTrips((tr.data || []).map(toTrip));
       setItems((ti.data || []).map(toItem));
       setPantry((pa.data || []).map(toPantry));
@@ -149,6 +160,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setError(String(e?.message || e));
       setLoading(false);
     }).finally(() => window.clearTimeout(timeout));
+
     return () => { mounted = false; window.clearTimeout(timeout); };
   }, [navigate]);
 
@@ -166,12 +178,29 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const daily = targets(profile);
   const spend = listItems.reduce((sum, i) => sum + (foodById(i.food_id)?.price || 0) * Number(i.quantity), 0);
   const coverage = Math.round(nutrientKeys.filter(k => k !== 'calories' && combined[k] / days >= daily[k] * .7).length / 8 * 100);
-  const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
-  const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories').sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
-  const suggestions = available.map(f => ({ food: f, score: biggestGaps.slice(0, 4).reduce((s, k) => s + Math.min(f.nutrition[k] / days / Math.max(1, daily[k] - combined[k] / days), 1), 0) })).filter(x => spend + x.food.price <= budget).sort((a, b) => b.score - a.score).slice(0, 2).map(x => x.food);
-  const results = foods.filter(f => (f.name + ' ' + f.category).toLowerCase().includes(search.toLowerCase())).slice(0, 6);
 
-  function fail(message: string) {
+  const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
+  const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
+
+  const suggestions: FoodSuggestion[] = available.map(food => {
+    const relevantGaps = biggestGaps.slice(0, 4).map(k => {
+      const target = daily[k];
+      const intake = combined[k] / days;
+      const remaining = Math.max(0, target - intake);
+      const amount = Math.max(0, Number(food.nutrition[k]) || 0);
+      const percentage = remaining > 0 ? Math.min(100, Math.round(amount / remaining * 100)) : 0;
+      const impact = remaining > 0 ? (remaining / target) * Math.min(amount / remaining, 1) : 0;
+      return { key: k, percentage, impact, amount };
+    }).filter(g => g.amount > 0 && g.impact > 0).sort((a, b) => b.impact - a.impact);
+
+    const score = relevantGaps.reduce((total, gap) => total + gap.impact, 0);
+    const reasons = relevantGaps.slice(0, 2).map(gap => `${nutrientLabels[gap.key]} (${gap.percentage}% of remaining gap)`);
+
+    return { food, score, reasons };
+  }).filter(s => s.score > 0 && (Number(s.food.price) <= 0 || !Number.isFinite(Number(s.food.price)) || spend + Number(s.food.price) <= budget)).sort((a, b) => b.score - a.score).slice(0, 2);
+
+  const results = foods.filter(f => (f.name + ' ' + f.category).toLowerCase().includes(search.toLowerCase())).slice(0, 6);
+    function fail(message: string) {
     setError(message);
     window.setTimeout(() => setError(''), 5000);
   }
@@ -335,4 +364,4 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;
-}
+};
