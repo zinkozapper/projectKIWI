@@ -124,25 +124,30 @@ export function ProfilePage() {
                 <option value="convenience">More convenient meals</option>
               </select>
             </label>
-            <label className={profileErrors.includes('budget') ? 'invalid' : ''}>
-              Grocery budget ($)
-              <input type="number" min="0" value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: e.target.value })} />
-            </label>
-            <div className="budget-period-field">
-              <span className="budget-period-label">Budget period</span>
-              <div className="segmented" role="group" aria-label="Budget period">
-                {[1, 2, 4].map(weeks => (
-                  <Button
-                    key={weeks}
-                    type="button"
-                    variant="ghost"
-                    className={profileDraft.budget_weeks === String(weeks) ? 'selected' : ''}
-                    aria-pressed={profileDraft.budget_weeks === String(weeks)}
-                    onClick={() => setProfileDraft({ ...profileDraft, budget_weeks: String(weeks) })}
-                  >
-                    {weeks} {weeks === 1 ? 'week' : 'weeks'}
-                  </Button>
-                ))}
+            <div className={`budget-field${profileErrors.includes('budget') ? ' invalid' : ''}`}>
+              <span className="budget-field-label">Budget:</span>
+              <div className="budget-control">
+                <div className="budget-amount-group">
+                  <label className="budget-amount" htmlFor="profile-budget">
+                    <span>$</span>
+                    <input id="profile-budget" type="number" min="0" value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: e.target.value })} />
+                  </label>
+                  <span className="budget-slash">/</span>
+                </div>
+                <div className="segmented" role="group" aria-label="Budget period">
+                  {[1, 2, 4].map(weeks => (
+                    <Button
+                      key={weeks}
+                      type="button"
+                      variant="ghost"
+                      className={profileDraft.budget_weeks === String(weeks) ? 'selected' : ''}
+                      aria-pressed={profileDraft.budget_weeks === String(weeks)}
+                      onClick={() => setProfileDraft({ ...profileDraft, budget_weeks: String(weeks) })}
+                    >
+                      {weeks === 1 ? '1 week' : weeks === 2 ? '2 weeks' : '1 month'}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -155,11 +160,10 @@ export function ProfilePage() {
         </div>
         <p className="section-note">Manage how you sign in, your password, and this device.</p>
         <div className="security-row">
-          <div className="section-title">
-            <div><h3>Passkeys</h3></div>
+          <div className="security-row-header">
+            <div><h3>Passkeys</h3><p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p></div>
             <Button onClick={addPasskey} disabled={passkeyBusy}><KeyRound size={16} /> {passkeyBusy ? 'Waiting…' : 'Add a passkey'}</Button>
           </div>
-          <p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p>
           {passkeyError && <p className="form-error" role="alert">{passkeyError}</p>}
           {passkeys.length ? passkeys.map(p => (
             <div className="history-row passkey-row" key={p.id}>
@@ -172,18 +176,16 @@ export function ProfilePage() {
           )) : <p className="empty-inline">No passkeys yet. Add one to sign in without your password.</p>}
         </div>
         <div className="security-row">
-          <div className="section-title">
-            <div><h3>Password</h3></div>
+          <div className="security-row-header">
+            <div><h3>Password</h3><p className="section-note">Pick a new password whenever you like. You'll stay signed in on this device.</p></div>
             <Button asChild variant="outline"><Link to="/reset-password">Change password <ArrowRight size={16} /></Link></Button>
           </div>
-          <p className="section-note">Pick a new password whenever you like. You'll stay signed in on this device.</p>
         </div>
         <div className="security-row">
-          <div className="section-title">
-            <div><h3>Sign out</h3></div>
+          <div className="security-row-header">
+            <div><h3>Sign out</h3><p className="section-note">Sign out of Kiwi on this device. Your saved plan stays safe.</p></div>
             <Button variant="outline" onClick={signOut}><LogOut size={16} /> Sign out</Button>
           </div>
-          <p className="section-note">Sign out of Kiwi on this device. Your saved plan stays safe.</p>
         </div>
       </section>
       <section className="section-block passkey-block">

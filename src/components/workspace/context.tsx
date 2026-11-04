@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { foods, foodById, totals, targets, nutrientKeys, nutrientLabels, type Profile } from '@/lib/foods';
+import { foods, foodById, searchFoods, totals, targets, nutrientKeys, nutrientLabels, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
 import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 
@@ -55,7 +55,6 @@ type WorkspaceValue = {
   combined: ReturnType<typeof totals>;
   daily: ReturnType<typeof targets>;
   spend: number;
-  coverage: number;
   biggestGaps: typeof nutrientKeys;
   suggestions: FoodSuggestion[];
   setProfileDraft: (draft: ProfileDraft) => void;
@@ -186,7 +185,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const combined = useMemo(() => totals([...listItems, ...pantry]), [listItems, pantry]);
   const daily = targets(profile);
   const spend = listItems.reduce((sum, i) => sum + (foodById(i.food_id)?.price || 0) * Number(i.quantity), 0);
-  const coverage = Math.round(nutrientKeys.filter(k => k !== 'calories' && combined[k] / days >= daily[k] * .7).length / 8 * 100);
 
   const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
   const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
@@ -208,7 +206,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return { food, score, reasons };
   }).filter(s => s.score > 0 && (Number(s.food.price) <= 0 || !Number.isFinite(Number(s.food.price)) || spend + Number(s.food.price) <= budget)).sort((a, b) => b.score - a.score).slice(0, 2);
 
-  const results = foods.filter(f => (f.name + ' ' + f.category).toLowerCase().includes(search.toLowerCase())).slice(0, 6);
+  const results = searchFoods(foods, search);
     function fail(message: string) {
     setError(message);
     window.setTimeout(() => setError(''), 5000);
@@ -373,7 +371,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const value: WorkspaceValue = {
     profile, trips, items, pantry, active, listItems, purchased, days, budget,
     profileDraft, profileErrors, loading, error, search, results, selected,
-    pantryTotals, combined, daily, spend, coverage, biggestGaps, suggestions,
+    pantryTotals, combined, daily, spend, biggestGaps, suggestions,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry, saveProfile, finishTrip, repeatTrip, signOut,
