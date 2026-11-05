@@ -15,7 +15,7 @@ The app displays nutrient information of foods you are already eating and gives 
 - Backend, authentication, and database: Supabase
 
 ## System Architecture Diagram
-![System Architecture Diagram](./assets/kiwi-architecture.png)
+![System Architecture Diagram](./assets/sad.png)
 
 ## How to run
 ### First time install (DEV)
