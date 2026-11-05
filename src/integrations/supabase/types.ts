@@ -176,6 +176,8 @@ export type Database = {
           activity: string
           age: number | null
           budget: number
+          budget_period_start: string
+          budget_period_weeks: number
           created_at: string
           display_name: string
           gender: string | null
@@ -188,6 +190,8 @@ export type Database = {
           activity?: string
           age?: number | null
           budget?: number
+          budget_period_start?: string
+          budget_period_weeks?: number
           created_at?: string
           display_name?: string
           gender?: string | null
@@ -200,6 +204,8 @@ export type Database = {
           activity?: string
           age?: number | null
           budget?: number
+          budget_period_start?: string
+          budget_period_weeks?: number
           created_at?: string
           display_name?: string
           gender?: string | null

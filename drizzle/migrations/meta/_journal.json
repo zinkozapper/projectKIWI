@@ -43,6 +43,13 @@
       "when": 1793852000000,
       "tag": "0005_kiwi_login_frequency",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793860000000,
+      "tag": "0006_kiwi_budget_period",
+      "breakpoints": true
     }
   ]
 }

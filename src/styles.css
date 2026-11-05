@@ -65,3 +65,5 @@ html{color-scheme:light}html.dark{color-scheme:dark}
 .scheme-swatch-neutral{background:oklch(.45 .02 250)}
 .scheme-swatch-ocean{background:oklch(.5 .13 240)}
 .scheme-swatch-sunset{background:oklch(.6 .15 45)}
+.plan-budget-detail{flex-basis:100%;order:3;font-size:11px;font-weight:600;color:var(--muted-foreground)}.budget-track{display:flex}.budget-track .fill{border-radius:0}.budget-track .fill.planned{opacity:.4}.profile-form .budget-start{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--muted-foreground)}.profile-form .budget-start input{width:auto;height:40px}.profile-form .budget-start.invalid input{border-color:var(--destructive)}
+@media(max-width:550px){.budget-control .budget-start{flex-basis:100%}.profile-form .budget-start input{flex:1}}

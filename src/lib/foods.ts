@@ -486,6 +486,8 @@ export type Profile = {
   activity: string;
   goal: string;
   budget: number;
+  budget_period_weeks?: number;
+  budget_period_start?: string;
 };
 
 // Calculate estimated daily nutritional targets.

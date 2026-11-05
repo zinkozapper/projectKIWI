@@ -4,6 +4,7 @@ import { ArrowRight, KeyRound, LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
+import { BUDGET_WEEK_OPTIONS, budgetWeeksLabel, toDateKey } from '@/lib/budget-period';
 import {
   applyScheme,
   applyTheme,
@@ -135,7 +136,7 @@ export function ProfilePage() {
                   <span className="budget-slash">/</span>
                 </div>
                 <div className="segmented" role="group" aria-label="Budget period">
-                  {[1, 2, 4].map(weeks => (
+                  {BUDGET_WEEK_OPTIONS.map(weeks => (
                     <Button
                       key={weeks}
                       type="button"
@@ -144,10 +145,14 @@ export function ProfilePage() {
                       aria-pressed={profileDraft.budget_weeks === String(weeks)}
                       onClick={() => setProfileDraft({ ...profileDraft, budget_weeks: String(weeks) })}
                     >
-                      {weeks === 1 ? '1 week' : weeks === 2 ? '2 weeks' : '1 month'}
+                      {budgetWeeksLabel(weeks)}
                     </Button>
                   ))}
                 </div>
+                <label className={`budget-start${profileErrors.includes('budget_start') ? ' invalid' : ''}`} htmlFor="profile-budget-start">
+                  <span>starting</span>
+                  <input id="profile-budget-start" type="date" max={toDateKey(new Date())} value={profileDraft.budget_start} onChange={e => setProfileDraft({ ...profileDraft, budget_start: e.target.value })} />
+                </label>
               </div>
             </div>
           </div>

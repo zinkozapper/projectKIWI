@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits } from '@/lib/foods';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
@@ -11,7 +12,7 @@ import { NutrientBar } from '../nutrient-bar';
 export function PlanPage() {
   const navigate = useNavigate();
   const {
-    days, budget, search, selected, results, listItems, pantry, combined, daily, spend, active,
+    days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, daily, spend, active,
     suggestions, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem,
   } = useWorkspace();
@@ -20,7 +21,7 @@ export function PlanPage() {
     foodById(selected),
     [...listItems.map(item => item.food_id), ...pantry.map(item => item.food_id)],
     daily,
-    Math.max(0, budget - spend)
+    Math.max(0, budgetRemaining)
   );
   const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
 
@@ -48,7 +49,10 @@ export function PlanPage() {
     if (item) void logRecommendationAdded({ source, foodId, anchorFoodId }, item.trip_id, item.id);
   }
 
-  const period = days === 28 ? '1 month' : `${days / 7} ${days === 7 ? 'week' : 'weeks'}`;
+  // Bar: solid = already bought this period, light = planned on the current list.
+  const used = periodSpent + spend;
+  const pct = (n: number) => (budget ? Math.min(100, n / budget * 100) : 0);
+  const daysLeft = daysLeftInPeriod(budgetPeriod);
 
   return (
     <>
@@ -66,15 +70,16 @@ export function PlanPage() {
 
       <div className="budget-progress plan-budget-progress">
         <div className="plan-budget-copy">
-          <span>Budget</span>
-          <strong>${spend.toFixed(2)} / ${budget.toFixed(0)} · {period}</strong>
+          <span>Budget · {formatBudgetPeriod(budgetPeriod)}</span>
+          <strong>${used.toFixed(2)} / ${budget.toFixed(0)} per {budgetWeeksLabel(budgetPeriod.weeks).replace(/^1 /, '')}</strong>
+          <small className="plan-budget-detail">
+            ${periodSpent.toFixed(2)} bought + ${spend.toFixed(2)} planned · {budgetRemaining >= 0 ? `$${budgetRemaining.toFixed(2)} left` : `$${(-budgetRemaining).toFixed(2)} over`} · {daysLeft} {daysLeft === 1 ? 'day' : 'days'} left
+          </small>
           <Link to="/profile">Edit</Link>
         </div>
-        <div className="track">
-          <div
-            className={spend > budget ? 'fill warning' : 'fill'}
-            style={{ width: `${Math.min(100, budget ? spend / budget * 100 : 0)}%` }}
-          />
+        <div className="track budget-track">
+          <div className={used > budget ? 'fill warning' : 'fill'} style={{ width: `${pct(periodSpent)}%` }} />
+          <div className={used > budget ? 'fill planned warning' : 'fill planned'} style={{ width: `${Math.max(0, pct(used) - pct(periodSpent))}%` }} />
         </div>
       </div>
 
