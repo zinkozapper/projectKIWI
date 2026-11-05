@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { foods, foodById, searchFoods, totals, targets, nutrientKeys, nutrientLabels, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
 import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
+import { resetRecommendationImpressions } from '@/lib/recommendation-events';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
 export type PantryItem = { id: string; food_id: string; quantity: number };
@@ -62,7 +63,7 @@ type WorkspaceValue = {
   setSelected: (id: string) => void;
   clearError: () => void;
   fail: (message: string) => void;
-  addFood: (id: string, q?: number) => Promise<void>;
+  addFood: (id: string, q?: number) => Promise<Item | null>;
   updateQuantity: (item: Item, q: number) => Promise<void>;
   removeItem: (item: Item, shop?: boolean) => Promise<void>;
   undoPurchase: (item: Item) => Promise<void>;
@@ -228,26 +229,37 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return t.id;
   }
 
-  async function addFood(id: string, q = 1) {
+  // Returns the saved list row (or null on failure) so callers like recommendation tracking can link to it.
+  async function addFood(id: string, q = 1): Promise<Item | null> {
     if (!Number.isFinite(q) || q <= 0) {
       fail('Enter a quantity greater than zero.');
-      return;
+      return null;
     }
     const tripId = await ensureTrip();
-    if (!tripId) return;
+    if (!tripId) return null;
     const food = foodById(id);
     const existing = items.find(i => i.trip_id === tripId && i.food_id === id && !i.purchased);
+    let saved: Item | null = null;
     if (existing) {
       const { data, error } = await supabase.from('shopping_list_item').update({ quantity: Number(existing.quantity) + q }).eq('shopping_list_item_id', Number(existing.id)).select().single();
       if (error) fail(error.message);
-      else setItems(prev => prev.map(i => i.id === existing.id ? toItem(data) : i));
+      else {
+        const row = toItem(data);
+        saved = row;
+        setItems(prev => prev.map(i => i.id === existing.id ? row : i));
+      }
     } else {
       const { data, error } = await supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(id), quantity: q, unit: food?.unit ?? null }).select().single();
       if (error) fail(error.message);
-      else setItems(prev => [...prev, toItem(data)]);
+      else {
+        const row = toItem(data);
+        saved = row;
+        setItems(prev => [...prev, row]);
+      }
     }
     setSearch('');
     setSelected(id);
+    return saved;
   }
 
   async function updateQuantity(item: Item, q: number) {
@@ -363,6 +375,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     await supabase.auth.signOut();
+    resetRecommendationImpressions();
     applyTheme('light');
     applyScheme(DEFAULT_SCHEME);
     navigate({ to: '/', replace: true });

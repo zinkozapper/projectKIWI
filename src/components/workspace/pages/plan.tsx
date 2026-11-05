@@ -1,15 +1,17 @@
 
+import { useEffect } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits } from '@/lib/foods';
+import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { NutrientBar } from '../nutrient-bar';
 
 export function PlanPage() {
   const navigate = useNavigate();
   const {
-    days, budget, search, selected, results, listItems, pantry, combined, daily, spend,
+    days, budget, search, selected, results, listItems, pantry, combined, daily, spend, active,
     suggestions, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem,
   } = useWorkspace();
@@ -20,6 +22,32 @@ export function PlanPage() {
     daily,
     Math.max(0, budget - spend)
   );
+  const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
+
+  // Recommendation tracking (OKR 1). Log each recommendation once when it appears on screen.
+  // The effects key on the food ids so they only run when what is shown actually changes.
+  const suggestionIds = suggestions.map(s => s.food.id).join(',');
+  useEffect(() => {
+    void logRecommendationsShown(
+      suggestions.map((s, i): ShownRecommendation => ({ source: 'nutrient_gap', foodId: s.food.id, rank: i + 1 })),
+      active?.id
+    );
+  }, [suggestionIds]);
+
+  const pairingIds = showPairings ? pairingSuggestions.map(f => f.id).join(',') : '';
+  useEffect(() => {
+    if (!pairingIds) return;
+    void logRecommendationsShown(
+      pairingSuggestions.map((f, i): ShownRecommendation => ({ source: 'pairing', foodId: f.id, anchorFoodId: selected, rank: i + 1 })),
+      active?.id
+    );
+  }, [pairingIds, selected]);
+
+  async function addRecommended(source: RecommendationSource, foodId: string, anchorFoodId?: string) {
+    const item = await addFood(foodId);
+    if (item) void logRecommendationAdded({ source, foodId, anchorFoodId }, item.trip_id, item.id);
+  }
+
   const period = days === 28 ? '1 month' : `${days / 7} ${days === 7 ? 'week' : 'weeks'}`;
 
   return (
@@ -197,7 +225,7 @@ export function PlanPage() {
                     <Button
                       size="icon"
                       title={`Add ${f.name}`}
-                      onClick={() => addFood(f.id)}
+                      onClick={() => addRecommended('nutrient_gap', f.id)}
                     >
                       <Plus size={16} />
                     </Button>
@@ -211,7 +239,7 @@ export function PlanPage() {
             </div>
           </section>
 
-          {listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0 && (
+          {showPairings && (
             <section className="section-block pairing-block">
               <div className="section-title">
                 <h2>Pairs well with {foodById(selected)?.name}</h2>
@@ -227,7 +255,7 @@ export function PlanPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => addFood(f.id)}
+                      onClick={() => addRecommended('pairing', f.id, selected)}
                     >
                       <Plus size={15} /> Add
                     </Button>

@@ -210,6 +210,84 @@ export type Database = {
         }
         Relationships: []
       }
+      recommendation_event: {
+        Row: {
+          anchor_food_id: number | null
+          created_at: string
+          event_type: string
+          food_id: number
+          impression_id: string
+          rank: number | null
+          recommendation_event_id: number
+          shopping_list_id: number | null
+          shopping_list_item_id: number | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          anchor_food_id?: number | null
+          created_at?: string
+          event_type: string
+          food_id: number
+          impression_id: string
+          rank?: number | null
+          recommendation_event_id?: number
+          shopping_list_id?: number | null
+          shopping_list_item_id?: number | null
+          source: string
+          user_id?: string
+        }
+        Update: {
+          anchor_food_id?: number | null
+          created_at?: string
+          event_type?: string
+          food_id?: number
+          impression_id?: string
+          rank?: number | null
+          recommendation_event_id?: number
+          shopping_list_id?: number | null
+          shopping_list_item_id?: number | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recommendation_event_anchor_food_id_fkey"
+            columns: ["anchor_food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+          {
+            foreignKeyName: "recommendation_event_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+          {
+            foreignKeyName: "recommendation_event_shopping_list_id_fkey"
+            columns: ["shopping_list_id"]
+            isOneToOne: false
+            referencedRelation: "shopping_list"
+            referencedColumns: ["shopping_list_id"]
+          },
+          {
+            foreignKeyName: "recommendation_event_shopping_list_item_id_fkey"
+            columns: ["shopping_list_item_id"]
+            isOneToOne: false
+            referencedRelation: "shopping_list_item"
+            referencedColumns: ["shopping_list_item_id"]
+          },
+          {
+            foreignKeyName: "recommendation_event_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       shopping_list: {
         Row: {
           budget: number
