@@ -94,10 +94,13 @@ export const Route = createRootRouteWithContext<{}>()({
   errorComponent: ErrorComponent,
 });
 
+const themeScript = `(function(){var r=document.documentElement;r.dataset.scheme='green';r.classList.remove('dark');r.style.colorScheme='light'})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <HeadContent />
       </head>
       <body>

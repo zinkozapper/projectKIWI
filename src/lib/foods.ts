@@ -72,6 +72,91 @@ export async function loadCatalog() {
 export const foodById = (id: string) =>
   foods.find(f => f.id === id);
 
+const FOOD_SEARCH_ALIASES: Record<string, string[]> = {
+  egg: ['eggs'],
+  'egg white': ['egg whites'],
+  'almond milk': ['plant milk', 'non dairy milk', 'dairy free milk', 'milk alternative'],
+  'whole milk': ['dairy milk'],
+  'nonfat greek yogurt': ['greek yogurt', 'yogurt', 'yoghurt'],
+  'chickpeas garbanzo beans': ['chickpeas', 'garbanzo beans'],
+  'rolled oats': ['oatmeal', 'porridge oats'],
+  'ground beef 90 10': ['ground beef', 'minced beef'],
+  'ground turkey': ['turkey mince'],
+  'sweet potato': ['yam', 'yams'],
+  'protein powder': ['whey protein', 'protein supplement'],
+};
+
+function normalizeSearchText(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+}
+
+function matchesQuery(value: string, query: string, queryWords: string[]): boolean {
+  const normalized = normalizeSearchText(value);
+  if (normalized.includes(query)) return true;
+  const words = normalized.split(' ');
+  return queryWords.every(queryWord => words.some(word => word.includes(queryWord)));
+}
+
+function isTypoMatch(value: string, queryWords: string[]): boolean {
+  const words = normalizeSearchText(value).split(' ');
+  return queryWords.every(queryWord => {
+    if (queryWord.length < 5) return false;
+    const maxDistance = queryWord.length >= 8 ? 2 : 1;
+    return words.some(word => editDistanceWithin(queryWord, word, maxDistance));
+  });
+}
+
+function editDistanceWithin(left: string, right: string, maxDistance: number): boolean {
+  if (Math.abs(left.length - right.length) > maxDistance) return false;
+
+  let previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let row = 1; row <= left.length; row++) {
+    const current = [row];
+    for (let column = 1; column <= right.length; column++) {
+      current[column] = Math.min(
+        current[column - 1]! + 1,
+        previous[column]! + 1,
+        previous[column - 1]! + (left[row - 1] === right[column - 1] ? 0 : 1)
+      );
+    }
+    previous = current;
+  }
+  return previous[right.length]! <= maxDistance;
+}
+
+export function searchFoods<T extends Pick<Food, 'name' | 'category'> & Partial<Pick<Food, 'note'>>>(
+  catalog: T[],
+  query: string,
+  limit = 6
+): T[] {
+  const term = normalizeSearchText(query);
+  if (!term) return [];
+  const queryWords = term.split(' ');
+
+  const nameMatches: T[] = [];
+  const aliasMatches: T[] = [];
+  const typoMatches: T[] = [];
+  const descriptionMatches: T[] = [];
+  const categoryMatches: T[] = [];
+
+  for (const food of catalog) {
+    const name = normalizeSearchText(food.name);
+    if (matchesQuery(food.name, term, queryWords)) {
+      nameMatches.push(food);
+    } else if ((FOOD_SEARCH_ALIASES[name] || []).some(alias => matchesQuery(alias, term, queryWords))) {
+      aliasMatches.push(food);
+    } else if (isTypoMatch(food.name, queryWords)) {
+      typoMatches.push(food);
+    } else if (food.note && matchesQuery(food.note, term, queryWords)) {
+      descriptionMatches.push(food);
+    } else if (matchesQuery(food.category, term, queryWords)) {
+      categoryMatches.push(food);
+    }
+  }
+
+  return [...nameMatches, ...aliasMatches, ...typoMatches, ...descriptionMatches, ...categoryMatches].slice(0, limit);
+}
+
 export const nutrientKeys: (keyof Nutrients)[] = [
   'calories',
   'protein',

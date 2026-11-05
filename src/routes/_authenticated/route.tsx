@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { WorkspaceProvider } from '@/components/workspace/context';
 import { WorkspaceShell } from '@/components/workspace/shell';
+import { applyScheme, applyTheme, getStoredScheme, resolveTheme } from '@/lib/theme';
 export const Route = createFileRoute('/_authenticated')({
   component: AuthenticatedLayout,
 });
@@ -13,7 +14,13 @@ function AuthenticatedLayout() {
   useEffect(() => {
     let active = true;
     supabase.auth.getSession().then(({ data }) => {
-      if (active && !data.session?.user) navigate({ to: '/', replace: true });
+      if (!active) return;
+      if (!data.session?.user) {
+        navigate({ to: '/', replace: true });
+        return;
+      }
+      applyTheme(resolveTheme());
+      applyScheme(getStoredScheme());
     });
     return () => { active = false; };
   }, [navigate]);
