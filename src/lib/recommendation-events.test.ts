@@ -7,7 +7,7 @@ vi.mock('@/integrations/supabase/client', () => ({
 
 import { logRecommendationAdded, logRecommendationsShown, resetRecommendationImpressions } from './recommendation-events';
 
-const rowsOf = (call: number) => upsert.mock.calls[call][0] as Record<string, unknown>[];
+const rowsOf = (call: number) => upsert.mock.calls[call]![0] as Record<string, unknown>[];
 
 describe('recommendation events', () => {
   beforeEach(() => {
@@ -24,12 +24,12 @@ describe('recommendation events', () => {
 
     expect(upsert).toHaveBeenCalledTimes(2);
     expect(rowsOf(0)).toEqual([expect.objectContaining({ event_type: 'shown', food_id: 5, rank: 1, shopping_list_id: 9 })]);
-    expect(rowsOf(1).map(r => r.food_id)).toEqual([7]);
+    expect(rowsOf(1).map(r => r['food_id'])).toEqual([7]);
   });
 
   it('links an add to the impression that was shown, then starts a new impression', async () => {
     await logRecommendationsShown([{ source: 'pairing', foodId: '3', anchorFoodId: '1', rank: 1 }]);
-    const shownId = rowsOf(0)[0].impression_id;
+    const shownId = rowsOf(0)[0]!['impression_id'];
 
     await logRecommendationAdded({ source: 'pairing', foodId: '3', anchorFoodId: '1' }, '9', '42');
     expect(rowsOf(1)[0]).toMatchObject({
@@ -41,7 +41,7 @@ describe('recommendation events', () => {
     });
 
     await logRecommendationsShown([{ source: 'pairing', foodId: '3', anchorFoodId: '1', rank: 1 }]);
-    expect(rowsOf(2)[0].impression_id).not.toBe(shownId);
+    expect(rowsOf(2)[0]!['impression_id']).not.toBe(shownId);
   });
 
   it('ignores an add that was never shown', async () => {

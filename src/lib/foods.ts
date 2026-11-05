@@ -42,28 +42,32 @@ export async function loadCatalog() {
   foods.splice(
     0,
     foods.length,
-    ...(data || []).map((r) => ({
-      id: String(r.food_id),
-      name: r.food_name,
-      category: r.food_category?.category_description ?? 'Other',
-      unit: r.unit,
-      price: Number(r.price),
-      servings: Number(r.serving_size),
-      nutrition: {
-        calories: Number(r.nutrition?.calories) || 0,
-        protein: Number(r.nutrition?.protein) || 0,
-        carbs: Number(r.nutrition?.carbs) || 0,
-        fat: Number(r.nutrition?.fat) || 0,
-        fiber: Number(r.nutrition?.fiber) || 0,
-        iron: Number(r.nutrition?.iron) || 0,
-        calcium: Number(r.nutrition?.calcium) || 0,
-        vitaminC: Number(r.nutrition?.vitaminC) || 0,
-        vitaminD: Number(r.nutrition?.vitaminD) || 0,
-      },
-      note: r.food_description,
-      emoji: r.emoji,
-      pairs: (r.pairs || []).map(String),
-    }))
+    ...(data || []).map((r) => {
+      // nutrition is a jsonb column, so Supabase types it as Json. Missing values still become 0.
+      const n = (r.nutrition ?? {}) as Partial<Record<keyof Nutrients, unknown>>;
+      return {
+        id: String(r.food_id),
+        name: r.food_name,
+        category: r.food_category?.category_description ?? 'Other',
+        unit: r.unit,
+        price: Number(r.price),
+        servings: Number(r.serving_size),
+        nutrition: {
+          calories: Number(n.calories) || 0,
+          protein: Number(n.protein) || 0,
+          carbs: Number(n.carbs) || 0,
+          fat: Number(n.fat) || 0,
+          fiber: Number(n.fiber) || 0,
+          iron: Number(n.iron) || 0,
+          calcium: Number(n.calcium) || 0,
+          vitaminC: Number(n.vitaminC) || 0,
+          vitaminD: Number(n.vitaminD) || 0,
+        },
+        note: r.food_description,
+        emoji: r.emoji,
+        pairs: (r.pairs || []).map(String),
+      };
+    })
   );
 
   return foods;
