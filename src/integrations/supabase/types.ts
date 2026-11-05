@@ -436,6 +436,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_login_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          login_event_id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type?: string
+          login_event_id?: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          login_event_id?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           email: string

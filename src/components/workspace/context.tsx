@@ -5,6 +5,7 @@ import { foods, foodById, searchFoods, totals, targets, nutrientKeys, nutrientLa
 import { loadCatalog } from '@/lib/foods';
 import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
+import { logAppOpen } from '@/lib/login-events';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
 export type PantryItem = { id: string; food_id: string; quantity: number };
@@ -122,6 +123,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
       const user = data.session.user;
       const id = user.id;
+      void logAppOpen(id);
 
       const [, pantryResult, pr, tr] = await Promise.all([
         supabase.from('users').upsert({ user_id: id, email: user.email || '' }, { onConflict: 'user_id', ignoreDuplicates: true }),
