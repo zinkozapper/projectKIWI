@@ -50,6 +50,13 @@
       "when": 1793860000000,
       "tag": "0006_kiwi_budget_period",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793870000000,
+      "tag": "0007_kiwi_nutrient_goal_snapshots",
+      "breakpoints": true
     }
   ]
 }

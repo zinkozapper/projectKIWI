@@ -118,6 +118,72 @@ export type Database = {
           },
         ]
       }
+      nutrient_profile_snapshot: {
+        Row: {
+          achievement_pct: number
+          avg_coverage_pct: number
+          created_at: string
+          goal_met: boolean
+          nutrient_profile_snapshot_id: number
+          nutrients: Json
+          nutrients_met: number
+          nutrients_total: number
+          pantry_food_ids: number[]
+          pantry_id: number
+          pantry_signature: string
+          plan_days: number
+          recommended_food_ids: number[]
+          user_id: string
+        }
+        Insert: {
+          achievement_pct: number
+          avg_coverage_pct: number
+          created_at?: string
+          goal_met: boolean
+          nutrient_profile_snapshot_id?: number
+          nutrients: Json
+          nutrients_met: number
+          nutrients_total: number
+          pantry_food_ids?: number[]
+          pantry_id: number
+          pantry_signature: string
+          plan_days: number
+          recommended_food_ids?: number[]
+          user_id?: string
+        }
+        Update: {
+          achievement_pct?: number
+          avg_coverage_pct?: number
+          created_at?: string
+          goal_met?: boolean
+          nutrient_profile_snapshot_id?: number
+          nutrients?: Json
+          nutrients_met?: number
+          nutrients_total?: number
+          pantry_food_ids?: number[]
+          pantry_id?: number
+          pantry_signature?: string
+          plan_days?: number
+          recommended_food_ids?: number[]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nutrient_profile_snapshot_pantry_id_fkey"
+            columns: ["pantry_id"]
+            isOneToOne: false
+            referencedRelation: "pantry"
+            referencedColumns: ["pantry_id"]
+          },
+          {
+            foreignKeyName: "nutrient_profile_snapshot_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       pantry: {
         Row: {
           pantry_id: number

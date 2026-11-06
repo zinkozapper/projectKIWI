@@ -7,6 +7,7 @@ import { loadCatalog } from '@/lib/foods';
 import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
 import { logAppOpen } from '@/lib/login-events';
+import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
@@ -213,6 +214,17 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const pantryTotals = useMemo(() => totals(pantry), [pantry]);
   const combined = useMemo(() => totals([...listItems, ...pantry]), [listItems, pantry]);
   const daily = targets(profile);
+  // OKR 2: save a nutrient goal snapshot when the pantry, plan length or targets change (migration 0007).
+  // Waits a moment so adding several pantry foods in a row saves one snapshot, not one per click.
+  useEffect(() => {
+    if (loading || !userId || !pantryId || !profile) return;
+    const t = window.setTimeout(() => {
+      void recordNutrientSnapshot({ userId, pantryId, pantry, pantryTotals, daily, days });
+    }, 1500);
+    return () => window.clearTimeout(t);
+    // daily is rebuilt every render from profile, so profile stands in for it here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, userId, pantryId, profile, pantry, pantryTotals, days]);
   const cost = (list: Item[]) => list.reduce((sum, i) => sum + (foodById(i.food_id)?.price || 0) * Number(i.quantity), 0);
   // spend = what is still on the current list (planned, not bought yet).
   const spend = cost(listItems);
@@ -449,6 +461,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   async function signOut() {
     await supabase.auth.signOut();
     resetRecommendationImpressions();
+    resetNutrientSnapshots();
     setFoodPreferences({});
     setUserId('');
     applyTheme('light');
