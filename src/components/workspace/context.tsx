@@ -63,6 +63,7 @@ type WorkspaceValue = {
   spend: number;
   biggestGaps: typeof nutrientKeys;
   suggestions: FoodSuggestion[];
+  foodGapScores: FoodSuggestion[];
   setProfileDraft: (draft: ProfileDraft) => void;
   setSearch: (search: string) => void;
   setSelected: (id: string) => void;
@@ -211,7 +212,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
   const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
 
-  const suggestions: FoodSuggestion[] = available.map(food => {
+  const foodGapScores: FoodSuggestion[] = available.map(food => {
     const relevantGaps = biggestGaps.slice(0, 4).map(k => {
       const target = daily[k];
       const intake = combined[k] / days;
@@ -226,7 +227,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     const reasons = relevantGaps.slice(0, 2).map(gap => `${nutrientLabels[gap.key]} (${gap.percentage}% of remaining gap)`);
 
     return { food, score, reasons };
-  }).filter(s => s.score > 0 && (Number(s.food.price) <= 0 || !Number.isFinite(Number(s.food.price)) || Number(s.food.price) <= budgetRemaining)).sort((a, b) => b.score - a.score).slice(0, 2);
+  }).filter(s => s.score > 0 && (Number(s.food.price) <= 0 || !Number.isFinite(Number(s.food.price)) || Number(s.food.price) <= budgetRemaining)).sort((a, b) => b.score - a.score);
+  const suggestions = foodGapScores.slice(0, 2);
 
   const results = searchFoods(foods, search);
     function fail(message: string) {
@@ -278,7 +280,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setItems(prev => [...prev, row]);
       }
     }
-    setSearch('');
     setSelected(id);
     return saved;
   }
@@ -408,7 +409,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
-    pantryTotals, combined, daily, spend, biggestGaps, suggestions,
+    pantryTotals, combined, daily, spend, biggestGaps, suggestions, foodGapScores,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry, saveProfile, finishTrip, repeatTrip, signOut,

@@ -1,19 +1,28 @@
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
-import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits } from '@/lib/foods';
+import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits, type Food } from '@/lib/foods';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { NutrientBar } from '../nutrient-bar';
 
+function addFoodOnCardKeyDown(e: KeyboardEvent<HTMLDivElement>, add: () => void) {
+  if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
+  e.preventDefault();
+  add();
+}
+
 export function PlanPage() {
   const navigate = useNavigate();
+  const [foodDetails, setFoodDetails] = useState<Food | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchArea = useRef<HTMLDivElement>(null);
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, daily, spend, active,
-    suggestions, setSearch, setSelected, fail,
+    suggestions, foodGapScores, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem,
   } = useWorkspace();
 
@@ -24,25 +33,43 @@ export function PlanPage() {
     Math.max(0, budgetRemaining)
   );
   const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
+  const recommendedFoods = showPairings ? pairingSuggestions : suggestions.map(suggestion => suggestion.food);
+  const recommendationSource: RecommendationSource = showPairings ? 'pairing' : 'nutrient_gap';
+  const recommendationAnchor = showPairings ? selected : '';
 
-  // Recommendation tracking (OKR 1). Log each recommendation once when it appears on screen.
-  // The effects key on the food ids so they only run when what is shown actually changes.
-  const suggestionIds = suggestions.map(s => s.food.id).join(',');
+  useEffect(() => {
+    if (!searchOpen) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!searchArea.current?.contains(event.target as Node)) setSearchOpen(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+    return () => document.removeEventListener('pointerdown', closeOnOutsideClick);
+  }, [searchOpen]);
+
+  useEffect(() => {
+    if (!foodDetails) return;
+    const clearOnOutsideFoodClick = (event: PointerEvent) => {
+      if (!(event.target instanceof Element)) return;
+      const clickedFoodId = event.target.closest('[data-food-id]')?.getAttribute('data-food-id');
+      if (clickedFoodId !== foodDetails.id) setFoodDetails(null);
+    };
+    document.addEventListener('pointerdown', clearOnOutsideFoodClick);
+    return () => document.removeEventListener('pointerdown', clearOnOutsideFoodClick);
+  }, [foodDetails]);
+
+  // Log only the recommendations currently shown in the combined section.
+  const recommendedFoodIds = recommendedFoods.map(food => food.id).join(',');
   useEffect(() => {
     void logRecommendationsShown(
-      suggestions.map((s, i): ShownRecommendation => ({ source: 'nutrient_gap', foodId: s.food.id, rank: i + 1 })),
+      recommendedFoods.map((food, i): ShownRecommendation => ({
+        source: recommendationSource,
+        foodId: food.id,
+        ...(recommendationAnchor ? { anchorFoodId: recommendationAnchor } : {}),
+        rank: i + 1,
+      })),
       active?.id
     );
-  }, [suggestionIds]);
-
-  const pairingIds = showPairings ? pairingSuggestions.map(f => f.id).join(',') : '';
-  useEffect(() => {
-    if (!pairingIds) return;
-    void logRecommendationsShown(
-      pairingSuggestions.map((f, i): ShownRecommendation => ({ source: 'pairing', foodId: f.id, anchorFoodId: selected, rank: i + 1 })),
-      active?.id
-    );
-  }, [pairingIds, selected]);
+  }, [recommendedFoodIds, recommendationSource, recommendationAnchor]);
 
   async function addRecommended(source: RecommendationSource, foodId: string, anchorFoodId?: string) {
     const item = await addFood(foodId);
@@ -93,34 +120,48 @@ export function PlanPage() {
               <span className="count-pill">{listItems.length} {listItems.length === 1 ? 'item' : 'items'}</span>
             </div>
 
-            <div className="searchbox">
-              <Search size={19} />
-              <input
-                aria-label="Search foods"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Search foods, like eggs or spinach…"
-              />
-            </div>
-
-            {search && (
-              <div className="search-results">
-                {results.length
-                  ? results.map(f => (
-                    <div key={f.id} className="search-result">
-                      <span className="food-emoji">{f.emoji}</span>
-                      <div>
-                        <strong>{f.name}</strong>
-                        <small>{f.category} · ${f.price.toFixed(2)} / {f.unit}</small>
-                      </div>
-                      <Button size="icon" title={`Add ${f.name}`} onClick={() => addFood(f.id)}>
-                        <Plus size={17} />
-                      </Button>
-                    </div>
-                  ))
-                  : <p className="empty-inline">No exact match. Try “beans”, “rice”, or “yogurt”.</p>}
+            <div ref={searchArea}>
+              <div className="searchbox">
+                <Search size={19} />
+                <input
+                  aria-label="Search foods"
+                  value={search}
+                  onFocus={() => setSearchOpen(true)}
+                  onChange={e => { setSearch(e.target.value); setSearchOpen(true); }}
+                  placeholder="Search foods, like eggs or spinach…"
+                />
               </div>
-            )}
+
+              {searchOpen && search && (
+                <div className="search-results">
+                  {results.length
+                    ? results.map(f => (
+                      <div
+                        key={f.id}
+                        className="search-result food-card-clickable"
+                        data-food-id={f.id}
+                        role="group"
+                        aria-label={`Add ${f.name} to your grocery list`}
+                        tabIndex={0}
+                        onClick={() => void addFood(f.id)}
+                        onKeyDown={e => addFoodOnCardKeyDown(e, () => void addFood(f.id))}
+                      >
+                        <span className="food-emoji">{f.emoji}</span>
+                        <div>
+                          <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setFoodDetails(f); }}>
+                            <strong>{f.name}</strong>
+                          </button>
+                          <small>{f.category} · ${f.price.toFixed(2)} / {f.unit}</small>
+                        </div>
+                        <Button size="icon" title={`Add ${f.name}`} onClick={e => { e.stopPropagation(); void addFood(f.id); }}>
+                          <Plus size={17} />
+                        </Button>
+                      </div>
+                    ))
+                    : <p className="empty-inline">No exact match. Try “beans”, “rice”, or “yogurt”.</p>}
+                </div>
+              )}
+            </div>
 
             <div className="list-head">
               <span>ITEM</span>
@@ -137,7 +178,8 @@ export function PlanPage() {
                     <div
                       className="grocery-row"
                       key={item.id}
-                      onClick={() => setSelected(f.id)}
+                      data-food-id={f.id}
+                      onClick={() => { setSelected(f.id); setFoodDetails(f); }}
                     >
                       <span className="food-emoji">{f.emoji}</span>
                       <div className="food-description">
@@ -212,30 +254,46 @@ export function PlanPage() {
             </div>
 
             <p className="section-note">
-              Foods that can help fill nutrition gaps.
+              {showPairings
+                ? `Pairs well with ${foodById(selected)?.name} and can help fill nutrition gaps.`
+                : 'Foods that can help fill nutrition gaps.'}
             </p>
 
             <div className="suggestion-grid">
-              {suggestions.length
-                ? suggestions.map(({ food: f, reasons }) => (
-                  <div className="suggestion" key={f.id}>
-                    <span className="suggestion-emoji">{f.emoji}</span>
-                    <div className="suggestion-copy">
-                      <strong>{f.name}</strong>
-                      <small>{f.note}</small>
-                      <span className="suggestion-price">
-                        ${f.price.toFixed(2)} · {reasons.join(' + ')}
-                      </span>
-                    </div>
-                    <Button
-                      size="icon"
-                      title={`Add ${f.name}`}
-                      onClick={() => addRecommended('nutrient_gap', f.id)}
+              {recommendedFoods.length
+                ? recommendedFoods.map(f => {
+                  const reasons = foodGapScores.find(suggestion => suggestion.food.id === f.id)?.reasons ?? [];
+                  return (
+                    <div
+                      className="suggestion food-card-clickable"
+                      key={f.id}
+                      data-food-id={f.id}
+                      role="group"
+                      aria-label={`Add ${f.name} to your grocery list`}
+                      tabIndex={0}
+                      onClick={() => void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined)}
+                      onKeyDown={e => addFoodOnCardKeyDown(e, () => void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined))}
                     >
-                      <Plus size={16} />
-                    </Button>
-                  </div>
-                ))
+                      <span className="suggestion-emoji">{f.emoji}</span>
+                      <div className="suggestion-copy">
+                        <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setFoodDetails(f); }}>
+                          <strong>{f.name}</strong>
+                        </button>
+                        <small>{f.note}</small>
+                        <span className="suggestion-price">
+                          ${f.price.toFixed(2)} · {reasons.length ? reasons.join(' + ') : `Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
+                        </span>
+                      </div>
+                      <Button
+                        size="icon"
+                        title={`Add ${f.name}`}
+                        onClick={e => { e.stopPropagation(); void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined); }}
+                      >
+                        <Plus size={16} />
+                      </Button>
+                    </div>
+                  );
+                })
                 : (
                   <p className="empty-inline">
                     No suggestions right now.
@@ -244,54 +302,34 @@ export function PlanPage() {
             </div>
           </section>
 
-          {showPairings && (
-            <section className="section-block pairing-block">
-              <div className="section-title">
-                <h2>Pairs well with {foodById(selected)?.name}</h2>
-              </div>
-              <div className="pair-list">
-                {pairingSuggestions.map(f => (
-                  <div className="pair" key={f.id}>
-                    <span className="food-emoji">{f.emoji}</span>
-                    <div>
-                      <strong>{f.name}</strong>
-                      <small>{f.note}</small>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => addRecommended('pairing', f.id, selected)}
-                    >
-                      <Plus size={15} /> Add
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
         </div>
 
         <div className="right-column">
           <section className="nutrition-panel nutrition-summary">
-            <h2>Nutrition</h2>
-            <p>Daily average across {days} days, including pantry foods.</p>
+            <h2>{foodDetails?.name ?? 'Nutrition'}</h2>
+            <p>{foodDetails
+              ? 'Nutrition per listed serving, compared with your daily targets.'
+              : `Daily average across ${days} days, including pantry foods.`}</p>
             <div className="nutrient-list">
               {nutrientKeys.map(k => (
                 <NutrientBar
                   key={k}
                   name={nutrientLabels[k]}
-                  value={combined[k] / days}
+                  value={foodDetails ? foodDetails.nutrition[k] : combined[k] / days}
                   target={daily[k]}
                   unit={nutrientUnits[k]}
                 />
               ))}
             </div>
             <div className="nutrition-foot">
-              Based on approximate package nutrition. Actual needs and portions may vary.
+              {foodDetails
+                ? 'Approximate nutrition for the listed serving. Actual values may vary.'
+                : 'Based on approximate package nutrition. Actual needs and portions may vary.'}
             </div>
           </section>
         </div>
       </div>
+
     </>
   );
 }

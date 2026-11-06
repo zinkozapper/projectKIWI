@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 
 const nav = [
-  { id: 'plan', label: 'My plan', to: '/plan', icon: ClipboardList },
-  { id: 'pantry', label: 'My pantry', to: '/plan/pantry', icon: House },
-  { id: 'shop', label: 'Shopping mode', to: '/plan/shop', icon: ShoppingBasket },
-  { id: 'history', label: 'History', to: '/plan/history', icon: History },
+  { id: 'plan', label: 'My plan', mobileLabel: 'Plan', to: '/plan', icon: ClipboardList },
+  { id: 'pantry', label: 'My pantry', mobileLabel: 'Pantry', to: '/plan/pantry', icon: House },
+  { id: 'shop', label: 'Shopping mode', mobileLabel: 'Shopping', to: '/plan/shop', icon: ShoppingBasket },
+  { id: 'history', label: 'History', mobileLabel: 'History', to: '/plan/history', icon: History },
 ] as const;
 
 const isHere = (pathname: string, to: string) => pathname === to || pathname === `${to}/`;
@@ -51,9 +51,9 @@ export function WorkspaceShell() {
         </main>
       </div>
       <nav className="mobile-nav">
-        {nav.map(({ id, label, to, icon: Icon }) => (
+        {nav.map(({ id, mobileLabel, to, icon: Icon }) => (
           <Button key={id} asChild variant="ghost" className={isHere(pathname, to) ? 'active' : ''}>
-            <Link to={to} activeOptions={{ exact: true }}><Icon size={20} /><span>{label.split(' ')[0]}</span></Link>
+            <Link to={to} activeOptions={{ exact: true }}><Icon size={20} /><span>{mobileLabel}</span></Link>
           </Button>
         ))}
       </nav>
