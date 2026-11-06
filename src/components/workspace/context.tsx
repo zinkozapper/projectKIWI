@@ -324,7 +324,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     if (error) fail(error.message);
     else {
       setTrips(prev => prev.map(t => t.id === active.id ? toTrip(data) : t));
-      navigate({ to: '/plan/history' });
+      navigate({ to: '/plan' });
     }
   }
 
