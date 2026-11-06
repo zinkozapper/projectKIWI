@@ -15,6 +15,7 @@ import { Route as EnrollRouteImport } from './routes/enroll'
 import { Route as ErrorRouteImport } from './routes/error'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPlanRouteRouteImport } from './routes/_authenticated/plan/route'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPlanIndexRouteImport } from './routes/_authenticated/plan/index'
@@ -50,6 +51,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPlanRouteRoute = AuthenticatedPlanRouteRouteImport.update({
   id: '/plan',
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/plan': typeof AuthenticatedPlanRouteRouteWithChildren
+  '/admin': typeof AuthenticatedAdminRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/error': typeof ErrorRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/plan': typeof AuthenticatedPlanRouteRouteWithChildren
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/_authenticated/plan/pantry': typeof AuthenticatedPlanPantryRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/plan'
+    | '/admin'
     | '/profile'
     | '/plan/history'
     | '/plan/pantry'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/error'
     | '/forgot-password'
     | '/reset-password'
+    | '/admin'
     | '/profile'
     | '/plan/history'
     | '/plan/pantry'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/_authenticated/plan'
+    | '/_authenticated/admin'
     | '/_authenticated/profile'
     | '/_authenticated/plan/history'
     | '/_authenticated/plan/pantry'
@@ -217,6 +229,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/plan': {
       id: '/_authenticated/plan'
@@ -285,11 +304,13 @@ const AuthenticatedPlanRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedPlanRouteRoute: typeof AuthenticatedPlanRouteRouteWithChildren
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPlanRouteRoute: AuthenticatedPlanRouteRouteWithChildren,
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 

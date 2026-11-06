@@ -594,7 +594,39 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_dashboard: {
+        Args: { p_window_days?: number }
+        Returns: Json
+      }
+      admin_refresh_snapshots: {
+        Args: never
+        Returns: undefined
+      }
+      admin_set_admin: {
+        Args: { p_is_admin: boolean; p_user_id: string }
+        Returns: undefined
+      }
+      admin_users: {
+        Args: never
+        Returns: {
+          days_inactive: number | null
+          email: string
+          first_name: string
+          has_profile: boolean
+          is_admin: boolean
+          last_active_date: string | null
+          last_name: string
+          last_sign_in_at: string | null
+          logon_days: number
+          recs_added: number
+          signed_up_at: string
+          status: string
+          tier: string
+          trips_completed: number
+          user_id: string
+        }[]
+      }
+      is_kiwi_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

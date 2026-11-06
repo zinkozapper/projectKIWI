@@ -130,3 +130,36 @@ html{color-scheme:light}html.dark{color-scheme:dark}
 @keyframes shop-complete-pop{from{opacity:0;transform:scale(.65) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(0)}}
 @media(max-width:800px){.shopping-experience .shop-finish-button{position:sticky;bottom:calc(78px + env(safe-area-inset-bottom));z-index:8;box-shadow:0 4px 16px oklch(.25 .03 145 / .2)}}
 @media(max-width:550px){.shopping-wrap.shopping-experience{padding-bottom:8px}.shopping-experience .shop-overview{padding:18px;border-radius:15px}.shop-overview-heading{align-items:flex-start;gap:10px}.shop-overview-title{gap:9px}.shop-overview-title h2{font-size:16px}.shop-overview-icon{width:38px;height:38px;border-radius:12px}.shop-estimate strong{font-size:17px}.shop-progress-copy{align-items:flex-start;flex-direction:column;gap:4px}.shop-list-heading{padding:16px}.shopping-experience .shop-row{grid-template-columns:22px 38px minmax(0,1fr) auto;gap:9px!important;min-height:72px;padding:10px 12px!important}.shop-food-emoji{width:38px;height:38px;border-radius:12px;font-size:20px}.shopping-experience .shop-row-name{font-size:13px}.shop-item-price{font-size:12px}.shop-item-price small{font-size:10px}.shopping-experience .shop-cart-row{grid-template-columns:25px minmax(0,1fr) auto;gap:8px;padding:9px 11px!important}.shop-cart-name{font-size:12px}.shop-cart-price{font-size:11px}}
+/* Admin dashboard */
+.admin-error{margin:0 0 18px}
+.spin{animation:content-spin .9s linear infinite}
+.admin-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:22px}
+.kpi-tile,.admin-card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:20px}
+.kpi-tile .section-kicker{margin-bottom:6px}
+.kpi-value{display:block;font-size:34px;line-height:1.1;font-weight:800;font-variant-numeric:tabular-nums}
+.kpi-tile p{font-size:12px;color:var(--muted-foreground);margin:6px 0 12px}
+.kpi-breakdown{list-style:none;margin:0;padding:10px 0 0;border-top:1px solid var(--border);display:grid;gap:5px;font-size:12px}
+.kpi-breakdown li{display:flex;justify-content:space-between;gap:10px}
+.kpi-breakdown li span:last-child{font-weight:700;font-variant-numeric:tabular-nums}
+.kpi-breakdown small{color:var(--muted-foreground);font-weight:500}
+.admin-trends{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.admin-card .section-note{margin:0 0 12px}
+.admin-users{margin-bottom:30px}
+.admin-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0 14px}
+.admin-toolbar .searchbox{flex:1 1 240px;height:40px}
+.admin-toolbar .segmented{flex-basis:auto}
+.admin-table-wrap{overflow-x:auto}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{text-align:left;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted-foreground);padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+.admin-table td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;font-variant-numeric:tabular-nums;white-space:nowrap}
+.admin-table td small{color:var(--muted-foreground)}
+.admin-table.compact td{padding:7px 10px}
+.admin-user-name{font-weight:700;display:flex;align-items:center;gap:7px}
+.admin-user-email{font-size:12px;color:var(--muted-foreground)}
+.admin-badge{font-size:10px;font-weight:800;color:var(--primary);background:var(--secondary);padding:2px 7px;border-radius:20px}
+.status-pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:capitalize}
+.status-pill.active{color:var(--primary);background:var(--secondary)}
+.status-pill.inactive{color:var(--muted-foreground);background:var(--muted)}
+.tier{margin-left:4px}
+@media(max-width:800px){.admin-trends{grid-template-columns:1fr}}
+@media(max-width:550px){.admin-kpis{grid-template-columns:1fr}.admin-toolbar .segmented{flex-basis:100%}}

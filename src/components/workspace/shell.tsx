@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState } from '@tanstack/react-router';
-import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShoppingBasket } from 'lucide-react';
+import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShieldCheck, ShoppingBasket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 
@@ -10,11 +10,17 @@ const nav = [
   { id: 'history', label: 'History', mobileLabel: 'History', to: '/plan/history', icon: History },
 ] as const;
 
+// Only shown to accounts in public.app_admin (migration 0007). The page and its data are checked
+// again in the database, so hiding the button is a convenience, not the security boundary.
+const adminNav = { id: 'admin', label: 'Admin', mobileLabel: 'Admin', to: '/admin', icon: ShieldCheck } as const;
+
 const isHere = (pathname: string, to: string) => pathname === to || pathname === `${to}/`;
 
 export function WorkspaceShell() {
-  const { loading, error, clearError, profile, listItems, signOut } = useWorkspace();
+  const { loading, error, clearError, profile, listItems, signOut, isAdmin } = useWorkspace();
   const pathname = useRouterState({ select: s => s.location.pathname });
+
+  const items = isAdmin ? [...nav, adminNav] : nav;
 
   const loadFailed = error === 'Could not load content';
 
@@ -23,7 +29,7 @@ export function WorkspaceShell() {
       <aside className="sidebar">
         <Link to="/plan" className="brand workspace-brand"><span className="brand-icon"><Leaf size={21} strokeWidth={2.5} /></span><span>kiwi<span className="brand-dot">.</span></span></Link>
         <nav className="side-nav">
-          {nav.map(({ id, label, to, icon: Icon }) => (
+          {items.map(({ id, label, to, icon: Icon }) => (
             <Button key={id} asChild variant="ghost" className={isHere(pathname, to) ? 'nav-item active' : 'nav-item'}>
               <Link to={to} activeOptions={{ exact: true }}>
                 <Icon size={18} />
@@ -51,7 +57,7 @@ export function WorkspaceShell() {
         </main>
       </div>
       <nav className="mobile-nav">
-        {nav.map(({ id, mobileLabel, to, icon: Icon }) => (
+        {items.map(({ id, mobileLabel, to, icon: Icon }) => (
           <Button key={id} asChild variant="ghost" className={isHere(pathname, to) ? 'active' : ''}>
             <Link to={to} activeOptions={{ exact: true }}><Icon size={20} /><span>{mobileLabel}</span></Link>
           </Button>

@@ -57,6 +57,13 @@
       "when": 1793870000000,
       "tag": "0007_kiwi_nutrient_goal_snapshots",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793880000000,
+      "tag": "0008_kiwi_admin_dashboard",
+      "breakpoints": true
     }
   ]
 }

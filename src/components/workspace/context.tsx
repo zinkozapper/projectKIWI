@@ -8,6 +8,7 @@ import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
+import { useIsAdmin } from '@/lib/admin';
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
@@ -41,6 +42,9 @@ const toFeetInches = (cm: number | null) => {
 };
 
 type WorkspaceValue = {
+  userId: string;
+  // null while checking. Admins see the Admin button (migration 0007).
+  isAdmin: boolean | null;
   profile: Profile | null;
   trips: Trip[];
   items: Item[];
@@ -104,6 +108,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [pantry, setPantry] = useState<PantryItem[]>([]);
   const [foodPreferences, setFoodPreferences] = useState<FoodPreferences>({});
   const [userId, setUserId] = useState('');
+  const isAdmin = useIsAdmin(userId);
   const [pantryId, setPantryId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -470,7 +475,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }
 
   const value: WorkspaceValue = {
-    profile, trips, items, pantry, active, listItems, purchased, days, budget,
+    userId, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
     pantryTotals, combined, daily, spend, biggestGaps, suggestions, foodGapScores,
