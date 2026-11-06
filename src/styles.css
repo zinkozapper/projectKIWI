@@ -32,7 +32,7 @@ html{color-scheme:light}html.dark{color-scheme:dark}
 .passkey-block{padding:28px;border:1px solid var(--border);border-radius:7px;background:var(--card)}.profile-layout+.passkey-block{margin-top:32px}.security-row+.security-row{margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}.security-row-header{display:flex;align-items:center;justify-content:space-between;gap:20px}.security-row-header>div{min-width:0}.security-row-header h3{margin:0 0 6px;font-size:18px}.security-row-header .section-note{margin:0}
 .passkey-block .section-title{margin-bottom:6px}
 .food-card-clickable{cursor:pointer;transition:border-color .15s ease,box-shadow .15s ease}.food-card-clickable:hover{border-color:var(--primary)}.food-card-clickable:focus-visible{outline:2px solid var(--primary);outline-offset:2px}.food-name-button{display:block;width:100%;min-width:0;overflow:hidden;padding:0;border:0;background:transparent;color:inherit;text-align:left;text-overflow:ellipsis;white-space:nowrap;font:inherit}.food-name-button:hover{color:var(--primary);text-decoration:underline}
-.suggestion-copy{grid-template-columns:minmax(0,1fr)}
+.search-result .food-name-button,.suggestion .food-name-button{width:100%;height:auto}
 .passkey-row h2{font-size:18px}
 @media(max-width:550px){.passkey-block{padding:20px}}
 .login-shake{animation:login-shake .28s ease-in-out}
