@@ -82,6 +82,42 @@ export type Database = {
         }
         Relationships: []
       }
+      food_preferences: {
+        Row: {
+          user_id: string
+          food_id: number
+          liked: boolean
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          food_id: number
+          liked: boolean
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          food_id?: number
+          liked?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "food_preferences_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+        ]
+      }
       pantry: {
         Row: {
           pantry_id: number

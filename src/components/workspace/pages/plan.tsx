@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Trash2 } from 'lucide-react';
+import { ArrowRight, Minus, Plus, Search, ShoppingBasket, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits, type Food } from '@/lib/foods';
@@ -20,18 +20,21 @@ export function PlanPage() {
   const [foodDetails, setFoodDetails] = useState<Food | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const searchArea = useRef<HTMLDivElement>(null);
+
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, daily, spend, active,
-    suggestions, foodGapScores, setSearch, setSelected, fail,
+    suggestions, foodGapScores, foodPreferences, setFoodPreference, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem,
   } = useWorkspace();
 
-  const pairingSuggestions = getFoodPairings(
+    const pairingSuggestions = getFoodPairings(
     foodById(selected),
     [...listItems.map(item => item.food_id), ...pantry.map(item => item.food_id)],
     daily,
-    Math.max(0, budgetRemaining)
+    Math.max(0, budgetRemaining),
+    foodPreferences
   );
+
   const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
   const recommendedFoods = showPairings ? pairingSuggestions : suggestions.map(suggestion => suggestion.food);
   const recommendationSource: RecommendationSource = showPairings ? 'pairing' : 'nutrient_gap';
@@ -263,6 +266,8 @@ export function PlanPage() {
               {recommendedFoods.length
                 ? recommendedFoods.map(f => {
                   const reasons = foodGapScores.find(suggestion => suggestion.food.id === f.id)?.reasons ?? [];
+                  const preference = foodPreferences[f.id];
+
                   return (
                     <div
                       className="suggestion food-card-clickable"
@@ -284,13 +289,36 @@ export function PlanPage() {
                           ${f.price.toFixed(2)} · {reasons.length ? reasons.join(' + ') : `Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
                         </span>
                       </div>
-                      <Button
-                        size="icon"
-                        title={`Add ${f.name}`}
-                        onClick={e => { e.stopPropagation(); void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined); }}
-                      >
-                        <Plus size={16} />
-                      </Button>
+
+                      <div className="suggestion-actions" onClick={e => e.stopPropagation()}>
+                        <Button
+                          size="icon"
+                          variant={preference === true ? 'default' : 'outline'}
+                          title={`Like ${f.name}`}
+                          aria-label={`Like ${f.name}`}
+                          aria-pressed={preference === true}
+                          onClick={() => void setFoodPreference(f.id, true)}
+                        >
+                          <ThumbsUp size={16} />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant={preference === false ? 'default' : 'outline'}
+                          title={`Dislike ${f.name}`}
+                          aria-label={`Dislike ${f.name}`}
+                          aria-pressed={preference === false}
+                          onClick={() => void setFoodPreference(f.id, false)}
+                        >
+                          <ThumbsDown size={16} />
+                        </Button>
+                        <Button
+                          size="icon"
+                          title={`Add ${f.name}`}
+                          onClick={() => void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined)}
+                        >
+                          <Plus size={16} />
+                        </Button>
+                      </div>
                     </div>
                   );
                 })
@@ -329,7 +357,6 @@ export function PlanPage() {
           </section>
         </div>
       </div>
-
     </>
   );
 }

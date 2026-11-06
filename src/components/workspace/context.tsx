@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,6 +14,7 @@ export type PantryItem = { id: string; food_id: string; quantity: number };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null };
 export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string };
 export type FoodSuggestion = { food: typeof foods[number]; score: number; reasons: string[] };
+export type FoodPreferences = Record<string, boolean>;
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
 const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity) });
@@ -64,6 +66,9 @@ type WorkspaceValue = {
   biggestGaps: typeof nutrientKeys;
   suggestions: FoodSuggestion[];
   foodGapScores: FoodSuggestion[];
+  foodPreferences: FoodPreferences;
+  likedFoods: typeof foods;
+  setFoodPreference: (foodId: string, liked: boolean) => Promise<void>;
   setProfileDraft: (draft: ProfileDraft) => void;
   setSearch: (search: string) => void;
   setSelected: (id: string) => void;
@@ -96,6 +101,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [pantry, setPantry] = useState<PantryItem[]>([]);
+  const [foodPreferences, setFoodPreferences] = useState<FoodPreferences>({});
   const [userId, setUserId] = useState('');
   const [pantryId, setPantryId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -132,12 +138,17 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       const id = user.id;
       void logAppOpen(id);
 
-      const [, pantryResult, pr, tr] = await Promise.all([
+      const [, pantryResult, pr, tr, fp] = await Promise.all([
         supabase.from('users').upsert({ user_id: id, email: user.email || '' }, { onConflict: 'user_id', ignoreDuplicates: true }),
         supabase.from('pantry').select('pantry_id').eq('user_id', id).maybeSingle(),
         supabase.from('profiles').select('*').eq('user_id', id).maybeSingle(),
         supabase.from('shopping_list').select('*').eq('user_id', id).order('created_at', { ascending: false }),
+        supabase.from('food_preferences').select('food_id, liked').eq('user_id', id),
       ]);
+
+      if (fp.error) {
+        console.error('Could not load food preferences:', fp.error.message);
+      }
 
       let pRow = pantryResult.data;
       if (!pRow) pRow = (await supabase.from('pantry').insert({ user_id: id }).select('pantry_id').single()).data;
@@ -159,6 +170,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
       setUserId(id);
       setPantryId(pRow?.pantry_id ?? null);
+
+      setFoodPreferences(
+        Object.fromEntries(
+          (fp.data || []).map(row => [String(row.food_id), row.liked])
+        )
+      );
 
       if (pr.data) {
         const p = pr.data as Profile;
@@ -223,21 +240,53 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       return { key: k, percentage, impact, amount };
     }).filter(g => g.amount > 0 && g.impact > 0).sort((a, b) => b.impact - a.impact);
 
-    const score = relevantGaps.reduce((total, gap) => total + gap.impact, 0);
+    const baseScore = relevantGaps.reduce((total, gap) => total + gap.impact, 0);
+    const liked = foodPreferences[food.id];
+    const score = baseScore * (liked === true ? 1.25 : liked === false ? 0.75 : 1);
     const reasons = relevantGaps.slice(0, 2).map(gap => `${nutrientLabels[gap.key]} (${gap.percentage}% of remaining gap)`);
 
     return { food, score, reasons };
   }).filter(s => s.score > 0 && (Number(s.food.price) <= 0 || !Number.isFinite(Number(s.food.price)) || Number(s.food.price) <= budgetRemaining)).sort((a, b) => b.score - a.score);
+
   const suggestions = foodGapScores.slice(0, 2);
+  const likedFoods = foods.filter(food => foodPreferences[food.id] === true);
 
   const results = searchFoods(foods, search);
-    function fail(message: string) {
+
+  function fail(message: string) {
     setError(message);
     window.setTimeout(() => setError(''), 5000);
   }
 
   function clearError() {
     setError('');
+  }
+
+  async function setFoodPreference(foodId: string, liked: boolean) {
+    if (!userId) {
+      fail('Please sign in before rating foods.');
+      return;
+    }
+
+    const { error } = await supabase.from('food_preferences').upsert(
+      {
+        user_id: userId,
+        food_id: Number(foodId),
+        liked,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id,food_id' }
+    );
+
+    if (error) {
+      fail('Could not save your food rating: ' + error.message);
+      return;
+    }
+
+    setFoodPreferences(prev => ({
+      ...prev,
+      [foodId]: liked,
+    }));
   }
 
   async function ensureTrip() {
@@ -400,6 +449,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   async function signOut() {
     await supabase.auth.signOut();
     resetRecommendationImpressions();
+    setFoodPreferences({});
+    setUserId('');
     applyTheme('light');
     applyScheme(DEFAULT_SCHEME);
     navigate({ to: '/', replace: true });
@@ -410,10 +461,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
     pantryTotals, combined, daily, spend, biggestGaps, suggestions, foodGapScores,
+    foodPreferences, likedFoods, setFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry, saveProfile, finishTrip, repeatTrip, signOut,
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;
-};
+}

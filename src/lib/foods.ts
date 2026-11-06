@@ -433,11 +433,13 @@ const ALL_MEAL_PAIRINGS = [
 ];
 
 // Return foods commonly used together in meals.
+
 export function getFoodPairings(
   selectedFood: Food | undefined,
   excludedFoodIds: string[],
   _dailyTargets: Nutrients,
-  budgetRemaining: number
+  budgetRemaining: number,
+  foodPreferences: Record<string, boolean> = {}
 ): Food[] {
   if (!selectedFood) return [];
 
@@ -476,8 +478,26 @@ export function getFoodPairings(
     recommendations.push(match);
   }
 
+  // Prioritize liked foods and rank disliked foods lower.
+  recommendations.sort((a, b) => {
+    const scoreA = foodPreferences[a.id] === true
+      ? 1.25
+      : foodPreferences[a.id] === false
+        ? 0.75
+        : 1;
+
+    const scoreB = foodPreferences[b.id] === true
+      ? 1.25
+      : foodPreferences[b.id] === false
+        ? 0.75
+        : 1;
+
+    return scoreB - scoreA;
+  });
+
   return recommendations.slice(0, 3);
 }
+
 
 // User nutrition profile.
 export type Profile = {
