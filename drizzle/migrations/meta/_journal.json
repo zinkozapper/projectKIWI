@@ -22,6 +22,34 @@
       "when": 1791500000000,
       "tag": "0002_kiwi_user_names",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793840000000,
+      "tag": "0003_kiwi_recommendation_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793850000000,
+      "tag": "0004_kiwi_login_activity_churn",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793852000000,
+      "tag": "0005_kiwi_login_frequency",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793860000000,
+      "tag": "0006_kiwi_budget_period",
+      "breakpoints": true
     }
   ]
 }

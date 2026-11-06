@@ -12,7 +12,6 @@ export function HistoryPage() {
     <>
       <div className="page-heading">
         <div>
-          <div className="eyebrow">THE GOOD OLD STAPLES</div>
           <h1>Your past trips<span className="brand-dot">.</span></h1>
           <p>Good groceries are worth repeating.</p>
         </div>

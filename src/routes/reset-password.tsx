@@ -13,6 +13,7 @@ export const Route = createFileRoute('/reset-password')({
 function ResetPassword() {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -21,6 +22,10 @@ function ResetPassword() {
     e.preventDefault();
     setError('');
     setNotice('');
+    if (password !== confirmPassword) {
+      setError("Passwords don't match.");
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
@@ -40,6 +45,7 @@ function ResetPassword() {
           <h1 id="reset-title">Choose a new password</h1>
           <form onSubmit={submit} className="login-form">
             <label>New password<input required type="password" minLength={6} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} /></label>
+            <label>Confirm new password<input required type="password" minLength={6} autoComplete="new-password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} /></label>
             {error && <p className="form-error" role="alert">{error}</p>}
             {notice && <p className="form-success" role="status">{notice}</p>}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'Updating…' : 'Update password'}</Button>

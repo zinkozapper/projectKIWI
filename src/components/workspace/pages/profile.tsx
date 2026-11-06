@@ -1,17 +1,40 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, KeyRound } from 'lucide-react';
+import { ArrowRight, KeyRound, LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
+import { BUDGET_WEEK_OPTIONS, budgetWeeksLabel, toDateKey } from '@/lib/budget-period';
+import {
+  applyScheme,
+  applyTheme,
+  COLOR_SCHEMES,
+  getStoredScheme,
+  resolveTheme,
+  setColorScheme,
+  setTheme,
+  type ColorScheme,
+} from '@/lib/theme';
 import { useWorkspace } from '../context';
 
 type Passkey = { id: string; friendly_name?: string; created_at: string; last_used_at?: string };
 
 export function ProfilePage() {
-  const { profileDraft, profileErrors, setProfileDraft, saveProfile } = useWorkspace();
+  const { profileDraft, profileErrors, setProfileDraft, saveProfile, signOut } = useWorkspace();
   const [passkeys, setPasskeys] = useState<Passkey[]>([]);
   const [passkeyError, setPasskeyError] = useState('');
   const [passkeyBusy, setPasskeyBusy] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [scheme, setScheme] = useState<ColorScheme>('green');
+
+  useEffect(() => {
+    const theme = resolveTheme();
+    applyTheme(theme);
+    setDarkMode(theme === 'dark');
+    const storedScheme = getStoredScheme();
+    applyScheme(storedScheme);
+    setScheme(storedScheme);
+  }, []);
 
   useEffect(() => {
     supabase.auth.passkey.list().then(({ data, error }) => {
@@ -19,6 +42,16 @@ export function ProfilePage() {
       else setPasskeys(data ?? []);
     });
   }, []);
+
+  function changeTheme(next: boolean) {
+    setDarkMode(next);
+    setTheme(next ? 'dark' : 'light');
+  }
+
+  function changeScheme(next: ColorScheme) {
+    setScheme(next);
+    setColorScheme(next);
+  }
 
   async function addPasskey() {
     setPasskeyError('');
@@ -40,14 +73,13 @@ export function ProfilePage() {
     <>
       <div className="page-heading">
         <div>
-          <div className="eyebrow">MADE FOR YOU</div>
           <h1>Your profile<span className="brand-dot">.</span></h1>
           <p>A few details help us make your grocery plan more useful.</p>
         </div>
       </div>
       <div className="profile-layout">
         <form className="profile-form" onSubmit={saveProfile}>
-          <div className="section-title"><div><span className="section-kicker">THE BASICS</span><h2>Tell us about you</h2></div></div>
+          <div className="section-title"><div><h2>Tell us about you</h2></div></div>
           <div className="form-grid">
             <label className={profileErrors.includes('display_name') ? 'invalid' : ''}>
               Your name
@@ -93,43 +125,99 @@ export function ProfilePage() {
                 <option value="convenience">More convenient meals</option>
               </select>
             </label>
-            <label className={profileErrors.includes('budget') ? 'invalid' : ''}>
-              Usual grocery budget ($) <small>Keeps suggestions practical</small>
-              <input type="number" min="0" value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: e.target.value })} />
-            </label>
+            <div className={`budget-field${profileErrors.includes('budget') ? ' invalid' : ''}`}>
+              <span className="budget-field-label">Budget:</span>
+              <div className="budget-control">
+                <div className="budget-amount-group">
+                  <label className="budget-amount" htmlFor="profile-budget">
+                    <span>$</span>
+                    <input id="profile-budget" type="number" min="0" value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: e.target.value })} />
+                  </label>
+                  <span className="budget-slash">/</span>
+                </div>
+                <div className="segmented" role="group" aria-label="Budget period">
+                  {BUDGET_WEEK_OPTIONS.map(weeks => (
+                    <Button
+                      key={weeks}
+                      type="button"
+                      variant="ghost"
+                      className={profileDraft.budget_weeks === String(weeks) ? 'selected' : ''}
+                      aria-pressed={profileDraft.budget_weeks === String(weeks)}
+                      onClick={() => setProfileDraft({ ...profileDraft, budget_weeks: String(weeks) })}
+                    >
+                      {budgetWeeksLabel(weeks)}
+                    </Button>
+                  ))}
+                </div>
+                <label className={`budget-start${profileErrors.includes('budget_start') ? ' invalid' : ''}`} htmlFor="profile-budget-start">
+                  <span>starting</span>
+                  <input id="profile-budget-start" type="date" max={toDateKey(new Date())} value={profileDraft.budget_start} onChange={e => setProfileDraft({ ...profileDraft, budget_start: e.target.value })} />
+                </label>
+              </div>
+            </div>
           </div>
           <Button className="save-profile" type="submit">Save profile <ArrowRight size={16} /></Button>
         </form>
-        <aside className="profile-aside">
-          <span>✳</span>
-          <h2>Not a diet.<br />Just a better starting point.</h2>
-          <p>Kiwi uses general estimates to help you spot gaps before you shop. It’s not medical advice, and food labels and portions can vary.</p>
-        </aside>
       </div>
       <section className="section-block passkey-block">
         <div className="section-title">
-          <div><span className="section-kicker">SIGN-IN SECURITY</span><h2>Passkeys</h2></div>
-          <Button onClick={addPasskey} disabled={passkeyBusy}><KeyRound size={16} /> {passkeyBusy ? 'Waiting…' : 'Add a passkey'}</Button>
+          <div><h2>Security</h2></div>
         </div>
-        <p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p>
-        {passkeyError && <p className="form-error" role="alert">{passkeyError}</p>}
-        {passkeys.length ? passkeys.map(p => (
-          <div className="history-row passkey-row" key={p.id}>
-            <div>
-              <span className="section-kicker">PASSKEY</span>
-              <h2>{p.friendly_name || 'Passkey'}</h2>
-              <p>Added {new Date(p.created_at).toLocaleDateString()}{p.last_used_at ? ` · Last used ${new Date(p.last_used_at).toLocaleDateString()}` : ''}</p>
-            </div>
-            <Button variant="outline" onClick={() => removePasskey(p.id)}>Remove</Button>
+        <p className="section-note">Manage how you sign in, your password, and this device.</p>
+        <div className="security-row">
+          <div className="security-row-header">
+            <div><h3>Passkeys</h3><p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p></div>
+            <Button onClick={addPasskey} disabled={passkeyBusy}><KeyRound size={16} /> {passkeyBusy ? 'Waiting…' : 'Add a passkey'}</Button>
           </div>
-        )) : <p className="empty-inline">No passkeys yet. Add one to sign in without your password.</p>}
+          {passkeyError && <p className="form-error" role="alert">{passkeyError}</p>}
+          {passkeys.length ? passkeys.map(p => (
+            <div className="history-row passkey-row" key={p.id}>
+              <div>
+                <h2>{p.friendly_name || 'Passkey'}</h2>
+                <p>Added {new Date(p.created_at).toLocaleDateString()}{p.last_used_at ? ` · Last used ${new Date(p.last_used_at).toLocaleDateString()}` : ''}</p>
+              </div>
+              <Button variant="outline" onClick={() => removePasskey(p.id)}>Remove</Button>
+            </div>
+          )) : <p className="empty-inline">No passkeys yet. Add one to sign in without your password.</p>}
+        </div>
+        <div className="security-row">
+          <div className="security-row-header">
+            <div><h3>Password</h3><p className="section-note">Pick a new password whenever you like. You'll stay signed in on this device.</p></div>
+            <Button asChild variant="outline"><Link to="/reset-password">Change password <ArrowRight size={16} /></Link></Button>
+          </div>
+        </div>
+        <div className="security-row">
+          <div className="security-row-header">
+            <div><h3>Sign out</h3><p className="section-note">Sign out of Kiwi on this device. Your saved plan stays safe.</p></div>
+            <Button variant="outline" onClick={signOut}><LogOut size={16} /> Sign out</Button>
+          </div>
+        </div>
       </section>
       <section className="section-block passkey-block">
         <div className="section-title">
-          <div><span className="section-kicker">PASSWORD</span><h2>Password</h2></div>
-          <Button asChild variant="outline"><Link to="/reset-password">Change password <ArrowRight size={16} /></Link></Button>
+          <div><h2>Theme</h2></div>
+          <div className="theme-toggle">
+            <Sun size={16} aria-hidden />
+            <Switch id="dark-mode" checked={darkMode} onCheckedChange={changeTheme} aria-label="Dark mode" />
+            <Moon size={16} aria-hidden />
+            <label htmlFor="dark-mode">Dark mode</label>
+          </div>
         </div>
-        <p className="section-note">Pick a new password whenever you like. You'll stay signed in on this device.</p>
+        <p className="section-note">Turn on dark mode and pick a color scheme. Your choices are saved on this device.</p>
+        <div className="scheme-picker" role="group" aria-label="Color scheme">
+          {COLOR_SCHEMES.map(option => (
+            <button
+              key={option.id}
+              type="button"
+              className={scheme === option.id ? 'scheme-option chosen' : 'scheme-option'}
+              onClick={() => changeScheme(option.id)}
+              aria-pressed={scheme === option.id}
+            >
+              <span className={`scheme-swatch scheme-swatch-${option.id}`} aria-hidden />
+              {option.label}
+            </button>
+          ))}
+        </div>
       </section>
     </>
   );

@@ -12,7 +12,6 @@ export function PantryPage() {
     <>
       <div className="page-heading">
         <div>
-          <div className="eyebrow">START WITH WHAT YOU HAVE</div>
           <h1>Your pantry<span className="brand-dot">.</span></h1>
           <p>Keep what’s already at home in the picture.</p>
         </div>
@@ -20,7 +19,7 @@ export function PantryPage() {
       </div>
       <div className="pantry-grid">
         <section className="section-block">
-          <div className="section-title"><div><span className="section-kicker">QUICK ADD</span><h2>Already in your kitchen?</h2></div></div>
+          <div className="section-title"><div><h2>Already in your kitchen?</h2></div></div>
           <div className="pantry-choices">
             {foods.map(f => {
               const inPantry = pantry.some(i => i.food_id === f.id);
@@ -37,7 +36,6 @@ export function PantryPage() {
           </div>
         </section>
         <section className="nutrition-panel pantry-snapshot">
-          <span className="section-kicker">PANTRY ONLY</span>
           <h2>What you have covered</h2>
           <p>{pantry.length ? 'A limited snapshot based on foods currently in your pantry. Quantities and actual portions may vary.' : 'Your pantry is empty. Add a few staples to see a snapshot, or go straight to planning.'}</p>
           {pantry.length > 0 && (

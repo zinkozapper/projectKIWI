@@ -63,23 +63,14 @@ function Login() {
     setRememberMePreference(rememberMe);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
       if (error) throw error;
 
-      // Record successful login in Supabase
-      const { error: loginError } = await supabase
-        .from('user_login_events')
-        .insert({
-          user_id: data.user.id
-        });
-
-      if (loginError) {
-        console.error('Failed to record login event:', loginError);
-      }
+      // The sign-in itself is logged to user_login_events by a database trigger (migration 0004).
 
       navigate({ to: '/plan' });
 
