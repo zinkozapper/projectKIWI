@@ -35,8 +35,9 @@ export function PlanPage() {
     foodById(selected),
     [...listItems.map(item => item.food_id), ...pantry.map(item => item.food_id)],
     daily,
-    Math.max(0, budgetRemaining),
-    foodPreferences
+    budgetRemaining,
+    foodPreferences,
+    days
   );
 
   const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
@@ -280,7 +281,10 @@ export function PlanPage() {
             <div className="suggestion-grid">
               {recommendedFoods.length
                 ? recommendedFoods.map(f => {
-                  const reasons = foodGapScores.find(suggestion => suggestion.food.id === f.id)?.reasons ?? [];
+                  const scored = foodGapScores.find(suggestion => suggestion.food.id === f.id);
+                  const reasons = scored?.reasons ?? [];
+                  const addCost = f.price > 0 ? f.price * days : 0;
+                  const overBudget = addCost > 0 && addCost > budgetRemaining;
                   const preference = foodPreferences[f.id];
 
                   return (
@@ -301,7 +305,7 @@ export function PlanPage() {
                         </button>
                         <small>{f.note}</small>
                         <span className="suggestion-price">
-                          ${f.price.toFixed(2)} · {reasons.length ? reasons.join(' + ') : `Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
+                          {addCost > 0 ? `$${addCost.toFixed(2)} for ${days} days` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''} · {reasons.length ? reasons.join(' + ') : `Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
                         </span>
                       </div>
 

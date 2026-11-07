@@ -477,7 +477,8 @@ export function getFoodPairings(
   excludedFoodIds: string[],
   _dailyTargets: Nutrients,
   budgetRemaining: number,
-  foodPreferences: Record<string, boolean> = {}
+  foodPreferences: Record<string, boolean> = {},
+  days = 1
 ): Food[] {
   if (!selectedFood) return [];
 
@@ -508,22 +509,18 @@ export function getFoodPairings(
     if (excludedFoodIds.includes(match.id)) continue;
     if (seen.has(match.id)) continue;
 
-    const price = Number(match.price);
-
-    if (
-      Number.isFinite(price) &&
-      price > 0 &&
-      price > budgetRemaining
-    ) {
-      continue;
-    }
-
     seen.add(match.id);
     recommendations.push(match);
   }
 
-  // Prioritize liked foods and rank disliked foods lower.
+  // Never drop a pairing for budget: pairings whose add (price × days) fits the remaining budget come
+  // first, then liked over neutral over disliked.
+  const fits = (food: Food) => {
+    const price = Number(food.price);
+    return !(Number.isFinite(price) && price > 0) || price * days <= budgetRemaining;
+  };
   recommendations.sort((a, b) => {
+    if (fits(a) !== fits(b)) return fits(a) ? -1 : 1;
     const scoreA = foodPreferences[a.id] === true
       ? 1.25
       : foodPreferences[a.id] === false

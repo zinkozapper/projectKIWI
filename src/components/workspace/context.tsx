@@ -15,7 +15,8 @@ export type Item = { id: string; food_id: string; quantity: number; purchased: b
 export type PantryItem = { id: string; food_id: string; quantity: number };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null };
 export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string };
-export type FoodSuggestion = { food: typeof foods[number]; score: number; reasons: string[] };
+// addCost = price of one add (1 serving a day for the whole plan). fitsBudget = that add fits what's left.
+export type FoodSuggestion = { food: typeof foods[number]; score: number; reasons: string[]; addCost: number; fitsBudget: boolean };
 export type FoodPreferences = Record<string, boolean>;
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
@@ -248,6 +249,17 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
   const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && !nutrientLimits.has(k) && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
 
+  // Suggestions never disappear for budget reasons. Foods whose add fits the remaining budget come
+  // first, ranked by how much they close the biggest gaps; the rest follow ranked by gap-filling per
+  // dollar. Over budget, nothing fits, so every suggestion is the cheapest way to fill the gaps.
+  const addCostOf = (food: typeof foods[number]) => {
+    const price = Number(food.price);
+    return Number.isFinite(price) && price > 0 ? price * days : 0;
+  };
+  const knownCosts = available.map(addCostOf).filter(c => c > 0).sort((a, b) => a - b);
+  const typicalCost = knownCosts[Math.floor(knownCosts.length / 2)] || 1;
+  const valueOf = (s: FoodSuggestion) => s.score / (s.addCost || typicalCost);
+
   const foodGapScores: FoodSuggestion[] = available.map(food => {
     const relevantGaps = biggestGaps.slice(0, 4).map(k => {
       const target = daily[k];
@@ -264,8 +276,14 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     const score = baseScore * (liked === true ? 1.25 : liked === false ? 0.75 : 1);
     const reasons = relevantGaps.slice(0, 2).map(gap => `${nutrientLabels[gap.key]} (${gap.percentage}% of remaining gap)`);
 
-    return { food, score, reasons };
-  }).filter(s => s.score > 0 && (Number(s.food.price) <= 0 || !Number.isFinite(Number(s.food.price)) || Number(s.food.price) <= budgetRemaining)).sort((a, b) => b.score - a.score);
+    const addCost = addCostOf(food);
+    // Unknown price (0): fits while there's budget left, ranked at a typical cost once over.
+    const fitsBudget = addCost > 0 ? addCost <= budgetRemaining : budgetRemaining > 0;
+    return { food, score, reasons, addCost, fitsBudget };
+  }).filter(s => s.score > 0).sort((a, b) => {
+    if (a.fitsBudget !== b.fitsBudget) return a.fitsBudget ? -1 : 1;
+    return a.fitsBudget ? b.score - a.score : valueOf(b) - valueOf(a);
+  });
 
   const suggestions = foodGapScores.slice(0, 2);
   const likedFoods = foods.filter(food => foodPreferences[food.id] === true);
