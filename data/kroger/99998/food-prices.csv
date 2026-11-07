@@ -1,5 +1,0 @@
-food_id,food,brand,description,size,regular,serving_g,price_per_serving,how,flags,store
-1,Chicken breast,Kroger,Kroger® Boneless Skinless Chicken Breast,1 lb,4,113.4,1.0000,$4 × 113.4 g / 454 g,,home
-18,Chickpeas / Garbanzo Beans,Kroger,Kroger® Garbanzo Beans,15.5 oz,1,116.0,0.4714,$1 × 116.0 g / 246 g,"56% of package usable; alternate: canned, drained (50 g dry = 116 g cooked)",home
-45,Frozen Mixed Berries,Private Selection,Private Selection® Triple Berry Blend,48 oz,12.99,100.0,0.9546,$12.99 × 100.0 g / 1361 g,alternate: triple berry blend; from backup store: Big Smiths Marketplace,Big Smiths Marketplace
-76,Nonfat Cheese,Kroger,Kroger® 2% Milk Reduced Fat Shredded Cheddar Cheese,8 oz,2.99,28.0,0.3691,$2.99 × 28.0 g / 227 g,alternate: reduced-fat cheese,home

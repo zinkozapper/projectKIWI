@@ -76,4 +76,4 @@ Other ZIPs: add `--zip 84604` to both steps. `--only 1,2,3` searches just those 
 
 ## First load (Nov 2026)
 
-Smith's, 350 N Freedom Blvd, Provo (location 70600136). 97 of 101 foods priced. Unpriced (no valid product at this store): Chickpeas (only canned), Acerola, Frozen Mixed Berries, Nonfat Cheese.
+Smith's, 350 N Freedom Blvd, Provo (location 70600136). 100 of 101 foods priced, all at the home store. Alternates used: chickpeas (canned, drained), frozen mixed berries (triple berry blend), nonfat cheese (reduced-fat shredded). Acerola is unpriced: nothing at the home store or the 3 backup Marketplaces (Lehi, Saratoga Springs, Springville).

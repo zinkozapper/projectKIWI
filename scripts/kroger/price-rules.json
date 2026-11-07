@@ -686,7 +686,7 @@
       ]
     },
     "45": {
-      "term": "mixed berries",
+      "term": "frozen mixed berries",
       "must": [
         "berry|berries"
       ],
@@ -694,9 +694,7 @@
         "frozen"
       ],
       "categories": [
-        "Frozen",
-        "Natural & Organic",
-        "Produce"
+        "Frozen"
       ],
       "exclude": [
         "protein",
@@ -707,7 +705,11 @@
         "waffles",
         "mango",
         "cherries",
-        "bites"
+        "bites",
+        "fresh cut",
+        "bowl",
+        "cup",
+        "cups"
       ],
       "alternates": [
         {
@@ -717,8 +719,7 @@
             "berry|berries"
           ],
           "categories": [
-            "Frozen",
-            "Natural & Organic"
+            "Frozen"
           ]
         },
         {
@@ -728,8 +729,7 @@
             "berry|berries"
           ],
           "categories": [
-            "Frozen",
-            "Natural & Organic"
+            "Frozen"
           ]
         },
         {
@@ -739,8 +739,7 @@
             "blueberry|blueberries"
           ],
           "categories": [
-            "Frozen",
-            "Natural & Organic"
+            "Frozen"
           ]
         }
       ]
