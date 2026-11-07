@@ -4,6 +4,12 @@ import { Button } from '@/components/ui/button';
 import { foodById } from '@/lib/foods';
 import { useWorkspace } from '../context';
 
+function foodNames(items: { food_id: string }[]) {
+  const names = items.map(i => foodById(i.food_id)?.name).filter((n): n is string => !!n);
+  if (names.length <= 4) return names.join(', ');
+  return `${names.slice(0, 4).join(', ')} + ${names.length - 4} more`;
+}
+
 export function HistoryPage() {
   const { trips, items, repeatTrip } = useWorkspace();
   const completed = trips.filter(t => t.status === 'completed');
@@ -25,9 +31,11 @@ export function HistoryPage() {
                 <span className="section-kicker">{new Date(t.completed_at || t.created_at).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 <h2>{t.days}-day grocery trip</h2>
                 <p>{purchasedItems.length} items · est. ${purchasedItems.reduce((s, i) => s + (foodById(i.food_id)?.price || 0) * i.quantity, 0).toFixed(2)}</p>
-                <div className="history-foods">
+                <div className="history-foods" aria-hidden="true">
                   {purchasedItems.slice(0, 7).map(i => <span title={foodById(i.food_id)?.name} key={i.id}>{foodById(i.food_id)?.emoji}</span>)}
                 </div>
+                {/* Names as text too: hover titles can't be read on a phone or by a screen reader. */}
+                <p className="history-food-names">{foodNames(purchasedItems)}</p>
               </div>
               <Button variant="outline" onClick={() => repeatTrip(t)}><BookmarkPlus size={16} /> Repeat list</Button>
             </div>

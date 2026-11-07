@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, Plus, X } from 'lucide-react';
+import { ArrowRight, Plus, Undo2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { foodById, nutrientKeys, type Nutrients } from '@/lib/foods';
+import { foodById, nutrientKeys, type Food, type Nutrients } from '@/lib/foods';
 import { useWorkspace } from '../context';
 import { NutrientPanel } from '../nutrient-bar';
 import { PantryAddDialog } from '../pantry-add-dialog';
 
 export function PantryPage() {
-  const { pantry, listItems, days, daily, pantryTotals, combined, removePantry } = useWorkspace();
+  const { pantry, listItems, days, daily, pantryTotals, combined, addPantry, removePantry } = useWorkspace();
   const [adding, setAdding] = useState(false);
+  // One tap marks a food gone, so keep an Undo around for a few seconds in case it was a mis-tap.
+  const [lastRemoved, setLastRemoved] = useState<Food | null>(null);
+
+  useEffect(() => {
+    if (!lastRemoved) return;
+    const timer = window.setTimeout(() => setLastRemoved(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [lastRemoved]);
+
+  async function markGone(pantryItemId: string, food: Food) {
+    await removePantry(pantryItemId);
+    setLastRemoved(food);
+  }
+
+  async function undoRemove() {
+    if (!lastRemoved) return;
+    const food = lastRemoved;
+    setLastRemoved(null);
+    await addPantry(food.id);
+  }
   // Same numbers as My Plan: pantry (solid) plus the grocery list (light).
   const perDay = (n: Nutrients) => Object.fromEntries(nutrientKeys.map(k => [k, n[k] / days])) as Nutrients;
   const hasAnything = pantry.length > 0 || listItems.length > 0;
@@ -35,7 +55,7 @@ export function PantryPage() {
               <p className="pantry-hint">Ran out or used it up? Tap it to mark it gone. Anything still here counts toward your plan and won’t be suggested again.</p>
               <div className="pantry-items">
                 {stocked.map(({ item, food }) => (
-                  <Button variant="outline" key={item.id} className="pantry-item" onClick={() => void removePantry(item.id)} aria-label={`Remove ${food!.name} from your pantry`}>
+                  <Button variant="outline" key={item.id} className="pantry-item" onClick={() => void markGone(item.id, food!)} aria-label={`Remove ${food!.name} from your pantry`}>
                     <span aria-hidden="true">{food!.emoji}</span>{food!.name}<X size={15} aria-hidden="true" />
                   </Button>
                 ))}
@@ -44,6 +64,12 @@ export function PantryPage() {
           ) : (
             <div className="empty-state">
               Your pantry is empty. Add what you have at home, or finish a shopping trip and it fills in automatically.
+            </div>
+          )}
+          {lastRemoved && (
+            <div className="undo-bar" role="status">
+              <span>Removed {lastRemoved.name}.</span>
+              <Button variant="ghost" size="sm" onClick={() => void undoRemove()}><Undo2 size={15} aria-hidden="true" /> Undo</Button>
             </div>
           )}
           <div className="pantry-footer">

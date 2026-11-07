@@ -3,8 +3,10 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { usePhoneLayout } from '@/hooks/use-phone-layout';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
-import { foodById, formatAmount, getFoodPairings, nutrientKeys, type Food, type Nutrients } from '@/lib/foods';
+import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLimits, NUTRIENTS, type Food, type Nutrients } from '@/lib/foods';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
@@ -24,6 +26,9 @@ export function PlanPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
   const searchArea = useRef<HTMLDivElement>(null);
+  // On phones the nutrition panel sits below everything else, so food details open in a dialog
+  // instead, and the plan's nutrition summary moves above the list as a collapsible section.
+  const isPhone = usePhoneLayout();
 
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
@@ -56,7 +61,8 @@ export function PlanPage() {
   }, [searchOpen]);
 
   useEffect(() => {
-    if (!foodDetails) return;
+    // The phone dialog closes itself; a touch to scroll must not clear it.
+    if (!foodDetails || isPhone) return;
     const clearOnOutsideFoodClick = (event: PointerEvent) => {
       if (!(event.target instanceof Element)) return;
       const clickedFoodId = event.target.closest('[data-food-id]')?.getAttribute('data-food-id');
@@ -64,7 +70,7 @@ export function PlanPage() {
     };
     document.addEventListener('pointerdown', clearOnOutsideFoodClick);
     return () => document.removeEventListener('pointerdown', clearOnOutsideFoodClick);
-  }, [foodDetails]);
+  }, [foodDetails, isPhone]);
 
   // Log only the recommendations currently shown in the combined section.
   const recommendedFoodIds = recommendedFoods.map(food => food.id).join(',');
@@ -89,6 +95,12 @@ export function PlanPage() {
   const used = periodSpent + spend;
   const pct = (n: number) => (budget ? Math.min(100, n / budget * 100) : 0);
   const daysLeft = daysLeftInPeriod(budgetPeriod);
+
+  const planPerDay = perDay(combined, days);
+  const goalNutrients = NUTRIENTS.filter(n => !nutrientLimits.has(n.key));
+  const goalsMet = goalNutrients.filter(n => planPerDay[n.key] >= daily[n.key]).length;
+  const planNutritionNote = `Daily average across ${days} days from your pantry plus your list. Each + adds 1 serving a day; pantry foods count as 1 serving a day.`;
+  const planNutritionFoot = 'Based on approximate package nutrition. Actual needs and portions may vary.';
 
   return (
     <>
@@ -127,6 +139,18 @@ export function PlanPage() {
           </div>
           <Button variant="outline" onClick={() => void startPlan()}><House size={16} /> Check pantry</Button>
         </div>
+      )}
+
+      {isPhone && (
+        <details className="nutrition-panel phone-nutrition-summary">
+          <summary>
+            <span>Nutrition</span>
+            <small>{goalsMet} of {goalNutrients.length} daily targets met</small>
+          </summary>
+          <p>{planNutritionNote}</p>
+          <NutrientPanel values={planPerDay} base={perDay(pantryTotals, days)} targets={daily} />
+          <div className="nutrition-foot">{planNutritionFoot}</div>
+        </details>
       )}
 
       <div className="plan-grid">
@@ -362,23 +386,42 @@ export function PlanPage() {
 
         </div>
 
-        <div className="right-column">
-          <section className="nutrition-panel nutrition-summary">
-            <h2>{foodDetails?.name ?? 'Nutrition'}</h2>
-            <p>{foodDetails
-              ? 'Nutrition per listed serving, compared with your daily targets.'
-              : `Daily average across ${days} days from your pantry plus your list. Each + adds 1 serving a day; pantry foods count as 1 serving a day.`}</p>
-            {foodDetails
-              ? <NutrientPanel values={foodDetails.nutrition} targets={daily} />
-              : <NutrientPanel values={perDay(combined, days)} base={perDay(pantryTotals, days)} targets={daily} />}
-            <div className="nutrition-foot">
+        {!isPhone && (
+          <div className="right-column">
+            <section className="nutrition-panel nutrition-summary">
+              <h2>{foodDetails?.name ?? 'Nutrition'}</h2>
+              <p>{foodDetails
+                ? 'Nutrition per listed serving, compared with your daily targets.'
+                : planNutritionNote}</p>
               {foodDetails
-                ? 'Approximate nutrition for the listed serving. Actual values may vary.'
-                : 'Based on approximate package nutrition. Actual needs and portions may vary.'}
-            </div>
-          </section>
-        </div>
+                ? <NutrientPanel values={foodDetails.nutrition} targets={daily} />
+                : <NutrientPanel values={planPerDay} base={perDay(pantryTotals, days)} targets={daily} />}
+              <div className="nutrition-foot">
+                {foodDetails
+                  ? 'Approximate nutrition for the listed serving. Actual values may vary.'
+                  : planNutritionFoot}
+              </div>
+            </section>
+          </div>
+        )}
       </div>
+
+      {isPhone && (
+        <Dialog open={!!foodDetails} onOpenChange={open => { if (!open) setFoodDetails(null); }}>
+          <DialogContent className="food-details-dialog">
+            {foodDetails && (
+              <>
+                <DialogHeader>
+                  <DialogTitle>{foodDetails.emoji} {foodDetails.name}</DialogTitle>
+                  <DialogDescription>Nutrition per listed serving, compared with your daily targets.</DialogDescription>
+                </DialogHeader>
+                <NutrientPanel values={foodDetails.nutrition} targets={daily} />
+                <div className="nutrition-foot">Approximate nutrition for the listed serving. Actual values may vary.</div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

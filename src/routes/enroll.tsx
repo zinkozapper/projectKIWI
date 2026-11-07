@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { googleSignInEnabled } from '@/lib/auth-options';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Leaf } from 'lucide-react';
@@ -65,8 +66,12 @@ function Enroll() {
             {notice && <p className="form-success" role="status">{notice}</p>}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'One moment…' : 'Create account'}</Button>
           </form>
-          <div className="divider login-divider"><span>or</span></div>
-          <Button className="google-button" variant="outline" type="button" onClick={google}><span className="google-g">G</span> Continue with Google</Button>
+          {googleSignInEnabled && (
+            <>
+              <div className="divider login-divider"><span>or</span></div>
+              <Button className="google-button" variant="outline" type="button" onClick={google}><span className="google-g">G</span> Continue with Google</Button>
+            </>
+          )}
           <div className="enroll-cta"><span>Already have an account? <Link to="/">Sign in</Link></span></div>
         </section>
       </div>

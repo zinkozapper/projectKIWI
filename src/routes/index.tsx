@@ -2,6 +2,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { getRememberMePreference, setRememberMePreference, supabase } from '@/integrations/supabase/client';
+import { googleSignInEnabled } from '@/lib/auth-options';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { KeyRound, Leaf } from 'lucide-react';
@@ -170,18 +171,22 @@ function Login() {
             </Button>
           </form>
 
-          <div className="divider login-divider">
-            <span>or</span>
-          </div>
+          {(googleSignInEnabled || passkeySupported) && (
+            <div className="divider login-divider">
+              <span>or</span>
+            </div>
+          )}
 
-          <Button
-            className="google-button"
-            variant="outline"
-            type="button"
-            onClick={google}
-          >
-            <span className="google-g">G</span> Sign in with Google
-          </Button>
+          {googleSignInEnabled && (
+            <Button
+              className="google-button"
+              variant="outline"
+              type="button"
+              onClick={google}
+            >
+              <span className="google-g">G</span> Sign in with Google
+            </Button>
+          )}
 
           {passkeySupported && (
             <Button
