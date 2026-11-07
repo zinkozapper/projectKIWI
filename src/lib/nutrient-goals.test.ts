@@ -9,12 +9,10 @@ vi.mock('@/integrations/supabase/client', () => {
   return { supabase: { from: vi.fn(() => ({ insert, select })) } };
 });
 
-import type { Nutrients } from './foods';
+import { emptyNutrients, type Nutrients } from './foods';
 import { evaluateNutrientGoals, pantrySignature, recordNutrientSnapshot, resetNutrientSnapshots } from './nutrient-goals';
 
-const n = (v: Partial<Nutrients>): Nutrients => ({
-  calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, iron: 0, calcium: 0, vitaminC: 0, vitaminD: 0, ...v,
-});
+const n = (v: Partial<Nutrients>): Nutrients => ({ ...emptyNutrients(), ...v });
 
 const daily = n({ calories: 2000, protein: 60, iron: 18 });
 
@@ -37,6 +35,11 @@ describe('evaluateNutrientGoals', () => {
     expect(r.achievementPct).toBe(100);
   });
 
+  it('leaves upper limits like sodium out of the goal', () => {
+    const r = evaluateNutrientGoals(n({ sodium: 99999 }), n({ protein: 60, sodium: 2300 }), 1);
+    expect(Object.keys(r.nutrients)).toEqual(['protein']);
+  });
+
   it('skips nutrients without a target and handles an empty pantry', () => {
     const r = evaluateNutrientGoals(n({}), daily, 7);
     expect(Object.keys(r.nutrients)).toEqual(['calories', 'protein', 'iron']);
@@ -46,8 +49,8 @@ describe('evaluateNutrientGoals', () => {
 });
 
 describe('recordNutrientSnapshot', () => {
-  const input = (quantity: number) => ({
-    userId: 'u1', pantryId: 5, pantry: [{ food_id: '3', quantity }], pantryTotals: n({ protein: 60 * quantity }), daily, days: 7,
+  const input = (quantity: number, foodId = '3') => ({
+    userId: 'u1', pantryId: 5, pantry: [{ food_id: foodId, quantity }], pantryTotals: n({ protein: 60 * quantity }), daily, days: 7,
   });
 
   beforeEach(() => {
@@ -62,7 +65,11 @@ describe('recordNutrientSnapshot', () => {
     expect(insert).toHaveBeenCalledTimes(1);
     expect(insert.mock.calls[0]?.[0]).toMatchObject({ user_id: 'u1', pantry_id: 5, plan_days: 7, pantry_food_ids: [3], nutrients_total: 3 });
 
+    // Quantity alone doesn't change the pantry (it only tracks which foods are at home)...
     await recordNutrientSnapshot(input(2));
+    expect(insert).toHaveBeenCalledTimes(1);
+    // ...a different food does.
+    await recordNutrientSnapshot(input(1, '4'));
     expect(insert).toHaveBeenCalledTimes(2);
   });
 

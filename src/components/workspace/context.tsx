@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { foods, foodById, searchFoods, totals, targets, nutrientKeys, nutrientLabels, type Profile } from '@/lib/foods';
+import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, nutrientLabels, nutrientLimits, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
 import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
@@ -216,8 +216,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const listItems = items.filter(i => i.trip_id === active?.id && !i.purchased);
   const purchased = items.filter(i => i.trip_id === active?.id && i.purchased);
-  const pantryTotals = useMemo(() => totals(pantry), [pantry]);
-  const combined = useMemo(() => totals([...listItems, ...pantry]), [listItems, pantry]);
+  // A pantry food counts as 1 serving a day for the whole plan, whatever quantity is stored:
+  // the pantry tracks what's at home, not how much of it.
+  const pantryTotals = useMemo(() => totals(pantry.map(p => ({ food_id: p.food_id, quantity: days }))), [pantry, days]);
+  const combined = useMemo(() => addNutrients(totals(listItems), pantryTotals), [listItems, pantryTotals]);
   const daily = targets(profile);
   // OKR 2: save a nutrient goal snapshot when the pantry, plan length or targets change (migration 0007).
   // Waits a moment so adding several pantry foods in a row saves one snapshot, not one per click.
@@ -244,7 +246,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const budgetRemaining = budget - periodSpent - spend;
 
   const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
-  const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
+  const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && !nutrientLimits.has(k) && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
 
   const foodGapScores: FoodSuggestion[] = available.map(food => {
     const relevantGaps = biggestGaps.slice(0, 4).map(k => {
@@ -318,12 +320,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return t.id;
   }
 
+  // q = servings per day. One add puts 1 serving a day on the list for the whole plan (7 servings on a
+  // 7-day plan, 14 on a 14-day plan). shopping_list_item.quantity stores the total servings to buy.
   // Returns the saved list row (or null on failure) so callers like recommendation tracking can link to it.
-  async function addFood(id: string, q = 1): Promise<Item | null> {
-    if (!Number.isFinite(q) || q <= 0) {
+  async function addFood(id: string, perDay = 1): Promise<Item | null> {
+    if (!Number.isFinite(perDay) || perDay <= 0) {
       fail('Enter a quantity greater than zero.');
       return null;
     }
+    const q = perDay * days;
     const tripId = await ensureTrip();
     if (!tripId) return null;
     const food = foodById(id);
@@ -435,11 +440,21 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   async function finishTrip() {
     if (!active) return;
     const { data, error } = await supabase.from('shopping_list').update({ status: 'completed', completed_at: new Date().toISOString() }).eq('shopping_list_id', Number(active.id)).select().single();
-    if (error) fail(error.message);
-    else {
-      setTrips(prev => prev.map(t => t.id === active.id ? toTrip(data) : t));
-      navigate({ to: '/plan' });
+    if (error) {
+      fail(error.message);
+      return;
     }
+    setTrips(prev => prev.map(t => t.id === active.id ? toTrip(data) : t));
+    // Everything bought goes into the pantry and stays there until the user removes it.
+    const bought = [...new Set(purchased.map(i => i.food_id))].filter(id => !pantry.some(p => p.food_id === id));
+    if (bought.length && pantryId) {
+      const { data: added, error: pantryError } = await supabase.from('pantry_item')
+        .insert(bought.map(id => ({ pantry_id: pantryId, food_id: Number(id), quantity: 1, unit: foodById(id)?.unit ?? null })))
+        .select();
+      if (pantryError) fail('Trip saved, but your pantry could not be updated: ' + pantryError.message);
+      else setPantry(prev => [...prev, ...(added || []).map(toPantry)]);
+    }
+    navigate({ to: '/plan' });
   }
 
   async function repeatTrip(trip: Trip) {

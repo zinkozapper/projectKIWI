@@ -4,11 +4,13 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
-import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits, type Food } from '@/lib/foods';
+import { foodById, formatAmount, getFoodPairings, nutrientKeys, type Food, type Nutrients } from '@/lib/foods';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
-import { NutrientBar } from '../nutrient-bar';
+import { NutrientPanel } from '../nutrient-bar';
+
+const perDay = (n: Nutrients, days: number) => Object.fromEntries(nutrientKeys.map(k => [k, n[k] / days])) as Nutrients;
 
 function addFoodOnCardKeyDown(e: KeyboardEvent<HTMLDivElement>, add: () => void) {
   if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
@@ -195,35 +197,42 @@ export function PlanPage() {
                         <strong>{f.name}</strong>
                         <small>{f.note}</small>
                       </div>
-                      <div className="qty-control" onClick={e => e.stopPropagation()}>
+                      {/* quantity is total servings; the control works in servings per day across the plan. */}
+                      <div className="qty-control per-day" onClick={e => e.stopPropagation()}>
                         <Button
                           size="icon"
                           variant="ghost"
-                          title="Decrease quantity"
-                          onClick={() => updateQuantity(item, Number(item.quantity) - 1)}
+                          title="One less serving a day"
+                          onClick={() => {
+                            const next = Number(item.quantity) - days;
+                            if (next > 0) updateQuantity(item, next);
+                            else removeItem(item);
+                          }}
                         >
                           <Minus size={13} />
                         </Button>
                         <input
-                          aria-label={`${f.name} quantity`}
+                          aria-label={`${f.name} servings per day`}
                           type="number"
                           min="1"
-                          value={item.quantity}
+                          step="1"
+                          value={Number(formatAmount(Number(item.quantity) / days).replace(/,/g, ''))}
                           onChange={e => {
                             const q = Number(e.target.value);
-                            if (q > 0) updateQuantity(item, q);
-                            else fail('Quantity must be a positive number.');
+                            if (q > 0) updateQuantity(item, q * days);
+                            else fail('Servings per day must be a positive number.');
                           }}
                         />
                         <Button
                           size="icon"
                           variant="ghost"
-                          title="Increase quantity"
-                          onClick={() => updateQuantity(item, Number(item.quantity) + 1)}
+                          title="One more serving a day"
+                          onClick={() => updateQuantity(item, Number(item.quantity) + days)}
                         >
                           <Plus size={13} />
                         </Button>
                       </div>
+                      <span className="qty-caption">/day · {formatAmount(Number(item.quantity))} total</span>
                       <span className="row-price">
                         ${(f.price * item.quantity).toFixed(2)}
                       </span>
@@ -343,18 +352,8 @@ export function PlanPage() {
             <h2>{foodDetails?.name ?? 'Nutrition'}</h2>
             <p>{foodDetails
               ? 'Nutrition per listed serving, compared with your daily targets.'
-              : `Daily average across ${days} days, including pantry foods.`}</p>
-            <div className="nutrient-list">
-              {nutrientKeys.map(k => (
-                <NutrientBar
-                  key={k}
-                  name={nutrientLabels[k]}
-                  value={foodDetails ? foodDetails.nutrition[k] : combined[k] / days}
-                  target={daily[k]}
-                  unit={nutrientUnits[k]}
-                />
-              ))}
-            </div>
+              : `Daily average across ${days} days. Each + adds 1 serving a day; pantry foods count as 1 serving a day.`}</p>
+            <NutrientPanel values={foodDetails ? foodDetails.nutrition : perDay(combined, days)} targets={daily} />
             <div className="nutrition-foot">
               {foodDetails
                 ? 'Approximate nutrition for the listed serving. Actual values may vary.'

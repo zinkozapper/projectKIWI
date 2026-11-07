@@ -1,51 +1,62 @@
+import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, Check, Plus } from 'lucide-react';
+import { ArrowRight, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { foods, nutrientKeys, nutrientLabels, nutrientUnits } from '@/lib/foods';
+import { foodById, nutrientKeys, type Nutrients } from '@/lib/foods';
 import { useWorkspace } from '../context';
-import { NutrientBar } from '../nutrient-bar';
+import { NutrientPanel } from '../nutrient-bar';
+import { PantryAddDialog } from '../pantry-add-dialog';
 
 export function PantryPage() {
-  const { pantry, days, daily, pantryTotals, addPantry, removePantry } = useWorkspace();
+  const { pantry, days, daily, pantryTotals, removePantry } = useWorkspace();
+  const [adding, setAdding] = useState(false);
+  const perDay = Object.fromEntries(nutrientKeys.map(k => [k, pantryTotals[k] / days])) as Nutrients;
+  const stocked = pantry.map(item => ({ item, food: foodById(item.food_id) })).filter(x => x.food).sort((a, b) => a.food!.name.localeCompare(b.food!.name));
 
   return (
     <>
       <div className="page-heading">
         <div>
           <h1>Your pantry<span className="brand-dot">.</span></h1>
-          <p>Keep what’s already at home in the picture.</p>
+          <p>What’s already at home. Finished trips fill it in for you.</p>
         </div>
-        <Button asChild><Link to="/plan">Plan a trip <ArrowRight size={16} /></Link></Button>
+        <Button onClick={() => setAdding(true)}><Plus size={16} /> Add to pantry</Button>
       </div>
       <div className="pantry-grid">
         <section className="section-block">
-          <div className="section-title"><div><h2>Already in your kitchen?</h2></div></div>
-          <div className="pantry-choices">
-            {foods.map(f => {
-              const inPantry = pantry.some(i => i.food_id === f.id);
-              return (
-                <Button variant="outline" key={f.id} className={inPantry ? 'pantry-chip chosen' : 'pantry-chip'} onClick={() => inPantry ? removePantry(pantry.find(i => i.food_id === f.id)?.id || '') : addPantry(f.id)}>
-                  <span>{f.emoji}</span>{f.name}{inPantry ? <Check size={15} /> : <Plus size={15} />}
-                </Button>
-              );
-            })}
+          <div className="section-title">
+            <div><h2>In your kitchen</h2></div>
+            <span className="count-pill">{pantry.length} {pantry.length === 1 ? 'food' : 'foods'}</span>
           </div>
+          {stocked.length ? (
+            <>
+              <p className="pantry-hint">Ran out of something? Tap it to take it out of your pantry.</p>
+              <div className="pantry-items">
+                {stocked.map(({ item, food }) => (
+                  <Button variant="outline" key={item.id} className="pantry-item" onClick={() => void removePantry(item.id)} aria-label={`Remove ${food!.name} from your pantry`}>
+                    <span aria-hidden="true">{food!.emoji}</span>{food!.name}<X size={15} aria-hidden="true" />
+                  </Button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="empty-state">
+              Your pantry is empty. Add what you have at home, or finish a shopping trip and it fills in automatically.
+            </div>
+          )}
           <div className="pantry-footer">
-            {pantry.length} items in your pantry
+            <Button variant="outline" onClick={() => setAdding(true)}><Plus size={16} /> Add foods</Button>
             <Button asChild variant="ghost"><Link to="/plan">Continue to plan <ArrowRight size={16} /></Link></Button>
           </div>
         </section>
         <section className="nutrition-panel pantry-snapshot">
           <h2>What you have covered</h2>
-          <p>{pantry.length ? 'A limited snapshot based on foods currently in your pantry. Quantities and actual portions may vary.' : 'Your pantry is empty. Add a few staples to see a snapshot, or go straight to planning.'}</p>
-          {pantry.length > 0 && (
-            <div className="nutrient-list">
-              {nutrientKeys.filter(k => k !== 'calories').map(k => <NutrientBar key={k} name={nutrientLabels[k]} value={pantryTotals[k] / days} target={daily[k]} unit={nutrientUnits[k]} />)}
-            </div>
-          )}
+          <p>{pantry.length ? `Daily average across ${days} days, counting each pantry food as 1 serving a day.` : 'Your pantry is empty. Add a few staples to see a snapshot, or go straight to planning.'}</p>
+          {pantry.length > 0 && <NutrientPanel values={perDay} targets={daily} hide={['calories']} />}
           <Button asChild className="snapshot-button"><Link to="/plan">Fill the gaps <ArrowRight size={16} /></Link></Button>
         </section>
       </div>
+      <PantryAddDialog open={adding} onOpenChange={setAdding} />
     </>
   );
 }

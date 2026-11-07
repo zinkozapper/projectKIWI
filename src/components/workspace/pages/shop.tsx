@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { foodById } from '@/lib/foods';
+import { foodById, formatAmount } from '@/lib/foods';
 import { useWorkspace } from '../context';
 
 export function ShopPage() {
@@ -69,7 +69,7 @@ export function ShopPage() {
                   >
                     <span className="shop-checkbox" aria-hidden="true" />
                     <span className="shop-food-emoji" aria-hidden="true">{food.emoji}</span>
-                    <span className="shop-row-name">{food.name}<small>{item.quantity} × {food.unit}</small></span>
+                    <span className="shop-row-name">{food.name}<small>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'} · {formatAmount(food.servings)} {food.unit} each</small></span>
                     <span className="shop-item-price">${(food.price * item.quantity).toFixed(2)}<small>estimated</small></span>
                   </Button>
                 );
@@ -104,7 +104,7 @@ export function ShopPage() {
                     onClick={() => undoPurchase(item)}
                   >
                     <span className="shop-cart-check"><Check size={15} aria-hidden="true" /></span>
-                    <span className="shop-cart-name">{food.name}<small>{item.quantity} × {food.unit}</small></span>
+                    <span className="shop-cart-name">{food.name}<small>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'} · {formatAmount(food.servings)} {food.unit} each</small></span>
                     <span className="shop-cart-price">${(food.price * item.quantity).toFixed(2)}</span>
                   </Button>
                 ) : null;

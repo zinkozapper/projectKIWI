@@ -1,11 +1,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Json, TablesInsert } from '@/integrations/supabase/types';
-import { nutrientKeys, type Nutrients } from './foods';
+import { nutrientKeys, nutrientLimits, type Nutrients } from './foods';
 
 // OKR 2: how well the pantry covers the user's daily nutrient targets, saved to
 // public.nutrient_profile_snapshot (migration 0007) each time the pantry or the targets change.
 // A nutrient is met when the pantry holds at least 100% of its daily target per plan day, the same
-// per-day math as the plan page bars. The goal is met when every nutrient with a target is met.
+// per-day math as the plan page bars (each pantry food = 1 serving a day). All 27 tracked nutrients
+// count except upper limits like sodium. The goal is met when every nutrient with a target is met.
 
 export type NutrientResult = { per_day: number; target: number; pct: number; met: boolean };
 export type NutrientGoalResult = {
@@ -25,6 +26,7 @@ export function evaluateNutrientGoals(pantryTotals: Nutrients, daily: Nutrients,
   let met = 0;
   let coverage = 0;
   for (const k of nutrientKeys) {
+    if (nutrientLimits.has(k)) continue;
     const target = Number(daily[k]) || 0;
     if (target <= 0) continue;
     const perDay = (Number(pantryTotals[k]) || 0) / planDays;
@@ -45,9 +47,10 @@ export function evaluateNutrientGoals(pantryTotals: Nutrients, daily: Nutrients,
   };
 }
 
-// Same pantry, plan length and targets = same snapshot, so reloading the app doesn't add rows.
+// Same pantry foods, plan length and targets = same snapshot, so reloading the app doesn't add rows.
+// Quantities are left out: the pantry only tracks which foods are at home.
 export function pantrySignature(pantry: { food_id: string; quantity: number }[], daily: Nutrients, days: number) {
-  const items = pantry.map(i => `${i.food_id}x${Number(i.quantity)}`).sort().join(',');
+  const items = [...new Set(pantry.map(i => i.food_id))].sort().join(',');
   const targets = nutrientKeys.map(k => Number(daily[k]) || 0).join(',');
   return `${items}|${days}|${targets}`;
 }

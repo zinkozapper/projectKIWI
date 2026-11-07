@@ -1,15 +1,61 @@
 
-export type Nutrients = {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  fiber: number;
-  iron: number;
-  calcium: number;
-  vitaminC: number;
-  vitaminD: number;
-};
+// The 27 nutrients Kiwi tracks. food stores them per 100 g in its *_mg / *_g columns (USDA import);
+// per serving = column × food.factor. Values in the app are per serving, in the unit below.
+// µg nutrients are stored in mg and multiplied by 1000 so small numbers stay readable.
+export const NUTRIENTS = [
+  { key: 'calories', column: 'calories_kcal', label: 'Calories', unit: 'kcal', scale: 1, group: 'macros' },
+  { key: 'protein', column: 'protein_g', label: 'Protein', unit: 'g', scale: 1, group: 'macros' },
+  { key: 'carbs', column: 'carbohydrate_g', label: 'Carbs', unit: 'g', scale: 1, group: 'macros' },
+  { key: 'fat', column: 'fat_g', label: 'Fat', unit: 'g', scale: 1, group: 'macros' },
+  { key: 'fiber', column: 'fiber_g', label: 'Fiber', unit: 'g', scale: 1, group: 'macros' },
+  { key: 'omega3', column: 'omega3_ala_g', label: 'Omega-3 (ALA)', unit: 'g', scale: 1, group: 'macros' },
+  { key: 'omega6', column: 'omega6_g', label: 'Omega-6', unit: 'g', scale: 1, group: 'macros' },
+  { key: 'vitaminA', column: 'vitamin_a_mg', label: 'Vitamin A', unit: 'µg', scale: 1000, group: 'vitamins' },
+  { key: 'vitaminC', column: 'vitamin_c_mg', label: 'Vitamin C', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'vitaminE', column: 'vitamin_e_mg', label: 'Vitamin E', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'vitaminK', column: 'vitamin_k_mg', label: 'Vitamin K', unit: 'µg', scale: 1000, group: 'vitamins' },
+  { key: 'thiamin', column: 'thiamin_b1_mg', label: 'Thiamin (B1)', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'riboflavin', column: 'riboflavin_b2_mg', label: 'Riboflavin (B2)', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'niacin', column: 'niacin_b3_mg', label: 'Niacin (B3)', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'vitaminB6', column: 'vitamin_b6_mg', label: 'Vitamin B6', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'folate', column: 'folate_b9_mg', label: 'Folate (B9)', unit: 'µg', scale: 1000, group: 'vitamins' },
+  { key: 'vitaminB12', column: 'vitamin_b12_mg', label: 'Vitamin B12', unit: 'µg', scale: 1000, group: 'vitamins' },
+  { key: 'choline', column: 'choline_mg', label: 'Choline', unit: 'mg', scale: 1, group: 'vitamins' },
+  { key: 'calcium', column: 'calcium_mg', label: 'Calcium', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'iron', column: 'iron_mg', label: 'Iron', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'magnesium', column: 'magnesium_mg', label: 'Magnesium', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'phosphorus', column: 'phosphorus_mg', label: 'Phosphorus', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'potassium', column: 'potassium_mg', label: 'Potassium', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'sodium', column: 'sodium_mg', label: 'Sodium', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'zinc', column: 'zinc_mg', label: 'Zinc', unit: 'mg', scale: 1, group: 'minerals' },
+  { key: 'copper', column: 'copper_mg', label: 'Copper', unit: 'µg', scale: 1000, group: 'minerals' },
+  { key: 'selenium', column: 'selenium_mg', label: 'Selenium', unit: 'µg', scale: 1000, group: 'minerals' },
+] as const;
+
+export type NutrientKey = typeof NUTRIENTS[number]['key'];
+export type NutrientGroup = typeof NUTRIENTS[number]['group'];
+export type Nutrients = Record<NutrientKey, number>;
+type NutrientColumn = typeof NUTRIENTS[number]['column'];
+
+export const nutrientGroups: { group: NutrientGroup; label: string }[] = [
+  { group: 'macros', label: 'Macros' },
+  { group: 'vitamins', label: 'Vitamins' },
+  { group: 'minerals', label: 'Minerals' },
+];
+
+// Upper limits rather than goals: the bar warns when over, and gap suggestions skip them.
+export const nutrientLimits = new Set<NutrientKey>(['sodium']);
+
+// Small amounts (B vitamins, omega-3) need decimals; everything else reads better as whole numbers.
+export function formatAmount(n: number) {
+  const abs = Math.abs(n);
+  if (abs === 0) return '0';
+  if (abs < 1) return String(Number(n.toFixed(2)));
+  if (abs < 10) return String(Number(n.toFixed(1)));
+  return Math.round(n).toLocaleString();
+}
+
+export const emptyNutrients = (): Nutrients => Object.fromEntries(NUTRIENTS.map(n => [n.key, 0])) as Nutrients;
 
 export type Food = {
   id: string;
@@ -57,11 +103,20 @@ type FoodRow = {
   emoji: string;
   pairs: number[] | null;
   flavor_profile?: string[] | null;
-};
+  factor?: number | string | null;
+} & Partial<Record<NutrientColumn, number | string | null>>;
 
-// One database row -> the Food shape the UI uses. nutrition is per serving; missing values become 0.
+// One database row -> the Food shape the UI uses. Nutrients come from the per-100 g columns × factor
+// (per serving). A row without those columns falls back to the older 8-nutrient nutrition json.
 export function mapFoodRow(r: FoodRow): Food {
-  const n = (r.nutrition ?? {}) as Partial<Record<keyof Nutrients, unknown>>;
+  const legacy = (r.nutrition ?? {}) as Partial<Record<string, unknown>>;
+  const factor = Number(r.factor);
+  const hasColumns = Number.isFinite(factor) && factor > 0 && r.calories_kcal != null;
+  const nutrition = emptyNutrients();
+  for (const n of NUTRIENTS) {
+    const value = hasColumns ? Number(r[n.column]) * factor * n.scale : Number(legacy[n.key]);
+    nutrition[n.key] = Number.isFinite(value) ? value : 0;
+  }
   return {
     id: String(r.food_id),
     name: r.food_name,
@@ -69,17 +124,7 @@ export function mapFoodRow(r: FoodRow): Food {
     unit: r.unit,
     price: Number(r.price),
     servings: Number(r.serving_size),
-    nutrition: {
-      calories: Number(n.calories) || 0,
-      protein: Number(n.protein) || 0,
-      carbs: Number(n.carbs) || 0,
-      fat: Number(n.fat) || 0,
-      fiber: Number(n.fiber) || 0,
-      iron: Number(n.iron) || 0,
-      calcium: Number(n.calcium) || 0,
-      vitaminC: Number(n.vitaminC) || 0,
-      vitaminD: Number(n.vitaminD) || 0,
-    },
+    nutrition,
     note: r.food_description,
     emoji: r.emoji,
     pairs: (r.pairs || []).map(String),
@@ -188,59 +233,25 @@ export function searchFoods<T extends Pick<Food, 'name' | 'category'> & Partial<
   return [...nameMatches, ...aliasMatches, ...typoMatches, ...descriptionMatches, ...categoryMatches].slice(0, limit);
 }
 
-export const nutrientKeys: (keyof Nutrients)[] = [
-  'calories',
-  'protein',
-  'carbs',
-  'fat',
-  'fiber',
-  'iron',
-  'calcium',
-  'vitaminC',
-  'vitaminD'
-];
+export const nutrientKeys: NutrientKey[] = NUTRIENTS.map(n => n.key);
+export const nutrientLabels = Object.fromEntries(NUTRIENTS.map(n => [n.key, n.label])) as Record<NutrientKey, string>;
+export const nutrientUnits = Object.fromEntries(NUTRIENTS.map(n => [n.key, n.unit])) as Record<NutrientKey, string>;
 
-export const nutrientLabels: Record<keyof Nutrients, string> = {
-  calories: 'Calories',
-  protein: 'Protein',
-  carbs: 'Carbs',
-  fat: 'Fat',
-  fiber: 'Fiber',
-  iron: 'Iron',
-  calcium: 'Calcium',
-  vitaminC: 'Vitamin C',
-  vitaminD: 'Vitamin D'
-};
-
-export const nutrientUnits: Record<keyof Nutrients, string> = {
-  calories: 'kcal',
-  protein: 'g',
-  carbs: 'g',
-  fat: 'g',
-  fiber: 'g',
-  iron: 'mg',
-  calcium: 'mg',
-  vitaminC: 'mg',
-  vitaminD: 'µg'
-};
-
+// quantity = total servings (shopping_list_item.quantity, or days × 1 serving for a pantry food).
 export function totals(
   items: { food_id: string; quantity: number }[]
 ): Nutrients {
-  const result = Object.fromEntries(
-    nutrientKeys.map(k => [k, 0])
-  ) as Nutrients;
-
+  const result = emptyNutrients();
   items.forEach(item => {
     const food = foodById(item.food_id);
-
-    if (food) {
-      nutrientKeys.forEach(k => {
-        result[k] += food.nutrition[k] * Number(item.quantity);
-      });
-    }
+    if (food) nutrientKeys.forEach(k => { result[k] += food.nutrition[k] * Number(item.quantity); });
   });
+  return result;
+}
 
+export function addNutrients(a: Nutrients, b: Nutrients): Nutrients {
+  const result = emptyNutrients();
+  nutrientKeys.forEach(k => { result[k] = a[k] + b[k]; });
   return result;
 }
 
@@ -572,15 +583,38 @@ export function targets(profile: Profile | null): Nutrients {
     }[profile?.activity as 'low' | 'moderate' | 'high'] || 1.45)
   );
 
+  // Adult (19+) Dietary Reference Intakes, NIH Office of Dietary Supplements: RDA, or AI where no RDA
+  // exists (fiber, omega-3/6, vitamin K, choline, potassium). Sodium is the 2,300 mg upper limit.
+  const male = profile?.gender === 'male';
+  const over30 = age > 30;
+
   return {
     calories,
     protein: Math.round(weight * 1.0),
     carbs: Math.round(calories * 0.5 / 4),
     fat: Math.round(calories * 0.3 / 9),
-    fiber: profile?.gender === 'male' ? 34 : 28,
-    iron: profile?.gender === 'female' ? 18 : 8,
+    fiber: male ? 34 : 28,
+    omega3: male ? 1.6 : 1.1,
+    omega6: male ? 17 : 12,
+    vitaminA: male ? 900 : 700,
+    vitaminC: male ? 90 : 75,
+    vitaminE: 15,
+    vitaminK: male ? 120 : 90,
+    thiamin: male ? 1.2 : 1.1,
+    riboflavin: male ? 1.3 : 1.1,
+    niacin: male ? 16 : 14,
+    vitaminB6: 1.3,
+    folate: 400,
+    vitaminB12: 2.4,
+    choline: male ? 550 : 425,
     calcium: 1000,
-    vitaminC: profile?.gender === 'male' ? 90 : 75,
-    vitaminD: 15
+    iron: profile?.gender === 'female' ? 18 : 8,
+    magnesium: male ? (over30 ? 420 : 400) : (over30 ? 320 : 310),
+    phosphorus: 700,
+    potassium: male ? 3400 : 2600,
+    sodium: 2300,
+    zinc: male ? 11 : 8,
+    copper: 900,
+    selenium: 55,
   };
 }
