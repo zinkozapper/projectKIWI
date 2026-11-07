@@ -2,6 +2,7 @@ import { Link, Outlet, useRouterState } from '@tanstack/react-router';
 import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShieldCheck, ShoppingBasket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
+import { PantryCheckDialog } from './pantry-check-dialog';
 
 const nav = [
   { id: 'plan', label: 'My plan', mobileLabel: 'Plan', to: '/plan', icon: ClipboardList },
@@ -63,6 +64,7 @@ export function WorkspaceShell() {
           </Button>
         ))}
       </nav>
+      <PantryCheckDialog />
     </div>
   );
 }

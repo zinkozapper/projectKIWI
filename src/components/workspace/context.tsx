@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
 import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, nutrientLabels, nutrientLimits, type Profile } from '@/lib/foods';
@@ -8,6 +8,7 @@ import { resetRecommendationImpressions } from '@/lib/recommendation-events';
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
 import { useIsAdmin } from '@/lib/admin';
+import { itemsToRepeat, needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pantry-check';
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
@@ -86,6 +87,11 @@ type WorkspaceValue = {
   saveTripSettings: (nextDays: number, nextBudget: number) => Promise<void>;
   addPantry: (id: string) => Promise<void>;
   removePantry: (id: string) => Promise<void>;
+  // Pantry check: before a new trip starts, the user confirms what's still at home.
+  pantryCheckDue: boolean;
+  pantryCheckOpen: boolean;
+  finishPantryCheck: (goneIds: string[] | null) => Promise<void>;
+  startPlan: () => Promise<void>;
   saveProfile: (e: FormEvent) => Promise<void>;
   finishTrip: () => Promise<void>;
   repeatTrip: (trip: Trip) => Promise<void>;
@@ -121,6 +127,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [profileDraft, setProfileDraft] = useState<ProfileDraft>({ display_name: '', age: '', height_ft: '', height_in: '', weight_lb: '', gender: '', activity: 'moderate', goal: 'maintain', budget: '75', budget_weeks: '1', budget_start: toDateKey(new Date()) });
   const [profileErrors, setProfileErrors] = useState<string[]>([]);
   const active = trips.find(t => t.status === 'active');
+  // Pantry check dialog: confirmPantry() opens it and resolves with the food ids still at home
+  // (or null if the user closes it). creatingTrip stops two adds from starting two trips.
+  const [pantryCheckOpen, setPantryCheckOpen] = useState(false);
+  const pantryCheckWaiters = useRef<((stillHave: Set<string> | null) => void)[]>([]);
+  const creatingTrip = useRef<Promise<string | null> | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -327,14 +338,64 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   async function ensureTrip() {
     if (active) return active.id;
-    const { data, error } = await supabase.from('shopping_list').insert({ user_id: userId, days, budget, status: 'active' }).select().single();
-    if (error || !data) {
-      fail(error?.message || 'Could not start a trip');
-      return null;
+    if (creatingTrip.current) return creatingTrip.current;
+    creatingTrip.current = (async () => {
+      const { data, error } = await supabase.from('shopping_list').insert({ user_id: userId, days, budget, status: 'active' }).select().single();
+      if (error || !data) {
+        fail(error?.message || 'Could not start a trip');
+        return null;
+      }
+      const t = toTrip(data);
+      setTrips(prev => [t, ...prev]);
+      return t.id;
+    })();
+    try {
+      return await creatingTrip.current;
+    } finally {
+      creatingTrip.current = null;
     }
-    const t = toTrip(data);
-    setTrips(prev => [t, ...prev]);
-    return t.id;
+  }
+
+  // Asks the user what's still in the pantry before a new trip starts. Resolves with the food ids
+  // still at home, or null if they close the dialog without confirming. With an empty pantry
+  // there is nothing to ask, so it resolves right away.
+  function confirmPantry(): Promise<Set<string> | null> {
+    if (!pantry.length) return Promise.resolve(new Set());
+    return new Promise(resolve => {
+      pantryCheckWaiters.current.push(resolve);
+      setPantryCheckOpen(true);
+    });
+  }
+
+  // Called by the dialog. goneIds = pantry_item ids marked gone; null = closed without confirming.
+  async function finishPantryCheck(goneIds: string[] | null) {
+    const waiters = pantryCheckWaiters.current;
+    pantryCheckWaiters.current = [];
+    setPantryCheckOpen(false);
+    if (goneIds === null) {
+      waiters.forEach(w => w(null));
+      return;
+    }
+    const { keep, remove } = splitPantryCheck(pantry, goneIds);
+    if (remove.length) {
+      const { error } = await supabase.from('pantry_item').delete().in('pantry_item_id', remove.map(p => Number(p.id)));
+      if (error) {
+        fail('Could not update your pantry: ' + error.message);
+        waiters.forEach(w => w(null));
+        return;
+      }
+      // Changing the pantry also saves a new OKR 2 nutrient snapshot (effect above).
+      setPantry(keep);
+    }
+    const stillHave = stillHaveFoodIds(keep);
+    waiters.forEach(w => w(stillHave));
+  }
+
+  // "Check pantry" on My Plan: confirm the pantry, then start the trip so the check isn't asked again.
+  async function startPlan() {
+    if (active) return;
+    const stillHave = await confirmPantry();
+    if (stillHave) await ensureTrip();
   }
 
   // q = servings per day. One add puts 1 serving a day on the list for the whole plan (7 servings on a
@@ -346,6 +407,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       return null;
     }
     const q = perDay * days;
+    // Starting a new trip: confirm the pantry first. Closing the check cancels the add.
+    if (!active && !(await confirmPantry())) return null;
     const tripId = await ensureTrip();
     if (!tripId) return null;
     const food = foodById(id);
@@ -480,12 +543,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       fail('Finish your current trip before repeating a past one.');
       return;
     }
+    // Confirm the pantry first, then leave out foods that are still at home.
+    const stillHave = await confirmPantry();
+    if (!stillHave) return;
     const { data, error } = await supabase.from('shopping_list').insert({ user_id: userId, days: trip.days, budget: trip.budget, status: 'active' }).select().single();
     if (error || !data) {
       fail(error?.message || 'Could not repeat trip');
       return;
     }
-    const old = items.filter(i => i.trip_id === trip.id);
+    const { copy: old } = itemsToRepeat(items.filter(i => i.trip_id === trip.id), stillHave);
     if (old.length) {
       const { data: copied, error: copyError } = await supabase.from('shopping_list_item').insert(old.map(i => ({ shopping_list_id: data.shopping_list_id, food_id: Number(i.food_id), quantity: i.quantity, unit: foodById(i.food_id)?.unit ?? null }))).select();
       if (copyError) fail(copyError.message);
@@ -513,7 +579,9 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     foodPreferences, likedFoods, setFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
-    addPantry, removePantry, saveProfile, finishTrip, repeatTrip, signOut,
+    addPantry, removePantry,
+    pantryCheckDue: needsPantryCheck(!!active, pantry.length), pantryCheckOpen, finishPantryCheck, startPlan,
+    saveProfile, finishTrip, repeatTrip, signOut,
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;

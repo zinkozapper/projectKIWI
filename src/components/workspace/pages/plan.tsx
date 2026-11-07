@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { ArrowRight, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, formatAmount, getFoodPairings, nutrientKeys, type Food, type Nutrients } from '@/lib/foods';
@@ -26,10 +26,11 @@ export function PlanPage() {
   const searchArea = useRef<HTMLDivElement>(null);
 
   const {
-    days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, daily, spend, active,
+    days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
     suggestions, foodGapScores, foodPreferences, setFoodPreference, setSearch, setSelected, fail,
-    addFood, updateQuantity, removeItem,
+    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan,
   } = useWorkspace();
+  const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
 
     const pairingSuggestions = getFoodPairings(
     foodById(selected),
@@ -118,6 +119,16 @@ export function PlanPage() {
         </div>
       </div>
 
+      {pantryCheckDue && (
+        <div className="pantry-check-banner">
+          <div>
+            <strong>New trip? Check your pantry first.</strong>
+            <small>You have {pantry.length} {pantry.length === 1 ? 'food' : 'foods'} at home. Mark anything that’s gone so your plan counts what you still have and doesn’t suggest buying it again.</small>
+          </div>
+          <Button variant="outline" onClick={() => void startPlan()}><House size={16} /> Check pantry</Button>
+        </div>
+      )}
+
       <div className="plan-grid">
         <div className="left-column">
           <section className="section-block grocery-list-section">
@@ -159,7 +170,7 @@ export function PlanPage() {
                           <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setFoodDetails(f); }}>
                             <strong>{f.name}</strong>
                           </button>
-                          <small>{f.category} · ${f.price.toFixed(2)} / {f.unit}</small>
+                          <small>{f.category} · ${f.price.toFixed(2)} / {f.unit}{inPantry(f.id) && <span className="in-pantry-note"> · In your pantry</span>}</small>
                         </div>
                         <Button size="icon" title={`Add ${f.name}`} onClick={e => { e.stopPropagation(); void addFood(f.id); }}>
                           <Plus size={17} />
@@ -196,7 +207,7 @@ export function PlanPage() {
                       <span className="food-emoji">{f.emoji}</span>
                       <div className="food-description">
                         <strong>{f.name}</strong>
-                        <small>{f.note}</small>
+                        <small>{inPantry(f.id) && <span className="in-pantry-note">Already in your pantry · </span>}{f.note}</small>
                       </div>
                       {/* quantity is total servings; the control works in servings per day across the plan. */}
                       <div className="qty-control per-day" onClick={e => e.stopPropagation()}>
@@ -356,8 +367,10 @@ export function PlanPage() {
             <h2>{foodDetails?.name ?? 'Nutrition'}</h2>
             <p>{foodDetails
               ? 'Nutrition per listed serving, compared with your daily targets.'
-              : `Daily average across ${days} days. Each + adds 1 serving a day; pantry foods count as 1 serving a day.`}</p>
-            <NutrientPanel values={foodDetails ? foodDetails.nutrition : perDay(combined, days)} targets={daily} />
+              : `Daily average across ${days} days from your pantry plus your list. Each + adds 1 serving a day; pantry foods count as 1 serving a day.`}</p>
+            {foodDetails
+              ? <NutrientPanel values={foodDetails.nutrition} targets={daily} />
+              : <NutrientPanel values={perDay(combined, days)} base={perDay(pantryTotals, days)} targets={daily} />}
             <div className="nutrition-foot">
               {foodDetails
                 ? 'Approximate nutrition for the listed serving. Actual values may vary.'

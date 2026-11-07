@@ -8,9 +8,11 @@ import { NutrientPanel } from '../nutrient-bar';
 import { PantryAddDialog } from '../pantry-add-dialog';
 
 export function PantryPage() {
-  const { pantry, days, daily, pantryTotals, removePantry } = useWorkspace();
+  const { pantry, listItems, days, daily, pantryTotals, combined, removePantry } = useWorkspace();
   const [adding, setAdding] = useState(false);
-  const perDay = Object.fromEntries(nutrientKeys.map(k => [k, pantryTotals[k] / days])) as Nutrients;
+  // Same numbers as My Plan: pantry (solid) plus the grocery list (light).
+  const perDay = (n: Nutrients) => Object.fromEntries(nutrientKeys.map(k => [k, n[k] / days])) as Nutrients;
+  const hasAnything = pantry.length > 0 || listItems.length > 0;
   const stocked = pantry.map(item => ({ item, food: foodById(item.food_id) })).filter(x => x.food).sort((a, b) => a.food!.name.localeCompare(b.food!.name));
 
   return (
@@ -18,7 +20,7 @@ export function PantryPage() {
       <div className="page-heading">
         <div>
           <h1>Your pantry<span className="brand-dot">.</span></h1>
-          <p>What’s already at home. Finished trips fill it in for you.</p>
+          <p>What’s already at home. Foods stay until you mark them gone. Finished trips fill it in for you.</p>
         </div>
         <Button onClick={() => setAdding(true)}><Plus size={16} /> Add to pantry</Button>
       </div>
@@ -30,7 +32,7 @@ export function PantryPage() {
           </div>
           {stocked.length ? (
             <>
-              <p className="pantry-hint">Ran out of something? Tap it to take it out of your pantry.</p>
+              <p className="pantry-hint">Ran out or used it up? Tap it to mark it gone. Anything still here counts toward your plan and won’t be suggested again.</p>
               <div className="pantry-items">
                 {stocked.map(({ item, food }) => (
                   <Button variant="outline" key={item.id} className="pantry-item" onClick={() => void removePantry(item.id)} aria-label={`Remove ${food!.name} from your pantry`}>
@@ -51,8 +53,10 @@ export function PantryPage() {
         </section>
         <section className="nutrition-panel pantry-snapshot">
           <h2>What you have covered</h2>
-          <p>{pantry.length ? `Daily average across ${days} days, counting each pantry food as 1 serving a day.` : 'Your pantry is empty. Add a few staples to see a snapshot, or go straight to planning.'}</p>
-          {pantry.length > 0 && <NutrientPanel values={perDay} targets={daily} hide={['calories']} />}
+          <p>{hasAnything
+            ? `Daily average across ${days} days: your pantry (1 serving a day each) plus ${listItems.length ? `the ${listItems.length} ${listItems.length === 1 ? 'food' : 'foods'} on your list` : 'your list, which is empty so far'}. My Plan shows the same numbers.`
+            : 'Your pantry is empty. Add a few staples to see a snapshot, or go straight to planning.'}</p>
+          {hasAnything && <NutrientPanel values={perDay(combined)} base={perDay(pantryTotals)} targets={daily} hide={['calories']} />}
           <Button asChild className="snapshot-button"><Link to="/plan">Fill the gaps <ArrowRight size={16} /></Link></Button>
         </section>
       </div>
