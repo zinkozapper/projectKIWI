@@ -10,6 +10,7 @@ import {
 import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { themeBootScript } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -94,7 +95,7 @@ export const Route = createRootRouteWithContext<{}>()({
   errorComponent: ErrorComponent,
 });
 
-const themeScript = `(function(){var r=document.documentElement;r.dataset.scheme='green';r.classList.remove('dark');r.style.colorScheme='light'})();`;
+const themeScript = themeBootScript;
 
 function RootShell({ children }: { children: ReactNode }) {
   return (

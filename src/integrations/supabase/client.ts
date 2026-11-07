@@ -4,8 +4,15 @@ import type { Database } from './types';
 
 const REMEMBER_ME_KEY = 'kiwi:remember-me';
 
+// Stay signed in by default: only an explicit "false" (Remember me unticked) keeps the
+// session in sessionStorage, which the browser clears when it closes.
 export function getRememberMePreference() {
-  return typeof window !== 'undefined' && window.localStorage.getItem(REMEMBER_ME_KEY) === 'true';
+  if (typeof window === 'undefined') return true;
+  try {
+    return window.localStorage.getItem(REMEMBER_ME_KEY) !== 'false';
+  } catch {
+    return true;
+  }
 }
 
 export function setRememberMePreference(remember: boolean) {
@@ -15,8 +22,11 @@ export function setRememberMePreference(remember: boolean) {
 const authStorage = {
   getItem(key: string) {
     if (typeof window === 'undefined') return null;
-    const storage = getRememberMePreference() ? window.localStorage : window.sessionStorage;
-    return storage.getItem(key);
+    const [preferred, other] = getRememberMePreference()
+      ? [window.localStorage, window.sessionStorage]
+      : [window.sessionStorage, window.localStorage];
+    // Fall back to the other storage so a session saved under the old setting still loads.
+    return preferred.getItem(key) ?? other.getItem(key);
   },
   setItem(key: string, value: string) {
     if (typeof window === 'undefined') return;

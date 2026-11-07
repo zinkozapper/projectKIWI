@@ -4,7 +4,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
 import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, nutrientLabels, nutrientLimits, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
-import { applyScheme, applyTheme, DEFAULT_SCHEME } from '@/lib/theme';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
@@ -502,8 +501,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     resetNutrientSnapshots();
     setFoodPreferences({});
     setUserId('');
-    applyTheme('light');
-    applyScheme(DEFAULT_SCHEME);
+    // Keep the saved theme and color scheme: they belong to this device, not the account.
     navigate({ to: '/', replace: true });
   }
 

@@ -25,14 +25,16 @@ export function getStoredTheme(): Theme | null {
   }
 }
 
-export function getSystemTheme(): Theme {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+export const DEFAULT_THEME: Theme = 'light';
+
+// The saved choice wins; with nothing saved the app is light (it no longer follows the OS,
+// which is what made it flip back to dark on PCs set to dark mode).
+export function resolveTheme(): Theme {
+  return getStoredTheme() ?? DEFAULT_THEME;
 }
 
-export function resolveTheme(): Theme {
-  return getStoredTheme() ?? getSystemTheme();
-}
+// Runs inline in <head> before the page paints, so the saved theme shows with no flash.
+export const themeBootScript = `(function(){var r=document.documentElement,t='light',s='green';try{var a=localStorage.getItem('kiwi:theme');if(a==='light'||a==='dark')t=a;var b=localStorage.getItem('kiwi:scheme');if(b==='green'||b==='neutral'||b==='ocean'||b==='sunset')s=b}catch(e){}r.dataset.scheme=s;r.classList.toggle('dark',t==='dark');r.style.colorScheme=t})();`;
 
 export function applyTheme(theme: Theme) {
   const root = document.documentElement;
