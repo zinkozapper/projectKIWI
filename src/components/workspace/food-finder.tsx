@@ -274,6 +274,11 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
                     {summary.pairs.length > 0 && <>Pairs well with {summary.pairs.join(', ')}.</>}
                   </p>
                 )}
+                <p className="section-note finder-done-meta">
+                  {summary.price
+                    ? <>About <strong>${summary.price.perServing.toFixed(2)}</strong> per {summary.serving} at {summary.price.store} ({summary.price.product}).</>
+                    : <>{summary.priceNote ?? 'No store price yet.'} It’ll show as unpriced for now.</>}
+                </p>
                 <p className="section-note finder-done-meta">{summary.source}{summary.needsReview ? ' · An admin will double-check its numbers.' : ''}</p>
               </>
             )}

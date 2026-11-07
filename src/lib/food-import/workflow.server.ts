@@ -7,6 +7,7 @@ import { getRequest } from '@tanstack/react-start/server';
 import { adminClient } from './env.server';
 import { askClaude } from './claude.server';
 import { fdcDetail, searchFdc } from './usda.server';
+import { priceNewFood, type PricingOutcome } from './price.server';
 import {
   EXCLUDE_PREPARED, FLAVOR_TAGS, FOOD_GROUPS, GROUP_RULES, NUTRIENT_COLUMNS, SERVING_CHOICES,
   cleanFlavorTags, computeFood, isFoodGroup, isServingChoice, legacyNutrition, median, pickRawReference, rankCandidates, servingColumns,
@@ -211,7 +212,7 @@ export async function search(input: SearchInput): Promise<SearchResult> {
 
 // ---------- Step 2: add ----------
 
-type EnrichAnswer = { name: string; description: string; emoji: string; categoryId: number; flavorTags: string[]; pairIds: number[] };
+type EnrichAnswer = { name: string; description: string; emoji: string; categoryId: number; flavorTags: string[]; pairIds: number[]; groceryTerm?: string; groceryMust?: string[] };
 
 const ENRICH_SYSTEM = `You catalog a new grocery food for Kiwi, a nutrition-aware grocery planner. Given the USDA record the shopper chose and Kiwi's existing catalog, return:
 - name: the plain grocery name a shopper would search for (max 40 characters, no USDA jargon like "NFS" or "from dried").
@@ -219,7 +220,9 @@ const ENRICH_SYSTEM = `You catalog a new grocery food for Kiwi, a nutrition-awar
 - emoji: a single emoji that best represents the food.
 - categoryId: the best matching category id from the list.
 - flavorTags: 2–4 tags describing its flavor profile, only from: ${FLAVOR_TAGS.join(', ')}.
-- pairIds: 3–6 ids of catalog foods that pair well with it in everyday meals (flavor and meal compatibility). Only use ids from the catalog list; never the food itself.`;
+- pairIds: 3–6 ids of catalog foods that pair well with it in everyday meals (flavor and meal compatibility). Only use ids from the catalog list; never the food itself.
+- groceryTerm: what to type into a grocery store's search box to find this food as it is bought (2–5 words, plain store wording, e.g. "boneless skinless chicken thighs", "dry red lentils", "frozen mixed berries"). Not organic, no brand names.
+- groceryMust: 1–2 words that any correct product's name must contain (e.g. ["thigh"], ["lentil"], ["berry|berries"]); use "a|b" when either spelling works.`;
 
 const ENRICH_TOOL = {
   name: 'catalog_food',
@@ -233,8 +236,10 @@ const ENRICH_TOOL = {
       categoryId: { type: 'integer' },
       flavorTags: { type: 'array', items: { type: 'string', enum: [...FLAVOR_TAGS] }, maxItems: 4 },
       pairIds: { type: 'array', items: { type: 'integer' }, maxItems: 6 },
+      groceryTerm: { type: 'string' },
+      groceryMust: { type: 'array', items: { type: 'string' }, maxItems: 2 },
     },
-    required: ['name', 'description', 'emoji', 'categoryId', 'flavorTags', 'pairIds'],
+    required: ['name', 'description', 'emoji', 'categoryId', 'flavorTags', 'pairIds', 'groceryTerm'],
   },
 };
 
@@ -304,6 +309,17 @@ export async function add(input: AddInput): Promise<AddResult> {
   const flavorTags = cleanFlavorTags(ai.flavorTags);
   const { serving_size, unit } = servingColumns(computed.serving);
 
+  // Store price (Kroger, docs/kroger-price-selection-rules.md): the AI's grocery search term + the same
+  // selection rules as the backfill. Runs before the insert so food.price is set; never blocks adding the food.
+  const pricing: PricingOutcome = await priceNewFood({
+    food_name: name,
+    food_category_id: categoryId,
+    serving_size,
+    unit,
+    serving_grams: computed.servingGrams,
+    search: { term: clip(ai.groceryTerm, 60) || name, must: (ai.groceryMust || []).map(t => clip(t, 30)).filter(Boolean).slice(0, 2) },
+  }, who.id);
+
   const row = {
     food_name: name,
     food_description: clip(ai.description, 120),
@@ -312,7 +328,7 @@ export async function add(input: AddInput): Promise<AddResult> {
     serving_size,
     unit,
     factor: computed.factor,
-    price: 0,
+    price: pricing.defaultPrice ?? 0,
     source: `USDA FDC ${record.dataType} (AI food finder)`,
     fdc_id: record.fdcId,
     raw_fdc_id: raw?.fdcId ?? null,
@@ -331,6 +347,11 @@ export async function add(input: AddInput): Promise<AddResult> {
   if (error) {
     if (error.code === '23505') throw new UserError(`“${name}” is already in Kiwi.`);
     throw error;
+  }
+
+  if (pricing.rows.length) {
+    const { error: priceError } = await db.from('food_price').upsert(pricing.rows.map(r => ({ ...r, food_id: food.food_id })), { onConflict: 'food_id,location_id' });
+    if (priceError) console.error('[food-import] saving price', priceError);
   }
 
   // Pairings go both ways so the partner foods suggest the new one too.
@@ -361,6 +382,8 @@ export async function add(input: AddInput): Promise<AddResult> {
       pairs: pairIds.map(id => nameOf.get(id) ?? '').filter(Boolean),
       needsReview: computed.needsReview,
       source: `USDA ${record.dataType}: ${record.description}`,
+      price: pricing.forUser,
+      priceNote: pricing.note,
     },
   };
 }

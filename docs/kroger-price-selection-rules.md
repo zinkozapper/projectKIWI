@@ -1,7 +1,9 @@
 # Kroger price selection rules
 
 How Kiwi turns a food into a localized price. Written so the add-food workflow can follow the same rules later.
-Code: `scripts/kroger/` (shared logic in `lib.mjs`, per-food rules in `price-rules.json`).
+Code: `src/lib/food-import/pricing.ts` (rules + scaling) and `kroger.server.ts` (API), shared by the add-food workflow (`price.server.ts`) and the backfill script (`scripts/kroger/`). Per-food and per-category rules: `src/lib/food-import/price-rules.json`.
+
+**New foods (add-food workflow):** there are no per-food rules yet, so Claude supplies the grocery search term and 1–2 words the product name must contain; category rules, brand order, organic fallback, scaling and backup stores apply as below. The food is priced at the user's ZIP store and at the default ZIP's store (→ `food.price`). A missing key, no store, or no match saves the food unpriced instead of failing.
 Tables: `profiles.zip_code`, `kroger_store`, `zip_store`, `food_price` (migration `0010_kiwi_localized_food_price.sql`).
 
 ## 1. Source and store

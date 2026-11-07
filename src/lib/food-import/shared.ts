@@ -72,5 +72,8 @@ export type AddResult = {
     pairs: string[];
     needsReview: boolean;
     source: string;
+    /** The shopper's store price per serving (Kroger), or null with priceNote saying why. */
+    price: { zip: string; store: string; product: string; perServing: number; flags: string[] } | null;
+    priceNote: string | null;
   } | null;
 };

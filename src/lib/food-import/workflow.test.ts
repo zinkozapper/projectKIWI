@@ -4,14 +4,14 @@ import type { FdcFood } from './rules';
 // ---------- In-memory stand-in for the Supabase service-role client ----------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- loose rows keep the fake small
 type Row = any;
-type Tables = 'food' | 'food_category' | 'food_import_request' | 'app_admin' | 'user_food_quota';
+type Tables = 'food' | 'food_category' | 'food_import_request' | 'app_admin' | 'user_food_quota' | 'food_price';
 const db = {} as Partial<Record<Tables, Row[]>> & Record<string, Row[] | undefined>;
 let nextId: Partial<Record<string, number>> = {};
 const pk: Partial<Record<string, string>> = { food: 'food_id', food_import_request: 'request_id', food_category: 'food_category_id' };
 
 function query(table: string) {
   const filters: ((r: Row) => boolean)[] = [];
-  let op: 'select' | 'insert' | 'update' = 'select';
+  let op: 'select' | 'insert' | 'update' | 'upsert' = 'select';
   let payload: Row = {};
   let head = false;
   let count = false;
@@ -19,12 +19,14 @@ function query(table: string) {
     select(_cols?: string, opts?: { count?: string; head?: boolean }) { if (opts?.head) head = true; if (opts?.count) count = true; return api; },
     insert(row: Row) { op = 'insert'; payload = row; return api; },
     update(row: Row) { op = 'update'; payload = row; return api; },
+    upsert(row: Row) { op = 'upsert'; payload = row; return api; },
     eq(col: string, v: unknown) { filters.push(r => r[col] === v); return api; },
     in(col: string, vs: unknown[]) { filters.push(r => vs.includes(r[col])); return api; },
     ilike(col: string, v: string) { filters.push(r => String(r[col]).toLowerCase() === v.toLowerCase()); return api; },
     order() { return api; },
     run() {
       const rows: Row[] = (db[table] ||= []);
+      if (op === 'upsert') { const list = Array.isArray(payload) ? payload : [payload]; rows.push(...list); return { data: list, error: null }; }
       if (op === 'insert') {
         const key = pk[table];
         const row: Row = { status: 'open', kind: 'food', rounds: [], raw_fdc_id: null, chosen_fdc_id: null, pairs: [], ...payload };
@@ -71,6 +73,11 @@ vi.mock('./usda.server', () => ({
 const askClaude = vi.fn();
 vi.mock('./claude.server', () => ({ askClaude: (a: unknown) => askClaude(a) }));
 
+// ---------- Kroger pricing stand-in (price.server is tested through kroger.server.test.ts) ----------
+const unpriced = { rows: [], defaultPrice: null, forUser: null, note: 'Store prices aren’t set up yet.' };
+const priceNewFood = vi.fn();
+vi.mock('./price.server', () => ({ priceNewFood: (...a: unknown[]) => priceNewFood(...a) }));
+
 const wf = await import('./workflow.server');
 
 beforeEach(() => {
@@ -84,10 +91,12 @@ beforeEach(() => {
   ];
   db.food_category = [{ food_category_id: 1, category_description: 'Proteins & Seafood' }];
   db.app_admin = [];
+  priceNewFood.mockReset();
+  priceNewFood.mockResolvedValue(unpriced);
   askClaude.mockReset();
   askClaude
     .mockResolvedValueOnce({ group: 'legume', options: [{ fdcId: 1, label: 'Brown lentils', reason: 'Cooked without fat', serving: '1/4 cup' }, { fdcId: 999, label: 'invented', reason: '', serving: '1 cup' }], followUpQuestion: null, noGoodMatch: false })
-    .mockResolvedValueOnce({ name: 'Lentils', description: 'Dried brown lentils', emoji: '🫘', categoryId: 1, flavorTags: ['earthy', 'crunchy'], pairIds: [1, 2, 404] });
+    .mockResolvedValueOnce({ name: 'Lentils', description: 'Dried brown lentils', emoji: '🫘', categoryId: 1, flavorTags: ['earthy', 'crunchy'], pairIds: [1, 2, 404], groceryTerm: 'dry brown lentils', groceryMust: ['lentil'] });
 });
 
 describe('food import workflow', () => {
@@ -143,5 +152,41 @@ describe('food import workflow', () => {
     askClaude.mockResolvedValueOnce({ group: 'legume', options: [{ fdcId: 1, label: 'Lentils', reason: '', serving: '1/4 cup' }], noGoodMatch: false });
     const again = await wf.search({ query: 'black lentils', howBought: 'dry', requestId: s.requestId });
     expect(again.status.limit).toBeNull();
+  });
+
+  it('prices the new food at the shopper’s store and saves it', async () => {
+    priceNewFood.mockResolvedValueOnce({
+      rows: [{ location_id: '70600136', source_location_id: null, product_id: 'p1', upc: null, brand: 'La Preferida', description: 'La Preferida® Lentils (Dry)', package_size: '16 oz', sold_by: 'UNIT', package_price: 1.79, package_grams: 453.6, serving_grams: 48, price_per_serving: 0.1894, store_brand: false, flags: 'no store brand: national brand used' }],
+      defaultPrice: 0.19,
+      forUser: { zip: '84601', store: 'Smith’s Provo', product: 'La Preferida · La Preferida® Lentils (Dry)', perServing: 0.1894, flags: [] },
+      note: null,
+    });
+    const s = await wf.search({ query: 'lentils', howBought: 'dry' });
+    const r = await wf.add({ requestId: s.requestId, fdcId: 1, group: 'legume', serving: '1/4 cup' });
+
+    // AI search term, the computed as-bought grams and the AI's category go to pricing
+    expect(priceNewFood).toHaveBeenCalledWith(expect.objectContaining({ food_name: 'Lentils', food_category_id: 1, serving_size: 0.25, unit: 'cup', serving_grams: 48, search: { term: 'dry brown lentils', must: ['lentil'] } }), 'user-1');
+    const food = db.food!.find(f => f.food_name === 'Lentils')!;
+    expect(food.price).toBe(0.19);
+    expect(db.food_price).toEqual([expect.objectContaining({ food_id: food.food_id, location_id: '70600136', price_per_serving: 0.1894 })]);
+    expect(r.summary!.price).toMatchObject({ perServing: 0.1894, store: 'Smith’s Provo' });
+    expect(r.summary!.priceNote).toBeNull();
+  });
+
+  it('still adds the food, unpriced, when no store price is found', async () => {
+    const s = await wf.search({ query: 'lentils', howBought: 'dry' });
+    const r = await wf.add({ requestId: s.requestId, fdcId: 1, group: 'legume', serving: '1/4 cup' });
+    expect(db.food!.find(f => f.food_name === 'Lentils')!.price).toBe(0);
+    expect(db.food_price ?? []).toHaveLength(0);
+    expect(r.summary!.price).toBeNull();
+    expect(r.summary!.priceNote).toMatch(/set up/);
+  });
+
+  it('does not look up a price when the food already exists', async () => {
+    const s = await wf.search({ query: 'lentils', howBought: 'dry' });
+    askClaude.mockReset();
+    askClaude.mockResolvedValueOnce({ name: 'rice', description: '', emoji: '🍚', categoryId: 1, flavorTags: [], pairIds: [], groceryTerm: 'rice' });
+    await wf.add({ requestId: s.requestId, fdcId: 1, group: 'legume', serving: '1/4 cup' });
+    expect(priceNewFood).not.toHaveBeenCalled();
   });
 });

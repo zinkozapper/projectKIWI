@@ -282,6 +282,88 @@ export type Database = {
           },
         ]
       }
+      food_price: {
+        Row: {
+          brand: string | null
+          description: string | null
+          fetched_at: string
+          flags: string | null
+          food_id: number
+          location_id: string
+          package_grams: number | null
+          package_price: number
+          package_size: string | null
+          price_per_serving: number
+          product_id: string
+          serving_grams: number
+          sold_by: string | null
+          source: string
+          source_location_id: string | null
+          store_brand: boolean
+          upc: string | null
+        }
+        Insert: {
+          brand?: string | null
+          description?: string | null
+          fetched_at?: string
+          flags?: string | null
+          food_id: number
+          location_id: string
+          package_grams?: number | null
+          package_price: number
+          package_size?: string | null
+          price_per_serving: number
+          product_id: string
+          serving_grams: number
+          sold_by?: string | null
+          source?: string
+          source_location_id?: string | null
+          store_brand?: boolean
+          upc?: string | null
+        }
+        Update: {
+          brand?: string | null
+          description?: string | null
+          fetched_at?: string
+          flags?: string | null
+          food_id?: number
+          location_id?: string
+          package_grams?: number | null
+          package_price?: number
+          package_size?: string | null
+          price_per_serving?: number
+          product_id?: string
+          serving_grams?: number
+          sold_by?: string | null
+          source?: string
+          source_location_id?: string | null
+          store_brand?: boolean
+          upc?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_price_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+          {
+            foreignKeyName: "food_price_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "kroger_store"
+            referencedColumns: ["location_id"]
+          },
+          {
+            foreignKeyName: "food_price_source_location_id_fkey"
+            columns: ["source_location_id"]
+            isOneToOne: false
+            referencedRelation: "kroger_store"
+            referencedColumns: ["location_id"]
+          },
+        ]
+      }
       food_preferences: {
         Row: {
           user_id: string
@@ -317,6 +399,45 @@ export type Database = {
             referencedColumns: ["food_id"]
           },
         ]
+      }
+      kroger_store: {
+        Row: {
+          address: string | null
+          chain: string | null
+          city: string | null
+          fetched_at: string
+          latitude: number | null
+          location_id: string
+          longitude: number | null
+          name: string
+          state: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          chain?: string | null
+          city?: string | null
+          fetched_at?: string
+          latitude?: number | null
+          location_id: string
+          longitude?: number | null
+          name: string
+          state?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          chain?: string | null
+          city?: string | null
+          fetched_at?: string
+          latitude?: number | null
+          location_id?: string
+          longitude?: number | null
+          name?: string
+          state?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
       }
       nutrient_profile_snapshot: {
         Row: {
@@ -487,6 +608,7 @@ export type Database = {
           height_cm: number | null
           user_id: string
           weight_kg: number | null
+          zip_code: string
         }
         Insert: {
           activity?: string
@@ -501,6 +623,7 @@ export type Database = {
           height_cm?: number | null
           user_id: string
           weight_kg?: number | null
+          zip_code?: string
         }
         Update: {
           activity?: string
@@ -515,6 +638,7 @@ export type Database = {
           height_cm?: number | null
           user_id?: string
           weight_kg?: number | null
+          zip_code?: string
         }
         Relationships: []
       }
@@ -785,6 +909,32 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      zip_store: {
+        Row: {
+          fetched_at: string
+          location_id: string
+          zip_code: string
+        }
+        Insert: {
+          fetched_at?: string
+          location_id: string
+          zip_code: string
+        }
+        Update: {
+          fetched_at?: string
+          location_id?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zip_store_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "kroger_store"
+            referencedColumns: ["location_id"]
+          },
+        ]
       }
       users: {
         Row: {
