@@ -20,7 +20,7 @@ npm run lint
 npm run format     # repo-wide Prettier write; avoid running it on unrelated files
 ```
 
-Environment setup: copy `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. `FDC_API_KEY` is only for the USDA scripts. Server-only values (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_SECRET`) must never be exposed through `VITE_` variables.
+Environment setup: copy `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. `FDC_API_KEY` and `ANTHROPIC_API_KEY` are used by the USDA scripts and the AI food finder. Server-only values (`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `FDC_API_KEY`, `DATABASE_URL`, `CRON_SECRET`) must never be exposed through `VITE_` variables.
 
 `npm run lint` currently reports many Prettier style errors across existing files because the repo uses single quotes while Prettier's defaults expect double quotes. Do not mass-reformat unrelated files or treat lint as a clean gate; match the surrounding style and keep changes scoped.
 
@@ -86,7 +86,7 @@ The source of truth for foods is Supabase `food` joined with `food_category`. `s
 - `serving_size` and `unit` describe what the user buys.
 - Keep nutrition estimates consistent between the database and `src/lib/foods.ts`.
 
-Curated meal pairings, aliases, nutrient labels/units, and nutrition target calculations live in `src/lib/foods.ts`. `MEAL_PAIRINGS`, `ADDITIONAL_PAIRINGS`, and `FOOD_ALIASES` drive `getFoodPairings()`; it filters by budget and already-selected foods and returns at most three suggestions. The `food.pairs` database column is loaded into `Food.pairs` but is not what drives recommendations. If foods are renamed in the database, update the pairing names/aliases too, or recommendations will silently drop.
+Curated meal pairings, aliases, nutrient labels/units, and nutrition target calculations live in `src/lib/foods.ts`. `getFoodPairings()` uses the `food.pairs` database column first (in both directions; set by the AI food finder), then the curated `MEAL_PAIRINGS`, `ADDITIONAL_PAIRINGS`, and `FOOD_ALIASES` lists, which still cover the original catalog. It filters by budget and already-selected foods and returns at most three suggestions. If foods are renamed in the database, update the pairing names/aliases too, or curated recommendations will silently drop.
 
 `targets(profile)` estimates daily nutrient goals from the profile. The profile UI stores height/weight in cm/kg but accepts feet/inches and pounds, converting in `src/components/workspace/context.tsx`.
 
@@ -102,6 +102,15 @@ node --env-file=.env scripts/usda/4-export-supabase.mjs # export Supabase import
 ```
 
 Review the `x` marks in `data/usda/candidates.csv` between steps 1 and 2. Group rules and per-food overrides live in `scripts/usda/foods-to-import.json`. Import `data/usda/supabase/food_category.csv` before `data/usda/supabase/food.csv` because foods reference categories. Missing nutrient values are stored as 0 per the current data decision.
+
+## AI food finder
+
+Users add foods through `src/components/workspace/food-finder.tsx` (opened from the plan page's search results). It calls the server functions in `src/lib/food-import/functions.ts`. Their handlers dynamically import `workflow.server.ts`, which uses `usda.server.ts` (USDA FoodData Central), `claude.server.ts` (Anthropic Messages API, forced tool use for JSON) and `env.server.ts` (service-role client). Keep secrets in `*.server.ts` files only; the build's import protection keeps them out of the browser bundle.
+
+- Pure selection and scaling rules: `src/lib/food-import/rules.ts`, the TypeScript port of `scripts/usda`, tested in `rules.test.ts`. Claude only chooses among USDA records; nutrient math stays in code.
+- Server functions return `{ ok, data } | { ok, error }` instead of throwing. `start.ts`'s error middleware would otherwise turn errors into the HTML error page.
+- Server env: `FDC_API_KEY`, `ANTHROPIC_API_KEY` (optional `ANTHROPIC_MODEL`), `SUPABASE_SERVICE_ROLE_KEY`. `SUPABASE_URL` falls back to the build-time `VITE_SUPABASE_URL`. Locally, `env.server.ts` reads `.env` directly.
+- Database: migration 0009 adds `food.flavor_profile/food_group/cook_ratio/raw_fdc_id/added_by/needs_review/review_notes`, `user_food_quota` (default limit 10, +10 per admin approval), and `food_import_request` (request log and admin queue), plus the `admin_food_queue`, `admin_resolve_food_request` and `admin_mark_food_reviewed` functions used by `src/components/workspace/food-queue.tsx` on `/admin`.
 
 ## UI and code style
 

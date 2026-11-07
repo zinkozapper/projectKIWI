@@ -1,0 +1,401 @@
+food_id,food,serving,serving_g,selected,tier,eligible,reason,product_id,upc,brand,description,size,package_g,sold_by,regular,promo,price_per_serving,how,flags,search_term,rank,categories
+1,Chicken breast,4 oz,113.398,,national brand,yes,,5204304031,0001,NationalCo,NationalCo breast boneless skinless chicken breast,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,boneless skinless chicken breast,0,Test
+1,Chicken breast,4 oz,113.398,,store brand,,organic,6950354061,0001,Simple Truth,Simple Truth Organic breast boneless skinless chicken breast,1 lb,,UNIT,8.985,7.188,,,,boneless skinless chicken breast,1,Test
+1,Chicken breast,4 oz,113.398,,store brand,yes,,5940885156,0001,Kroger,Kroger® breast boneless skinless chicken breast,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,boneless skinless chicken breast,2,Test
+1,Chicken breast,4 oz,113.398,x,store brand,yes,,7915176019,0001,Kroger,Kroger® breast boneless skinless chicken breast family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,boneless skinless chicken breast,3,Test
+2,Chicken thighs,4 oz,113.398,,national brand,yes,,1310504019,0001,NationalCo,NationalCo thigh boneless skinless chicken thighs,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,boneless skinless chicken thighs,0,Test
+2,Chicken thighs,4 oz,113.398,,store brand,,organic,0789760347,0001,Simple Truth,Simple Truth Organic thigh boneless skinless chicken thighs,1 lb,,UNIT,8.985,7.188,,,,boneless skinless chicken thighs,1,Test
+2,Chicken thighs,4 oz,113.398,x,store brand,yes,,7432349380,0001,Kroger,Kroger® thigh boneless skinless chicken thighs,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,boneless skinless chicken thighs,2,Test
+2,Chicken thighs,4 oz,113.398,,store brand,yes,,2162543075,0001,Kroger,Kroger® thigh boneless skinless chicken thighs family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,boneless skinless chicken thighs,3,Test
+3,Pork Tenderloin,4 oz,113.398,,national brand,yes,,2583818189,0001,NationalCo,NationalCo tenderloin pork tenderloin,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,pork tenderloin,0,Test
+3,Pork Tenderloin,4 oz,113.398,,store brand,,organic,4615701452,0001,Simple Truth,Simple Truth Organic tenderloin pork tenderloin,1 lb,,UNIT,8.985,7.188,,,,pork tenderloin,1,Test
+3,Pork Tenderloin,4 oz,113.398,x,store brand,yes,,4052049311,0001,Kroger,Kroger® tenderloin pork tenderloin,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,pork tenderloin,2,Test
+3,Pork Tenderloin,4 oz,113.398,,store brand,yes,,7420160381,0001,Kroger,Kroger® tenderloin pork tenderloin family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,pork tenderloin,3,Test
+4,Pork Butt/Shoulder,4 oz,113.398,,national brand,yes,,4988913116,0001,NationalCo,NationalCo shoulder pork shoulder butt roast,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,pork shoulder butt roast,0,Test
+4,Pork Butt/Shoulder,4 oz,113.398,,store brand,,organic,8106317584,0001,Simple Truth,Simple Truth Organic shoulder pork shoulder butt roast,1 lb,,UNIT,8.985,7.188,,,,pork shoulder butt roast,1,Test
+4,Pork Butt/Shoulder,4 oz,113.398,x,store brand,yes,,0769108103,0001,Kroger,Kroger® shoulder pork shoulder butt roast,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,pork shoulder butt roast,2,Test
+4,Pork Butt/Shoulder,4 oz,113.398,,store brand,yes,,4735275083,0001,Kroger,Kroger® shoulder pork shoulder butt roast family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,pork shoulder butt roast,3,Test
+5,Sirloin,4 oz,113.398,,national brand,yes,,6919412443,0001,NationalCo,NationalCo sirloin beef sirloin steak,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,beef sirloin steak,0,Test
+5,Sirloin,4 oz,113.398,,store brand,,organic,6835346701,0001,Simple Truth,Simple Truth Organic sirloin beef sirloin steak,1 lb,,UNIT,8.985,7.188,,,,beef sirloin steak,1,Test
+5,Sirloin,4 oz,113.398,x,store brand,yes,,8832793225,0001,Kroger,Kroger® sirloin beef sirloin steak,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,beef sirloin steak,2,Test
+5,Sirloin,4 oz,113.398,,store brand,yes,,8393970252,0001,Kroger,Kroger® sirloin beef sirloin steak family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,beef sirloin steak,3,Test
+6,Chuck,4 oz,113.398,,national brand,yes,,9015635038,0001,NationalCo,NationalCo chuck beef chuck roast,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,beef chuck roast,0,Test
+6,Chuck,4 oz,113.398,,store brand,,organic,8647924574,0001,Simple Truth,Simple Truth Organic chuck beef chuck roast,1 lb,,UNIT,8.985,7.188,,,,beef chuck roast,1,Test
+6,Chuck,4 oz,113.398,x,store brand,yes,,5150196219,0001,Kroger,Kroger® chuck beef chuck roast,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,beef chuck roast,2,Test
+6,Chuck,4 oz,113.398,,store brand,yes,,6264976257,0001,Kroger,Kroger® chuck beef chuck roast family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,beef chuck roast,3,Test
+7,Ground beef 90/10,4 oz,113.398,,national brand,yes,,6743158768,0001,NationalCo,NationalCo ground 90 90% lean ground beef,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,90% lean ground beef,0,Test
+7,Ground beef 90/10,4 oz,113.398,,store brand,,organic,7768025147,0001,Simple Truth,Simple Truth Organic ground 90 90% lean ground beef,1 lb,,UNIT,8.985,7.188,,,,90% lean ground beef,1,Test
+7,Ground beef 90/10,4 oz,113.398,x,store brand,yes,,2485609454,0001,Kroger,Kroger® ground 90 90% lean ground beef,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,90% lean ground beef,2,Test
+7,Ground beef 90/10,4 oz,113.398,,store brand,yes,,8913455146,0001,Kroger,Kroger® ground 90 90% lean ground beef family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,90% lean ground beef,3,Test
+8,Ribeye Whole,4 oz,113.398,,national brand,yes,,3066081506,0001,NationalCo,NationalCo ribeye ribeye steak,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,ribeye steak,0,Test
+8,Ribeye Whole,4 oz,113.398,,store brand,,organic,7733237071,0001,Simple Truth,Simple Truth Organic ribeye ribeye steak,1 lb,,UNIT,8.985,7.188,,,,ribeye steak,1,Test
+8,Ribeye Whole,4 oz,113.398,x,store brand,yes,,5830308342,0001,Kroger,Kroger® ribeye ribeye steak,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,ribeye steak,2,Test
+8,Ribeye Whole,4 oz,113.398,,store brand,yes,,2277658483,0001,Kroger,Kroger® ribeye ribeye steak family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,ribeye steak,3,Test
+9,Tilapia,4 oz,113.398,,national brand,yes,,7765753761,0001,NationalCo,NationalCo tilapia tilapia fillets,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,tilapia fillets,0,Test
+9,Tilapia,4 oz,113.398,,store brand,,organic,7491950109,0001,Simple Truth,Simple Truth Organic tilapia tilapia fillets,1 lb,,UNIT,8.985,7.188,,,,tilapia fillets,1,Test
+9,Tilapia,4 oz,113.398,x,store brand,yes,,4774461999,0001,Kroger,Kroger® tilapia tilapia fillets,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,tilapia fillets,2,Test
+9,Tilapia,4 oz,113.398,,store brand,yes,,7147964774,0001,Kroger,Kroger® tilapia tilapia fillets family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,tilapia fillets,3,Test
+10,Salmon,4 oz,113.398,,national brand,yes,,1540032530,0001,NationalCo,NationalCo salmon atlantic salmon fillet,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,atlantic salmon fillet,0,Test
+10,Salmon,4 oz,113.398,,store brand,,organic,6107969348,0001,Simple Truth,Simple Truth Organic salmon atlantic salmon fillet,1 lb,,UNIT,8.985,7.188,,,,atlantic salmon fillet,1,Test
+10,Salmon,4 oz,113.398,x,store brand,yes,,6703893023,0001,Kroger,Kroger® salmon atlantic salmon fillet,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,atlantic salmon fillet,2,Test
+10,Salmon,4 oz,113.398,,store brand,yes,,0524359022,0001,Kroger,Kroger® salmon atlantic salmon fillet family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,atlantic salmon fillet,3,Test
+11,Tuna,4 oz,113.398,,national brand,yes,,1194107199,0001,NationalCo,NationalCo tuna chunk light tuna in water,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,chunk light tuna in water,0,Test
+11,Tuna,4 oz,113.398,,store brand,,organic,1747937497,0001,Simple Truth,Simple Truth Organic tuna chunk light tuna in water,1 lb,,UNIT,8.985,7.188,,,,chunk light tuna in water,1,Test
+11,Tuna,4 oz,113.398,x,store brand,yes,,5673827692,0001,Kroger,Kroger® tuna chunk light tuna in water,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,chunk light tuna in water,2,Test
+11,Tuna,4 oz,113.398,,store brand,yes,,8714637023,0001,Kroger,Kroger® tuna chunk light tuna in water family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,chunk light tuna in water,3,Test
+12,Sardines,4 oz,113.398,,national brand,yes,,2029954780,0001,NationalCo,NationalCo sardines sardines in water,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,sardines in water,0,Test
+12,Sardines,4 oz,113.398,,store brand,,organic,9460501814,0001,Simple Truth,Simple Truth Organic sardines sardines in water,1 lb,,UNIT,8.985,7.188,,,,sardines in water,1,Test
+12,Sardines,4 oz,113.398,x,store brand,yes,,4579697498,0001,Kroger,Kroger® sardines sardines in water,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,sardines in water,2,Test
+12,Sardines,4 oz,113.398,,store brand,yes,,5433797892,0001,Kroger,Kroger® sardines sardines in water family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,sardines in water,3,Test
+13,Oysters,4 oz,113.398,,national brand,yes,,1215983484,0001,NationalCo,NationalCo oysters whole oysters,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,whole oysters,0,Test
+13,Oysters,4 oz,113.398,,store brand,,organic,7708328149,0001,Simple Truth,Simple Truth Organic oysters whole oysters,1 lb,,UNIT,8.985,7.188,,,,whole oysters,1,Test
+13,Oysters,4 oz,113.398,x,store brand,yes,,1494100076,0001,Kroger,Kroger® oysters whole oysters,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,whole oysters,2,Test
+13,Oysters,4 oz,113.398,,store brand,yes,,5297377579,0001,Kroger,Kroger® oysters whole oysters family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,whole oysters,3,Test
+14,Ground Turkey,4 oz,113.398,,national brand,yes,,9409414908,0001,NationalCo,NationalCo ground turkey 93% lean ground turkey,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,93% lean ground turkey,0,Test
+14,Ground Turkey,4 oz,113.398,,store brand,,organic,6903377509,0001,Simple Truth,Simple Truth Organic ground turkey 93% lean ground turkey,1 lb,,UNIT,8.985,7.188,,,,93% lean ground turkey,1,Test
+14,Ground Turkey,4 oz,113.398,x,store brand,yes,,4282883619,0001,Kroger,Kroger® ground turkey 93% lean ground turkey,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,93% lean ground turkey,2,Test
+14,Ground Turkey,4 oz,113.398,,store brand,yes,,1816855611,0001,Kroger,Kroger® ground turkey 93% lean ground turkey family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,93% lean ground turkey,3,Test
+15,Chicken Liver,4 oz,113.398,,national brand,yes,,1343648886,0001,NationalCo,NationalCo liver chicken livers,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,chicken livers,0,Test
+15,Chicken Liver,4 oz,113.398,,store brand,,organic,6216641160,0001,Simple Truth,Simple Truth Organic liver chicken livers,1 lb,,UNIT,8.985,7.188,,,,chicken livers,1,Test
+15,Chicken Liver,4 oz,113.398,x,store brand,yes,,0037421871,0001,Kroger,Kroger® liver chicken livers,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,chicken livers,2,Test
+15,Chicken Liver,4 oz,113.398,,store brand,yes,,0983322295,0001,Kroger,Kroger® liver chicken livers family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,chicken livers,3,Test
+16,Liver,4 oz,113.398,,national brand,yes,,3580236744,0001,NationalCo,NationalCo beef liver beef liver,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,beef liver,0,Test
+16,Liver,4 oz,113.398,,store brand,,organic,2316145271,0001,Simple Truth,Simple Truth Organic beef liver beef liver,1 lb,,UNIT,8.985,7.188,,,,beef liver,1,Test
+16,Liver,4 oz,113.398,x,store brand,yes,,8753005866,0001,Kroger,Kroger® beef liver beef liver,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,beef liver,2,Test
+16,Liver,4 oz,113.398,,store brand,yes,,5327763945,0001,Kroger,Kroger® beef liver beef liver family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,beef liver,3,Test
+17,Shrimp,4 oz,113.398,,national brand,yes,,4081828998,0001,NationalCo,NationalCo shrimp raw shrimp,1 lb,453.6,UNIT,5.391,4.3128,1.3478,$5.391 × 113.4 g / 454 g,,raw shrimp,0,Test
+17,Shrimp,4 oz,113.398,,store brand,,organic,6266348897,0001,Simple Truth,Simple Truth Organic shrimp raw shrimp,1 lb,,UNIT,8.985,7.188,,,,raw shrimp,1,Test
+17,Shrimp,4 oz,113.398,x,store brand,yes,,6963649365,0001,Kroger,Kroger® shrimp raw shrimp,1 lb,453.6,UNIT,5.99,4.792000000000001,1.4975,$5.99 × 113.4 g / 454 g,,raw shrimp,2,Test
+17,Shrimp,4 oz,113.398,,store brand,yes,,9062606069,0001,Kroger,Kroger® shrimp raw shrimp family pack,3 lb,1360.8,UNIT,17.97,14.376,1.4975,$17.97 × 113.4 g / 1361 g,,raw shrimp,3,Test
+18,Chickpeas / Garbanzo Beans,0.25 cup,50,,national brand,yes,,4401934346,0001,NationalCo,NationalCo garbanzo dry garbanzo beans,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2966,$2.6910000000000003 × 50.0 g / 454 g,,dry garbanzo beans,0,Test
+18,Chickpeas / Garbanzo Beans,0.25 cup,50,,store brand,,organic,8262455813,0001,Simple Truth,Simple Truth Organic garbanzo dry garbanzo beans,16 oz,,UNIT,4.485,3.5880000000000005,,,,dry garbanzo beans,1,Test
+18,Chickpeas / Garbanzo Beans,0.25 cup,50,x,store brand,yes,,4363678453,0001,Kroger,Kroger® garbanzo dry garbanzo beans,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3296,$2.99 × 50.0 g / 454 g,,dry garbanzo beans,2,Test
+18,Chickpeas / Garbanzo Beans,0.25 cup,50,,store brand,yes,,6440980550,0001,Kroger,Kroger® garbanzo dry garbanzo beans family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.9888,$8.97 × 50.0 g / 454 g,,dry garbanzo beans,3,Test
+19,Lentils,0.25 cup,48,x,national brand,yes,,6616837243,0001,NationalCo,NationalCo lentil dry lentils,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2848,$2.6910000000000003 × 48.0 g / 454 g,,dry lentils,0,Test
+19,Lentils,0.25 cup,48,,store brand,,organic,8017798367,0001,Simple Truth,Simple Truth Organic lentil dry lentils,16 oz,,UNIT,4.485,3.5880000000000005,,,,dry lentils,1,Test
+19,Lentils,0.25 cup,48,x,store brand,yes,,9571524342,0001,Kroger,Kroger® lentil dry lentils,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3164,$2.99 × 48.0 g / 454 g,,dry lentils,2,Test
+19,Lentils,0.25 cup,48,,store brand,yes,,1313755632,0001,Kroger,Kroger® lentil dry lentils family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.9492,$8.97 × 48.0 g / 454 g,,dry lentils,3,Test
+20,Bagels,85 g,85,,national brand,yes,,0560040301,0001,NationalCo,NationalCo bagel plain bagels,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5043,$2.6910000000000003 × 85.0 g / 454 g,,plain bagels,0,Test
+20,Bagels,85 g,85,,store brand,,organic,6099559906,0001,Simple Truth,Simple Truth Organic bagel plain bagels,16 oz,,UNIT,4.485,3.5880000000000005,,,,plain bagels,1,Test
+20,Bagels,85 g,85,x,store brand,yes,,0990707330,0001,Kroger,Kroger® bagel plain bagels,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.5603,$2.99 × 85.0 g / 454 g,,plain bagels,2,Test
+20,Bagels,85 g,85,,store brand,yes,,4202537457,0001,Kroger,Kroger® bagel plain bagels family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.6809,$8.97 × 85.0 g / 454 g,,plain bagels,3,Test
+21,Pasta,2 oz,56.699,,national brand,yes,,0504968753,0001,NationalCo,NationalCo spaghetti spaghetti pasta,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.3364,$2.6910000000000003 × 56.7 g / 454 g,,spaghetti pasta,0,Test
+21,Pasta,2 oz,56.699,,store brand,,organic,0631394941,0001,Simple Truth,Simple Truth Organic spaghetti spaghetti pasta,16 oz,,UNIT,4.485,3.5880000000000005,,,,spaghetti pasta,1,Test
+21,Pasta,2 oz,56.699,x,store brand,yes,,6373259722,0001,Kroger,Kroger® spaghetti spaghetti pasta,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3738,$2.99 × 56.7 g / 454 g,,spaghetti pasta,2,Test
+21,Pasta,2 oz,56.699,,store brand,yes,,4540370438,0001,Kroger,Kroger® spaghetti spaghetti pasta family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.1213,$8.97 × 56.7 g / 454 g,,spaghetti pasta,3,Test
+22,Whole Wheat Pasta,2 oz,56.699,,national brand,yes,,1925284743,0001,NationalCo,NationalCo whole wheat whole wheat pasta,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.3364,$2.6910000000000003 × 56.7 g / 454 g,,whole wheat pasta,0,Test
+22,Whole Wheat Pasta,2 oz,56.699,,store brand,,organic,9750586435,0001,Simple Truth,Simple Truth Organic whole wheat whole wheat pasta,16 oz,,UNIT,4.485,3.5880000000000005,,,,whole wheat pasta,1,Test
+22,Whole Wheat Pasta,2 oz,56.699,x,store brand,yes,,0800587966,0001,Kroger,Kroger® whole wheat whole wheat pasta,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3738,$2.99 × 56.7 g / 454 g,,whole wheat pasta,2,Test
+22,Whole Wheat Pasta,2 oz,56.699,,store brand,yes,,6799639779,0001,Kroger,Kroger® whole wheat whole wheat pasta family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.1213,$8.97 × 56.7 g / 454 g,,whole wheat pasta,3,Test
+23,Rice,2 oz,56.699,,national brand,yes,,8733933446,0001,NationalCo,NationalCo rice long grain white rice,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.3364,$2.6910000000000003 × 56.7 g / 454 g,,long grain white rice,0,Test
+23,Rice,2 oz,56.699,,store brand,,organic,4806215812,0001,Simple Truth,Simple Truth Organic rice long grain white rice,16 oz,,UNIT,4.485,3.5880000000000005,,,,long grain white rice,1,Test
+23,Rice,2 oz,56.699,x,store brand,yes,,2954232614,0001,Kroger,Kroger® rice long grain white rice,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3738,$2.99 × 56.7 g / 454 g,,long grain white rice,2,Test
+23,Rice,2 oz,56.699,,store brand,yes,,1589021794,0001,Kroger,Kroger® rice long grain white rice family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.1213,$8.97 × 56.7 g / 454 g,,long grain white rice,3,Test
+24,Quinoa,2 oz,56.699,,national brand,yes,,4963334929,0001,NationalCo,NationalCo quinoa quinoa,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.3364,$2.6910000000000003 × 56.7 g / 454 g,,quinoa,0,Test
+24,Quinoa,2 oz,56.699,,store brand,,organic,9746218538,0001,Simple Truth,Simple Truth Organic quinoa quinoa,16 oz,,UNIT,4.485,3.5880000000000005,,,,quinoa,1,Test
+24,Quinoa,2 oz,56.699,x,store brand,yes,,2964807513,0001,Kroger,Kroger® quinoa quinoa,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3738,$2.99 × 56.7 g / 454 g,,quinoa,2,Test
+24,Quinoa,2 oz,56.699,,store brand,yes,,6932723536,0001,Kroger,Kroger® quinoa quinoa family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.1213,$8.97 × 56.7 g / 454 g,,quinoa,3,Test
+25,Rolled oats,2 oz,56.699,,national brand,yes,,6316727824,0001,NationalCo,NationalCo oats old fashioned rolled oats,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.3364,$2.6910000000000003 × 56.7 g / 454 g,,old fashioned rolled oats,0,Test
+25,Rolled oats,2 oz,56.699,,store brand,,organic,6287674532,0001,Simple Truth,Simple Truth Organic oats old fashioned rolled oats,16 oz,,UNIT,4.485,3.5880000000000005,,,,old fashioned rolled oats,1,Test
+25,Rolled oats,2 oz,56.699,x,store brand,yes,,7895675652,0001,Kroger,Kroger® oats old fashioned rolled oats,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3738,$2.99 × 56.7 g / 454 g,,old fashioned rolled oats,2,Test
+25,Rolled oats,2 oz,56.699,,store brand,yes,,4543093585,0001,Kroger,Kroger® oats old fashioned rolled oats family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.1213,$8.97 × 56.7 g / 454 g,,old fashioned rolled oats,3,Test
+26,Multi-grain Bread,45 g,45,,national brand,yes,,6321438698,0001,NationalCo,NationalCo multi multigrain bread,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2670,$2.6910000000000003 × 45.0 g / 454 g,,multigrain bread,0,Test
+26,Multi-grain Bread,45 g,45,,store brand,,organic,0319789488,0001,Simple Truth,Simple Truth Organic multi multigrain bread,16 oz,,UNIT,4.485,3.5880000000000005,,,,multigrain bread,1,Test
+26,Multi-grain Bread,45 g,45,x,store brand,yes,,7802343882,0001,Kroger,Kroger® multi multigrain bread,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.2966,$2.99 × 45.0 g / 454 g,,multigrain bread,2,Test
+26,Multi-grain Bread,45 g,45,,store brand,yes,,1109168324,0001,Kroger,Kroger® multi multigrain bread family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.8899,$8.97 × 45.0 g / 454 g,,multigrain bread,3,Test
+27,Brown Rice,0.25 cup,46.3,,national brand,yes,,4081424119,0001,NationalCo,NationalCo brown rice long grain brown rice,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2747,$2.6910000000000003 × 46.3 g / 454 g,,long grain brown rice,0,Test
+27,Brown Rice,0.25 cup,46.3,,store brand,,organic,9178931260,0001,Simple Truth,Simple Truth Organic brown rice long grain brown rice,16 oz,,UNIT,4.485,3.5880000000000005,,,,long grain brown rice,1,Test
+27,Brown Rice,0.25 cup,46.3,x,store brand,yes,,8608328545,0001,Kroger,Kroger® brown rice long grain brown rice,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3052,$2.99 × 46.3 g / 454 g,,long grain brown rice,2,Test
+27,Brown Rice,0.25 cup,46.3,,store brand,yes,,4410043089,0001,Kroger,Kroger® brown rice long grain brown rice family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.9156,$8.97 × 46.3 g / 454 g,,long grain brown rice,3,Test
+28,Whole Wheat Tortillas,1 unit,45,,national brand,yes,,8817354799,0001,NationalCo,NationalCo whole wheat tortilla whole wheat tortillas,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,whole wheat tortillas,0,Test
+28,Whole Wheat Tortillas,1 unit,45,,store brand,,organic,1740557839,0001,Simple Truth,Simple Truth Organic whole wheat tortilla whole wheat tortillas,each,,UNIT,1.935,1.548,,,,whole wheat tortillas,1,Test
+28,Whole Wheat Tortillas,1 unit,45,x,store brand,yes,,3943763569,0001,Kroger,Kroger® whole wheat tortilla whole wheat tortillas,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,whole wheat tortillas,2,Test
+28,Whole Wheat Tortillas,1 unit,45,,store brand,yes,,6452551993,0001,Kroger,Kroger® whole wheat tortilla whole wheat tortillas family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,whole wheat tortillas,3,Test
+29,Sourdough Bread,2 oz,56.699,,national brand,yes,,6288555120,0001,NationalCo,NationalCo sourdough sourdough bread,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.3364,$2.6910000000000003 × 56.7 g / 454 g,,sourdough bread,0,Test
+29,Sourdough Bread,2 oz,56.699,,store brand,,organic,6847800810,0001,Simple Truth,Simple Truth Organic sourdough sourdough bread,16 oz,,UNIT,4.485,3.5880000000000005,,,,sourdough bread,1,Test
+29,Sourdough Bread,2 oz,56.699,x,store brand,yes,,2988165932,0001,Kroger,Kroger® sourdough sourdough bread,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3738,$2.99 × 56.7 g / 454 g,,sourdough bread,2,Test
+29,Sourdough Bread,2 oz,56.699,,store brand,yes,,0316283605,0001,Kroger,Kroger® sourdough sourdough bread family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.1213,$8.97 × 56.7 g / 454 g,,sourdough bread,3,Test
+30,Couscous,0.25 cup,43.3,,national brand,yes,,9813122448,0001,NationalCo,NationalCo couscous couscous,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2569,$2.6910000000000003 × 43.3 g / 454 g,,couscous,0,Test
+30,Couscous,0.25 cup,43.3,,store brand,,organic,9548333917,0001,Simple Truth,Simple Truth Organic couscous couscous,16 oz,,UNIT,4.485,3.5880000000000005,,,,couscous,1,Test
+30,Couscous,0.25 cup,43.3,x,store brand,yes,,7337400561,0001,Kroger,Kroger® couscous couscous,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.2854,$2.99 × 43.3 g / 454 g,,couscous,2,Test
+30,Couscous,0.25 cup,43.3,,store brand,yes,,7744148420,0001,Kroger,Kroger® couscous couscous family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.8563,$8.97 × 43.3 g / 454 g,,couscous,3,Test
+31,Mandarin Oranges,1 unit,88,,national brand,yes,,8801247611,0001,NationalCo,NationalCo mandarin mandarin oranges,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,mandarin oranges,0,Test
+31,Mandarin Oranges,1 unit,88,,store brand,,organic,9983701522,0001,Simple Truth,Simple Truth Organic mandarin mandarin oranges,each,,UNIT,1.935,1.548,,,,mandarin oranges,1,Test
+31,Mandarin Oranges,1 unit,88,x,store brand,yes,,5218892820,0001,Kroger,Kroger® mandarin mandarin oranges,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,mandarin oranges,2,Test
+31,Mandarin Oranges,1 unit,88,,store brand,yes,,4924007672,0001,Kroger,Kroger® mandarin mandarin oranges family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,mandarin oranges,3,Test
+32,Dates,100 g,100,,national brand,yes,,8615851584,0001,NationalCo,NationalCo dates medjool dates,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,medjool dates,0,Test
+32,Dates,100 g,100,,store brand,,organic,8032923262,0001,Simple Truth,Simple Truth Organic dates medjool dates,16 oz,,UNIT,4.485,3.5880000000000005,,,,medjool dates,1,Test
+32,Dates,100 g,100,x,store brand,yes,,5169511536,0001,Kroger,Kroger® dates medjool dates,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,medjool dates,2,Test
+32,Dates,100 g,100,,store brand,yes,,6470528749,0001,Kroger,Kroger® dates medjool dates family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,medjool dates,3,Test
+33,Bananas,1 unit,118,,national brand,yes,,2961065690,0001,NationalCo,NationalCo banana bananas,each,453.6,WEIGHT,0.531,0.42480000000000007,0.1381,$0.531/lb × 118.0 g,priced per lb,bananas,0,Test
+33,Bananas,1 unit,118,,store brand,,organic,2902149458,0001,Simple Truth,Simple Truth Organic banana bananas,each,,WEIGHT,0.885,0.7080000000000001,,,,bananas,1,Test
+33,Bananas,1 unit,118,x,store brand,yes,,2014094824,0001,Kroger,Kroger® banana bananas,each,453.6,WEIGHT,0.59,0.472,0.1535,$0.59/lb × 118.0 g,priced per lb,bananas,2,Test
+33,Bananas,1 unit,118,,store brand,yes,,9330274570,0001,Kroger,Kroger® banana bananas family pack,each,453.6,WEIGHT,1.77,1.4160000000000001,0.4605,$1.77/lb × 118.0 g,priced per lb,bananas,3,Test
+34,Peaches,1 unit,150,,national brand,yes,,0285154404,0001,NationalCo,NationalCo peach fresh peaches,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,fresh peaches,0,Test
+34,Peaches,1 unit,150,,store brand,,organic,7950104633,0001,Simple Truth,Simple Truth Organic peach fresh peaches,each,,UNIT,1.935,1.548,,,,fresh peaches,1,Test
+34,Peaches,1 unit,150,x,store brand,yes,,0584215830,0001,Kroger,Kroger® peach fresh peaches,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,fresh peaches,2,Test
+34,Peaches,1 unit,150,,store brand,yes,,4627507566,0001,Kroger,Kroger® peach fresh peaches family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,fresh peaches,3,Test
+35,Blueberries,100 g,100,,national brand,yes,,7146637209,0001,NationalCo,NationalCo blueberr fresh blueberries,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh blueberries,0,Test
+35,Blueberries,100 g,100,,store brand,,organic,9307559946,0001,Simple Truth,Simple Truth Organic blueberr fresh blueberries,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh blueberries,1,Test
+35,Blueberries,100 g,100,x,store brand,yes,,4036958515,0001,Kroger,Kroger® blueberr fresh blueberries,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh blueberries,2,Test
+35,Blueberries,100 g,100,,store brand,yes,,0151847056,0001,Kroger,Kroger® blueberr fresh blueberries family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh blueberries,3,Test
+36,Blackberries,100 g,100,,national brand,yes,,4472901924,0001,NationalCo,NationalCo blackberr fresh blackberries,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh blackberries,0,Test
+36,Blackberries,100 g,100,,store brand,,organic,6611401849,0001,Simple Truth,Simple Truth Organic blackberr fresh blackberries,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh blackberries,1,Test
+36,Blackberries,100 g,100,x,store brand,yes,,0026396342,0001,Kroger,Kroger® blackberr fresh blackberries,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh blackberries,2,Test
+36,Blackberries,100 g,100,,store brand,yes,,9509008352,0001,Kroger,Kroger® blackberr fresh blackberries family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh blackberries,3,Test
+37,Raspberries,100 g,100,,national brand,yes,,3065119673,0001,NationalCo,NationalCo raspberr fresh raspberries,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh raspberries,0,Test
+37,Raspberries,100 g,100,,store brand,,organic,8248264110,0001,Simple Truth,Simple Truth Organic raspberr fresh raspberries,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh raspberries,1,Test
+37,Raspberries,100 g,100,x,store brand,yes,,2596274461,0001,Kroger,Kroger® raspberr fresh raspberries,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh raspberries,2,Test
+37,Raspberries,100 g,100,,store brand,yes,,6287478439,0001,Kroger,Kroger® raspberr fresh raspberries family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh raspberries,3,Test
+38,Strawberries,100 g,100,,national brand,yes,,3370824701,0001,NationalCo,NationalCo strawberr fresh strawberries,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh strawberries,0,Test
+38,Strawberries,100 g,100,,store brand,,organic,4595755949,0001,Simple Truth,Simple Truth Organic strawberr fresh strawberries,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh strawberries,1,Test
+38,Strawberries,100 g,100,x,store brand,yes,,8722318395,0001,Kroger,Kroger® strawberr fresh strawberries,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh strawberries,2,Test
+38,Strawberries,100 g,100,,store brand,yes,,3981153736,0001,Kroger,Kroger® strawberr fresh strawberries family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh strawberries,3,Test
+39,Kiwis,1 unit,69,,national brand,yes,,9970332708,0001,NationalCo,NationalCo kiwi kiwi fruit,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,kiwi fruit,0,Test
+39,Kiwis,1 unit,69,,store brand,,organic,4880711911,0001,Simple Truth,Simple Truth Organic kiwi kiwi fruit,each,,UNIT,1.935,1.548,,,,kiwi fruit,1,Test
+39,Kiwis,1 unit,69,x,store brand,yes,,5156134367,0001,Kroger,Kroger® kiwi kiwi fruit,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,kiwi fruit,2,Test
+39,Kiwis,1 unit,69,,store brand,yes,,9938710934,0001,Kroger,Kroger® kiwi kiwi fruit family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,kiwi fruit,3,Test
+40,Acerola Juice,6 g,6,,national brand,yes,,7428948598,0001,NationalCo,NationalCo acerola acerola,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.0356,$2.6910000000000003 × 6.0 g / 454 g,,acerola,0,Test
+40,Acerola Juice,6 g,6,,store brand,,organic,9556334861,0001,Simple Truth,Simple Truth Organic acerola acerola,16 oz,,UNIT,4.485,3.5880000000000005,,,,acerola,1,Test
+40,Acerola Juice,6 g,6,x,store brand,yes,,8030847940,0001,Kroger,Kroger® acerola acerola,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.0396,$2.99 × 6.0 g / 454 g,,acerola,2,Test
+40,Acerola Juice,6 g,6,,store brand,yes,,6598133527,0001,Kroger,Kroger® acerola acerola family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.1187,$8.97 × 6.0 g / 454 g,,acerola,3,Test
+41,Cantaloupe,1 unit,552,,national brand,yes,,9481158963,0001,NationalCo,NationalCo cantaloupe cantaloupe,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,cantaloupe,0,Test
+41,Cantaloupe,1 unit,552,,store brand,,organic,5464793228,0001,Simple Truth,Simple Truth Organic cantaloupe cantaloupe,each,,UNIT,1.935,1.548,,,,cantaloupe,1,Test
+41,Cantaloupe,1 unit,552,x,store brand,yes,,1874150441,0001,Kroger,Kroger® cantaloupe cantaloupe,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,cantaloupe,2,Test
+41,Cantaloupe,1 unit,552,,store brand,yes,,7242485421,0001,Kroger,Kroger® cantaloupe cantaloupe family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,cantaloupe,3,Test
+42,Apples,1 unit,169,,national brand,yes,,1069071953,0001,NationalCo,NationalCo apple gala apples,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,gala apples,0,Test
+42,Apples,1 unit,169,,store brand,,organic,5663988826,0001,Simple Truth,Simple Truth Organic apple gala apples,each,,UNIT,1.935,1.548,,,,gala apples,1,Test
+42,Apples,1 unit,169,x,store brand,yes,,5601142667,0001,Kroger,Kroger® apple gala apples,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,gala apples,2,Test
+42,Apples,1 unit,169,,store brand,yes,,9136859134,0001,Kroger,Kroger® apple gala apples family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,gala apples,3,Test
+43,Lemon,1 unit,65,,national brand,yes,,9256185937,0001,NationalCo,NationalCo lemon lemon,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,lemon,0,Test
+43,Lemon,1 unit,65,,store brand,,organic,8996288643,0001,Simple Truth,Simple Truth Organic lemon lemon,each,,UNIT,1.935,1.548,,,,lemon,1,Test
+43,Lemon,1 unit,65,x,store brand,yes,,1343141984,0001,Kroger,Kroger® lemon lemon,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,lemon,2,Test
+43,Lemon,1 unit,65,,store brand,yes,,6395268922,0001,Kroger,Kroger® lemon lemon family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,lemon,3,Test
+44,Lime,1 unit,65,,national brand,yes,,1114395397,0001,NationalCo,NationalCo lime lime,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,lime,0,Test
+44,Lime,1 unit,65,,store brand,,organic,9315846344,0001,Simple Truth,Simple Truth Organic lime lime,each,,UNIT,1.935,1.548,,,,lime,1,Test
+44,Lime,1 unit,65,x,store brand,yes,,7599828468,0001,Kroger,Kroger® lime lime,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,lime,2,Test
+44,Lime,1 unit,65,,store brand,yes,,9129911387,0001,Kroger,Kroger® lime lime family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,lime,3,Test
+45,Frozen Mixed Berries,100 g,100,,national brand,yes,,2102108145,0001,NationalCo,NationalCo berr frozen mixed berries,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,frozen mixed berries,0,Test
+45,Frozen Mixed Berries,100 g,100,,store brand,,organic,4785365643,0001,Simple Truth,Simple Truth Organic berr frozen mixed berries,16 oz,,UNIT,4.485,3.5880000000000005,,,,frozen mixed berries,1,Test
+45,Frozen Mixed Berries,100 g,100,x,store brand,yes,,2667938522,0001,Kroger,Kroger® berr frozen mixed berries,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,frozen mixed berries,2,Test
+45,Frozen Mixed Berries,100 g,100,,store brand,yes,,0104842467,0001,Kroger,Kroger® berr frozen mixed berries family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,frozen mixed berries,3,Test
+46,Broccoli,100 g,100,,national brand,yes,,9862101946,0001,NationalCo,NationalCo broccoli broccoli crowns,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,broccoli crowns,0,Test
+46,Broccoli,100 g,100,,store brand,,organic,7095505350,0001,Simple Truth,Simple Truth Organic broccoli broccoli crowns,16 oz,,UNIT,4.485,3.5880000000000005,,,,broccoli crowns,1,Test
+46,Broccoli,100 g,100,x,store brand,yes,,1358764670,0001,Kroger,Kroger® broccoli broccoli crowns,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,broccoli crowns,2,Test
+46,Broccoli,100 g,100,,store brand,yes,,9373505677,0001,Kroger,Kroger® broccoli broccoli crowns family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,broccoli crowns,3,Test
+47,Cauliflower,1 unit,588,,national brand,yes,,7927383220,0001,NationalCo,NationalCo cauliflower cauliflower,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,cauliflower,0,Test
+47,Cauliflower,1 unit,588,,store brand,,organic,3023700008,0001,Simple Truth,Simple Truth Organic cauliflower cauliflower,each,,UNIT,1.935,1.548,,,,cauliflower,1,Test
+47,Cauliflower,1 unit,588,x,store brand,yes,,9204615858,0001,Kroger,Kroger® cauliflower cauliflower,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,cauliflower,2,Test
+47,Cauliflower,1 unit,588,,store brand,yes,,7266401186,0001,Kroger,Kroger® cauliflower cauliflower family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,cauliflower,3,Test
+48,Butternut squash,100 g,100,,national brand,yes,,9235938479,0001,NationalCo,NationalCo butternut butternut squash,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,butternut squash,0,Test
+48,Butternut squash,100 g,100,,store brand,,organic,3471467563,0001,Simple Truth,Simple Truth Organic butternut butternut squash,16 oz,,UNIT,4.485,3.5880000000000005,,,,butternut squash,1,Test
+48,Butternut squash,100 g,100,x,store brand,yes,,5217814674,0001,Kroger,Kroger® butternut butternut squash,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,butternut squash,2,Test
+48,Butternut squash,100 g,100,,store brand,yes,,7305796622,0001,Kroger,Kroger® butternut butternut squash family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,butternut squash,3,Test
+49,Red Bell Pepper,1 unit,119,,national brand,yes,,2604623910,0001,NationalCo,NationalCo red pepper red bell pepper,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,red bell pepper,0,Test
+49,Red Bell Pepper,1 unit,119,,store brand,,organic,7065577213,0001,Simple Truth,Simple Truth Organic red pepper red bell pepper,each,,UNIT,1.935,1.548,,,,red bell pepper,1,Test
+49,Red Bell Pepper,1 unit,119,x,store brand,yes,,8671895453,0001,Kroger,Kroger® red pepper red bell pepper,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,red bell pepper,2,Test
+49,Red Bell Pepper,1 unit,119,,store brand,yes,,3168993274,0001,Kroger,Kroger® red pepper red bell pepper family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,red bell pepper,3,Test
+50,Asparagus,100 g,100,,national brand,yes,,7836552000,0001,NationalCo,NationalCo asparagus fresh asparagus,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh asparagus,0,Test
+50,Asparagus,100 g,100,,store brand,,organic,9907670487,0001,Simple Truth,Simple Truth Organic asparagus fresh asparagus,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh asparagus,1,Test
+50,Asparagus,100 g,100,x,store brand,yes,,7614817581,0001,Kroger,Kroger® asparagus fresh asparagus,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh asparagus,2,Test
+50,Asparagus,100 g,100,,store brand,yes,,2461366654,0001,Kroger,Kroger® asparagus fresh asparagus family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh asparagus,3,Test
+51,Brussels Sprouts,100 g,100,,national brand,yes,,5941305635,0001,NationalCo,NationalCo brussels brussels sprouts,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,brussels sprouts,0,Test
+51,Brussels Sprouts,100 g,100,,store brand,,organic,6433112638,0001,Simple Truth,Simple Truth Organic brussels brussels sprouts,16 oz,,UNIT,4.485,3.5880000000000005,,,,brussels sprouts,1,Test
+51,Brussels Sprouts,100 g,100,x,store brand,yes,,7700363367,0001,Kroger,Kroger® brussels brussels sprouts,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,brussels sprouts,2,Test
+51,Brussels Sprouts,100 g,100,,store brand,yes,,8486176397,0001,Kroger,Kroger® brussels brussels sprouts family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,brussels sprouts,3,Test
+52,Potato,1 unit,213,,national brand,yes,,6598782189,0001,NationalCo,NationalCo potato russet potatoes,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,russet potatoes,0,Test
+52,Potato,1 unit,213,,store brand,,organic,7592013718,0001,Simple Truth,Simple Truth Organic potato russet potatoes,each,,UNIT,1.935,1.548,,,,russet potatoes,1,Test
+52,Potato,1 unit,213,x,store brand,yes,,1032698679,0001,Kroger,Kroger® potato russet potatoes,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,russet potatoes,2,Test
+52,Potato,1 unit,213,,store brand,yes,,0339202660,0001,Kroger,Kroger® potato russet potatoes family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,russet potatoes,3,Test
+53,Sweet Potato,1 unit,130,,national brand,yes,,3856871651,0001,NationalCo,NationalCo sweet potato sweet potatoes,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,sweet potatoes,0,Test
+53,Sweet Potato,1 unit,130,,store brand,,organic,4610968959,0001,Simple Truth,Simple Truth Organic sweet potato sweet potatoes,each,,UNIT,1.935,1.548,,,,sweet potatoes,1,Test
+53,Sweet Potato,1 unit,130,x,store brand,yes,,8966464927,0001,Kroger,Kroger® sweet potato sweet potatoes,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,sweet potatoes,2,Test
+53,Sweet Potato,1 unit,130,,store brand,yes,,5977573443,0001,Kroger,Kroger® sweet potato sweet potatoes family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,sweet potatoes,3,Test
+54,Carrot,100 g,100,,national brand,yes,,9606661244,0001,NationalCo,NationalCo carrot carrots,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,carrots,0,Test
+54,Carrot,100 g,100,,store brand,,organic,2465595397,0001,Simple Truth,Simple Truth Organic carrot carrots,16 oz,,UNIT,4.485,3.5880000000000005,,,,carrots,1,Test
+54,Carrot,100 g,100,x,store brand,yes,,1525748884,0001,Kroger,Kroger® carrot carrots,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,carrots,2,Test
+54,Carrot,100 g,100,,store brand,yes,,1403237860,0001,Kroger,Kroger® carrot carrots family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,carrots,3,Test
+55,Spinach,100 g,100,,national brand,yes,,4111521754,0001,NationalCo,NationalCo spinach fresh spinach,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh spinach,0,Test
+55,Spinach,100 g,100,,store brand,,organic,9789390192,0001,Simple Truth,Simple Truth Organic spinach fresh spinach,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh spinach,1,Test
+55,Spinach,100 g,100,x,store brand,yes,,5485593228,0001,Kroger,Kroger® spinach fresh spinach,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh spinach,2,Test
+55,Spinach,100 g,100,,store brand,yes,,8755363928,0001,Kroger,Kroger® spinach fresh spinach family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh spinach,3,Test
+56,Avocado,1 unit,136,,national brand,yes,,6581996400,0001,NationalCo,NationalCo avocado hass avocado,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,hass avocado,0,Test
+56,Avocado,1 unit,136,,store brand,,organic,6294194355,0001,Simple Truth,Simple Truth Organic avocado hass avocado,each,,UNIT,1.935,1.548,,,,hass avocado,1,Test
+56,Avocado,1 unit,136,x,store brand,yes,,2416068560,0001,Kroger,Kroger® avocado hass avocado,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,hass avocado,2,Test
+56,Avocado,1 unit,136,,store brand,yes,,6731436479,0001,Kroger,Kroger® avocado hass avocado family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,hass avocado,3,Test
+57,Beets,100 g,100,,national brand,yes,,9154496769,0001,NationalCo,NationalCo beet fresh beets,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,fresh beets,0,Test
+57,Beets,100 g,100,,store brand,,organic,8280424577,0001,Simple Truth,Simple Truth Organic beet fresh beets,16 oz,,UNIT,4.485,3.5880000000000005,,,,fresh beets,1,Test
+57,Beets,100 g,100,x,store brand,yes,,5589552776,0001,Kroger,Kroger® beet fresh beets,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,fresh beets,2,Test
+57,Beets,100 g,100,,store brand,yes,,3183946672,0001,Kroger,Kroger® beet fresh beets family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,fresh beets,3,Test
+58,Black Beans,100 g,100,,national brand,yes,,7777369141,0001,NationalCo,NationalCo black beans black beans canned,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,black beans canned,0,Test
+58,Black Beans,100 g,100,,store brand,,organic,7936764199,0001,Simple Truth,Simple Truth Organic black beans black beans canned,16 oz,,UNIT,4.485,3.5880000000000005,,,,black beans canned,1,Test
+58,Black Beans,100 g,100,x,store brand,yes,,5012924132,0001,Kroger,Kroger® black beans black beans canned,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,black beans canned,2,Test
+58,Black Beans,100 g,100,,store brand,yes,,5876313285,0001,Kroger,Kroger® black beans black beans canned family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,black beans canned,3,Test
+59,Edamame,100 g,100,,national brand,yes,,5438171164,0001,NationalCo,NationalCo edamame shelled edamame,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,shelled edamame,0,Test
+59,Edamame,100 g,100,,store brand,,organic,8013831155,0001,Simple Truth,Simple Truth Organic edamame shelled edamame,16 oz,,UNIT,4.485,3.5880000000000005,,,,shelled edamame,1,Test
+59,Edamame,100 g,100,x,store brand,yes,,1990744419,0001,Kroger,Kroger® edamame shelled edamame,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,shelled edamame,2,Test
+59,Edamame,100 g,100,,store brand,yes,,8646674317,0001,Kroger,Kroger® edamame shelled edamame family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,shelled edamame,3,Test
+60,Tofu,100 g,100,,national brand,yes,,6830091781,0001,NationalCo,NationalCo tofu firm tofu,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,firm tofu,0,Test
+60,Tofu,100 g,100,,store brand,,organic,7603591313,0001,Simple Truth,Simple Truth Organic tofu firm tofu,16 oz,,UNIT,4.485,3.5880000000000005,,,,firm tofu,1,Test
+60,Tofu,100 g,100,x,store brand,yes,,9801161990,0001,Kroger,Kroger® tofu firm tofu,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,firm tofu,2,Test
+60,Tofu,100 g,100,,store brand,yes,,8648323887,0001,Kroger,Kroger® tofu firm tofu family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,firm tofu,3,Test
+61,Kimchi,100 g,100,,national brand,yes,,6810281918,0001,NationalCo,NationalCo kimchi kimchi,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,kimchi,0,Test
+61,Kimchi,100 g,100,,store brand,,organic,6942494821,0001,Simple Truth,Simple Truth Organic kimchi kimchi,16 oz,,UNIT,4.485,3.5880000000000005,,,,kimchi,1,Test
+61,Kimchi,100 g,100,x,store brand,yes,,0821077874,0001,Kroger,Kroger® kimchi kimchi,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,kimchi,2,Test
+61,Kimchi,100 g,100,,store brand,yes,,6059038935,0001,Kroger,Kroger® kimchi kimchi family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,kimchi,3,Test
+62,Yellow Onion,1 unit,148,,national brand,yes,,0377504265,0001,NationalCo,NationalCo onion yellow onions,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,yellow onions,0,Test
+62,Yellow Onion,1 unit,148,,store brand,,organic,4306263907,0001,Simple Truth,Simple Truth Organic onion yellow onions,each,,UNIT,1.935,1.548,,,,yellow onions,1,Test
+62,Yellow Onion,1 unit,148,x,store brand,yes,,5014383680,0001,Kroger,Kroger® onion yellow onions,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,yellow onions,2,Test
+62,Yellow Onion,1 unit,148,,store brand,yes,,2054261988,0001,Kroger,Kroger® onion yellow onions family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,yellow onions,3,Test
+63,Garlic,1 clove,3,,national brand,yes,,1150362089,0001,NationalCo,NationalCo garlic garlic bulb,each,,UNIT,1.161,0.9288000000000001,0.1161,$1.161 / 10 cloves,,garlic bulb,0,Test
+63,Garlic,1 clove,3,,store brand,,organic,5997289048,0001,Simple Truth,Simple Truth Organic garlic garlic bulb,each,,UNIT,1.935,1.548,,,,garlic bulb,1,Test
+63,Garlic,1 clove,3,x,store brand,yes,,0622318438,0001,Kroger,Kroger® garlic garlic bulb,each,,UNIT,1.29,1.032,0.1290,$1.29 / 10 cloves,,garlic bulb,2,Test
+63,Garlic,1 clove,3,,store brand,yes,,8619858374,0001,Kroger,Kroger® garlic garlic bulb family pack,each,,UNIT,3.87,3.096,0.3870,$3.87 / 10 cloves,,garlic bulb,3,Test
+64,Tomatoes,1 unit,125,,national brand,yes,,8956284774,0001,NationalCo,NationalCo tomato roma tomatoes,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,roma tomatoes,0,Test
+64,Tomatoes,1 unit,125,,store brand,,organic,6546479009,0001,Simple Truth,Simple Truth Organic tomato roma tomatoes,each,,UNIT,1.935,1.548,,,,roma tomatoes,1,Test
+64,Tomatoes,1 unit,125,x,store brand,yes,,8124039830,0001,Kroger,Kroger® tomato roma tomatoes,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,roma tomatoes,2,Test
+64,Tomatoes,1 unit,125,,store brand,yes,,4182918087,0001,Kroger,Kroger® tomato roma tomatoes family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,roma tomatoes,3,Test
+65,Cucumber,1 unit,200,,national brand,yes,,9871409891,0001,NationalCo,NationalCo cucumber cucumber,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,cucumber,0,Test
+65,Cucumber,1 unit,200,,store brand,,organic,6663635968,0001,Simple Truth,Simple Truth Organic cucumber cucumber,each,,UNIT,1.935,1.548,,,,cucumber,1,Test
+65,Cucumber,1 unit,200,x,store brand,yes,,5333242261,0001,Kroger,Kroger® cucumber cucumber,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,cucumber,2,Test
+65,Cucumber,1 unit,200,,store brand,yes,,2668017625,0001,Kroger,Kroger® cucumber cucumber family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,cucumber,3,Test
+66,Kale,100 g,100,,national brand,yes,,7074406714,0001,NationalCo,NationalCo kale kale,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.5933,$2.6910000000000003 × 100.0 g / 454 g,,kale,0,Test
+66,Kale,100 g,100,,store brand,,organic,9806389856,0001,Simple Truth,Simple Truth Organic kale kale,16 oz,,UNIT,4.485,3.5880000000000005,,,,kale,1,Test
+66,Kale,100 g,100,x,store brand,yes,,6739551884,0001,Kroger,Kroger® kale kale,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.6592,$2.99 × 100.0 g / 454 g,,kale,2,Test
+66,Kale,100 g,100,,store brand,yes,,2921146290,0001,Kroger,Kroger® kale kale family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,1.9775,$8.97 × 100.0 g / 454 g,,kale,3,Test
+67,Zucchini,1 unit,196,,national brand,yes,,2860381228,0001,NationalCo,NationalCo zucchini zucchini,each,,UNIT,1.161,0.9288000000000001,1.1610,$1.161 / 1 units,,zucchini,0,Test
+67,Zucchini,1 unit,196,,store brand,,organic,8823383907,0001,Simple Truth,Simple Truth Organic zucchini zucchini,each,,UNIT,1.935,1.548,,,,zucchini,1,Test
+67,Zucchini,1 unit,196,x,store brand,yes,,7383966547,0001,Kroger,Kroger® zucchini zucchini,each,,UNIT,1.29,1.032,1.2900,$1.29 / 1 units,,zucchini,2,Test
+67,Zucchini,1 unit,196,,store brand,yes,,2448891859,0001,Kroger,Kroger® zucchini zucchini family pack,each,,UNIT,3.87,3.096,3.8700,$3.87 / 1 units,,zucchini,3,Test
+68,Skim Milk,240 g,240,,national brand,yes,,2557725621,0001,NationalCo,NationalCo milk fat free fat free skim milk,1 gal,3899.0,UNIT,3.411,2.7288,0.2100,$3.411 × 240.0 g / (3785 ml × 1.03),density 1.03 g/ml,fat free skim milk,0,Test
+68,Skim Milk,240 g,240,,store brand,,organic,6395697428,0001,Simple Truth,Simple Truth Organic milk fat free fat free skim milk,1 gal,,UNIT,5.6850000000000005,4.548000000000001,,,,fat free skim milk,1,Test
+68,Skim Milk,240 g,240,x,store brand,yes,,2756208946,0001,Kroger,Kroger® milk fat free fat free skim milk,1 gal,3899.0,UNIT,3.79,3.032,0.2333,$3.79 × 240.0 g / (3785 ml × 1.03),density 1.03 g/ml,fat free skim milk,2,Test
+68,Skim Milk,240 g,240,,store brand,yes,,3293739191,0001,Kroger,Kroger® milk fat free fat free skim milk family pack,1 gal,3899.0,UNIT,11.370000000000001,9.096000000000002,0.6999,$11.370000000000001 × 240.0 g / (3785 ml × 1.03),density 1.03 g/ml,fat free skim milk,3,Test
+69,Almond Milk,200 g,200,,national brand,yes,,7290685961,0001,NationalCo,NationalCo almond unsweetened unsweetened almond milk,1 gal,3899.0,UNIT,3.411,2.7288,0.1750,$3.411 × 200.0 g / (3785 ml × 1.03),density 1.03 g/ml,unsweetened almond milk,0,Test
+69,Almond Milk,200 g,200,,store brand,,organic,8121659909,0001,Simple Truth,Simple Truth Organic almond unsweetened unsweetened almond milk,1 gal,,UNIT,5.6850000000000005,4.548000000000001,,,,unsweetened almond milk,1,Test
+69,Almond Milk,200 g,200,x,store brand,yes,,1547401337,0001,Kroger,Kroger® almond unsweetened unsweetened almond milk,1 gal,3899.0,UNIT,3.79,3.032,0.1944,$3.79 × 200.0 g / (3785 ml × 1.03),density 1.03 g/ml,unsweetened almond milk,2,Test
+69,Almond Milk,200 g,200,,store brand,yes,,9480691080,0001,Kroger,Kroger® almond unsweetened unsweetened almond milk family pack,1 gal,3899.0,UNIT,11.370000000000001,9.096000000000002,0.5832,$11.370000000000001 × 200.0 g / (3785 ml × 1.03),density 1.03 g/ml,unsweetened almond milk,3,Test
+70,Nonfat Greek yogurt,170 g,170,,national brand,yes,,6517991367,0001,NationalCo,NationalCo greek plain nonfat nonfat plain greek yogurt,32 oz,907.2,UNIT,4.041,3.2328000000000006,0.7573,$4.041 × 170.0 g / 907 g,,nonfat plain greek yogurt,0,Test
+70,Nonfat Greek yogurt,170 g,170,,store brand,,organic,2092396477,0001,Simple Truth,Simple Truth Organic greek plain nonfat nonfat plain greek yogurt,32 oz,,UNIT,6.735,5.388000000000001,,,,nonfat plain greek yogurt,1,Test
+70,Nonfat Greek yogurt,170 g,170,x,store brand,yes,,4576034426,0001,Kroger,Kroger® greek plain nonfat nonfat plain greek yogurt,32 oz,907.2,UNIT,4.49,3.5920000000000005,0.8414,$4.49 × 170.0 g / 907 g,,nonfat plain greek yogurt,2,Test
+70,Nonfat Greek yogurt,170 g,170,,store brand,yes,,1756771115,0001,Kroger,Kroger® greek plain nonfat nonfat plain greek yogurt family pack,32 oz,907.2,UNIT,13.47,10.776000000000002,2.5242,$13.47 × 170.0 g / 907 g,,nonfat plain greek yogurt,3,Test
+71,Low-fat Cottage Cheese,113 g,113,,national brand,yes,,6737889003,0001,NationalCo,NationalCo cottage low fat low fat cottage cheese,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.6704,$2.6910000000000003 × 113.0 g / 454 g,,low fat cottage cheese,0,Test
+71,Low-fat Cottage Cheese,113 g,113,,store brand,,organic,4330807842,0001,Simple Truth,Simple Truth Organic cottage low fat low fat cottage cheese,16 oz,,UNIT,4.485,3.5880000000000005,,,,low fat cottage cheese,1,Test
+71,Low-fat Cottage Cheese,113 g,113,x,store brand,yes,,5677345189,0001,Kroger,Kroger® cottage low fat low fat cottage cheese,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.7449,$2.99 × 113.0 g / 454 g,,low fat cottage cheese,2,Test
+71,Low-fat Cottage Cheese,113 g,113,,store brand,yes,,6487057626,0001,Kroger,Kroger® cottage low fat low fat cottage cheese family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,2.2346,$8.97 × 113.0 g / 454 g,,low fat cottage cheese,3,Test
+72,Parmesan Cheese,25 g,25,,national brand,yes,,5376044208,0001,NationalCo,NationalCo parmesan grated parmesan cheese,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1483,$2.6910000000000003 × 25.0 g / 454 g,,grated parmesan cheese,0,Test
+72,Parmesan Cheese,25 g,25,,store brand,,organic,7903751013,0001,Simple Truth,Simple Truth Organic parmesan grated parmesan cheese,16 oz,,UNIT,4.485,3.5880000000000005,,,,grated parmesan cheese,1,Test
+72,Parmesan Cheese,25 g,25,x,store brand,yes,,8478288180,0001,Kroger,Kroger® parmesan grated parmesan cheese,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1648,$2.99 × 25.0 g / 454 g,,grated parmesan cheese,2,Test
+72,Parmesan Cheese,25 g,25,,store brand,yes,,3253840506,0001,Kroger,Kroger® parmesan grated parmesan cheese family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.4944,$8.97 × 25.0 g / 454 g,,grated parmesan cheese,3,Test
+73,Egg,50 g,50,,national brand,yes,,6304812632,0001,NationalCo,NationalCo egg large eggs,12 ct,600.0,UNIT,3.1410000000000005,2.5128000000000004,0.2618,$3.1410000000000005 / 12 × 50 g / 50 g,50 g per unit,large eggs,0,Test
+73,Egg,50 g,50,,store brand,,organic,4258567836,0001,Simple Truth,Simple Truth Organic egg large eggs,12 ct,,UNIT,5.235,4.188000000000001,,,,large eggs,1,Test
+73,Egg,50 g,50,x,store brand,yes,,0598890498,0001,Kroger,Kroger® egg large eggs,12 ct,600.0,UNIT,3.49,2.7920000000000003,0.2908,$3.49 / 12 × 50 g / 50 g,50 g per unit,large eggs,2,Test
+73,Egg,50 g,50,,store brand,yes,,8978993331,0001,Kroger,Kroger® egg large eggs family pack,12 ct,600.0,UNIT,10.47,8.376000000000001,0.8725,$10.47 / 12 × 50 g / 50 g,50 g per unit,large eggs,3,Test
+74,Egg white,46 g,46,,national brand,yes,,0575077404,0001,NationalCo,NationalCo egg white liquid egg whites,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2729,$2.6910000000000003 × 46.0 g / 454 g,,liquid egg whites,0,Test
+74,Egg white,46 g,46,,store brand,,organic,9054564296,0001,Simple Truth,Simple Truth Organic egg white liquid egg whites,16 oz,,UNIT,4.485,3.5880000000000005,,,,liquid egg whites,1,Test
+74,Egg white,46 g,46,x,store brand,yes,,1470212698,0001,Kroger,Kroger® egg white liquid egg whites,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.3032,$2.99 × 46.0 g / 454 g,,liquid egg whites,2,Test
+74,Egg white,46 g,46,,store brand,yes,,0595884086,0001,Kroger,Kroger® egg white liquid egg whites family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.9097,$8.97 × 46.0 g / 454 g,,liquid egg whites,3,Test
+75,Cheese,28 g,28,,national brand,yes,,7240222188,0001,NationalCo,NationalCo jack monterey jack cheese,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1661,$2.6910000000000003 × 28.0 g / 454 g,,monterey jack cheese,0,Test
+75,Cheese,28 g,28,,store brand,,organic,4467416723,0001,Simple Truth,Simple Truth Organic jack monterey jack cheese,16 oz,,UNIT,4.485,3.5880000000000005,,,,monterey jack cheese,1,Test
+75,Cheese,28 g,28,x,store brand,yes,,7579455417,0001,Kroger,Kroger® jack monterey jack cheese,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1846,$2.99 × 28.0 g / 454 g,,monterey jack cheese,2,Test
+75,Cheese,28 g,28,,store brand,yes,,4919790987,0001,Kroger,Kroger® jack monterey jack cheese family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5537,$8.97 × 28.0 g / 454 g,,monterey jack cheese,3,Test
+76,Nonfat Cheese,28 g,28,,national brand,yes,,0070504835,0001,NationalCo,NationalCo cheese fat free fat free shredded cheese,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1661,$2.6910000000000003 × 28.0 g / 454 g,,fat free shredded cheese,0,Test
+76,Nonfat Cheese,28 g,28,,store brand,,organic,3664317289,0001,Simple Truth,Simple Truth Organic cheese fat free fat free shredded cheese,16 oz,,UNIT,4.485,3.5880000000000005,,,,fat free shredded cheese,1,Test
+76,Nonfat Cheese,28 g,28,x,store brand,yes,,5032194689,0001,Kroger,Kroger® cheese fat free fat free shredded cheese,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1846,$2.99 × 28.0 g / 454 g,,fat free shredded cheese,2,Test
+76,Nonfat Cheese,28 g,28,,store brand,yes,,2243783345,0001,Kroger,Kroger® cheese fat free fat free shredded cheese family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5537,$8.97 × 28.0 g / 454 g,,fat free shredded cheese,3,Test
+77,Butter,7 g,7,,national brand,yes,,5917872408,0001,NationalCo,NationalCo butter salted butter,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.0415,$2.6910000000000003 × 7.0 g / 454 g,,salted butter,0,Test
+77,Butter,7 g,7,,store brand,,organic,8020859227,0001,Simple Truth,Simple Truth Organic butter salted butter,16 oz,,UNIT,4.485,3.5880000000000005,,,,salted butter,1,Test
+77,Butter,7 g,7,x,store brand,yes,,4286171456,0001,Kroger,Kroger® butter salted butter,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.0461,$2.99 × 7.0 g / 454 g,,salted butter,2,Test
+77,Butter,7 g,7,,store brand,yes,,1667019772,0001,Kroger,Kroger® butter salted butter family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.1384,$8.97 × 7.0 g / 454 g,,salted butter,3,Test
+78,Whole Milk,1 cup,244,,national brand,yes,,9808919113,0001,NationalCo,NationalCo whole milk whole milk,1 gal,,UNIT,3.411,2.7288,0.2132,$3.411 × 236.6 ml / 3785 ml,,whole milk,0,Test
+78,Whole Milk,1 cup,244,,store brand,,organic,1987756357,0001,Simple Truth,Simple Truth Organic whole milk whole milk,1 gal,,UNIT,5.6850000000000005,4.548000000000001,,,,whole milk,1,Test
+78,Whole Milk,1 cup,244,x,store brand,yes,,0304987198,0001,Kroger,Kroger® whole milk whole milk,1 gal,,UNIT,3.79,3.032,0.2369,$3.79 × 236.6 ml / 3785 ml,,whole milk,2,Test
+78,Whole Milk,1 cup,244,,store brand,yes,,5020362984,0001,Kroger,Kroger® whole milk whole milk family pack,1 gal,,UNIT,11.370000000000001,9.096000000000002,0.7106,$11.370000000000001 × 236.6 ml / 3785 ml,,whole milk,3,Test
+79,Cheddar Cheese,1 oz,28.3495,,national brand,yes,,4316248787,0001,NationalCo,NationalCo cheddar cheddar cheese block,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1682,$2.6910000000000003 × 28.3 g / 454 g,,cheddar cheese block,0,Test
+79,Cheddar Cheese,1 oz,28.3495,,store brand,,organic,0813103887,0001,Simple Truth,Simple Truth Organic cheddar cheddar cheese block,16 oz,,UNIT,4.485,3.5880000000000005,,,,cheddar cheese block,1,Test
+79,Cheddar Cheese,1 oz,28.3495,x,store brand,yes,,1077113604,0001,Kroger,Kroger® cheddar cheddar cheese block,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1869,$2.99 × 28.3 g / 454 g,,cheddar cheese block,2,Test
+79,Cheddar Cheese,1 oz,28.3495,,store brand,yes,,2490122546,0001,Kroger,Kroger® cheddar cheddar cheese block family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5606,$8.97 × 28.3 g / 454 g,,cheddar cheese block,3,Test
+80,Mozzarella Cheese,1 oz,28.3495,,national brand,yes,,7937222640,0001,NationalCo,NationalCo mozzarella mozzarella cheese,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1682,$2.6910000000000003 × 28.3 g / 454 g,,mozzarella cheese,0,Test
+80,Mozzarella Cheese,1 oz,28.3495,,store brand,,organic,5085633354,0001,Simple Truth,Simple Truth Organic mozzarella mozzarella cheese,16 oz,,UNIT,4.485,3.5880000000000005,,,,mozzarella cheese,1,Test
+80,Mozzarella Cheese,1 oz,28.3495,x,store brand,yes,,5692419822,0001,Kroger,Kroger® mozzarella mozzarella cheese,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1869,$2.99 × 28.3 g / 454 g,,mozzarella cheese,2,Test
+80,Mozzarella Cheese,1 oz,28.3495,,store brand,yes,,2135917121,0001,Kroger,Kroger® mozzarella mozzarella cheese family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5606,$8.97 × 28.3 g / 454 g,,mozzarella cheese,3,Test
+81,Protein Powder,38 g,38,,national brand,yes,,0066170290,0001,NationalCo,NationalCo protein whey protein powder,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.2254,$2.6910000000000003 × 38.0 g / 454 g,,whey protein powder,0,Test
+81,Protein Powder,38 g,38,,store brand,,organic,3164038094,0001,Simple Truth,Simple Truth Organic protein whey protein powder,16 oz,,UNIT,4.485,3.5880000000000005,,,,whey protein powder,1,Test
+81,Protein Powder,38 g,38,x,store brand,yes,,4315501745,0001,Kroger,Kroger® protein whey protein powder,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.2505,$2.99 × 38.0 g / 454 g,,whey protein powder,2,Test
+81,Protein Powder,38 g,38,,store brand,yes,,3305567997,0001,Kroger,Kroger® protein whey protein powder family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.7515,$8.97 × 38.0 g / 454 g,,whey protein powder,3,Test
+82,Powdered Peanut Butter,16 g,16,,national brand,yes,,7409290705,0001,NationalCo,NationalCo peanut powder powdered peanut butter,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.0949,$2.6910000000000003 × 16.0 g / 454 g,,powdered peanut butter,0,Test
+82,Powdered Peanut Butter,16 g,16,,store brand,,organic,6346600406,0001,Simple Truth,Simple Truth Organic peanut powder powdered peanut butter,16 oz,,UNIT,4.485,3.5880000000000005,,,,powdered peanut butter,1,Test
+82,Powdered Peanut Butter,16 g,16,x,store brand,yes,,7408260863,0001,Kroger,Kroger® peanut powder powdered peanut butter,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1055,$2.99 × 16.0 g / 454 g,,powdered peanut butter,2,Test
+82,Powdered Peanut Butter,16 g,16,,store brand,yes,,3065511368,0001,Kroger,Kroger® peanut powder powdered peanut butter family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.3164,$8.97 × 16.0 g / 454 g,,powdered peanut butter,3,Test
+83,Peanut Butter,32 g,32,,national brand,yes,,3004300292,0001,NationalCo,NationalCo peanut butter creamy peanut butter,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1898,$2.6910000000000003 × 32.0 g / 454 g,,creamy peanut butter,0,Test
+83,Peanut Butter,32 g,32,,store brand,,organic,9480514452,0001,Simple Truth,Simple Truth Organic peanut butter creamy peanut butter,16 oz,,UNIT,4.485,3.5880000000000005,,,,creamy peanut butter,1,Test
+83,Peanut Butter,32 g,32,x,store brand,yes,,4185957710,0001,Kroger,Kroger® peanut butter creamy peanut butter,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.2109,$2.99 × 32.0 g / 454 g,,creamy peanut butter,2,Test
+83,Peanut Butter,32 g,32,,store brand,yes,,6369024787,0001,Kroger,Kroger® peanut butter creamy peanut butter family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.6328,$8.97 × 32.0 g / 454 g,,creamy peanut butter,3,Test
+84,Peanuts,28 g,28,,national brand,yes,,3028089430,0001,NationalCo,NationalCo peanuts dry roasted peanuts,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1661,$2.6910000000000003 × 28.0 g / 454 g,,dry roasted peanuts,0,Test
+84,Peanuts,28 g,28,,store brand,,organic,8824384284,0001,Simple Truth,Simple Truth Organic peanuts dry roasted peanuts,16 oz,,UNIT,4.485,3.5880000000000005,,,,dry roasted peanuts,1,Test
+84,Peanuts,28 g,28,x,store brand,yes,,0588241384,0001,Kroger,Kroger® peanuts dry roasted peanuts,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1846,$2.99 × 28.0 g / 454 g,,dry roasted peanuts,2,Test
+84,Peanuts,28 g,28,,store brand,yes,,6341252684,0001,Kroger,Kroger® peanuts dry roasted peanuts family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5537,$8.97 × 28.0 g / 454 g,,dry roasted peanuts,3,Test
+85,Cocoa Powder,20 g,20,,national brand,yes,,5518242270,0001,NationalCo,NationalCo cocoa unsweetened cocoa powder,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1187,$2.6910000000000003 × 20.0 g / 454 g,,unsweetened cocoa powder,0,Test
+85,Cocoa Powder,20 g,20,,store brand,,organic,5105527255,0001,Simple Truth,Simple Truth Organic cocoa unsweetened cocoa powder,16 oz,,UNIT,4.485,3.5880000000000005,,,,unsweetened cocoa powder,1,Test
+85,Cocoa Powder,20 g,20,x,store brand,yes,,6468395788,0001,Kroger,Kroger® cocoa unsweetened cocoa powder,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1318,$2.99 × 20.0 g / 454 g,,unsweetened cocoa powder,2,Test
+85,Cocoa Powder,20 g,20,,store brand,yes,,7758576728,0001,Kroger,Kroger® cocoa unsweetened cocoa powder family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.3955,$8.97 × 20.0 g / 454 g,,unsweetened cocoa powder,3,Test
+86,Almond Butter,28 g,28,,national brand,yes,,8881666065,0001,NationalCo,NationalCo almond butter almond butter,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1661,$2.6910000000000003 × 28.0 g / 454 g,,almond butter,0,Test
+86,Almond Butter,28 g,28,,store brand,,organic,3341353462,0001,Simple Truth,Simple Truth Organic almond butter almond butter,16 oz,,UNIT,4.485,3.5880000000000005,,,,almond butter,1,Test
+86,Almond Butter,28 g,28,x,store brand,yes,,0212521197,0001,Kroger,Kroger® almond butter almond butter,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1846,$2.99 × 28.0 g / 454 g,,almond butter,2,Test
+86,Almond Butter,28 g,28,,store brand,yes,,1024394383,0001,Kroger,Kroger® almond butter almond butter family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5537,$8.97 × 28.0 g / 454 g,,almond butter,3,Test
+87,Walnuts,28 g,28,,national brand,yes,,9002096621,0001,NationalCo,NationalCo walnut walnuts,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1661,$2.6910000000000003 × 28.0 g / 454 g,,walnuts,0,Test
+87,Walnuts,28 g,28,,store brand,,organic,0280437447,0001,Simple Truth,Simple Truth Organic walnut walnuts,16 oz,,UNIT,4.485,3.5880000000000005,,,,walnuts,1,Test
+87,Walnuts,28 g,28,x,store brand,yes,,9159538797,0001,Kroger,Kroger® walnut walnuts,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1846,$2.99 × 28.0 g / 454 g,,walnuts,2,Test
+87,Walnuts,28 g,28,,store brand,yes,,1675413584,0001,Kroger,Kroger® walnut walnuts family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5537,$8.97 × 28.0 g / 454 g,,walnuts,3,Test
+88,Chia Seeds,30 g,30,,national brand,yes,,1371723280,0001,NationalCo,NationalCo chia chia seeds,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1780,$2.6910000000000003 × 30.0 g / 454 g,,chia seeds,0,Test
+88,Chia Seeds,30 g,30,,store brand,,organic,2882714570,0001,Simple Truth,Simple Truth Organic chia chia seeds,16 oz,,UNIT,4.485,3.5880000000000005,,,,chia seeds,1,Test
+88,Chia Seeds,30 g,30,x,store brand,yes,,3373083158,0001,Kroger,Kroger® chia chia seeds,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1978,$2.99 × 30.0 g / 454 g,,chia seeds,2,Test
+88,Chia Seeds,30 g,30,,store brand,yes,,0851607370,0001,Kroger,Kroger® chia chia seeds family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5933,$8.97 × 30.0 g / 454 g,,chia seeds,3,Test
+89,Hemp Seeds,30 g,30,,national brand,yes,,9844360051,0001,NationalCo,NationalCo hemp hemp seeds,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1780,$2.6910000000000003 × 30.0 g / 454 g,,hemp seeds,0,Test
+89,Hemp Seeds,30 g,30,,store brand,,organic,2914729878,0001,Simple Truth,Simple Truth Organic hemp hemp seeds,16 oz,,UNIT,4.485,3.5880000000000005,,,,hemp seeds,1,Test
+89,Hemp Seeds,30 g,30,x,store brand,yes,,0182839269,0001,Kroger,Kroger® hemp hemp seeds,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1978,$2.99 × 30.0 g / 454 g,,hemp seeds,2,Test
+89,Hemp Seeds,30 g,30,,store brand,yes,,9831609379,0001,Kroger,Kroger® hemp hemp seeds family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5933,$8.97 × 30.0 g / 454 g,,hemp seeds,3,Test
+90,Pumpkin Seeds,30 g,30,,national brand,yes,,1650104323,0001,NationalCo,NationalCo pumpkin pumpkin seeds pepitas,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1780,$2.6910000000000003 × 30.0 g / 454 g,,pumpkin seeds pepitas,0,Test
+90,Pumpkin Seeds,30 g,30,,store brand,,organic,5906471343,0001,Simple Truth,Simple Truth Organic pumpkin pumpkin seeds pepitas,16 oz,,UNIT,4.485,3.5880000000000005,,,,pumpkin seeds pepitas,1,Test
+90,Pumpkin Seeds,30 g,30,x,store brand,yes,,6789609272,0001,Kroger,Kroger® pumpkin pumpkin seeds pepitas,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1978,$2.99 × 30.0 g / 454 g,,pumpkin seeds pepitas,2,Test
+90,Pumpkin Seeds,30 g,30,,store brand,yes,,7920925543,0001,Kroger,Kroger® pumpkin pumpkin seeds pepitas family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5933,$8.97 × 30.0 g / 454 g,,pumpkin seeds pepitas,3,Test
+91,Dark Chocolate,30 g,30,,national brand,yes,,7224694340,0001,NationalCo,NationalCo dark chocolate dark chocolate bar,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1780,$2.6910000000000003 × 30.0 g / 454 g,,dark chocolate bar,0,Test
+91,Dark Chocolate,30 g,30,,store brand,,organic,3341560548,0001,Simple Truth,Simple Truth Organic dark chocolate dark chocolate bar,16 oz,,UNIT,4.485,3.5880000000000005,,,,dark chocolate bar,1,Test
+91,Dark Chocolate,30 g,30,x,store brand,yes,,0056973602,0001,Kroger,Kroger® dark chocolate dark chocolate bar,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1978,$2.99 × 30.0 g / 454 g,,dark chocolate bar,2,Test
+91,Dark Chocolate,30 g,30,,store brand,yes,,4081630988,0001,Kroger,Kroger® dark chocolate dark chocolate bar family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5933,$8.97 × 30.0 g / 454 g,,dark chocolate bar,3,Test
+92,Avocado Oil,15 g,15,,national brand,yes,,6028659284,0001,NationalCo,NationalCo avocado oil avocado oil,16.9 fl oz,459.8,UNIT,7.191000000000001,5.752800000000001,0.2346,$7.191000000000001 × 15.0 g / (500 ml × 0.92),density 0.92 g/ml,avocado oil,0,Test
+92,Avocado Oil,15 g,15,,store brand,,organic,1114922681,0001,Simple Truth,Simple Truth Organic avocado oil avocado oil,16.9 fl oz,,UNIT,11.985,9.588,,,,avocado oil,1,Test
+92,Avocado Oil,15 g,15,x,store brand,yes,,5131344820,0001,Kroger,Kroger® avocado oil avocado oil,16.9 fl oz,459.8,UNIT,7.99,6.392,0.2607,$7.99 × 15.0 g / (500 ml × 0.92),density 0.92 g/ml,avocado oil,2,Test
+92,Avocado Oil,15 g,15,,store brand,yes,,7007414310,0001,Kroger,Kroger® avocado oil avocado oil family pack,16.9 fl oz,459.8,UNIT,23.97,19.176,0.7820,$23.97 × 15.0 g / (500 ml × 0.92),density 0.92 g/ml,avocado oil,3,Test
+93,Olive Oil,15 g,15,,national brand,yes,,0483259243,0001,NationalCo,NationalCo olive oil extra virgin olive oil,16.9 fl oz,459.8,UNIT,7.191000000000001,5.752800000000001,0.2346,$7.191000000000001 × 15.0 g / (500 ml × 0.92),density 0.92 g/ml,extra virgin olive oil,0,Test
+93,Olive Oil,15 g,15,,store brand,,organic,7187355797,0001,Simple Truth,Simple Truth Organic olive oil extra virgin olive oil,16.9 fl oz,,UNIT,11.985,9.588,,,,extra virgin olive oil,1,Test
+93,Olive Oil,15 g,15,x,store brand,yes,,8513946991,0001,Kroger,Kroger® olive oil extra virgin olive oil,16.9 fl oz,459.8,UNIT,7.99,6.392,0.2607,$7.99 × 15.0 g / (500 ml × 0.92),density 0.92 g/ml,extra virgin olive oil,2,Test
+93,Olive Oil,15 g,15,,store brand,yes,,1495309212,0001,Kroger,Kroger® olive oil extra virgin olive oil family pack,16.9 fl oz,459.8,UNIT,23.97,19.176,0.7820,$23.97 × 15.0 g / (500 ml × 0.92),density 0.92 g/ml,extra virgin olive oil,3,Test
+94,Ground Flax Seeds,1 oz,28.3495,,national brand,yes,,2455649084,0001,NationalCo,NationalCo flax ground flaxseed,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1682,$2.6910000000000003 × 28.3 g / 454 g,,ground flaxseed,0,Test
+94,Ground Flax Seeds,1 oz,28.3495,,store brand,,organic,3819635479,0001,Simple Truth,Simple Truth Organic flax ground flaxseed,16 oz,,UNIT,4.485,3.5880000000000005,,,,ground flaxseed,1,Test
+94,Ground Flax Seeds,1 oz,28.3495,x,store brand,yes,,3756251629,0001,Kroger,Kroger® flax ground flaxseed,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1869,$2.99 × 28.3 g / 454 g,,ground flaxseed,2,Test
+94,Ground Flax Seeds,1 oz,28.3495,,store brand,yes,,7343455227,0001,Kroger,Kroger® flax ground flaxseed family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5606,$8.97 × 28.3 g / 454 g,,ground flaxseed,3,Test
+95,Cashews,1 oz,28.3495,,national brand,yes,,5708597050,0001,NationalCo,NationalCo cashew cashews,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1682,$2.6910000000000003 × 28.3 g / 454 g,,cashews,0,Test
+95,Cashews,1 oz,28.3495,,store brand,,organic,3988154305,0001,Simple Truth,Simple Truth Organic cashew cashews,16 oz,,UNIT,4.485,3.5880000000000005,,,,cashews,1,Test
+95,Cashews,1 oz,28.3495,x,store brand,yes,,2658079490,0001,Kroger,Kroger® cashew cashews,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1869,$2.99 × 28.3 g / 454 g,,cashews,2,Test
+95,Cashews,1 oz,28.3495,,store brand,yes,,0199802103,0001,Kroger,Kroger® cashew cashews family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5606,$8.97 × 28.3 g / 454 g,,cashews,3,Test
+96,Sunflower Seeds,1 oz,28.3495,,national brand,yes,,2311162325,0001,NationalCo,NationalCo sunflower sunflower seed kernels,16 oz,453.6,UNIT,2.6910000000000003,2.1528000000000005,0.1682,$2.6910000000000003 × 28.3 g / 454 g,,sunflower seed kernels,0,Test
+96,Sunflower Seeds,1 oz,28.3495,,store brand,,organic,1189289243,0001,Simple Truth,Simple Truth Organic sunflower sunflower seed kernels,16 oz,,UNIT,4.485,3.5880000000000005,,,,sunflower seed kernels,1,Test
+96,Sunflower Seeds,1 oz,28.3495,x,store brand,yes,,5976637286,0001,Kroger,Kroger® sunflower sunflower seed kernels,16 oz,453.6,UNIT,2.99,2.3920000000000003,0.1869,$2.99 × 28.3 g / 454 g,,sunflower seed kernels,2,Test
+96,Sunflower Seeds,1 oz,28.3495,,store brand,yes,,6630881050,0001,Kroger,Kroger® sunflower sunflower seed kernels family pack,16 oz,453.6,UNIT,8.97,7.176000000000001,0.5606,$8.97 × 28.3 g / 454 g,,sunflower seed kernels,3,Test
+97,Apple Cider Vinegar,1 tbsp,14.9,,national brand,yes,,0450416451,0001,NationalCo,NationalCo cider vinegar apple cider vinegar,16.9 fl oz,,UNIT,7.191000000000001,5.752800000000001,0.2128,$7.191000000000001 × 14.8 ml / 500 ml,,apple cider vinegar,0,Test
+97,Apple Cider Vinegar,1 tbsp,14.9,,store brand,,organic,8329776318,0001,Simple Truth,Simple Truth Organic cider vinegar apple cider vinegar,16.9 fl oz,,UNIT,11.985,9.588,,,,apple cider vinegar,1,Test
+97,Apple Cider Vinegar,1 tbsp,14.9,x,store brand,yes,,4920761153,0001,Kroger,Kroger® cider vinegar apple cider vinegar,16.9 fl oz,,UNIT,7.99,6.392,0.2364,$7.99 × 14.8 ml / 500 ml,,apple cider vinegar,2,Test
+97,Apple Cider Vinegar,1 tbsp,14.9,,store brand,yes,,9427442967,0001,Kroger,Kroger® cider vinegar apple cider vinegar family pack,16.9 fl oz,,UNIT,23.97,19.176,0.7092,$23.97 × 14.8 ml / 500 ml,,apple cider vinegar,3,Test
+98,Soy Sauce / Tamari,1 tbsp,16,,national brand,yes,,8960651651,0001,NationalCo,NationalCo soy sauce soy sauce,16.9 fl oz,,UNIT,7.191000000000001,5.752800000000001,0.2128,$7.191000000000001 × 14.8 ml / 500 ml,,soy sauce,0,Test
+98,Soy Sauce / Tamari,1 tbsp,16,,store brand,,organic,9014462171,0001,Simple Truth,Simple Truth Organic soy sauce soy sauce,16.9 fl oz,,UNIT,11.985,9.588,,,,soy sauce,1,Test
+98,Soy Sauce / Tamari,1 tbsp,16,x,store brand,yes,,1472116885,0001,Kroger,Kroger® soy sauce soy sauce,16.9 fl oz,,UNIT,7.99,6.392,0.2364,$7.99 × 14.8 ml / 500 ml,,soy sauce,2,Test
+98,Soy Sauce / Tamari,1 tbsp,16,,store brand,yes,,2931179443,0001,Kroger,Kroger® soy sauce soy sauce family pack,16.9 fl oz,,UNIT,23.97,19.176,0.7092,$23.97 × 14.8 ml / 500 ml,,soy sauce,3,Test
+99,Honey,1 tbsp,20,,national brand,yes,,4863512600,0001,NationalCo,NationalCo honey honey,16.9 fl oz,,UNIT,7.191000000000001,5.752800000000001,0.2128,$7.191000000000001 × 14.8 ml / 500 ml,,honey,0,Test
+99,Honey,1 tbsp,20,,store brand,,organic,4242160744,0001,Simple Truth,Simple Truth Organic honey honey,16.9 fl oz,,UNIT,11.985,9.588,,,,honey,1,Test
+99,Honey,1 tbsp,20,x,store brand,yes,,0583499813,0001,Kroger,Kroger® honey honey,16.9 fl oz,,UNIT,7.99,6.392,0.2364,$7.99 × 14.8 ml / 500 ml,,honey,2,Test
+99,Honey,1 tbsp,20,,store brand,yes,,1999038836,0001,Kroger,Kroger® honey honey family pack,16.9 fl oz,,UNIT,23.97,19.176,0.7092,$23.97 × 14.8 ml / 500 ml,,honey,3,Test
+100,Maple Syrup,1 tbsp,20,,national brand,yes,,0296119722,0001,NationalCo,NationalCo maple syrup pure maple syrup,16.9 fl oz,,UNIT,7.191000000000001,5.752800000000001,0.2128,$7.191000000000001 × 14.8 ml / 500 ml,,pure maple syrup,0,Test
+100,Maple Syrup,1 tbsp,20,,store brand,,organic,9058805496,0001,Simple Truth,Simple Truth Organic maple syrup pure maple syrup,16.9 fl oz,,UNIT,11.985,9.588,,,,pure maple syrup,1,Test
+100,Maple Syrup,1 tbsp,20,x,store brand,yes,,2892585594,0001,Kroger,Kroger® maple syrup pure maple syrup,16.9 fl oz,,UNIT,7.99,6.392,0.2364,$7.99 × 14.8 ml / 500 ml,,pure maple syrup,2,Test
+100,Maple Syrup,1 tbsp,20,,store brand,yes,,2964371321,0001,Kroger,Kroger® maple syrup pure maple syrup family pack,16.9 fl oz,,UNIT,23.97,19.176,0.7092,$23.97 × 14.8 ml / 500 ml,,pure maple syrup,3,Test

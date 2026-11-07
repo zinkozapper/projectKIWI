@@ -42,7 +42,8 @@ per-serving value = prepared value per 100 g × factor
 - The raw-to-cooked calorie ratio captures the weight change (water gained or lost). The same factor scales every nutrient.
 - Raw/dry references come from Foundation or SR Legacy, because FNDDS does not include raw meat or dry grains.
 - **Meats: the cooked and raw records must come from the same dataset.** Mixing FNDDS cooked with SR raw gave shrimp a yield above 100%. FNDDS is not used for meats.
-- **Sodium for prepared foods comes from the raw/dry record**, scaled to the serving. FNDDS cooked grains and legumes assume salt added during cooking (even "no added fat" versions), and some SR cooked meats include moisture-retaining additives. Kiwi models what you buy, so cooking salt is excluded. Example: lentils show 342 mg per 1/4 cup dry from the cooked record vs about 3 mg dry. _Status: rule adopted; not yet applied to the Sprint 1 dataset. Implement in the automated import._
+- **Sodium for prepared foods comes from the raw/dry record**, scaled to the serving. FNDDS cooked grains and legumes assume salt added during cooking (even "no added fat" versions), and some SR cooked meats include moisture-retaining additives. Kiwi models what you buy, so cooking salt is excluded. Example: lentils show 342 mg per 1/4 cup dry from the cooked record vs about 3 mg dry. _Status: applied by the AI food finder (`src/lib/food-import/rules.ts`) to every new food. The 100 Sprint 1 foods still carry cooked-record sodium until they are backfilled._
+  - **Fallback when there is no raw/dry sodium value:** grains and legumes −90% (salted cooking water is nearly all of it), meat and seafood unchanged. The food is flagged for admin review.
 - **Per-unit servings (`1 unit`) = the average gram weight of one whole item:**
   1. Ignore portions that aren't one whole item: cup, slice, wedge, piece, RACC, and variety sizes like cherry, plum or miniature.
   2. Use the **medium** portion if there is one.
@@ -105,6 +106,16 @@ Out of scope for now: vitamin D, price.
   - Known exceptions (accepted after review): high-fiber or acidic fruits (citrus, berries), whose fiber and organic acids carry fewer calories than standard carbs; vinegar (calories from acetic acid); alcohol and sugar alcohols.
 - Check `portions_on_record` in `import-log.csv` to confirm each serving matched a sensible portion. If none fits, set `servingGrams` on the food.
 - No duplicate food names. Every row keeps its source `fdc_id`, `data_type` and description.
+
+## 7. Automated import (AI food finder)
+
+The in-app workflow (`src/lib/food-import/`, README "AI food workflow") applies these rules automatically:
+
+- §1: drops prepared records with added fat; Claude chooses only among the remaining USDA candidates, ordered by coverage then dataset; the user makes the final pick.
+- §2–3: Claude proposes the group and serving (validated against the group rules), and the code computes grams, factor and nutrients. Claude never supplies nutrient values. The user's only choice is which USDA record matches; serving, flavor profile and pairings are set automatically.
+- **Cross-check against other records:** each new cooked food's raw/cooked calorie ratio is compared with the median of its group (`food.cook_ratio`). More than 20% off flags the food for review. If no raw/dry record exists, the group median is used as the ratio, and the food is flagged.
+- Flavor profile: 2–4 tags from a fixed list of 16; pairings: 3–6 foods already in the catalog, saved in both directions. Anything outside those lists is dropped.
+- Missing nutrients are stored as 0 (§6). Foods with review flags are still added, but they appear under "New foods to double-check" on `/admin`.
 
 ## Running the import
 

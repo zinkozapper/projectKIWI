@@ -14,45 +14,180 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_admin: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       food: {
         Row: {
+          added_by: string | null
+          calcium_mg: number
+          calories_kcal: number
+          carbohydrate_g: number
+          choline_mg: number
+          cook_ratio: number | null
+          copper_mg: number
+          created_at: string
           emoji: string
+          factor: number
+          fat_g: number
+          fdc_id: number | null
+          fiber_g: number
+          flavor_profile: string[]
+          folate_b9_mg: number
           food_category_id: number | null
           food_description: string
+          food_group: string | null
           food_id: number
           food_name: string
           food_picture: string | null
+          iron_mg: number
+          magnesium_mg: number
+          needs_review: boolean
+          niacin_b3_mg: number
           nutrition: Json
+          omega3_ala_g: number
+          omega6_g: number
           pairs: number[]
+          phosphorus_mg: number
+          potassium_mg: number
           price: number
+          protein_g: number
+          raw_fdc_id: number | null
+          review_notes: string | null
+          riboflavin_b2_mg: number
+          selenium_mg: number
           serving_size: number
+          sodium_mg: number
+          source: string | null
+          thiamin_b1_mg: number
           unit: string
+          vitamin_a_mg: number
+          vitamin_b12_mg: number
+          vitamin_b6_mg: number
+          vitamin_c_mg: number
+          vitamin_e_mg: number
+          vitamin_k_mg: number
+          zinc_mg: number
         }
         Insert: {
+          added_by?: string | null
+          calcium_mg?: number
+          calories_kcal?: number
+          carbohydrate_g?: number
+          choline_mg?: number
+          cook_ratio?: number | null
+          copper_mg?: number
+          created_at?: string
           emoji?: string
+          factor?: number
+          fat_g?: number
+          fdc_id?: number | null
+          fiber_g?: number
+          flavor_profile?: string[]
+          folate_b9_mg?: number
           food_category_id?: number | null
           food_description?: string
+          food_group?: string | null
           food_id?: number
           food_name: string
           food_picture?: string | null
+          iron_mg?: number
+          magnesium_mg?: number
+          needs_review?: boolean
+          niacin_b3_mg?: number
           nutrition?: Json
+          omega3_ala_g?: number
+          omega6_g?: number
           pairs?: number[]
+          phosphorus_mg?: number
+          potassium_mg?: number
           price?: number
+          protein_g?: number
+          raw_fdc_id?: number | null
+          review_notes?: string | null
+          riboflavin_b2_mg?: number
+          selenium_mg?: number
           serving_size?: number
+          sodium_mg?: number
+          source?: string | null
+          thiamin_b1_mg?: number
           unit?: string
+          vitamin_a_mg?: number
+          vitamin_b12_mg?: number
+          vitamin_b6_mg?: number
+          vitamin_c_mg?: number
+          vitamin_e_mg?: number
+          vitamin_k_mg?: number
+          zinc_mg?: number
         }
         Update: {
+          added_by?: string | null
+          calcium_mg?: number
+          calories_kcal?: number
+          carbohydrate_g?: number
+          choline_mg?: number
+          cook_ratio?: number | null
+          copper_mg?: number
+          created_at?: string
           emoji?: string
+          factor?: number
+          fat_g?: number
+          fdc_id?: number | null
+          fiber_g?: number
+          flavor_profile?: string[]
+          folate_b9_mg?: number
           food_category_id?: number | null
           food_description?: string
+          food_group?: string | null
           food_id?: number
           food_name?: string
           food_picture?: string | null
+          iron_mg?: number
+          magnesium_mg?: number
+          needs_review?: boolean
+          niacin_b3_mg?: number
           nutrition?: Json
+          omega3_ala_g?: number
+          omega6_g?: number
           pairs?: number[]
+          phosphorus_mg?: number
+          potassium_mg?: number
           price?: number
+          protein_g?: number
+          raw_fdc_id?: number | null
+          review_notes?: string | null
+          riboflavin_b2_mg?: number
+          selenium_mg?: number
           serving_size?: number
+          sodium_mg?: number
+          source?: string | null
+          thiamin_b1_mg?: number
           unit?: string
+          vitamin_a_mg?: number
+          vitamin_b12_mg?: number
+          vitamin_b6_mg?: number
+          vitamin_c_mg?: number
+          vitamin_e_mg?: number
+          vitamin_k_mg?: number
+          zinc_mg?: number
         }
         Relationships: [
           {
@@ -81,6 +216,71 @@ export type Database = {
           food_category_id?: number
         }
         Relationships: []
+      }
+      food_import_request: {
+        Row: {
+          admin_note: string | null
+          chosen_fdc_id: number | null
+          created_at: string
+          food_id: number | null
+          how_bought: string | null
+          kind: string
+          notes: string | null
+          query: string
+          raw_fdc_id: number | null
+          request_id: number
+          resolved_at: string | null
+          resolved_by: string | null
+          rounds: Json
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          chosen_fdc_id?: number | null
+          created_at?: string
+          food_id?: number | null
+          how_bought?: string | null
+          kind?: string
+          notes?: string | null
+          query?: string
+          raw_fdc_id?: number | null
+          request_id?: never
+          resolved_at?: string | null
+          resolved_by?: string | null
+          rounds?: Json
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          chosen_fdc_id?: number | null
+          created_at?: string
+          food_id?: number | null
+          how_bought?: string | null
+          kind?: string
+          notes?: string | null
+          query?: string
+          raw_fdc_id?: number | null
+          request_id?: never
+          resolved_at?: string | null
+          resolved_by?: string | null
+          rounds?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_import_request_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+        ]
       }
       food_preferences: {
         Row: {
@@ -544,6 +744,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_food_quota: {
+        Row: {
+          food_limit: number
+          updated_at: string
+          updated_by: string | null
+          user_id: string
+        }
+        Insert: {
+          food_limit?: number
+          updated_at?: string
+          updated_by?: string | null
+          user_id: string
+        }
+        Update: {
+          food_limit?: number
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_login_events: {
         Row: {
           created_at: string
@@ -594,12 +815,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_food_queue: { Args: never; Returns: Json }
+      admin_mark_food_reviewed: {
+        Args: { p_food_id: number }
+        Returns: undefined
+      }
       admin_dashboard: {
         Args: { p_window_days?: number }
         Returns: Json
       }
       admin_refresh_snapshots: {
         Args: never
+        Returns: undefined
+      }
+      admin_resolve_food_request: {
+        Args: { p_approve: boolean; p_note?: string; p_request_id: number }
         Returns: undefined
       }
       admin_set_admin: {

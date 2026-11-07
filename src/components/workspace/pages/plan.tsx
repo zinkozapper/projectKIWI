@@ -1,12 +1,13 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, Minus, Plus, Search, ShoppingBasket, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { ArrowRight, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, getFoodPairings, nutrientKeys, nutrientLabels, nutrientUnits, type Food } from '@/lib/foods';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
+import { FoodFinder } from '../food-finder';
 import { NutrientBar } from '../nutrient-bar';
 
 function addFoodOnCardKeyDown(e: KeyboardEvent<HTMLDivElement>, add: () => void) {
@@ -19,6 +20,7 @@ export function PlanPage() {
   const navigate = useNavigate();
   const [foodDetails, setFoodDetails] = useState<Food | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [finderOpen, setFinderOpen] = useState(false);
   const searchArea = useRef<HTMLDivElement>(null);
 
   const {
@@ -162,8 +164,12 @@ export function PlanPage() {
                       </div>
                     ))
                     : <p className="empty-inline">No exact match. Try “beans”, “rice”, or “yogurt”.</p>}
+                  <button type="button" className="finder-launch" onClick={() => { setSearchOpen(false); setFinderOpen(true); }}>
+                    <Sparkles size={15} aria-hidden="true" /> Can’t find it? Add “{search.trim()}” to Kiwi
+                  </button>
                 </div>
               )}
+              <FoodFinder open={finderOpen} onOpenChange={setFinderOpen} initialQuery={search.trim()} onFinished={() => setSearch('')} />
             </div>
 
             <div className="list-head">

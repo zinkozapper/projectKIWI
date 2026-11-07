@@ -7,6 +7,7 @@ import {
 } from '@/lib/admin';
 import { nutrientLabels } from '@/lib/foods';
 import { useWorkspace } from '../context';
+import { FoodQueue } from '../food-queue';
 
 const filters: { id: UserFilter; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -216,6 +217,8 @@ export function AdminPage() {
           </div>
         </>
       )}
+
+      <FoodQueue />
 
       <section className="admin-card admin-users">
         <div className="section-title">

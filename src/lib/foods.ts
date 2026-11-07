@@ -22,6 +22,7 @@ export type Food = {
   note: string;
   emoji: string;
   pairs: string[];
+  flavor?: string[];
 };
 
 // Food catalog loaded from Supabase.
@@ -39,38 +40,64 @@ export async function loadCatalog() {
 
   if (error) throw error;
 
-  foods.splice(
-    0,
-    foods.length,
-    ...(data || []).map((r) => {
-      // nutrition is a jsonb column, so Supabase types it as Json. Missing values still become 0.
-      const n = (r.nutrition ?? {}) as Partial<Record<keyof Nutrients, unknown>>;
-      return {
-        id: String(r.food_id),
-        name: r.food_name,
-        category: r.food_category?.category_description ?? 'Other',
-        unit: r.unit,
-        price: Number(r.price),
-        servings: Number(r.serving_size),
-        nutrition: {
-          calories: Number(n.calories) || 0,
-          protein: Number(n.protein) || 0,
-          carbs: Number(n.carbs) || 0,
-          fat: Number(n.fat) || 0,
-          fiber: Number(n.fiber) || 0,
-          iron: Number(n.iron) || 0,
-          calcium: Number(n.calcium) || 0,
-          vitaminC: Number(n.vitaminC) || 0,
-          vitaminD: Number(n.vitaminD) || 0,
-        },
-        note: r.food_description,
-        emoji: r.emoji,
-        pairs: (r.pairs || []).map(String),
-      };
-    })
-  );
+  foods.splice(0, foods.length, ...(data || []).map(mapFoodRow));
 
   return foods;
+}
+
+type FoodRow = {
+  food_id: number;
+  food_name: string;
+  food_category?: { category_description: string } | null;
+  unit: string;
+  price: number | string;
+  serving_size: number | string;
+  nutrition: unknown;
+  food_description: string;
+  emoji: string;
+  pairs: number[] | null;
+  flavor_profile?: string[] | null;
+};
+
+// One database row -> the Food shape the UI uses. nutrition is per serving; missing values become 0.
+export function mapFoodRow(r: FoodRow): Food {
+  const n = (r.nutrition ?? {}) as Partial<Record<keyof Nutrients, unknown>>;
+  return {
+    id: String(r.food_id),
+    name: r.food_name,
+    category: r.food_category?.category_description ?? 'Other',
+    unit: r.unit,
+    price: Number(r.price),
+    servings: Number(r.serving_size),
+    nutrition: {
+      calories: Number(n.calories) || 0,
+      protein: Number(n.protein) || 0,
+      carbs: Number(n.carbs) || 0,
+      fat: Number(n.fat) || 0,
+      fiber: Number(n.fiber) || 0,
+      iron: Number(n.iron) || 0,
+      calcium: Number(n.calcium) || 0,
+      vitaminC: Number(n.vitaminC) || 0,
+      vitaminD: Number(n.vitaminD) || 0,
+    },
+    note: r.food_description,
+    emoji: r.emoji,
+    pairs: (r.pairs || []).map(String),
+    flavor: r.flavor_profile || [],
+  };
+}
+
+// Add a food created by the AI food finder to the cached catalog (and link it into its partners' pairs)
+// so it shows up in search and pairings without a reload.
+export function addFoodToCatalog(row: FoodRow): Food {
+  const food = mapFoodRow(row);
+  const at = foods.findIndex(f => f.id === food.id);
+  if (at >= 0) foods[at] = food;
+  else foods.push(food);
+  for (const partner of foods) {
+    if (food.pairs.includes(partner.id) && !partner.pairs.includes(food.id)) partner.pairs = [...partner.pairs, food.id];
+  }
+  return food;
 }
 
 export const foodById = (id: string) =>
@@ -451,15 +478,21 @@ export function getFoodPairings(
     group.filter(name => !matchesPairing(selectedFood, name))
   );
 
+  // Pairings stored in the database (food.pairs, set by the AI food finder) come first, in both directions;
+  // the curated lists below still cover the original catalog until it is backfilled.
+  const databasePairs = [
+    ...selectedFood.pairs.map(id => foodById(id)),
+    ...foods.filter(food => food.pairs.includes(selectedFood.id)),
+  ].filter((food): food is Food => !!food);
+  const candidates: Food[] = [
+    ...databasePairs,
+    ...recommendedNames.map(name => foods.find(food => matchesPairing(food, name))).filter((food): food is Food => !!food),
+  ];
+
   const recommendations: Food[] = [];
   const seen = new Set<string>();
 
-  for (const pairingName of recommendedNames) {
-    const match = foods.find(food =>
-      matchesPairing(food, pairingName)
-    );
-
-    if (!match) continue;
+  for (const match of candidates) {
     if (match.id === selectedFood.id) continue;
     if (excludedFoodIds.includes(match.id)) continue;
     if (seen.has(match.id)) continue;

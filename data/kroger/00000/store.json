@@ -1,0 +1,15 @@
+{
+  "zip": "00000",
+  "store": {
+    "location_id": "70600123",
+    "chain": "SMITHS",
+    "name": "Smith's Provo",
+    "address": "1 Main St",
+    "city": "Provo",
+    "state": "UT",
+    "zip_code": "84601",
+    "latitude": 40.23,
+    "longitude": -111.66
+  },
+  "fetched_at": "2026-11-07T00:28:10.300Z"
+}
