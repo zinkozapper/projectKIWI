@@ -1,9 +1,36 @@
+# Kiwi Nutrition
+
 ## Summary
 Eat healthy, live happy.
 
 Kiwi is an app that provides recommendations to users on how to eat healthier. 
 
 The app displays nutrient information of foods you are already eating and gives recommendations on what to eat. It helps users identify nutritional gaps and makes plans to help close those gaps. This app also helps users to shop for healthier foods.
+
+Kiwi is built for young adults planning groceries on a budget. Live site: **https://dfoo37gyp3r01.cloudfront.net**
+
+## Features
+
+- **Profile and daily targets.** Age, height (ft/in), weight (lb), sex, activity and goal set daily targets for 27 nutrients from adult NIH DRIs. Height and weight are stored as cm/kg.
+- **My plan** (`/plan`). Search the catalog and build a grocery trip. Each add puts 1 serving per day on the list for the whole trip. Nutrient bars show what the pantry already covers and what the list adds. Suggestions rank foods by how much of your gaps they fill per dollar, and "Pairs well with" suggests foods that go together.
+- **Budget periods.** The budget is an amount per 1, 2 or 4 weeks that repeats from a start date, so spending resets on its own each period (`src/lib/budget-period.ts`, migration 0006).
+- **Persistent pantry** (`/plan/pantry`). Foods stay in the pantry until you mark them gone. Finishing a trip adds everything bought. Before each new trip a **pantry check** asks what's still at home, so a bag of rice isn't re-added every week (`src/lib/pantry-check.ts`).
+- **Shopping mode** (`/plan/shop`) to check items off in the store, and **History** (`/plan/history`) for finished trips.
+- **AI food workflow.** Add foods that aren't in the catalog (see below).
+- **Sign-in.** Email and password, passkeys (managed on `/profile`), and password reset. "Remember me" is on by default, so users stay signed in across browser restarts. Google sign-in is built but hidden until `VITE_GOOGLE_SIGN_IN=true` (it needs a Google Cloud OAuth client set up in Supabase first).
+- **Theme.** Light by default, with dark mode and four color schemes on `/profile`. The choice is saved on the device and applied before the page paints.
+- **Admin dashboard** (`/admin`). Only accounts in `public.app_admin` see the Admin button. It shows the OKR tiles, daily history, a user list with a Make admin button, and the queue of food requests and flagged foods from the AI workflow.
+
+### OKR tracking
+
+| OKR | What's measured | Migration | Queries |
+|---|---|---|---|
+| 1. Effective recommendations | Suggestions shown, added and dismissed (`recommendation_event`) | 0003 | [docs/recommendation-metrics.sql](docs/recommendation-metrics.sql) |
+| 2. Nutrient goal achievement | Share of nutrient targets the pantry meets (`nutrient_profile_snapshot`) | 0007 | [docs/nutrient-goal-metrics.sql](docs/nutrient-goal-metrics.sql) |
+| 3. Login frequency | Users with 2+ logon days in the last 30 days | 0005 | [docs/login-frequency.sql](docs/login-frequency.sql) |
+| 4. Churn | Users active last 30 days with no activity this 30 days (`user_login_events`) | 0004 | [docs/churn-metrics.sql](docs/churn-metrics.sql) |
+
+Daily snapshots are scheduled with `pg_cron` when it is enabled in Supabase (Database → Extensions). All four numbers also show on `/admin`.
 
 ## ERD
 ![ERD](./assets/ERD.png)
@@ -13,6 +40,8 @@ The app displays nutrient information of foods you are already eating and gives 
 - Application: TanStack Start and TanStack Router
 - UI: Tailwind CSS and Radix UI
 - Backend, authentication, and database: Supabase
+- AI and data: Claude API, USDA FoodData Central, Kroger API
+- Hosting: AWS Elastic Beanstalk behind CloudFront, deployed by GitHub Actions
 
 ## System Architecture Diagram
 ![System Architecture Diagram](./assets/sad.png)
@@ -107,10 +136,15 @@ Prices for the existing catalog were loaded with the backfill script, which uses
 
 ## How to run
 ### First time install (DEV)
+You need Node 22 or newer.
+
 ```bash
 git clone https://github.com/zinkozapper/projectKIWI
+cd projectKIWI
 npm install
 ```
+
+If `npm install` fails with a peer dependency error, run `npm install --legacy-peer-deps`. On Windows PowerShell, if scripts are blocked, use `npm.cmd` in place of `npm` (for example `npm.cmd install`, `npm.cmd run dev`).
 
 Copy the `.env` file from the example and add the Supabase values:
 
@@ -119,6 +153,12 @@ cp .env.example .env
 vi .env
 ```
 
+On Windows PowerShell: `Copy-Item .env.example .env`, then `notepad .env`.
+
+`.env.example` only has placeholders, so the app shows a "can't load" page until you fill in the real `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` (Supabase → Project Settings → API keys). The server-only keys in the [AI food workflow setup](#setup) are needed only for adding new foods. Optional: `VITE_GOOGLE_SIGN_IN=true` shows the Google button.
+
+**Never commit `.env`.** It is gitignored on purpose and holds secret keys.
+
 Start the app:
 
 ```bash
@@ -126,6 +166,12 @@ npm run dev
 ```
 
 Open the local URL printed by Vite, usually `http://localhost:8080`.
+
+### Tests
+
+```bash
+npm test
+```
 
 ### Lighthouse performance testing
 
@@ -144,9 +190,58 @@ Simply pull the latest repo then run it
 
 ```bash
 git pull
+npm install
 npm run dev
 ```
 
-### Verify vertical slice
-On home page, fill out account information and select 'Create Account.' The app will send you an email to verify your account. Click on the link in the email and then you will be logged in! You can also select logout in the bottom left hand corner of the screen and log back in using the email and password you provided.
+If anyone added a migration since your last pull, apply it in Supabase too (next section).
 
+### Verify vertical slice
+On home page, fill out account information and select 'Create Account.' If email confirmation is turned on in Supabase, the app will send you an email to verify your account; click on the link in the email and then you will be logged in! You can also select logout in the bottom left hand corner of the screen and log back in using the email and password you provided.
+
+## Database migrations
+
+Migrations are plain SQL files in `drizzle/migrations/`. Nothing applies them automatically: run each new file, in order, in the Supabase SQL editor. After a schema change, regenerate `src/integrations/supabase/types.ts` instead of editing it by hand.
+
+| File | What it adds |
+|---|---|
+| `0000_kiwi_profiles_and_grocery_lists.sql` | Profiles and the first grocery tables |
+| `0001_kiwi_erd_schema.sql` | ERD schema: users, pantry, shopping lists, food catalog, RLS |
+| `0002_kiwi_user_names.sql` | Fills first and last name on sign-up |
+| `0003_kiwi_recommendation_events.sql` | OKR 1 recommendation events |
+| `0004_kiwi_login_activity_churn.sql` | OKR 4 login events, `analytics` schema, churn snapshots |
+| `0005_kiwi_login_frequency.sql` | OKR 3 login frequency |
+| `0006_kiwi_budget_period.sql` | Budget period (1, 2 or 4 weeks) on profiles |
+| `0007_kiwi_nutrient_goal_snapshots.sql` | OKR 2 nutrient goal snapshots |
+| `0008_kiwi_admin_dashboard.sql` | `app_admin` and the admin dashboard functions |
+| `0009_kiwi_food_import_workflow.sql` | AI food workflow: quotas, requests, review flags |
+| `0010_kiwi_localized_food_price.sql` | Kroger stores and per-store food prices |
+
+The food catalog itself comes from the USDA scripts: import `data/usda/supabase/food_category.csv` before `data/usda/supabase/food.csv`.
+
+To make the first admin, run this once in the SQL editor (after that, admins can make other admins from `/admin`):
+
+```sql
+INSERT INTO public.app_admin (user_id, note)
+SELECT id, 'first admin' FROM auth.users WHERE email = 'you@example.com'
+ON CONFLICT (user_id) DO NOTHING;
+```
+
+## Deployment
+
+Every push to `main` deploys automatically. [.github/workflows/deploy.yml](.github/workflows/deploy.yml) installs with `npm ci --legacy-peer-deps`, builds with `NITRO_PRESET=node-server`, zips `.output` with a Procfile, and deploys it as a new version (`gh-<run>-<sha>`) to AWS Elastic Beanstalk (us-east-2, Node.js 22, application `kiwi-nitrition`, environment `Kiwi-nitrition-env`). You can also start it by hand from the Actions tab with **Run workflow**. The run fails if the environment ends up Red.
+
+CloudFront serves the site over HTTPS at **https://dfoo37gyp3r01.cloudfront.net** in front of the Elastic Beanstalk URL. Share that address, not the EB one. Supabase Auth's Site URL and redirect URLs point to it.
+
+**GitHub repository secrets** (Settings → Secrets and variables → Actions). The `VITE_` values are baked into the browser bundle at build time:
+
+- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`
+
+**Elastic Beanstalk environment properties** (Configuration → Updates, monitoring, and logging → Environment properties). These are read by the server at runtime and never reach the browser:
+
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+- `ANTHROPIC_API_KEY`, `FDC_API_KEY`
+- `KROGER_CLIENT_ID`, `KROGER_CLIENT_SECRET`
+
+To show Google sign-in on the live site, first enable the Google provider in Supabase, then add a `VITE_GOOGLE_SIGN_IN` secret set to `true` and pass it in the build step's `env` in `deploy.yml` (it isn't passed yet).
