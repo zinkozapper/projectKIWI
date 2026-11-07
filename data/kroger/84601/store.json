@@ -9,7 +9,46 @@
     "state": "UT",
     "zip_code": "84601",
     "latitude": 40.2386833,
-    "longitude": -111.6613853
+    "longitude": -111.6613853,
+    "departments": 34
   },
-  "fetched_at": "2026-11-07T04:54:48.193Z"
+  "alternates": [
+    {
+      "location_id": "70600119",
+      "chain": "SMITHS",
+      "name": "Smith's Marketplace - Center Pointe At Lehi",
+      "address": "1550 E 3500 N",
+      "city": "Lehi",
+      "state": "UT",
+      "zip_code": "84043",
+      "latitude": 40.4296792,
+      "longitude": -111.8248596,
+      "departments": 55
+    },
+    {
+      "location_id": "70600207",
+      "chain": "SMITHS",
+      "name": "Smith's Marketplace - Saratoga Springs Marketplace",
+      "address": "689 N Redwood Rd",
+      "city": "Saratoga Springs",
+      "state": "UT",
+      "zip_code": "84045",
+      "latitude": 40.374687,
+      "longitude": -111.91951399999999,
+      "departments": 51
+    },
+    {
+      "location_id": "70600271",
+      "chain": "SMITHS",
+      "name": "Smith's Marketplace - Springville Marketplace",
+      "address": "1117 W 400 S",
+      "city": "Springville",
+      "state": "UT",
+      "zip_code": "84663",
+      "latitude": 40.158999,
+      "longitude": -111.630137,
+      "departments": 50
+    }
+  ],
+  "fetched_at": "2026-11-07T05:18:33.685Z"
 }

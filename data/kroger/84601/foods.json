@@ -1,0 +1,709 @@
+[
+ {
+  "food_id": 1,
+  "food_name": "Chicken breast",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 2,
+  "food_name": "Chicken thighs",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 3,
+  "food_name": "Pork Tenderloin",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 4,
+  "food_name": "Pork Butt/Shoulder",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 5,
+  "food_name": "Sirloin",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 6,
+  "food_name": "Chuck",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 7,
+  "food_name": "Ground beef 90/10",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 8,
+  "food_name": "Ribeye Whole",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 9,
+  "food_name": "Tilapia",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 10,
+  "food_name": "Salmon",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 11,
+  "food_name": "Tuna",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 12,
+  "food_name": "Sardines",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 13,
+  "food_name": "Oysters",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 14,
+  "food_name": "Ground Turkey",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 15,
+  "food_name": "Chicken Liver",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 16,
+  "food_name": "Liver",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 17,
+  "food_name": "Shrimp",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 18,
+  "food_name": "Chickpeas / Garbanzo Beans",
+  "food_category_id": 1,
+  "serving_size": 0.25,
+  "unit": "cup"
+ },
+ {
+  "food_id": 19,
+  "food_name": "Lentils",
+  "food_category_id": 1,
+  "serving_size": 0.25,
+  "unit": "cup"
+ },
+ {
+  "food_id": 20,
+  "food_name": "Bagels",
+  "food_category_id": 2,
+  "serving_size": 85,
+  "unit": "g"
+ },
+ {
+  "food_id": 21,
+  "food_name": "Pasta",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz"
+ },
+ {
+  "food_id": 22,
+  "food_name": "Whole Wheat Pasta",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz"
+ },
+ {
+  "food_id": 23,
+  "food_name": "Rice",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz"
+ },
+ {
+  "food_id": 24,
+  "food_name": "Quinoa",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz"
+ },
+ {
+  "food_id": 25,
+  "food_name": "Rolled oats",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz"
+ },
+ {
+  "food_id": 26,
+  "food_name": "Multi-grain Bread",
+  "food_category_id": 2,
+  "serving_size": 45,
+  "unit": "g"
+ },
+ {
+  "food_id": 27,
+  "food_name": "Brown Rice",
+  "food_category_id": 2,
+  "serving_size": 0.25,
+  "unit": "cup"
+ },
+ {
+  "food_id": 28,
+  "food_name": "Whole Wheat Tortillas",
+  "food_category_id": 2,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 29,
+  "food_name": "Sourdough Bread",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz"
+ },
+ {
+  "food_id": 30,
+  "food_name": "Couscous",
+  "food_category_id": 2,
+  "serving_size": 0.25,
+  "unit": "cup"
+ },
+ {
+  "food_id": 31,
+  "food_name": "Mandarin Oranges",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 32,
+  "food_name": "Dates",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 33,
+  "food_name": "Bananas",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 34,
+  "food_name": "Peaches",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 35,
+  "food_name": "Blueberries",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 36,
+  "food_name": "Blackberries",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 37,
+  "food_name": "Raspberries",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 38,
+  "food_name": "Strawberries",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 39,
+  "food_name": "Kiwis",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 40,
+  "food_name": "Acerola Juice",
+  "food_category_id": 3,
+  "serving_size": 6,
+  "unit": "g"
+ },
+ {
+  "food_id": 41,
+  "food_name": "Cantaloupe",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 42,
+  "food_name": "Apples",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 43,
+  "food_name": "Lemon",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 44,
+  "food_name": "Lime",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 45,
+  "food_name": "Frozen Mixed Berries",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 46,
+  "food_name": "Broccoli",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 47,
+  "food_name": "Cauliflower",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 48,
+  "food_name": "Butternut squash",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 49,
+  "food_name": "Red Bell Pepper",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 50,
+  "food_name": "Asparagus",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 51,
+  "food_name": "Brussels Sprouts",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 52,
+  "food_name": "Potato",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 53,
+  "food_name": "Sweet Potato",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 54,
+  "food_name": "Carrot",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 55,
+  "food_name": "Spinach",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 56,
+  "food_name": "Avocado",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 57,
+  "food_name": "Beets",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 58,
+  "food_name": "Black Beans",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 59,
+  "food_name": "Edamame",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 60,
+  "food_name": "Tofu",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 61,
+  "food_name": "Kimchi",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 62,
+  "food_name": "Yellow Onion",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 63,
+  "food_name": "Garlic",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "clove"
+ },
+ {
+  "food_id": 64,
+  "food_name": "Tomatoes",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 65,
+  "food_name": "Cucumber",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 66,
+  "food_name": "Kale",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 67,
+  "food_name": "Zucchini",
+  "food_category_id": 4,
+  "serving_size": 1,
+  "unit": "unit"
+ },
+ {
+  "food_id": 68,
+  "food_name": "Skim Milk",
+  "food_category_id": 5,
+  "serving_size": 240,
+  "unit": "g"
+ },
+ {
+  "food_id": 69,
+  "food_name": "Almond Milk",
+  "food_category_id": 5,
+  "serving_size": 200,
+  "unit": "g"
+ },
+ {
+  "food_id": 70,
+  "food_name": "Nonfat Greek yogurt",
+  "food_category_id": 5,
+  "serving_size": 170,
+  "unit": "g"
+ },
+ {
+  "food_id": 71,
+  "food_name": "Low-fat Cottage Cheese",
+  "food_category_id": 5,
+  "serving_size": 113,
+  "unit": "g"
+ },
+ {
+  "food_id": 72,
+  "food_name": "Parmesan Cheese",
+  "food_category_id": 5,
+  "serving_size": 25,
+  "unit": "g"
+ },
+ {
+  "food_id": 73,
+  "food_name": "Egg",
+  "food_category_id": 5,
+  "serving_size": 50,
+  "unit": "g"
+ },
+ {
+  "food_id": 74,
+  "food_name": "Egg white",
+  "food_category_id": 5,
+  "serving_size": 46,
+  "unit": "g"
+ },
+ {
+  "food_id": 75,
+  "food_name": "Cheese",
+  "food_category_id": 5,
+  "serving_size": 28,
+  "unit": "g"
+ },
+ {
+  "food_id": 76,
+  "food_name": "Nonfat Cheese",
+  "food_category_id": 5,
+  "serving_size": 28,
+  "unit": "g"
+ },
+ {
+  "food_id": 77,
+  "food_name": "Butter",
+  "food_category_id": 5,
+  "serving_size": 7,
+  "unit": "g"
+ },
+ {
+  "food_id": 78,
+  "food_name": "Whole Milk",
+  "food_category_id": 5,
+  "serving_size": 1,
+  "unit": "cup"
+ },
+ {
+  "food_id": 79,
+  "food_name": "Cheddar Cheese",
+  "food_category_id": 5,
+  "serving_size": 1,
+  "unit": "oz"
+ },
+ {
+  "food_id": 80,
+  "food_name": "Mozzarella Cheese",
+  "food_category_id": 5,
+  "serving_size": 1,
+  "unit": "oz"
+ },
+ {
+  "food_id": 81,
+  "food_name": "Protein Powder",
+  "food_category_id": 6,
+  "serving_size": 38,
+  "unit": "g"
+ },
+ {
+  "food_id": 82,
+  "food_name": "Powdered Peanut Butter",
+  "food_category_id": 6,
+  "serving_size": 16,
+  "unit": "g"
+ },
+ {
+  "food_id": 83,
+  "food_name": "Peanut Butter",
+  "food_category_id": 6,
+  "serving_size": 32,
+  "unit": "g"
+ },
+ {
+  "food_id": 84,
+  "food_name": "Peanuts",
+  "food_category_id": 6,
+  "serving_size": 28,
+  "unit": "g"
+ },
+ {
+  "food_id": 85,
+  "food_name": "Cocoa Powder",
+  "food_category_id": 6,
+  "serving_size": 20,
+  "unit": "g"
+ },
+ {
+  "food_id": 86,
+  "food_name": "Almond Butter",
+  "food_category_id": 6,
+  "serving_size": 28,
+  "unit": "g"
+ },
+ {
+  "food_id": 87,
+  "food_name": "Walnuts",
+  "food_category_id": 6,
+  "serving_size": 28,
+  "unit": "g"
+ },
+ {
+  "food_id": 88,
+  "food_name": "Chia Seeds",
+  "food_category_id": 6,
+  "serving_size": 30,
+  "unit": "g"
+ },
+ {
+  "food_id": 89,
+  "food_name": "Hemp Seeds",
+  "food_category_id": 6,
+  "serving_size": 30,
+  "unit": "g"
+ },
+ {
+  "food_id": 90,
+  "food_name": "Pumpkin Seeds",
+  "food_category_id": 6,
+  "serving_size": 30,
+  "unit": "g"
+ },
+ {
+  "food_id": 91,
+  "food_name": "Dark Chocolate",
+  "food_category_id": 6,
+  "serving_size": 30,
+  "unit": "g"
+ },
+ {
+  "food_id": 92,
+  "food_name": "Avocado Oil",
+  "food_category_id": 6,
+  "serving_size": 15,
+  "unit": "g"
+ },
+ {
+  "food_id": 93,
+  "food_name": "Olive Oil",
+  "food_category_id": 6,
+  "serving_size": 15,
+  "unit": "g"
+ },
+ {
+  "food_id": 94,
+  "food_name": "Ground Flax Seeds",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "oz"
+ },
+ {
+  "food_id": 95,
+  "food_name": "Cashews",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "oz"
+ },
+ {
+  "food_id": 96,
+  "food_name": "Sunflower Seeds",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "oz"
+ },
+ {
+  "food_id": 97,
+  "food_name": "Apple Cider Vinegar",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "tbsp"
+ },
+ {
+  "food_id": 98,
+  "food_name": "Soy Sauce / Tamari",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "tbsp"
+ },
+ {
+  "food_id": 99,
+  "food_name": "Honey",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "tbsp"
+ },
+ {
+  "food_id": 100,
+  "food_name": "Maple Syrup",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "tbsp"
+ },
+ {
+  "food_id": 101,
+  "food_name": "Pineapple",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit"
+ }
+]

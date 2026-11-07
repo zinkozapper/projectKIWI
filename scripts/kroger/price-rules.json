@@ -1,120 +1,1353 @@
 {
-  "_doc": "Kroger price selection rules. See docs/kroger-price-selection-rules.md. Per food (keyed by food_id): term = Kroger search text; must = every entry must appear in brand+description (an entry 'a|b' means a OR b); exclude = none may appear (whole word, case-insensitive); allow = drop a category/global exclude for this food; density = g per ml for volume packages; unitGrams = grams per counted unit (eggs); unitsPerPackageItem = servings per each (garlic cloves per bulb).",
+  "_doc": "Kroger price selection rules. See docs/kroger-price-selection-rules.md. Per food (keyed by food_id): term = Kroger search text; must = every entry must appear in brand+description (an entry 'a|b' means a OR b); exclude = none may appear (whole word, case-insensitive); allow = drop a category/global exclude for this food; density = g per ml for volume packages; unitGrams = grams per counted unit (eggs); unitsPerPackageItem = servings per each (garlic cloves per bulb). categories = Kroger product categories a pick must have at least one of (category default, or per food). alternates = ordered fallback searches (other preparations or closest substitutes) tried at the home store before other stores; each may override term/must/exclude/categories plus servingGrams (serving in that form) and packageYield (usable share of the package).",
   "defaultZip": "84601",
   "storeRadiusMiles": 10,
   "storeChains": [],
-  "storeBrands": ["Kroger", "Private Selection", "Simple Truth", "Smart Way", "Heritage Farm", "Home Chef", "Comforts"],
-  "genericBrands": ["", "Fresh", "Fresh Produce", "Produce", "Smith's"],
-  "excludeAlways": ["organic"],
-  "check": { "minPerServing": 0.02, "maxPerServing": 4.0 },
+  "storeBrands": [
+    "Kroger",
+    "Private Selection",
+    "Simple Truth",
+    "Smart Way",
+    "Heritage Farm",
+    "Home Chef",
+    "Comforts"
+  ],
+  "genericBrands": [
+    "",
+    "Fresh",
+    "Fresh Produce",
+    "Produce",
+    "Smith's"
+  ],
+  "excludeAlways": [],
+  "check": {
+    "minPerServing": 0.02,
+    "maxPerServing": 4.0
+  },
   "categories": {
-    "1": { "exclude": ["breaded", "seasoned", "marinated", "cooked", "rotisserie", "nuggets", "patties", "strips", "sausage", "broth", "stock", "soup", "salad", "meal", "kit", "flavored", "dog", "cat", "pet", "jerky"] },
-    "2": { "exclude": ["mix", "seasoned", "flavored", "cups", "microwave", "frozen", "chips", "crackers", "cereal", "bar", "bars", "kit"] },
-    "3": { "exclude": ["juice", "dried", "chips", "snack", "cups", "syrup", "jam", "preserves", "bar", "bars", "yogurt", "smoothie", "flavored", "candy", "dip", "pie", "sauce", "frozen", "freeze"] },
-    "4": { "exclude": ["frozen", "canned", "soup", "seasoned", "kit", "chips", "sauce", "dip", "juice", "fries", "tots", "riced", "spiralized", "noodles", "steamable", "cups", "mashed"] },
-    "5": { "density": 1.03, "exclude": ["flavored", "vanilla", "strawberry", "chocolate", "lactose", "drink", "creamer", "dip", "snack", "spread", "substitute", "cream cheese"] },
-    "6": { "exclude": ["spray"] }
+    "1": {
+      "exclude": [
+        "breaded",
+        "seasoned",
+        "marinated",
+        "cooked",
+        "rotisserie",
+        "nuggets",
+        "patties",
+        "strips",
+        "sausage",
+        "broth",
+        "stock",
+        "soup",
+        "salad",
+        "meal",
+        "kit",
+        "flavored",
+        "dog",
+        "cat",
+        "pet",
+        "jerky",
+        "sugar",
+        "bacon",
+        "peppercorn",
+        "herb",
+        "teriyaki",
+        "bbq",
+        "grilled",
+        "stuffed",
+        "cook in bag",
+        "garlic",
+        "glazed"
+      ],
+      "categories": [
+        "Meat & Seafood",
+        "Frozen"
+      ]
+    },
+    "2": {
+      "exclude": [
+        "mix",
+        "seasoned",
+        "flavored",
+        "cups",
+        "microwave",
+        "frozen",
+        "chips",
+        "crackers",
+        "cereal",
+        "bar",
+        "bars",
+        "kit"
+      ],
+      "categories": [
+        "Pasta, Sauces, Grain",
+        "Bakery",
+        "Breakfast",
+        "International",
+        "Natural & Organic",
+        "Baking Goods"
+      ]
+    },
+    "3": {
+      "exclude": [
+        "juice",
+        "dried",
+        "chips",
+        "snack",
+        "cups",
+        "syrup",
+        "jam",
+        "preserves",
+        "bar",
+        "bars",
+        "yogurt",
+        "smoothie",
+        "flavored",
+        "candy",
+        "dip",
+        "pie",
+        "sauce",
+        "frozen",
+        "freeze",
+        "trail mix",
+        "cookies",
+        "salad",
+        "protein"
+      ],
+      "categories": [
+        "Produce"
+      ]
+    },
+    "4": {
+      "exclude": [
+        "frozen",
+        "canned",
+        "soup",
+        "seasoned",
+        "kit",
+        "chips",
+        "sauce",
+        "dip",
+        "juice",
+        "fries",
+        "tots",
+        "riced",
+        "spiralized",
+        "noodles",
+        "steamable",
+        "cups",
+        "mashed",
+        "salad",
+        "jalapenos",
+        "yams in syrup"
+      ],
+      "categories": [
+        "Produce"
+      ]
+    },
+    "5": {
+      "density": 1.03,
+      "exclude": [
+        "flavored",
+        "vanilla",
+        "strawberry",
+        "chocolate",
+        "lactose",
+        "drink",
+        "creamer",
+        "dip",
+        "snack",
+        "spread",
+        "substitute",
+        "cream cheese",
+        "spreadable",
+        "olive oil",
+        "blend"
+      ],
+      "categories": [
+        "Dairy",
+        "Deli",
+        "Natural & Organic"
+      ]
+    },
+    "6": {
+      "exclude": [
+        "spray"
+      ],
+      "categories": [
+        "Baking Goods",
+        "Snacks",
+        "Condiment & Sauces",
+        "Pasta, Sauces, Grain",
+        "Natural & Organic",
+        "Health",
+        "Breakfast",
+        "Candy",
+        "International",
+        "Canned & Packaged",
+        "Produce"
+      ]
+    }
   },
   "foods": {
-    "1": { "term": "boneless skinless chicken breast", "must": ["breast"] },
-    "2": { "term": "boneless skinless chicken thighs", "must": ["thigh"] },
-    "3": { "term": "pork tenderloin", "must": ["tenderloin"] },
-    "4": { "term": "pork shoulder butt roast", "must": ["shoulder|butt"] },
-    "5": { "term": "beef sirloin steak", "must": ["sirloin"], "exclude": ["ground"] },
-    "6": { "term": "beef chuck roast", "must": ["chuck"], "exclude": ["ground"] },
-    "7": { "term": "90% lean ground beef", "must": ["ground", "90"] },
-    "8": { "term": "ribeye steak", "must": ["ribeye|rib eye"] },
-    "9": { "term": "tilapia fillets", "must": ["tilapia"] },
-    "10": { "term": "atlantic salmon fillet", "must": ["salmon"], "exclude": ["smoked", "canned", "pouch", "pink"] },
-    "11": { "term": "chunk light tuna in water", "must": ["tuna"], "exclude": ["oil", "salad", "kit"] },
-    "12": { "term": "sardines in water", "must": ["sardines"], "exclude": ["mustard", "hot", "tomato"] },
-    "13": { "term": "whole oysters", "must": ["oysters"], "exclude": ["crackers", "sauce"] },
-    "14": { "term": "93% lean ground turkey", "must": ["ground", "turkey"] },
-    "15": { "term": "chicken livers", "must": ["liver"] },
-    "16": { "term": "beef liver", "must": ["beef", "liver"] },
-    "17": { "term": "raw shrimp", "must": ["shrimp"], "allow": ["cooked"], "exclude": ["cocktail", "breaded", "tempura"] },
-    "18": { "term": "dry garbanzo beans", "must": ["garbanzo|chickpea"], "exclude": ["hummus", "pasta", "snacks"] },
-    "19": { "term": "dry lentils", "must": ["lentil"], "exclude": ["pasta", "soup"] },
-    "20": { "term": "plain bagels", "must": ["bagel"], "exclude": ["cinnamon", "blueberry", "everything", "chips", "mini", "thins"] },
-    "21": { "term": "spaghetti pasta", "must": ["spaghetti|penne|pasta"], "exclude": ["whole wheat", "sauce", "gluten"] },
-    "22": { "term": "whole wheat pasta", "must": ["whole wheat|whole grain"], "exclude": ["sauce"] },
-    "23": { "term": "long grain white rice", "must": ["rice"], "exclude": ["brown", "boil", "instant", "fried", "pilaf", "cauliflower"] },
-    "24": { "term": "quinoa", "must": ["quinoa"], "exclude": ["pasta", "blend"] },
-    "25": { "term": "old fashioned rolled oats", "must": ["oats"], "exclude": ["instant", "quick", "steel cut", "oatmeal cups"] },
-    "26": { "term": "multigrain bread", "must": ["multi"], "exclude": ["thins", "buns", "rolls"] },
-    "27": { "term": "long grain brown rice", "must": ["brown", "rice"], "exclude": ["boil", "instant", "fried"] },
-    "28": { "term": "whole wheat tortillas", "must": ["whole wheat", "tortilla"], "exclude": ["chips"] },
-    "29": { "term": "sourdough bread", "must": ["sourdough"], "exclude": ["rolls", "crackers", "pretzels", "starter"] },
-    "30": { "term": "couscous", "must": ["couscous"], "exclude": ["pearl"] },
-    "31": { "term": "mandarin oranges", "must": ["mandarin|clementine|cutie"], "exclude": ["canned", "light syrup"] },
-    "32": { "term": "medjool dates", "must": ["dates"], "allow": ["dried"] },
-    "33": { "term": "bananas", "must": ["banana"], "exclude": ["bread", "peppers"] },
-    "34": { "term": "fresh peaches", "must": ["peach"], "exclude": ["canned", "sliced"] },
-    "35": { "term": "fresh blueberries", "must": ["blueberr"] },
-    "36": { "term": "fresh blackberries", "must": ["blackberr"] },
-    "37": { "term": "fresh raspberries", "must": ["raspberr"] },
-    "38": { "term": "fresh strawberries", "must": ["strawberr"] },
-    "39": { "term": "kiwi fruit", "must": ["kiwi"] },
-    "40": { "term": "acerola", "must": ["acerola"], "allow": ["juice"] },
-    "41": { "term": "cantaloupe", "must": ["cantaloupe"], "exclude": ["chunks", "cut"] },
-    "42": { "term": "gala apples", "must": ["apple"], "exclude": ["sauce", "applesauce", "cider", "pie", "sliced"] },
-    "43": { "term": "lemon", "must": ["lemon"], "exclude": ["lemonade", "pepper", "concentrate"] },
-    "44": { "term": "lime", "must": ["lime"], "exclude": ["key lime", "concentrate", "chips"] },
-    "45": { "term": "frozen mixed berries", "must": ["berr"], "allow": ["frozen"] },
-    "46": { "term": "broccoli crowns", "must": ["broccoli"], "exclude": ["slaw", "rice", "cheese"] },
-    "47": { "term": "cauliflower", "must": ["cauliflower"], "exclude": ["rice", "crust", "wings", "florets"] },
-    "48": { "term": "butternut squash", "must": ["butternut"] },
-    "49": { "term": "red bell pepper", "must": ["red", "pepper"], "exclude": ["roasted", "flakes", "jar"] },
-    "50": { "term": "fresh asparagus", "must": ["asparagus"] },
-    "51": { "term": "brussels sprouts", "must": ["brussels"] },
-    "52": { "term": "russet potatoes", "must": ["potato"], "exclude": ["sweet", "chips", "salad"] },
-    "53": { "term": "sweet potatoes", "must": ["sweet potato|yam"] },
-    "54": { "term": "carrots", "must": ["carrot"], "exclude": ["cake", "baby", "shredded", "chips"] },
-    "55": { "term": "fresh spinach", "must": ["spinach"], "exclude": ["dip", "artichoke"] },
-    "56": { "term": "hass avocado", "must": ["avocado"], "exclude": ["oil", "guacamole", "mayo"] },
-    "57": { "term": "fresh beets", "must": ["beet"], "exclude": ["sliced", "pickled", "canned"] },
-    "58": { "term": "black beans canned", "must": ["black beans"], "allow": ["canned"], "exclude": ["refried", "seasoned", "chips", "dip"] },
-    "59": { "term": "shelled edamame", "must": ["edamame"], "allow": ["frozen"] },
-    "60": { "term": "firm tofu", "must": ["tofu"], "exclude": ["baked", "silken"] },
-    "61": { "term": "kimchi", "must": ["kimchi"], "exclude": ["noodles", "ramen"] },
-    "62": { "term": "yellow onions", "must": ["onion"], "exclude": ["red", "white", "green", "powder", "rings", "chopped", "diced"] },
-    "63": { "term": "garlic bulb", "must": ["garlic"], "exclude": ["minced", "powder", "salt", "bread", "chopped", "peeled", "paste"], "unitsPerPackageItem": 10 },
-    "64": { "term": "roma tomatoes", "must": ["tomato"], "exclude": ["paste", "diced", "sauce", "crushed", "cherry", "grape"] },
-    "65": { "term": "cucumber", "must": ["cucumber"], "exclude": ["pickle", "mini"] },
-    "66": { "term": "kale", "must": ["kale"], "exclude": ["chips", "salad kit"] },
-    "67": { "term": "zucchini", "must": ["zucchini"], "exclude": ["noodles", "bread"] },
-    "68": { "term": "fat free skim milk", "must": ["milk", "fat free|skim|nonfat"] },
-    "69": { "term": "unsweetened almond milk", "must": ["almond", "unsweetened"] },
-    "70": { "term": "nonfat plain greek yogurt", "must": ["greek", "plain", "nonfat|fat free|0%"] },
-    "71": { "term": "low fat cottage cheese", "must": ["cottage", "low fat|lowfat|2%|1%"] },
-    "72": { "term": "grated parmesan cheese", "must": ["parmesan"], "exclude": ["dressing", "crisps", "sauce"] },
-    "73": { "term": "large eggs", "must": ["egg"], "exclude": ["white", "whites", "liquid", "hard", "boiled", "noodles"], "unitGrams": 50 },
-    "74": { "term": "liquid egg whites", "must": ["egg white"] },
-    "75": { "term": "monterey jack cheese", "must": ["jack"], "exclude": ["pepper"] },
-    "76": { "term": "fat free shredded cheese", "must": ["cheese", "fat free|nonfat"] },
-    "77": { "term": "salted butter", "must": ["butter"], "exclude": ["margarine", "peanut", "almond", "apple", "cookies", "buttermilk"] },
-    "78": { "term": "whole milk", "must": ["whole", "milk"], "exclude": ["buttermilk", "evaporated", "powdered"] },
-    "79": { "term": "cheddar cheese block", "must": ["cheddar"], "exclude": ["crackers", "soup"] },
-    "80": { "term": "mozzarella cheese", "must": ["mozzarella"], "exclude": ["sticks", "breaded"] },
-    "81": { "term": "whey protein powder", "must": ["protein"], "exclude": ["bar", "shake", "drink", "ready"] },
-    "82": { "term": "powdered peanut butter", "must": ["peanut", "powder"] },
-    "83": { "term": "creamy peanut butter", "must": ["peanut butter"], "exclude": ["powdered", "powder", "crackers", "cups", "cookies", "candy"] },
-    "84": { "term": "dry roasted peanuts", "must": ["peanuts"], "exclude": ["butter", "honey", "candy", "trail"] },
-    "85": { "term": "unsweetened cocoa powder", "must": ["cocoa"], "exclude": ["hot cocoa", "mix", "butter"] },
-    "86": { "term": "almond butter", "must": ["almond butter"] },
-    "87": { "term": "walnuts", "must": ["walnut"], "exclude": ["candied", "trail"] },
-    "88": { "term": "chia seeds", "must": ["chia"] },
-    "89": { "term": "hemp seeds", "must": ["hemp"] },
-    "90": { "term": "pumpkin seeds pepitas", "must": ["pumpkin|pepitas"], "exclude": ["pie", "puree", "spice"] },
-    "91": { "term": "dark chocolate bar", "must": ["dark chocolate"], "exclude": ["covered", "almonds", "cookies", "ice cream", "chips"] },
-    "92": { "term": "avocado oil", "must": ["avocado oil"], "density": 0.92 },
-    "93": { "term": "extra virgin olive oil", "must": ["olive oil"], "density": 0.92 },
-    "94": { "term": "ground flaxseed", "must": ["flax"] },
-    "95": { "term": "cashews", "must": ["cashew"], "exclude": ["butter", "trail", "honey"] },
-    "96": { "term": "sunflower seed kernels", "must": ["sunflower"], "exclude": ["oil", "butter", "in shell"] },
-    "97": { "term": "apple cider vinegar", "must": ["cider vinegar"] },
-    "98": { "term": "soy sauce", "must": ["soy sauce"], "exclude": ["less sodium", "reduced", "lite"] },
-    "99": { "term": "honey", "must": ["honey"], "exclude": ["roasted", "graham", "mustard", "bbq", "nut", "oats", "wheat", "ham"] },
-    "100": { "term": "pure maple syrup", "must": ["maple syrup"], "exclude": ["pancake", "flavored", "butter"] }
+    "1": {
+      "term": "boneless skinless chicken breast",
+      "must": [
+        "breast"
+      ]
+    },
+    "2": {
+      "term": "boneless skinless chicken thighs",
+      "must": [
+        "thigh"
+      ]
+    },
+    "3": {
+      "term": "pork tenderloin",
+      "must": [
+        "tenderloin"
+      ]
+    },
+    "4": {
+      "term": "pork shoulder butt roast",
+      "must": [
+        "shoulder|butt"
+      ]
+    },
+    "5": {
+      "term": "beef sirloin steak",
+      "must": [
+        "sirloin"
+      ],
+      "exclude": [
+        "ground"
+      ]
+    },
+    "6": {
+      "term": "beef chuck roast",
+      "must": [
+        "chuck"
+      ],
+      "exclude": [
+        "ground"
+      ]
+    },
+    "7": {
+      "term": "90% lean ground beef",
+      "must": [
+        "ground",
+        "90"
+      ]
+    },
+    "8": {
+      "term": "ribeye steak",
+      "must": [
+        "ribeye|rib eye"
+      ]
+    },
+    "9": {
+      "term": "tilapia fillets",
+      "must": [
+        "tilapia"
+      ]
+    },
+    "10": {
+      "term": "atlantic salmon fillet",
+      "must": [
+        "salmon"
+      ],
+      "exclude": [
+        "smoked",
+        "canned",
+        "pouch",
+        "pink"
+      ]
+    },
+    "11": {
+      "term": "chunk light tuna in water",
+      "must": [
+        "tuna"
+      ],
+      "exclude": [
+        "oil",
+        "salad",
+        "kit"
+      ],
+      "categories": [
+        "Meat & Seafood",
+        "Canned & Packaged",
+        "International"
+      ]
+    },
+    "12": {
+      "term": "sardines in water",
+      "must": [
+        "sardines"
+      ],
+      "exclude": [
+        "mustard",
+        "hot",
+        "tomato"
+      ],
+      "categories": [
+        "Meat & Seafood",
+        "Canned & Packaged",
+        "International"
+      ]
+    },
+    "13": {
+      "term": "smoked oysters canned",
+      "must": [
+        "oysters"
+      ],
+      "exclude": [
+        "crackers",
+        "sauce"
+      ],
+      "categories": [
+        "Meat & Seafood",
+        "Canned & Packaged",
+        "International"
+      ]
+    },
+    "14": {
+      "term": "93% lean ground turkey",
+      "must": [
+        "ground",
+        "turkey"
+      ]
+    },
+    "15": {
+      "term": "chicken livers",
+      "must": [
+        "liver"
+      ]
+    },
+    "16": {
+      "term": "beef liver",
+      "must": [
+        "beef",
+        "liver"
+      ]
+    },
+    "17": {
+      "term": "raw shrimp",
+      "must": [
+        "shrimp"
+      ],
+      "allow": [
+        "cooked"
+      ],
+      "exclude": [
+        "cocktail",
+        "breaded",
+        "tempura"
+      ]
+    },
+    "18": {
+      "term": "kroger garbanzo beans",
+      "must": [
+        "garbanzo|chickpea",
+        "dry|dried"
+      ],
+      "exclude": [
+        "hummus",
+        "pasta",
+        "snacks"
+      ],
+      "categories": [
+        "Canned & Packaged",
+        "Pasta, Sauces, Grain",
+        "International",
+        "Natural & Organic"
+      ],
+      "alternates": [
+        {
+          "label": "canned, drained (50 g dry = 116 g cooked)",
+          "term": "garbanzo beans",
+          "must": [
+            "garbanzo|chickpea"
+          ],
+          "exclude": [
+            "hummus",
+            "snacks",
+            "pasta",
+            "roasted",
+            "seasoned"
+          ],
+          "categories": [
+            "Canned & Packaged",
+            "International",
+            "Natural & Organic"
+          ],
+          "servingGrams": 116,
+          "packageYield": 0.56
+        }
+      ]
+    },
+    "19": {
+      "term": "dry lentils",
+      "must": [
+        "lentil"
+      ],
+      "exclude": [
+        "pasta",
+        "soup"
+      ],
+      "categories": [
+        "Canned & Packaged",
+        "Pasta, Sauces, Grain",
+        "International",
+        "Natural & Organic"
+      ],
+      "alternates": [
+        {
+          "label": "canned, drained (48 g dry = 147 g cooked)",
+          "term": "canned lentils",
+          "must": [
+            "lentil"
+          ],
+          "exclude": [
+            "soup",
+            "pasta"
+          ],
+          "categories": [
+            "Canned & Packaged",
+            "International",
+            "Natural & Organic"
+          ],
+          "servingGrams": 147,
+          "packageYield": 0.56
+        }
+      ]
+    },
+    "20": {
+      "term": "plain bagels",
+      "must": [
+        "bagel"
+      ],
+      "exclude": [
+        "cinnamon",
+        "blueberry",
+        "everything",
+        "chips",
+        "mini",
+        "thins"
+      ]
+    },
+    "21": {
+      "term": "spaghetti pasta",
+      "must": [
+        "spaghetti|penne|pasta"
+      ],
+      "exclude": [
+        "whole wheat",
+        "sauce",
+        "gluten"
+      ]
+    },
+    "22": {
+      "term": "whole wheat pasta",
+      "must": [
+        "whole wheat|whole grain"
+      ],
+      "exclude": [
+        "sauce"
+      ]
+    },
+    "23": {
+      "term": "long grain white rice",
+      "must": [
+        "rice"
+      ],
+      "exclude": [
+        "brown",
+        "boil",
+        "instant",
+        "fried",
+        "pilaf",
+        "cauliflower"
+      ]
+    },
+    "24": {
+      "term": "quinoa",
+      "must": [
+        "quinoa"
+      ],
+      "exclude": [
+        "pasta",
+        "blend"
+      ]
+    },
+    "25": {
+      "term": "kroger old fashioned oats",
+      "must": [
+        "oats"
+      ],
+      "exclude": [
+        "instant",
+        "quick",
+        "steel cut",
+        "oatmeal cups"
+      ]
+    },
+    "26": {
+      "term": "multigrain bread",
+      "must": [
+        "multigrain|multi-grain|multi grain"
+      ],
+      "exclude": [
+        "thins",
+        "buns",
+        "rolls"
+      ]
+    },
+    "27": {
+      "term": "long grain brown rice",
+      "must": [
+        "brown",
+        "rice"
+      ],
+      "exclude": [
+        "boil",
+        "instant",
+        "fried"
+      ]
+    },
+    "28": {
+      "term": "whole wheat tortillas",
+      "must": [
+        "whole wheat",
+        "tortilla"
+      ],
+      "exclude": [
+        "chips"
+      ]
+    },
+    "29": {
+      "term": "sourdough bread",
+      "must": [
+        "sourdough"
+      ],
+      "exclude": [
+        "rolls",
+        "crackers",
+        "pretzels",
+        "starter"
+      ]
+    },
+    "30": {
+      "term": "couscous",
+      "must": [
+        "couscous"
+      ],
+      "exclude": [
+        "pearl"
+      ]
+    },
+    "31": {
+      "term": "mandarin oranges",
+      "must": [
+        "mandarin|clementine|cutie"
+      ],
+      "exclude": [
+        "canned",
+        "light syrup"
+      ]
+    },
+    "32": {
+      "term": "medjool dates",
+      "must": [
+        "dates"
+      ],
+      "allow": [
+        "dried"
+      ],
+      "categories": [
+        "Produce",
+        "Snacks",
+        "Baking Goods",
+        "International"
+      ]
+    },
+    "33": {
+      "term": "bananas",
+      "must": [
+        "banana"
+      ],
+      "exclude": [
+        "bread",
+        "peppers"
+      ]
+    },
+    "34": {
+      "term": "fresh peaches",
+      "must": [
+        "peach"
+      ],
+      "exclude": [
+        "canned",
+        "sliced"
+      ]
+    },
+    "35": {
+      "term": "fresh blueberries",
+      "must": [
+        "blueberry|blueberries"
+      ]
+    },
+    "36": {
+      "term": "fresh blackberries",
+      "must": [
+        "blackberry|blackberries"
+      ]
+    },
+    "37": {
+      "term": "fresh raspberries",
+      "must": [
+        "raspberry|raspberries"
+      ]
+    },
+    "38": {
+      "term": "fresh strawberries",
+      "must": [
+        "strawberry|strawberries"
+      ]
+    },
+    "39": {
+      "term": "kiwi fruit",
+      "must": [
+        "kiwi"
+      ]
+    },
+    "40": {
+      "term": "acerola",
+      "must": [
+        "acerola"
+      ],
+      "allow": [
+        "juice"
+      ],
+      "categories": [],
+      "alternates": [
+        {
+          "label": "acerola cherry powder",
+          "term": "acerola cherry powder",
+          "must": [
+            "acerola"
+          ],
+          "categories": []
+        }
+      ]
+    },
+    "41": {
+      "term": "cantaloupe",
+      "must": [
+        "cantaloupe"
+      ],
+      "exclude": [
+        "chunks",
+        "cut"
+      ]
+    },
+    "42": {
+      "term": "gala apples",
+      "must": [
+        "apple"
+      ],
+      "exclude": [
+        "sauce",
+        "applesauce",
+        "cider",
+        "pie",
+        "sliced"
+      ]
+    },
+    "43": {
+      "term": "lemon",
+      "must": [
+        "lemon"
+      ],
+      "exclude": [
+        "lemonade",
+        "pepper",
+        "concentrate"
+      ]
+    },
+    "44": {
+      "term": "lime",
+      "must": [
+        "lime"
+      ],
+      "exclude": [
+        "key lime",
+        "concentrate",
+        "chips"
+      ]
+    },
+    "45": {
+      "term": "mixed berries",
+      "must": [
+        "berry|berries"
+      ],
+      "allow": [
+        "frozen"
+      ],
+      "categories": [
+        "Frozen",
+        "Natural & Organic",
+        "Produce"
+      ],
+      "exclude": [
+        "protein",
+        "bar",
+        "bars",
+        "smoothie",
+        "yogurt",
+        "waffles",
+        "mango",
+        "cherries",
+        "bites"
+      ],
+      "alternates": [
+        {
+          "label": "triple berry blend",
+          "term": "triple berry blend",
+          "must": [
+            "berry|berries"
+          ],
+          "categories": [
+            "Frozen",
+            "Natural & Organic"
+          ]
+        },
+        {
+          "label": "frozen berry medley",
+          "term": "frozen berry medley",
+          "must": [
+            "berry|berries"
+          ],
+          "categories": [
+            "Frozen",
+            "Natural & Organic"
+          ]
+        },
+        {
+          "label": "frozen blueberries (closest single berry)",
+          "term": "frozen blueberries",
+          "must": [
+            "blueberry|blueberries"
+          ],
+          "categories": [
+            "Frozen",
+            "Natural & Organic"
+          ]
+        }
+      ]
+    },
+    "46": {
+      "term": "broccoli crowns",
+      "must": [
+        "broccoli"
+      ],
+      "exclude": [
+        "slaw",
+        "rice",
+        "cheese"
+      ]
+    },
+    "47": {
+      "term": "cauliflower",
+      "must": [
+        "cauliflower"
+      ],
+      "exclude": [
+        "rice",
+        "crust",
+        "wings",
+        "florets"
+      ]
+    },
+    "48": {
+      "term": "butternut squash",
+      "must": [
+        "butternut"
+      ]
+    },
+    "49": {
+      "term": "red bell pepper",
+      "must": [
+        "red",
+        "pepper"
+      ],
+      "exclude": [
+        "roasted",
+        "flakes",
+        "jar"
+      ]
+    },
+    "50": {
+      "term": "fresh asparagus",
+      "must": [
+        "asparagus"
+      ]
+    },
+    "51": {
+      "term": "brussels sprouts",
+      "must": [
+        "brussels"
+      ]
+    },
+    "52": {
+      "term": "russet potatoes",
+      "must": [
+        "russet"
+      ],
+      "exclude": [
+        "sweet",
+        "chips",
+        "salad"
+      ]
+    },
+    "53": {
+      "term": "sweet potatoes",
+      "must": [
+        "sweet potato|yam"
+      ]
+    },
+    "54": {
+      "term": "carrots",
+      "must": [
+        "carrot"
+      ],
+      "exclude": [
+        "cake",
+        "baby",
+        "shredded",
+        "chips"
+      ]
+    },
+    "55": {
+      "term": "fresh spinach",
+      "must": [
+        "spinach"
+      ],
+      "exclude": [
+        "dip",
+        "artichoke"
+      ]
+    },
+    "56": {
+      "term": "hass avocado",
+      "must": [
+        "avocado"
+      ],
+      "exclude": [
+        "oil",
+        "guacamole",
+        "mayo"
+      ]
+    },
+    "57": {
+      "term": "fresh beets",
+      "must": [
+        "beet"
+      ],
+      "exclude": [
+        "sliced",
+        "pickled",
+        "canned"
+      ]
+    },
+    "58": {
+      "term": "black beans canned",
+      "must": [
+        "black beans"
+      ],
+      "allow": [
+        "canned"
+      ],
+      "exclude": [
+        "refried",
+        "seasoned",
+        "chips",
+        "dip"
+      ],
+      "categories": [
+        "Canned & Packaged",
+        "International"
+      ]
+    },
+    "59": {
+      "term": "shelled edamame",
+      "must": [
+        "edamame",
+        "shelled"
+      ],
+      "allow": [
+        "frozen"
+      ],
+      "categories": [
+        "Frozen",
+        "Produce"
+      ],
+      "exclude": [
+        "meal",
+        "shrimp",
+        "teriyaki",
+        "broccoli",
+        "noodles",
+        "bowl"
+      ]
+    },
+    "60": {
+      "term": "firm tofu",
+      "must": [
+        "tofu"
+      ],
+      "exclude": [
+        "baked",
+        "silken"
+      ],
+      "categories": [
+        "Produce",
+        "Natural & Organic"
+      ]
+    },
+    "61": {
+      "term": "kimchi",
+      "must": [
+        "kimchi"
+      ],
+      "exclude": [
+        "noodles",
+        "ramen"
+      ],
+      "categories": []
+    },
+    "62": {
+      "term": "yellow onions",
+      "must": [
+        "onion"
+      ],
+      "exclude": [
+        "red",
+        "white",
+        "green",
+        "powder",
+        "rings",
+        "chopped",
+        "diced"
+      ]
+    },
+    "63": {
+      "term": "garlic bulb",
+      "must": [
+        "garlic"
+      ],
+      "exclude": [
+        "minced",
+        "powder",
+        "salt",
+        "bread",
+        "chopped",
+        "peeled",
+        "paste"
+      ],
+      "unitsPerPackageItem": 10
+    },
+    "64": {
+      "term": "roma tomatoes",
+      "must": [
+        "tomato"
+      ],
+      "exclude": [
+        "paste",
+        "diced",
+        "sauce",
+        "crushed",
+        "cherry",
+        "grape"
+      ]
+    },
+    "65": {
+      "term": "cucumber",
+      "must": [
+        "cucumber"
+      ],
+      "exclude": [
+        "pickle",
+        "mini",
+        "baby"
+      ]
+    },
+    "66": {
+      "term": "kale",
+      "must": [
+        "kale"
+      ],
+      "exclude": [
+        "chips",
+        "salad kit"
+      ]
+    },
+    "67": {
+      "term": "zucchini",
+      "must": [
+        "zucchini"
+      ],
+      "exclude": [
+        "noodles",
+        "bread"
+      ]
+    },
+    "68": {
+      "term": "fat free skim milk",
+      "must": [
+        "milk",
+        "fat free|skim|nonfat"
+      ]
+    },
+    "69": {
+      "term": "unsweetened almond milk",
+      "must": [
+        "almond",
+        "unsweetened"
+      ]
+    },
+    "70": {
+      "term": "nonfat plain greek yogurt",
+      "must": [
+        "greek",
+        "plain",
+        "nonfat|fat free|0%"
+      ]
+    },
+    "71": {
+      "term": "low fat cottage cheese",
+      "must": [
+        "cottage",
+        "low fat|lowfat|2%|1%"
+      ]
+    },
+    "72": {
+      "term": "grated parmesan cheese",
+      "must": [
+        "parmesan"
+      ],
+      "exclude": [
+        "dressing",
+        "crisps",
+        "sauce"
+      ]
+    },
+    "73": {
+      "term": "large eggs",
+      "must": [
+        "egg"
+      ],
+      "exclude": [
+        "white",
+        "whites",
+        "liquid",
+        "hard",
+        "boiled",
+        "noodles"
+      ],
+      "unitGrams": 50
+    },
+    "74": {
+      "term": "liquid egg whites",
+      "must": [
+        "egg white"
+      ]
+    },
+    "75": {
+      "term": "monterey jack cheese",
+      "must": [
+        "jack"
+      ],
+      "exclude": [
+        "pepper"
+      ]
+    },
+    "76": {
+      "term": "fat free shredded cheddar",
+      "must": [
+        "cheese",
+        "fat free|nonfat"
+      ],
+      "alternates": [
+        {
+          "label": "reduced-fat cheese",
+          "term": "reduced fat shredded cheese",
+          "must": [
+            "cheese",
+            "reduced fat|2% milk|low fat|lowfat|light"
+          ]
+        },
+        {
+          "label": "part-skim mozzarella",
+          "term": "part skim mozzarella",
+          "must": [
+            "mozzarella",
+            "part skim|part-skim"
+          ]
+        }
+      ]
+    },
+    "77": {
+      "term": "salted butter",
+      "must": [
+        "butter"
+      ],
+      "exclude": [
+        "margarine",
+        "peanut",
+        "almond",
+        "apple",
+        "cookies",
+        "buttermilk"
+      ]
+    },
+    "78": {
+      "term": "whole milk",
+      "must": [
+        "whole",
+        "milk"
+      ],
+      "exclude": [
+        "buttermilk",
+        "evaporated",
+        "powdered"
+      ]
+    },
+    "79": {
+      "term": "cheddar cheese block",
+      "must": [
+        "cheddar"
+      ],
+      "exclude": [
+        "crackers",
+        "soup"
+      ]
+    },
+    "80": {
+      "term": "mozzarella cheese",
+      "must": [
+        "mozzarella"
+      ],
+      "exclude": [
+        "sticks",
+        "breaded"
+      ]
+    },
+    "81": {
+      "term": "whey protein powder",
+      "must": [
+        "protein"
+      ],
+      "exclude": [
+        "bar",
+        "shake",
+        "drink",
+        "ready"
+      ]
+    },
+    "82": {
+      "term": "powdered peanut butter",
+      "must": [
+        "peanut",
+        "powdered|powder"
+      ]
+    },
+    "83": {
+      "term": "creamy peanut butter",
+      "must": [
+        "peanut butter"
+      ],
+      "exclude": [
+        "powdered",
+        "powder",
+        "crackers",
+        "cups",
+        "cookies",
+        "candy"
+      ]
+    },
+    "84": {
+      "term": "dry roasted peanuts",
+      "must": [
+        "peanuts"
+      ],
+      "exclude": [
+        "butter",
+        "honey",
+        "candy",
+        "trail"
+      ]
+    },
+    "85": {
+      "term": "unsweetened cocoa powder",
+      "must": [
+        "cocoa"
+      ],
+      "exclude": [
+        "hot cocoa",
+        "mix",
+        "butter"
+      ]
+    },
+    "86": {
+      "term": "almond butter",
+      "must": [
+        "almond butter"
+      ]
+    },
+    "87": {
+      "term": "walnuts",
+      "must": [
+        "walnut"
+      ],
+      "exclude": [
+        "candied",
+        "trail"
+      ]
+    },
+    "88": {
+      "term": "chia seed",
+      "must": [
+        "chia"
+      ],
+      "exclude": [
+        "rice",
+        "quinoa",
+        "bar",
+        "bars"
+      ]
+    },
+    "89": {
+      "term": "hemp seeds",
+      "must": [
+        "hemp"
+      ]
+    },
+    "90": {
+      "term": "pumpkin seeds pepitas",
+      "must": [
+        "pumpkin|pepitas"
+      ],
+      "exclude": [
+        "pie",
+        "puree",
+        "spice"
+      ]
+    },
+    "91": {
+      "term": "dark chocolate bar",
+      "must": [
+        "dark chocolate"
+      ],
+      "exclude": [
+        "covered",
+        "almonds",
+        "cookies",
+        "ice cream",
+        "chips",
+        "flavored",
+        "peanut butter",
+        "mint"
+      ]
+    },
+    "92": {
+      "term": "avocado oil",
+      "must": [
+        "avocado oil"
+      ],
+      "density": 0.92
+    },
+    "93": {
+      "term": "extra virgin olive oil",
+      "must": [
+        "olive oil"
+      ],
+      "density": 0.92
+    },
+    "94": {
+      "term": "flaxseed",
+      "must": [
+        "flax|flaxseed"
+      ]
+    },
+    "95": {
+      "term": "cashews",
+      "must": [
+        "cashew"
+      ],
+      "exclude": [
+        "butter",
+        "trail",
+        "honey"
+      ]
+    },
+    "96": {
+      "term": "sunflower seed kernels",
+      "must": [
+        "sunflower"
+      ],
+      "exclude": [
+        "oil",
+        "butter",
+        "in shell"
+      ]
+    },
+    "97": {
+      "term": "apple cider vinegar",
+      "must": [
+        "cider vinegar"
+      ]
+    },
+    "98": {
+      "term": "soy sauce",
+      "must": [
+        "soy sauce"
+      ],
+      "exclude": [
+        "less sodium",
+        "reduced",
+        "lite"
+      ]
+    },
+    "99": {
+      "term": "honey",
+      "must": [
+        "honey"
+      ],
+      "exclude": [
+        "roasted",
+        "graham",
+        "mustard",
+        "bbq",
+        "nut",
+        "oats",
+        "wheat",
+        "ham"
+      ]
+    },
+    "100": {
+      "term": "pure maple syrup",
+      "must": [
+        "maple syrup"
+      ],
+      "exclude": [
+        "pancake",
+        "flavored",
+        "butter"
+      ]
+    }
+  },
+  "altStores": {
+    "max": 3,
+    "radiusMiles": 25
   }
 }

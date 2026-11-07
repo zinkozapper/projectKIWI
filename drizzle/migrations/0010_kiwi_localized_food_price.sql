@@ -81,3 +81,8 @@ CREATE POLICY food_price_read ON public.food_price FOR SELECT TO anon, authentic
 REVOKE INSERT, UPDATE, DELETE ON public.kroger_store, public.zip_store, public.food_price FROM anon, authenticated;
 GRANT SELECT ON public.kroger_store, public.zip_store, public.food_price TO anon, authenticated;
 GRANT ALL ON public.kroger_store, public.zip_store, public.food_price TO service_role;
+
+-- 6. Price found at a backup store: food_price stays keyed by the ZIP's home store (what the app looks up),
+--    source_location_id records the store it actually came from.
+ALTER TABLE public.food_price ADD COLUMN IF NOT EXISTS source_location_id text REFERENCES public.kroger_store(location_id) ON DELETE SET NULL;
+COMMENT ON COLUMN public.food_price.source_location_id IS 'Store the price came from when the home store had no valid product (NULL = home store)';

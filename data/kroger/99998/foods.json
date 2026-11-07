@@ -1,0 +1,37 @@
+[
+ {
+  "food_id": 1,
+  "food_name": "Chicken breast",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz"
+ },
+ {
+  "food_id": 18,
+  "food_name": "Chickpeas / Garbanzo Beans",
+  "food_category_id": 1,
+  "serving_size": 0.25,
+  "unit": "cup"
+ },
+ {
+  "food_id": 45,
+  "food_name": "Frozen Mixed Berries",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g"
+ },
+ {
+  "food_id": 76,
+  "food_name": "Nonfat Cheese",
+  "food_category_id": 5,
+  "serving_size": 28,
+  "unit": "g"
+ },
+ {
+  "food_id": 40,
+  "food_name": "Acerola Juice",
+  "food_category_id": 3,
+  "serving_size": 6,
+  "unit": "g"
+ }
+]

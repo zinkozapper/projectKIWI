@@ -1,0 +1,98 @@
+food_id,food,brand,description,size,regular,serving_g,price_per_serving,how,flags
+1,Chicken breast,Heritage Farm,Heritage Farm® Boneless Skinless Chicken Breasts,1 lb,2.59,113.398,0.6475,$2.59/lb × 113.4 g,priced per lb
+2,Chicken thighs,Kroger,Kroger® Frozen Raw Boneless Skinless Chicken Thighs,3 lb,10.99,113.398,0.9158,$10.99 × 113.4 g / 1361 g,
+3,Pork Tenderloin,PORK,Pork Tenderloin Boneless (Whole),1 lb,5.99,113.398,1.4975,$5.99/lb × 113.4 g,priced per lb
+4,Pork Butt/Shoulder,Kroger,Kroger® Fresh Natural Pork Shoulder Butt Bone In,1 lb,2.99,113.398,0.7475,$2.99/lb × 113.4 g,priced per lb
+5,Sirloin,Private Selection,Private Selection® Natural USDA Choice Angus Beef Top Sirloin Steak,10 oz,10.99,113.398,4.3960,$10.99 × 113.4 g / 283 g,price/serving outside $0.02–$4
+6,Chuck,Kroger Mercado,Kroger® Thin Sliced Beef Chuck Shoulder Steak,1 lb,10.99,113.398,2.7475,$10.99/lb × 113.4 g,priced per lb
+7,Ground beef 90/10,Private Selection,Private Selection Angus Beef 90% Lean Ground Sirloin,1 lb,9.99,113.398,2.4975,$9.99/lb × 113.4 g,priced per lb
+8,Ribeye Whole,Kroger Mercado,Kroger® Thin Sliced Beef Ribeye Steak,1 lb,19.99,113.398,4.9975,$19.99/lb × 113.4 g,priced per lb; price/serving outside $0.02–$4
+9,Tilapia,,Kroger® Fresh Farm Raised Tilapia Fillets,16 oz,8,113.398,2.0000,$8 × 113.4 g / 454 g,
+10,Salmon,Kroger,Kroger® Fresh Farm Raised Atlantic Salmon Fillet,1 lb,9.99,113.398,2.4975,$9.99/lb × 113.4 g,priced per lb
+11,Tuna,Kroger,Kroger® Wild Caught Chunk Light Tuna in Water,12 oz,2.29,113.398,0.7633,$2.29 × 113.4 g / 340 g,
+12,Sardines,Chicken of the Sea,Chicken of the Sea Wild Caught Sardines in Water,3.75 oz,1.69,113.398,1.8027,$1.69 × 113.4 g / 106 g,no store brand: national brand used
+13,Oysters,Ocean Prince,Ocean Prince Cocktail Smoked Oysters,3 oz,2.69,113.398,3.5867,$2.69 × 113.4 g / 85 g,no store brand: national brand used
+14,Ground Turkey,Kroger,Kroger® 93/7 Lean Fresh Ground Turkey - 1 LB,1 lb,5.49,113.398,1.3725,$5.49 × 113.4 g / 454 g,
+15,Chicken Liver,Heritage Farm,Heritage Farm Natural Chicken Livers,20 oz,2.49,113.398,0.4980,$2.49 × 113.4 g / 567 g,
+16,Liver,,Rumba Meats® Beef Liver Sliced (Higado de Res Rebanado),1 lb,3.99,113.398,0.9975,$3.99/lb × 113.4 g,priced per lb
+17,Shrimp,Kroger,Kroger® Peeled & Deveined Tail Off White Raw Shrimp,2 lb,17.98,113.398,2.2475,$17.98 × 113.4 g / 907 g,
+19,Lentils,La Preferida,La Preferida® Lentils (Dry),16 oz,1.79,48,0.1894,$1.79 × 48.0 g / 454 g,no store brand: national brand used
+20,Bagels,Kroger,Kroger® Plain Bagels,6 ct / 18 oz,2.49,85,0.4148,$2.49 × 85.0 g / 510 g,
+21,Pasta,Kroger,KROGER 32 oz Spaghetti,32 oz,2,56.699,0.1250,$2 × 56.7 g / 907 g,
+22,Whole Wheat Pasta,Kroger,Kroger® 100% Whole Grain Penne Rigate,16 oz,1.33,56.699,0.1663,$1.33 × 56.7 g / 454 g,
+23,Rice,Kroger,Kroger® Enriched Long Grain White Rice,32 oz,1.89,56.699,0.1181,$1.89 × 56.7 g / 907 g,
+24,Quinoa,Kroger,Kroger® Quinoa,16 oz,4.79,56.699,0.5988,$4.79 × 56.7 g / 454 g,
+25,Rolled oats,Kroger,Kroger® 100% Whole Grain Old Fashioned Oats,42 oz,4.49,56.699,0.2138,$4.49 × 56.7 g / 1191 g,
+26,Multi-grain Bread,Private Selection,Private Selection® Multigrain Bread Wide Pan,24 oz,3.49,45,0.2308,$3.49 × 45.0 g / 680 g,
+27,Brown Rice,Kroger,Kroger® Long Grain Brown Rice,32 oz,1.89,46.3,0.0965,$1.89 × 46.3 g / 907 g,
+28,Whole Wheat Tortillas,Kroger,Kroger® 100% Whole Wheat Tortillas,10 ct / 16 oz,2.79,45,0.2790,$2.79 / 10 units,
+29,Sourdough Bread,Private Selection,Private Selection® Sourdough Bread Wide Pan,24 oz,3.49,56.699,0.2908,$3.49 × 56.7 g / 680 g,
+30,Couscous,Kroger,Kroger® Original Couscous,7 oz,2.49,43.3,0.5433,$2.49 × 43.3 g / 198 g,
+31,Mandarin Oranges,Private Selection,Private Selection® Fresh Seedless Gold Nugget Mandarin Oranges Bag,3 lb,4.99,88,0.3227,$4.99 × 88.0 g / 1361 g,
+32,Dates,Oasis,Oasis Dates Conventional Pitted Medjool Dates,12 oz,5.99,100,1.7608,$5.99 × 100.0 g / 340 g,no store brand: national brand used
+33,Bananas,Fresh Bananas,Fresh Bunch of Bananas – 5-7 Bananas,1 lb,0.55,118,0.1431,$0.55/lb × 118.0 g,priced per lb
+34,Peaches,Fresh Stone fruit,Kroger® Peaches 2 Pound Bag,2 lb,5.99,150,0.9904,$5.99 × 150.0 g / 907 g,
+35,Blueberries,Private Selection,Private Selection® Fresh Colossal Blueberries,9.8 oz,6.99,100,2.5160,$6.99 × 100.0 g / 278 g,
+36,Blackberries,Private Selection,Private Selection® Sweet Karoline Fresh Blackberries,10 oz,4.99,100,1.7602,$4.99 × 100.0 g / 283 g,
+37,Raspberries,Fresh Berries,Fresh Red Raspberries - 12 OZ Clamshell,12 oz,6.49,100,1.9077,$6.49 × 100.0 g / 340 g,
+38,Strawberries,Fresh Berries,Fresh Strawberries - 2 LB Clamshell,2 lb,9.39,100,1.0351,$9.39 × 100.0 g / 907 g,
+39,Kiwis,,Mighties Green Fresh Kiwi Fruit,2 lb,6,69,0.4564,$6 × 69.0 g / 907 g,
+41,Cantaloupe,,Cantaloupe,1 ct,3.5,552,3.5000,$3.5 / 1 units,
+42,Apples,,Kroger® Gala Apples – 3 Pound Bag,3 lb,2.59,169,0.3217,$2.59 × 169.0 g / 1361 g,
+43,Lemon,Fresh Citrus,Kroger® Fresh Lemons Bag,2 lb,4.99,65,0.3575,$4.99 × 65.0 g / 907 g,
+44,Lime,Fresh Citrus,Kroger® Fresh Limes Bag,2 lb,4.99,65,0.3575,$4.99 × 65.0 g / 907 g,
+46,Broccoli,Fresh Broccoli & Cauliflower,Broccoli Crown,1 lb,2.39,100,0.5269,$2.39/lb × 100.0 g,priced per lb
+47,Cauliflower,Fresh Broccoli & Cauliflower,Cauliflower,1 lb,1.99,588,2.5797,$1.99/lb × 588.0 g,priced per lb
+48,Butternut squash,,Butternut Squash,1 lb,1.49,100,0.3285,$1.49/lb × 100.0 g,priced per lb
+49,Red Bell Pepper,,Fresh Red Bell Pepper,1 ct,1.59,119,1.5900,$1.59 / 1 units,
+50,Asparagus,,Green Asparagus,1 lb,4.69,100,1.0340,$4.69/lb × 100.0 g,priced per lb
+51,Brussels Sprouts,Kroger,Kroger® Brussels Sprouts BIG DEAL!,24 oz,6,100,0.8818,$6 × 100.0 g / 680 g,
+52,Potato,Fresh Potatoes,Kroger® Russet Potatoes Bag BIG DEAL!,10 lb,3.99,213,0.1874,$3.99 × 213.0 g / 4536 g,
+53,Sweet Potato,Fresh Potatoes,Kroger® Sweet Potato,3 lb,4.99,130,0.4767,$4.99 × 130.0 g / 1361 g,
+54,Carrot,Kroger,Kroger® Whole Carrots,5 lb,4.99,100,0.2200,$4.99 × 100.0 g / 2268 g,
+55,Spinach,Kroger,Kroger® Baby Spinach,10 oz,3.99,100,1.4074,$3.99 × 100.0 g / 283 g,
+56,Avocado,Fresh Avocados,Fresh Medium Ripe Avocado,1 each,1,136,1.0000,$1 / 1 units,
+57,Beets,,Golden Beets,1 lb,1.99,100,0.4387,$1.99/lb × 100.0 g,priced per lb
+58,Black Beans,Kroger,Kroger® Black Beans BIG DEAL!,4 pk / 15.5 oz,3.89,100,0.2213,$3.89 × 100.0 g / 1758 g,
+59,Edamame,Pictsweet Farms,Pictsweet Farms® Steam'ables® Shelled Edamame with Sea Salt Packs,5 pk / 4 oz,7.49,100,1.3210,$7.49 × 100.0 g / 567 g,no store brand: national brand used
+60,Tofu,Simple Truth Organic,Simple Truth Organic® Firm Tofu,14 oz,1.99,100,0.5014,$1.99 × 100.0 g / 397 g,only organic available
+61,Kimchi,Simple Truth,Simple Truth® Raw-Fermented Korean Style Kimchi,17 oz,7.99,100,1.6579,$7.99 × 100.0 g / 482 g,
+62,Yellow Onion,,Kroger® Yellow Onion 3 lb Bag,3 lb,3.39,148,0.3687,$3.39 × 148.0 g / 1361 g,
+63,Garlic,Kroger,Kroger® Whole Garlic Bulbs,5 ct,1.99,3,0.0398,$1.99 / 50 cloves,
+64,Tomatoes,Fresh Tomatoes,Fresh Roma Tomato,1 lb,1.79,125,0.4933,$1.79/lb × 125.0 g,priced per lb
+65,Cucumber,,Cucumber,1 ct,0.79,200,0.7900,$0.79 / 1 units,
+66,Kale,,Kale Bag,16 oz,3.49,100,0.7694,$3.49 × 100.0 g / 454 g,
+67,Zucchini,,Zucchini,1 lb,1.69,196,0.7303,$1.69/lb × 196.0 g,priced per lb
+68,Skim Milk,Kroger,Kroger® Fat Free Skim Milk Quart,1 qt,2.19,240,0.5392,$2.19 × 240.0 g / (946 ml × 1.03),density 1.03 g/ml
+69,Almond Milk,Simple Truth,Simple Truth™ Dairy Free Shelf Stable Unsweetened Plain Almond Milk Quart,1 qt,1.99,200,0.4083,$1.99 × 200.0 g / (946 ml × 1.03),density 1.03 g/ml
+70,Nonfat Greek yogurt,Kroger,Kroger® Plain Nonfat Greek Yogurt Cup,5.3 oz,0.89,170,1.0070,$0.89 × 170.0 g / 150 g,
+71,Low-fat Cottage Cheese,Kroger,Kroger® 2% Low Fat Small Curd Cottage Cheese,24 oz,3.19,113,0.5298,$3.19 × 113.0 g / 680 g,
+72,Parmesan Cheese,Kroger,Kroger® Grated Parmesan Cheese,16 oz,5.99,25,0.3301,$5.99 × 25.0 g / 454 g,
+73,Egg,Simple Truth,Simple Truth® Cage Free Grade AA Large Brown Eggs,24 ct,6.79,50,0.2829,$6.79 / 24 × 50 g / 50 g,50 g per unit
+74,Egg white,Kroger,Kroger® Cage Free Liquid Egg Whites,32 oz,7.49,46,0.3798,$7.49 × 46.0 g / 907 g,
+75,Cheese,Kroger,Kroger® Monterey Jack Block Cheese BIG DEAL!,32 oz,7.29,28,0.2250,$7.29 × 28.0 g / 907 g,
+77,Butter,Kroger,Kroger® Salted Butter Sticks,4 sticks / 16 oz,3.49,7,0.0539,$3.49 × 7.0 g / 454 g,
+78,Whole Milk,Kroger,Kroger® Whole Vitamin D Milk Quart,1 qt,2.19,244,0.5475,$2.19 × 236.6 ml / 946 ml,
+79,Cheddar Cheese,Kroger,Kroger® Sharp Cheddar Block Cheese BIG DEAL!,32 oz,7.29,28.3495,0.2278,$7.29 × 28.3 g / 907 g,
+80,Mozzarella Cheese,Kroger,Kroger® Mozzarella Shredded Cheese BIG DEAL!,4 lb,13.99,28.3495,0.2186,$13.99 × 28.3 g / 1814 g,
+81,Protein Powder,Ghirardelli,Ghirardelli x ProSupps Whey Protein Chocolate Peanut Butter 18 sv,1.58 lbs,35.99,38,1.9083,$35.99 × 38.0 g / 717 g,no store brand: national brand used
+82,Powdered Peanut Butter,Simple Truth,Simple Truth® Powdered Plant Based Peanut Butter BIG DEAL!,24 oz,12.99,16,0.3055,$12.99 × 16.0 g / 680 g,
+83,Peanut Butter,Kroger,Kroger® Peanut Butter Creamy BIG Deal!,64 oz,6.49,32,0.1145,$6.49 × 32.0 g / 1814 g,
+84,Peanuts,Kroger,Kroger® Shelled Salted Roasted Peanuts,16 oz,2.49,28,0.1537,$2.49 × 28.0 g / 454 g,
+85,Cocoa Powder,Hershey's,HERSHEY'S Natural Unsweetened Cocoa Powder Can,8 oz,7.49,20,0.6605,$7.49 × 20.0 g / 227 g,no store brand: national brand used
+86,Almond Butter,Simple Truth,Simple Truth® Creamy No Sugar Added Almond Butter,16 oz,6.99,28,0.4315,$6.99 × 28.0 g / 454 g,
+87,Walnuts,Private Selection,Private Selection® Shelled Jumbo Walnuts,16 oz,5.99,28,0.3698,$5.99 × 28.0 g / 454 g,
+88,Chia Seeds,Simple Truth,Simple Truth Organic® Whole Black Chia Seeds,12 oz,4.79,30,0.4224,$4.79 × 30.0 g / 340 g,only organic available
+89,Hemp Seeds,Manitoba Harvest,Manitoba Harvest ® Hemp Hearts,8 oz,9.99,30,1.3215,$9.99 × 30.0 g / 227 g,no store brand: national brand used
+90,Pumpkin Seeds,Simple Truth,Simple Truth® Raw Pepitas,14.5 oz,6.99,30,0.5101,$6.99 × 30.0 g / 411 g,
+91,Dark Chocolate,Private Selection,Private Selection® 72% Cacao Dark Chocolate Swiss Candy Bar,3.5 oz,3.99,30,1.2064,$3.99 × 30.0 g / 99 g,
+92,Avocado Oil,Private Selection,Private Selection® Avocado Oil,67.6 fl oz,32.99,15,0.2691,$32.99 × 15.0 g / (1999 ml × 0.92),density 0.92 g/ml
+93,Olive Oil,Kroger,Kroger® Extra Virgin Olive Oil,67.6 fl oz,24.99,15,0.2038,$24.99 × 15.0 g / (1999 ml × 0.92),density 0.92 g/ml
+94,Ground Flax Seeds,Bob's Red Mill,Bob's Red Mill Gluten Free Non GMO Flaxseed Meal,16 oz,4.99,28.3495,0.3119,$4.99 × 28.3 g / 454 g,no store brand: national brand used
+95,Cashews,Kroger,Kroger® Halves & Pieces Salted Cashews,32 oz,13.99,28.3495,0.4372,$13.99 × 28.3 g / 907 g,
+96,Sunflower Seeds,Kroger,Kroger® Dry Roasted Salted Sunflower Kernels,7.25 oz,2.59,28.3495,0.3572,$2.59 × 28.3 g / 206 g,
+97,Apple Cider Vinegar,Kroger,Kroger® Apple Cider Vinegar,1 gal,7.29,14.9,0.0285,$7.29 × 14.8 ml / 3785 ml,
+98,Soy Sauce / Tamari,Kroger,Kroger® Brewed Soy Sauce BIG DEAL!,32 fl oz,3.99,16,0.0623,$3.99 × 14.8 ml / 946 ml,
+99,Honey,Kroger,Kroger® Clover Honey Bear,24 oz,7.79,20,0.2290,$7.79 × 20.0 g / 680 g,
+100,Maple Syrup,Private Selection,Private Selection™ 100% Pure Grade A Amber Maple Syrup,32 fl oz,18.99,20,0.2967,$18.99 × 14.8 ml / 946 ml,
+101,Pineapple,,Fresh Ripe Whole Pineapple,1 ct,3.29,,3.2900,$3.29 / 1 units,
