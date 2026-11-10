@@ -93,7 +93,9 @@ function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/error`
+        // Come back to the sign-in page; it sees the new session and moves on to /plan,
+        // or sends Google/Supabase errors (?error=...) to /error.
+        redirectTo: `${window.location.origin}/`
       }
     });
 
