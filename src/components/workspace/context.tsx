@@ -2,9 +2,10 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, nutrientLabels, nutrientLimits, type Profile } from '@/lib/foods';
+import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, nutrientLimits, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
+import { nutrientBoosts, type NutrientBoost } from '@/lib/recommendation-boosts';
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
 import { useIsAdmin } from '@/lib/admin';
@@ -16,7 +17,7 @@ export type PantryItem = { id: string; food_id: string; quantity: number };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null };
 export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string };
 // addCost = price of one add (1 serving a day for the whole plan). fitsBudget = that add fits what's left.
-export type FoodSuggestion = { food: typeof foods[number]; score: number; reasons: string[]; addCost: number; fitsBudget: boolean };
+export type FoodSuggestion = { food: typeof foods[number]; score: number; boosts: NutrientBoost[]; addCost: number; fitsBudget: boolean };
 export type FoodPreferences = Record<string, boolean>;
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
@@ -285,13 +286,14 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     const baseScore = relevantGaps.reduce((total, gap) => total + gap.impact, 0);
     const liked = foodPreferences[food.id];
     const score = baseScore * (liked === true ? 1.25 : liked === false ? 0.75 : 1);
-    const reasons = relevantGaps.slice(0, 2).map(gap => `${nutrientLabels[gap.key]} (${gap.percentage}% of remaining gap)`);
+    const boosts = nutrientBoosts(relevantGaps);
 
     const addCost = addCostOf(food);
     // Unknown price (0): fits while there's budget left, ranked at a typical cost once over.
     const fitsBudget = addCost > 0 ? addCost <= budgetRemaining : budgetRemaining > 0;
-    return { food, score, reasons, addCost, fitsBudget };
-  }).filter(s => s.score > 0).sort((a, b) => {
+    return { food, score, boosts, addCost, fitsBudget };
+    // Only suggest foods that fill at least MIN_BOOST_PERCENT of some gap, so every card has a chip.
+  }).filter(s => s.score > 0 && s.boosts.length > 0).sort((a, b) => {
     if (a.fitsBudget !== b.fitsBudget) return a.fitsBudget ? -1 : 1;
     return a.fitsBudget ? b.score - a.score : valueOf(b) - valueOf(a);
   });

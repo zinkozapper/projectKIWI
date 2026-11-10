@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { usePhoneLayout } from '@/hooks/use-phone-layout';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLimits, NUTRIENTS, type Food, type Nutrients } from '@/lib/foods';
+import { boostTitle } from '@/lib/recommendation-boosts';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
@@ -317,7 +318,7 @@ export function PlanPage() {
               {recommendedFoods.length
                 ? recommendedFoods.map(f => {
                   const scored = foodGapScores.find(suggestion => suggestion.food.id === f.id);
-                  const reasons = scored?.reasons ?? [];
+                  const boosts = scored?.boosts ?? [];
                   const addCost = f.price > 0 ? f.price * days : 0;
                   const overBudget = addCost > 0 && addCost > budgetRemaining;
                   const preference = foodPreferences[f.id];
@@ -340,8 +341,17 @@ export function PlanPage() {
                         </button>
                         <small>{f.note}</small>
                         <span className="suggestion-price">
-                          {addCost > 0 ? `$${addCost.toFixed(2)} for ${days} days` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''} · {reasons.length ? reasons.join(' + ') : `Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
+                          {addCost > 0 ? `$${addCost.toFixed(2)} for ${days} days` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''}{boosts.length ? '' : ` · Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
                         </span>
+                        {boosts.length > 0 && (
+                          <ul className="boost-chips" aria-label={`Nutrients ${f.name} helps with`}>
+                            {boosts.map(boost => (
+                              <li key={boost.key} className="boost-chip" title={boostTitle(boost)}>
+                                {boost.label} <span>+{boost.percentage}%</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
 
                       <div className="suggestion-actions" onClick={e => e.stopPropagation()}>
