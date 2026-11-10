@@ -556,62 +556,95 @@ export type Profile = {
 };
 
 // Calculate estimated daily nutritional targets.
+
 export function targets(profile: Profile | null): Nutrients {
   const weight = Number(profile?.weight_kg) || 68;
   const height = Number(profile?.height_cm) || 170;
   const age = Number(profile?.age) || 23;
 
+  const isMale = profile?.gender === 'male';
+  const isFemale = profile?.gender === 'female';
+
+  // Use the midpoint of male/female reference values when neither
+  // category is selected. This is an estimate, not a separate DRI.
+  const sexValue = (male: number, female: number) =>
+    isMale ? male : isFemale ? female : (male + female) / 2;
+
   const base =
     10 * weight +
     6.25 * height -
     5 * age +
-    (profile?.gender === 'male'
-      ? 5
-      : profile?.gender === 'female'
-        ? -161
-        : -78);
+    (isMale ? 5 : isFemale ? -161 : -78);
 
-  const calories = Math.round(
-    base *
-    ({
-      low: 1.2,
-      moderate: 1.45,
-      high: 1.7
-    }[profile?.activity as 'low' | 'moderate' | 'high'] || 1.45)
+  const activityMultiplier = {
+    low: 1.2,
+    moderate: 1.375,
+    high: 1.725,
+  }[profile?.activity as 'low' | 'moderate' | 'high'] || 1.375;
+
+  const calories = Math.round(base * activityMultiplier);
+
+  const over30 = age >= 31;
+  const over50 = age >= 51;
+  const over70 = age >= 71;
+
+  const fiber = sexValue(
+    over50 ? 30 : 38,
+    over50 ? 21 : 25
   );
 
-  // Adult (19+) Dietary Reference Intakes, NIH Office of Dietary Supplements: RDA, or AI where no RDA
-  // exists (fiber, omega-3/6, vitamin K, choline, potassium). Sodium is the 2,300 mg upper limit.
-  const male = profile?.gender === 'male';
-  const over30 = age > 30;
+  const calcium = sexValue(
+    over70 ? 1200 : 1000,
+    over50 ? 1200 : 1000
+  );
+
+  const iron = sexValue(
+    8,
+    over50 ? 8 : 18
+  );
+
+  const magnesium = sexValue(
+    over30 ? 420 : 400,
+    over30 ? 320 : 310
+  );
+
+  const vitaminB6 = sexValue(
+    over50 ? 1.7 : 1.3,
+    over50 ? 1.5 : 1.3
+  );
 
   return {
     calories,
-    protein: Math.round(weight * 1.0),
-    carbs: Math.round(calories * 0.5 / 4),
+    protein: Math.round(weight * 0.8),
+    carbs: Math.max(130, Math.round(calories * 0.5 / 4)),
     fat: Math.round(calories * 0.3 / 9),
-    fiber: male ? 34 : 28,
-    omega3: male ? 1.6 : 1.1,
-    omega6: male ? 17 : 12,
-    vitaminA: male ? 900 : 700,
-    vitaminC: male ? 90 : 75,
+
+    fiber: Math.round(fiber),
+    omega3: sexValue(1.6, 1.1),
+    omega6: sexValue(over50 ? 14 : 17, over50 ? 11 : 12),
+
+    vitaminA: sexValue(900, 700),
+    vitaminC: sexValue(90, 75),
     vitaminE: 15,
-    vitaminK: male ? 120 : 90,
-    thiamin: male ? 1.2 : 1.1,
-    riboflavin: male ? 1.3 : 1.1,
-    niacin: male ? 16 : 14,
-    vitaminB6: 1.3,
+    vitaminK: sexValue(120, 90),
+
+    thiamin: sexValue(1.2, 1.1),
+    riboflavin: sexValue(1.3, 1.1),
+    niacin: sexValue(16, 14),
+    vitaminB6,
     folate: 400,
     vitaminB12: 2.4,
-    choline: male ? 550 : 425,
-    calcium: 1000,
-    iron: profile?.gender === 'female' ? 18 : 8,
-    magnesium: male ? (over30 ? 420 : 400) : (over30 ? 320 : 310),
+    choline: sexValue(550, 425),
+
+    calcium,
+    iron,
+    magnesium,
     phosphorus: 700,
-    potassium: male ? 3400 : 2600,
+    potassium: sexValue(3400, 2600),
     sodium: 2300,
-    zinc: male ? 11 : 8,
+    zinc: sexValue(11, 8),
     copper: 900,
     selenium: 55,
   };
 }
+
