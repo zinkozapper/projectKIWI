@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Download, LoaderCircle, RefreshCw, Search, ShieldCheck, ShieldOff } from 'lucide-react';
+import { Download, LoaderCircle, Pencil, RefreshCw, Search, ShieldCheck, ShieldOff, Trash2, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   filterUsers, formatPct, fullName, loadAdminDashboard, loadAdminUsers, refreshSnapshots, setAdmin, toCsv,
   type AdminDashboard, type AdminUser, type UserFilter,
 } from '@/lib/admin';
 import { nutrientLabels } from '@/lib/foods';
+import { adminDeleteAccount } from '@/lib/admin-accounts/functions';
+import { AccountDialog } from '../account-dialog';
 import { useWorkspace } from '../context';
 import { FoodQueue } from '../food-queue';
 
@@ -31,6 +33,8 @@ export function AdminPage() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<UserFilter>('all');
   const [busyUser, setBusyUser] = useState('');
+  const [notice, setNotice] = useState('');
+  const [dialog, setDialog] = useState<{ open: boolean; account: AdminUser | null }>({ open: false, account: null });
 
   const load = useCallback(async (recompute = false) => {
     setLoading(true);
@@ -74,12 +78,42 @@ export function AdminPage() {
     try {
       await setAdmin(u.user_id, !u.is_admin);
       setUsers(list => list.map(x => (x.user_id === u.user_id ? { ...x, is_admin: !u.is_admin } : x)));
+      setNotice(u.is_admin ? `${label} is no longer an admin.` : `${label} is now an admin.`);
       setDash(d => (d ? { ...d, admins: d.admins + (u.is_admin ? -1 : 1) } : d));
     } catch (e) {
       setError(errorText(e));
     } finally {
       setBusyUser('');
     }
+  }
+
+  async function deleteAccount(u: AdminUser) {
+    const label = fullName(u) || u.email;
+    const ok = window.confirm(`Delete the account for ${label} (${u.email})?\n\nThis permanently removes their sign-in, profile, pantry, lists and history. It can't be undone.`);
+    if (!ok) return;
+    setBusyUser(u.user_id);
+    setError('');
+    setNotice('');
+    try {
+      const result = await adminDeleteAccount({ data: { userId: u.user_id } });
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setNotice(`Deleted ${u.email}.`);
+      await load();
+    } catch (e) {
+      setError(errorText(e));
+    } finally {
+      setBusyUser('');
+    }
+  }
+
+  async function accountSaved(message: string) {
+    setDialog({ open: false, account: null });
+    setError('');
+    setNotice(message);
+    await load();
   }
 
   function exportCsv() {
@@ -120,6 +154,7 @@ export function AdminPage() {
       </div>
 
       {error && <div className="form-error admin-error" role="alert">{error}</div>}
+      {notice && !error && <div className="form-success admin-error" role="status">{notice}</div>}
 
       {!dash && loading && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading dashboard…</div>}
 
@@ -236,6 +271,7 @@ export function AdminPage() {
             ))}
           </div>
           <Button variant="outline" onClick={exportCsv} disabled={!shown.length}><Download size={16} /> CSV</Button>
+          <Button onClick={() => { setNotice(''); setDialog({ open: true, account: null }); }}><UserPlus size={16} /> Add account</Button>
         </div>
         <div className="admin-table-wrap">
           <table className="admin-table">
@@ -248,7 +284,7 @@ export function AdminPage() {
                 <th>Signed up</th>
                 <th>Trips</th>
                 <th>Recs added</th>
-                <th aria-label="Admin access" />
+                <th aria-label="Account actions" />
               </tr>
             </thead>
             <tbody>
@@ -265,11 +301,21 @@ export function AdminPage() {
                   <td>{u.trips_completed}</td>
                   <td>{u.recs_added}</td>
                   <td>
-                    {u.user_id !== userId && (
-                      <Button variant="ghost" size="sm" onClick={() => toggleAdmin(u)} disabled={busyUser === u.user_id}>
-                        {u.is_admin ? <><ShieldOff size={14} /> Remove admin</> : <><ShieldCheck size={14} /> Make admin</>}
+                    <div className="admin-row-actions">
+                      {u.user_id !== userId && (
+                        <Button variant="ghost" size="sm" onClick={() => toggleAdmin(u)} disabled={busyUser === u.user_id}>
+                          {u.is_admin ? <><ShieldOff size={14} /> Remove admin</> : <><ShieldCheck size={14} /> Make admin</>}
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" onClick={() => { setNotice(''); setDialog({ open: true, account: u }); }} disabled={busyUser === u.user_id} aria-label={`Edit ${u.email}`}>
+                        <Pencil size={14} /> Edit
                       </Button>
-                    )}
+                      {u.user_id !== userId && (
+                        <Button variant="ghost" size="sm" className="admin-delete" onClick={() => deleteAccount(u)} disabled={busyUser === u.user_id} aria-label={`Delete ${u.email}`}>
+                          <Trash2 size={14} /> Delete
+                        </Button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -278,6 +324,13 @@ export function AdminPage() {
           {!shown.length && !loading && <div className="empty-state">No users match.</div>}
         </div>
       </section>
+
+      <AccountDialog
+        open={dialog.open}
+        account={dialog.account}
+        onClose={() => setDialog({ open: false, account: null })}
+        onSaved={accountSaved}
+      />
     </>
   );
 }

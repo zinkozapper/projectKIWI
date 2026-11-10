@@ -157,6 +157,15 @@ html{color-scheme:light}html.dark{color-scheme:dark}
 .admin-user-name{font-weight:700;display:flex;align-items:center;gap:7px}
 .admin-user-email{font-size:12px;color:var(--muted-foreground)}
 .admin-badge{font-size:10px;font-weight:800;color:var(--primary);background:var(--secondary);padding:2px 7px;border-radius:20px}
+.admin-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:2px}
+.admin-delete{color:var(--destructive)}
+.account-dialog{max-width:480px;width:calc(100vw - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
+.account-form{gap:14px}
+.account-name-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.account-form label.account-check{display:flex;align-items:center;gap:9px;font-weight:600}
+.account-form label.account-check input{width:18px;height:18px;accent-color:var(--primary)}
+.account-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+@media(max-width:550px){.account-name-row{grid-template-columns:1fr}}
 .status-pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:capitalize}
 .status-pill.active{color:var(--primary);background:var(--secondary)}
 .status-pill.inactive{color:var(--muted-foreground);background:var(--muted)}
