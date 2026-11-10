@@ -160,6 +160,22 @@ export function ProfilePage() {
         </form>
       </div>
       <section className="section-block passkey-block">
+        <div className="section-title" style={{ alignItems: 'center' }}>
+          <div>
+            <h2>Food preferences</h2>
+          </div>
+          <Button asChild variant="outline">
+            <Link to="/food-preferences">
+              Manage foods <ArrowRight size={16} />
+            </Link>
+          </Button>
+        </div>
+
+        <p className="section-note">
+          Manage the foods KIWI recommends based on what you like.
+        </p>
+      </section>
+      <section className="section-block passkey-block">
         <div className="section-title">
           <div><h2>Security</h2></div>
         </div>

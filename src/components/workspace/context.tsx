@@ -75,6 +75,7 @@ type WorkspaceValue = {
   foodPreferences: FoodPreferences;
   likedFoods: typeof foods;
   setFoodPreference: (foodId: string, liked: boolean) => Promise<void>;
+  removeFoodPreference: (foodId: string) => Promise<void>;
   setProfileDraft: (draft: ProfileDraft) => void;
   setSearch: (search: string) => void;
   setSelected: (id: string) => void;
@@ -336,6 +337,30 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }));
   }
 
+  async function removeFoodPreference(foodId: string) {
+  if (!userId) {
+    fail('Please sign in before removing food preferences.');
+    return;
+  }
+
+  const { error } = await supabase
+    .from('food_preferences')
+    .delete()
+    .eq('user_id', userId)
+    .eq('food_id', Number(foodId));
+
+  if (error) {
+    fail('Could not remove food preference: ' + error.message);
+    return;
+  }
+
+  setFoodPreferences(prev => {
+    const updated = { ...prev };
+    delete updated[foodId];
+    return updated;
+  });
+}
+
   async function ensureTrip() {
     if (active) return active.id;
     if (creatingTrip.current) return creatingTrip.current;
@@ -576,7 +601,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
     pantryTotals, combined, daily, spend, biggestGaps, suggestions, foodGapScores,
-    foodPreferences, likedFoods, setFoodPreference,
+    foodPreferences, likedFoods, setFoodPreference, removeFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry,

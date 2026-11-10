@@ -16,6 +16,7 @@ import { Route as ErrorRouteImport } from './routes/error'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedFoodPreferencesRouteImport } from './routes/_authenticated/food-preferences'
 import { Route as AuthenticatedPlanRouteRouteImport } from './routes/_authenticated/plan/route'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPlanIndexRouteImport } from './routes/_authenticated/plan/index'
@@ -57,6 +58,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFoodPreferencesRoute =
+  AuthenticatedFoodPreferencesRouteImport.update({
+    id: '/food-preferences',
+    path: '/food-preferences',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPlanRouteRoute = AuthenticatedPlanRouteRouteImport.update({
   id: '/plan',
   path: '/plan',
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/plan': typeof AuthenticatedPlanRouteRouteWithChildren
   '/admin': typeof AuthenticatedAdminRoute
+  '/food-preferences': typeof AuthenticatedFoodPreferencesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
@@ -110,6 +118,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/food-preferences': typeof AuthenticatedFoodPreferencesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
@@ -126,6 +135,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/plan': typeof AuthenticatedPlanRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/food-preferences': typeof AuthenticatedFoodPreferencesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/_authenticated/plan/pantry': typeof AuthenticatedPlanPantryRoute
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/plan'
     | '/admin'
+    | '/food-preferences'
     | '/profile'
     | '/plan/history'
     | '/plan/pantry'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/admin'
+    | '/food-preferences'
     | '/profile'
     | '/plan/history'
     | '/plan/pantry'
@@ -170,6 +182,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/plan'
     | '/_authenticated/admin'
+    | '/_authenticated/food-preferences'
     | '/_authenticated/profile'
     | '/_authenticated/plan/history'
     | '/_authenticated/plan/pantry'
@@ -235,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/food-preferences': {
+      id: '/_authenticated/food-preferences'
+      path: '/food-preferences'
+      fullPath: '/food-preferences'
+      preLoaderRoute: typeof AuthenticatedFoodPreferencesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/plan': {
@@ -305,12 +325,14 @@ const AuthenticatedPlanRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedPlanRouteRoute: typeof AuthenticatedPlanRouteRouteWithChildren
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedFoodPreferencesRoute: typeof AuthenticatedFoodPreferencesRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPlanRouteRoute: AuthenticatedPlanRouteRouteWithChildren,
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedFoodPreferencesRoute: AuthenticatedFoodPreferencesRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 
