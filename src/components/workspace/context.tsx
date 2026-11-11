@@ -206,8 +206,24 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setBudgetStart(start);
         setProfileDraft({ display_name: p.display_name || '', age: String(p.age || ''), ...toFeetInches(p.height_cm), weight_lb: p.weight_kg ? String(Math.round(Number(p.weight_kg) * LB_PER_KG)) : '', gender: p.gender || '', activity: p.activity || 'moderate', goal: p.goal || 'maintain', budget: String(p.budget ?? 75), budget_weeks: String(weeks), budget_start: start });
       } else {
-        navigate({ to: '/profile', replace: true });
-      }
+        setProfile(null);
+        setBudget(75);
+        setBudgetWeeks(1);
+        setBudgetStart(toDateKey(new Date()));
+        setProfileDraft({
+          display_name: '',
+          age: '',
+          height_ft: '',
+          height_in: '',
+          weight_lb: '',
+          gender: '',
+          activity: 'moderate',
+          goal: 'maintain',
+          budget: '75',
+          budget_weeks: '1',
+          budget_start: toDateKey(new Date()),
+      });
+    }
 
       setTrips((tr.data || []).map(toTrip));
       setItems((ti.data || []).map(toItem));

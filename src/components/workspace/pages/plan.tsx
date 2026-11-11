@@ -34,7 +34,7 @@ export function PlanPage() {
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
     suggestions, foodGapScores, foodPreferences, setFoodPreference, setSearch, setSelected, fail,
-    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan,
+    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
 
@@ -105,6 +105,13 @@ export function PlanPage() {
 
   return (
     <>
+      {!profile && (
+        <p className="section-note">
+          You're currently using default nutrition estimates. Complete your profile
+          using the account button to get nutrition goals personalized to you.
+        </p>
+      )}
+
       <div className="page-heading">
         <div>
           <h1>Your grocery plan<span className="brand-dot">.</span></h1>

@@ -8,7 +8,7 @@ import { NutrientPanel } from '../nutrient-bar';
 import { PantryAddDialog } from '../pantry-add-dialog';
 
 export function PantryPage() {
-  const { pantry, listItems, days, daily, pantryTotals, combined, addPantry, removePantry } = useWorkspace();
+  const { pantry, listItems, days, daily, pantryTotals, combined, addPantry, removePantry, profile, } = useWorkspace();
   const [adding, setAdding] = useState(false);
   // One tap marks a food gone, so keep an Undo around for a few seconds in case it was a mis-tap.
   const [lastRemoved, setLastRemoved] = useState<Food | null>(null);
@@ -37,6 +37,13 @@ export function PantryPage() {
 
   return (
     <>
+      {!profile && (
+        <p className="section-note">
+          You're currently using default nutrition estimates. Complete your profile
+          using the account button to get nutrition goals personalized to you.
+        </p>
+      )}
+      
       <div className="page-heading">
         <div>
           <h1>Your pantry<span className="brand-dot">.</span></h1>
