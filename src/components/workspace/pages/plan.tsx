@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,9 +24,9 @@ function addFoodOnCardKeyDown(e: KeyboardEvent<HTMLDivElement>, add: () => void)
 export function PlanPage() {
   const navigate = useNavigate();
   const [foodDetails, setFoodDetails] = useState<Food | null>(null);
+  const [detailsFromSearch, setDetailsFromSearch] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
-  const searchArea = useRef<HTMLDivElement>(null);
   // On phones the nutrition panel sits below everything else, so food details open in a dialog
   // instead, and the plan's nutrition summary moves above the list as a collapsible section.
   const isPhone = usePhoneLayout();
@@ -34,7 +34,7 @@ export function PlanPage() {
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
     suggestions, foodGapScores, foodPreferences, setFoodPreference, setSearch, setSelected, fail,
-    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, priceOf, hasUnpricedBudgetItems,
+    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, isFirstSession, priceOf, hasUnpricedBudgetItems,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
 
@@ -54,17 +54,8 @@ export function PlanPage() {
   const recommendationAnchor = showPairings ? selected : '';
 
   useEffect(() => {
-    if (!searchOpen) return;
-    const closeOnOutsideClick = (event: PointerEvent) => {
-      if (!searchArea.current?.contains(event.target as Node)) setSearchOpen(false);
-    };
-    document.addEventListener('pointerdown', closeOnOutsideClick);
-    return () => document.removeEventListener('pointerdown', closeOnOutsideClick);
-  }, [searchOpen]);
-
-  useEffect(() => {
     // The phone dialog closes itself; a touch to scroll must not clear it.
-    if (!foodDetails || isPhone) return;
+    if (!foodDetails || isPhone || detailsFromSearch) return;
     const clearOnOutsideFoodClick = (event: PointerEvent) => {
       if (!(event.target instanceof Element)) return;
       const clickedFoodId = event.target.closest('[data-food-id]')?.getAttribute('data-food-id');
@@ -72,7 +63,7 @@ export function PlanPage() {
     };
     document.addEventListener('pointerdown', clearOnOutsideFoodClick);
     return () => document.removeEventListener('pointerdown', clearOnOutsideFoodClick);
-  }, [foodDetails, isPhone]);
+  }, [foodDetails, isPhone, detailsFromSearch]);
 
   // Log only the recommendations currently shown in the combined section.
   const recommendedFoodIds = recommendedFoods.map(food => food.id).join(',');
@@ -106,7 +97,7 @@ export function PlanPage() {
 
   return (
     <>
-      {!profile && (
+      {!profile && !isFirstSession && (
         <p className="section-note">
           You're currently using default nutrition estimates. Complete your profile
           using the account button to get nutrition goals personalized to you.
@@ -115,17 +106,11 @@ export function PlanPage() {
 
       <div className="page-heading">
         <div>
-          <h1>Your grocery plan<span className="brand-dot">.</span></h1>
-          <p>Build your list, then shop.</p>
+          <h1>Your grocery plan</h1>
         </div>
-        {listItems.length > 0 && (
-          <Button className="shop-action" onClick={() => navigate({ to: '/plan/shop' })}>
-            <ShoppingBasket size={17} /> Shop this list ({listItems.length}) <ArrowRight size={16} />
-          </Button>
-        )}
       </div>
 
-      <div className="budget-progress plan-budget-progress">
+      {!isFirstSession && <div className="budget-progress plan-budget-progress">
         <div className="plan-budget-copy">
           <span>Budget · {formatBudgetPeriod(budgetPeriod)}</span>
           <strong>${used.toFixed(2)} / ${budget.toFixed(0)} per {budgetWeeksLabel(budgetPeriod.weeks).replace(/^1 /, '')}</strong>
@@ -139,9 +124,9 @@ export function PlanPage() {
           <div className={used > budget ? 'fill warning' : 'fill'} style={{ width: `${pct(periodSpent)}%` }} />
           <div className={used > budget ? 'fill planned warning' : 'fill planned'} style={{ width: `${Math.max(0, pct(used) - pct(periodSpent))}%` }} />
         </div>
-      </div>
+      </div>}
 
-      {pantryCheckDue && (
+      {pantryCheckDue && !isFirstSession && (
         <div className="pantry-check-banner">
           <div>
             <strong>New trip? Check your pantry first.</strong>
@@ -170,22 +155,27 @@ export function PlanPage() {
               <div>
                 <h2>Your grocery list</h2>
               </div>
-              <span className="count-pill">{listItems.length} {listItems.length === 1 ? 'item' : 'items'}</span>
+              <Button onClick={() => setSearchOpen(true)}><Plus size={16} /> Add to list</Button>
             </div>
 
-            <div ref={searchArea}>
+            <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+              <DialogContent className="pantry-dialog">
+                <DialogHeader>
+                  <DialogTitle>Add to your grocery list</DialogTitle>
+                  <DialogDescription>Search for foods to add to your list.</DialogDescription>
+                </DialogHeader>
               <div className="searchbox">
                 <Search size={19} />
                 <input
                   aria-label="Search foods"
                   value={search}
-                  onFocus={() => setSearchOpen(true)}
-                  onChange={e => { setSearch(e.target.value); setSearchOpen(true); }}
+                  onChange={e => setSearch(e.target.value)}
                   placeholder="Search foods, like eggs or spinach…"
+                  autoFocus
                 />
               </div>
 
-              {searchOpen && search && (
+              {search.trim() && (
                 <div className="search-results">
                   {results.length
                     ? results.map(f => (
@@ -201,7 +191,7 @@ export function PlanPage() {
                       >
                         <span className="food-emoji">{f.emoji}</span>
                         <div>
-                          <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setFoodDetails(f); }}>
+                          <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setDetailsFromSearch(true); setFoodDetails(f); }}>
                             <strong>{f.name}</strong>
                           </button>
                           <small>{f.category} · {priceOf(f.id) != null ? `$${priceOf(f.id)!.toFixed(2)} / ${f.unit}` : 'Price unknown'}{inPantry(f.id) && <span className="in-pantry-note"> · In your pantry</span>}</small>
@@ -217,8 +207,10 @@ export function PlanPage() {
                   </button>
                 </div>
               )}
-              <FoodFinder open={finderOpen} onOpenChange={setFinderOpen} initialQuery={search.trim()} onFinished={() => setSearch('')} />
-            </div>
+              <Button onClick={() => setSearchOpen(false)}>Done</Button>
+              </DialogContent>
+            </Dialog>
+            <FoodFinder open={finderOpen} onOpenChange={setFinderOpen} initialQuery={search.trim()} onFinished={() => setSearch('')} />
 
             <div className="list-head">
               <span>ITEM</span>
@@ -300,7 +292,7 @@ export function PlanPage() {
               </div>
             ) : (
               <div className="empty-state">
-                Search above to add foods to your list.
+                Add foods to start your grocery list.
               </div>
             )}
 
@@ -425,8 +417,14 @@ export function PlanPage() {
         )}
       </div>
 
-      {isPhone && (
-        <Dialog open={!!foodDetails} onOpenChange={open => { if (!open) setFoodDetails(null); }}>
+      {listItems.length > 0 && (
+        <Button className="shop-action" onClick={() => navigate({ to: '/plan/shop' })}>
+          <ShoppingBasket size={17} /> Shop this list ({listItems.length}) <ArrowRight size={16} />
+        </Button>
+      )}
+
+      {(isPhone || detailsFromSearch) && (
+        <Dialog open={!!foodDetails} onOpenChange={open => { if (!open) { setFoodDetails(null); setDetailsFromSearch(false); } }}>
           <DialogContent className="food-details-dialog">
             {foodDetails && (
               <>

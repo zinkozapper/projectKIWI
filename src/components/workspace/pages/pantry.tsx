@@ -8,7 +8,7 @@ import { NutrientPanel } from '../nutrient-bar';
 import { PantryAddDialog } from '../pantry-add-dialog';
 
 export function PantryPage() {
-  const { pantry, listItems, days, daily, pantryTotals, combined, addPantry, removePantry, profile, } = useWorkspace();
+  const { pantry, listItems, days, daily, pantryTotals, combined, addPantry, removePantry, profile, isFirstSession } = useWorkspace();
   const [adding, setAdding] = useState(false);
   // One tap marks a food gone, so keep an Undo around for a few seconds in case it was a mis-tap.
   const [lastRemoved, setLastRemoved] = useState<Food | null>(null);
@@ -37,7 +37,7 @@ export function PantryPage() {
 
   return (
     <>
-      {!profile && (
+      {!profile && !isFirstSession && (
         <p className="section-note">
           You're currently using default nutrition estimates. Complete your profile
           using the account button to get nutrition goals personalized to you.
@@ -46,12 +46,12 @@ export function PantryPage() {
       
       <div className="page-heading">
         <div>
-          <h1>Your pantry<span className="brand-dot">.</span></h1>
-          <p>What’s already at home. Foods stay until you mark them gone. Finished trips fill it in for you.</p>
+          <h1>Your pantry</h1>
+          {!isFirstSession && <p>What’s already at home. Foods stay until you mark them gone. Finished trips fill it in for you.</p>}
         </div>
-        <Button onClick={() => setAdding(true)}><Plus size={16} /> Add to pantry</Button>
+        <Button variant={isFirstSession && pantry.length > 0 ? 'outline' : 'default'} onClick={() => setAdding(true)}><Plus size={16} /> Add to pantry</Button>
       </div>
-      <div className="pantry-grid">
+      <div className={isFirstSession ? '' : 'pantry-grid'}>
         <section className="section-block">
           <div className="section-title">
             <div><h2>In your kitchen</h2></div>
@@ -80,18 +80,18 @@ export function PantryPage() {
             </div>
           )}
           <div className="pantry-footer">
-            <Button variant="outline" onClick={() => setAdding(true)}><Plus size={16} /> Add foods</Button>
-            <Button asChild variant="ghost"><Link to="/plan">Continue to plan <ArrowRight size={16} /></Link></Button>
+            {!isFirstSession && <Button variant="outline" onClick={() => setAdding(true)}><Plus size={16} /> Add foods</Button>}
+            <Button asChild variant={isFirstSession && pantry.length > 0 ? 'default' : 'ghost'}><Link to="/plan">{isFirstSession && pantry.length === 0 ? 'Skip to plan' : 'Continue to plan'} <ArrowRight size={16} /></Link></Button>
           </div>
         </section>
-        <section className="nutrition-panel pantry-snapshot">
+        {!isFirstSession && <section className="nutrition-panel pantry-snapshot">
           <h2>What you have covered</h2>
           <p>{hasAnything
             ? `Daily average across ${days} days: your pantry (1 serving a day each) plus ${listItems.length ? `the ${listItems.length} ${listItems.length === 1 ? 'food' : 'foods'} on your list` : 'your list, which is empty so far'}. My Plan shows the same numbers.`
             : 'Your pantry is empty. Add a few staples to see a snapshot, or go straight to planning.'}</p>
           {hasAnything && <NutrientPanel values={perDay(combined)} base={perDay(pantryTotals)} targets={daily} hide={['calories']} />}
-          <Button asChild className="snapshot-button"><Link to="/plan">Fill the gaps <ArrowRight size={16} /></Link></Button>
-        </section>
+          <Button asChild variant={isFirstSession ? 'outline' : 'default'} className="snapshot-button"><Link to="/plan">Fill the gaps <ArrowRight size={16} /></Link></Button>
+        </section>}
       </div>
       <PantryAddDialog open={adding} onOpenChange={setAdding} />
     </>

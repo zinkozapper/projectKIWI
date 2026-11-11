@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Leaf, TriangleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { isSuccessfulAuthCallback, signedInDestination } from '@/lib/first-session';
 
 export const Route = createFileRoute('/error')({
   head: () => ({ meta: [{ title: 'Kiwi — Something went wrong' }, { name: 'description', content: 'Something went wrong while signing you in.' }] }),
@@ -14,8 +15,14 @@ function ErrorScreen() {
   const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
-  }, []);
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (data.user && isSuccessfulAuthCallback(window.location.search, window.location.hash)) {
+        navigate({ to: await signedInDestination(), replace: true });
+      } else {
+        setSignedIn(Boolean(data.user));
+      }
+    });
+  }, [navigate]);
 
   return (
     <div className="error-page">

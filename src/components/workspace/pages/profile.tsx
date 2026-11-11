@@ -75,7 +75,7 @@ export function ProfilePage() {
     <>
       <div className="page-heading">
         <div>
-          <h1>Your profile<span className="brand-dot">.</span></h1>
+          <h1>Your profile</h1>
           <p>A few details help us make your grocery plan more useful.</p>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { googleSignInEnabled, selfHosted } from '@/lib/auth-options';
+import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Leaf } from 'lucide-react';
@@ -20,8 +21,8 @@ function Enroll() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: '/plan', replace: true });
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (data.user) navigate({ to: await signedInDestination(), replace: true });
     });
   }, [navigate]);
 
@@ -37,7 +38,7 @@ function Enroll() {
         options: { emailRedirectTo: window.location.origin },
       });
       if (error) throw error;
-      if (data.session) navigate({ to: '/plan' });
+      if (data.session) navigate({ to: await signedInDestination() });
       else setNotice(selfHosted ? 'Account created. If you cannot sign in, contact your administrator.' : 'Check your email to confirm your account, then sign in.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -48,7 +49,7 @@ function Enroll() {
 
   async function google() {
     setError('');
-    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/error` } });
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/` } });
     if (error) navigate({ to: '/error' });
   }
 
@@ -77,7 +78,6 @@ function Enroll() {
       </div>
       <div className="auth-photo login-photo">
         <img src={groceries} width={800} height={1000} fetchPriority="high" decoding="async" alt="A balanced grocery haul with chicken, fruit, vegetables and pantry staples" />
-        <div className="photo-caption"><span className="photo-sparkle">✳</span><span>Good food.<br />Good days.</span></div>
       </div>
     </div>
   );

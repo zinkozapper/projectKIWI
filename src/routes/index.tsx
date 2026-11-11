@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { getRememberMePreference, setRememberMePreference, supabase } from '@/integrations/supabase/client';
 import { googleSignInEnabled, passkeysEnabled, selfHosted } from '@/lib/auth-options';
+import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { KeyRound, Leaf } from 'lucide-react';
@@ -43,8 +44,8 @@ function Login() {
       return;
     }
 
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: '/plan', replace: true });
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (data.user) navigate({ to: await signedInDestination(), replace: true });
     });
   }, [navigate]);
 
@@ -73,7 +74,7 @@ function Login() {
 
       // The sign-in itself is logged to user_login_events by a database trigger (migration 0004).
 
-      navigate({ to: '/plan' });
+      navigate({ to: await signedInDestination() });
 
     } catch (err) {
       setError(
@@ -112,7 +113,7 @@ function Login() {
     setBusy(false);
 
     if (error) navigate({ to: '/error' });
-    else navigate({ to: '/plan' });
+    else navigate({ to: await signedInDestination() });
   }
 
   return (

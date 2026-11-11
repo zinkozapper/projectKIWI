@@ -19,7 +19,7 @@ const adminNav = { id: 'admin', label: 'Admin', mobileLabel: 'Admin', to: '/admi
 const isHere = (pathname: string, to: string) => pathname === to || pathname === `${to}/`;
 
 export function WorkspaceShell() {
-  const { loading, error, clearError, profile, listItems, signOut, isAdmin, priceStatus, priceRefreshUnavailable } = useWorkspace();
+  const { loading, error, clearError, profile, listItems, signOut, isAdmin, priceStatus, priceRefreshUnavailable, firstSessionResolved } = useWorkspace();
   const pathname = useRouterState({ select: s => s.location.pathname });
 
   const items = isAdmin ? [...nav, adminNav] : nav;
@@ -56,7 +56,7 @@ export function WorkspaceShell() {
         <main className="workspace">
           {loading && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading content…</div>}
           <PriceNotice status={priceStatus} refreshUnavailable={priceRefreshUnavailable} />
-          <Outlet />
+          {firstSessionResolved && <Outlet />}
         </main>
       </div>
       <nav className="mobile-nav">

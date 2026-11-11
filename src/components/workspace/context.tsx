@@ -13,6 +13,7 @@ import { needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pant
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 import { localizedPricingEnabled } from '@/lib/pricing-functions';
 import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
+import { isFirstAccountSession } from '@/lib/first-session';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
 export type PantryItem = { id: string; food_id: string; quantity: number };
@@ -47,6 +48,8 @@ const toFeetInches = (cm: number | null) => {
 
 type WorkspaceValue = {
   userId: string;
+  isFirstSession: boolean;
+  firstSessionResolved: boolean;
   // null while checking. Admins see the Admin button (migration 0007).
   isAdmin: boolean | null;
   profile: Profile | null;
@@ -124,6 +127,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [pantry, setPantry] = useState<PantryItem[]>([]);
   const [foodPreferences, setFoodPreferences] = useState<FoodPreferences>({});
   const [userId, setUserId] = useState('');
+  const [isFirstSession, setIsFirstSession] = useState(false);
+  const [firstSessionResolved, setFirstSessionResolved] = useState(false);
   const isAdmin = useIsAdmin(userId);
   const [pantryId, setPantryId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -149,6 +154,16 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const creatingTrip = useRef<Promise<string | null> | null>(null);
 
   useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setIsFirstSession(false);
+        navigate({ to: '/', replace: true });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  useEffect(() => {
     let mounted = true;
     let timedOut = false;
     const timeout = window.setTimeout(() => {
@@ -170,12 +185,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       const id = user.id;
       void logAppOpen(id);
 
-      const [, pantryResult, pr, tr, fp] = await Promise.all([
+      const [, pantryResult, pr, tr, fp, firstSession] = await Promise.all([
         supabase.from('users').upsert({ user_id: id, email: user.email || '' }, { onConflict: 'user_id', ignoreDuplicates: true }),
         supabase.from('pantry').select('pantry_id').eq('user_id', id).maybeSingle(),
         supabase.from('profiles').select('*').eq('user_id', id).maybeSingle(),
         supabase.from('shopping_list').select('*').eq('user_id', id).order('created_at', { ascending: false }),
         supabase.from('food_preferences').select('food_id, liked').eq('user_id', id),
+        isFirstAccountSession(),
       ]);
 
       if (fp.error) {
@@ -201,6 +217,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       if (!mounted || timedOut) return;
 
       setUserId(id);
+      setIsFirstSession(firstSession);
+      setFirstSessionResolved(true);
       setPantryId(pRow?.pantry_id ?? null);
 
       setFoodPreferences(
@@ -470,6 +488,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // still at home, or null if they close the dialog without confirming. With an empty pantry
   // there is nothing to ask, so it resolves right away.
   function confirmPantry(): Promise<Set<string> | null> {
+    if (isFirstSession) return Promise.resolve(stillHaveFoodIds(pantry));
     if (!pantry.length) return Promise.resolve(new Set());
     return new Promise(resolve => {
       pantryCheckWaiters.current.push(resolve);
@@ -649,7 +668,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       if (pantryError) fail('Trip saved, but your pantry could not be updated: ' + pantryError.message);
       else setPantry(prev => [...prev, ...(added || []).map(toPantry)]);
     }
-    navigate({ to: '/plan' });
+    navigate({ to: '/plan/history' });
   }
 
   async function renameTrip(trip: Trip, name: string) {
@@ -711,12 +730,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     resetNutrientSnapshots();
     setFoodPreferences({});
     setUserId('');
+    setIsFirstSession(false);
     // Keep the saved theme and color scheme: they belong to this device, not the account.
     navigate({ to: '/', replace: true });
   }
 
   const value: WorkspaceValue = {
-    userId, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
+    userId, isFirstSession, firstSessionResolved, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
     pantryTotals, combined, daily, spend, priceOf, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores,

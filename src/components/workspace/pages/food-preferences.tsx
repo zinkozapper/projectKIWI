@@ -23,7 +23,7 @@ export function FoodPreferencesPage() {
     <>
       <div className="page-heading">
         <div>
-          <h1>Food preferences<span className="brand-dot">.</span></h1>
+          <h1>Food preferences</h1>
           <p>Manage which foods KIWI recommends to you.</p>
         </div>
 

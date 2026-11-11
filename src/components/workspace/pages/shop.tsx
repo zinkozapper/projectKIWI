@@ -17,7 +17,7 @@ export function ShopPage() {
       <div className="page-heading">
         <div>
           <span className="shop-eyebrow">Shopping mode</span>
-          <h1>Let’s get shopping<span className="brand-dot">.</span></h1>
+          <h1>Let’s get shopping</h1>
           <p>Tap an item when it’s in your cart.</p>
         </div>
         <Button asChild variant="outline" className="shop-back-button"><Link to="/plan"><ChevronLeft size={16} /> Back to plan</Link></Button>

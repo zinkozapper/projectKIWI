@@ -145,7 +145,7 @@ export function AdminPage() {
       <div className="page-heading">
         <div>
           <span className="section-kicker">ADMIN</span>
-          <h1>Kiwi dashboard<span className="brand-dot">.</span></h1>
+          <h1>Kiwi dashboard</h1>
           <p>{dash ? `OKR numbers for the last ${dash.window_days} days, as of ${shortDate(dash.as_of)} (UTC).` : 'OKR numbers and accounts.'}</p>
         </div>
         <Button variant="outline" onClick={() => load(true)} disabled={loading}>
