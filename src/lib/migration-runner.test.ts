@@ -12,3 +12,9 @@ it('generates balanced psql conditionals for each migration', () => {
   expect(result.stdout).toContain('\\endif\n');
   expect(result.stdout).not.toContain('\x1b');
 });
+
+it('includes the first-session migration after earlier migrations', () => {
+  const script = readFileSync('self-host/migrate.sh', 'utf8');
+  expect(script).toContain('20260101000030 "$root/drizzle/migrations/0014_kiwi_first_session.sql"');
+  expect(script).toContain('"$root/drizzle/migrations/0014_kiwi_first_session.sql" "$root/supabase/seed.sql"');
+});

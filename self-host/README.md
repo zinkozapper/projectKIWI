@@ -63,6 +63,8 @@ node ../scripts/self-host/admin.mjs
 
 Enter the account email at the prompt. This requires a running database and the admin schema to be in place. Admin access is privileged; promote only trusted accounts.
 
+Rebuild after pulling app changes with `docker compose up --build -d`. The migration service includes the first-session onboarding migration; accounts created after it runs see the welcome and pantry flow. Existing accounts are not enrolled retroactively. The app, grocery search, pantry and shopping screens use the same code as the normal deployment.
+
 Signup is open to anyone who can reach the instance, and email accounts are automatically confirmed. No SMTP service is configured: email delivery, including password-reset messages, is not available. Restrict access at the network or proxy layer if open registration is unacceptable.
 
 ## Data, privacy, and recovery

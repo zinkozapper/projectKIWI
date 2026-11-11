@@ -23,7 +23,7 @@ until curl --fail --silent --show-error --max-time 3 "$AUTH_HEALTH_URL" >/dev/nu
   sleep 2
 done
 
-for file in "$root/drizzle/migrations/0011_kiwi_trip_name.sql" "$root/drizzle/migrations/0012_kiwi_price_refresh.sql" "$root/drizzle/migrations/0013_kiwi_price_freshness.sql" "$root/supabase/seed.sql"; do
+for file in "$root/drizzle/migrations/0011_kiwi_trip_name.sql" "$root/drizzle/migrations/0012_kiwi_price_refresh.sql" "$root/drizzle/migrations/0013_kiwi_price_freshness.sql" "$root/drizzle/migrations/0014_kiwi_first_session.sql" "$root/supabase/seed.sql"; do
   test -r "$file" || { echo "Missing required file: $file" >&2; exit 1; }
 done
 
@@ -62,6 +62,7 @@ test "$found" -gt 0 || { echo 'No canonical migrations found' >&2; exit 1; }
 printf '%s %s\n' 20260101000022 "$root/drizzle/migrations/0011_kiwi_trip_name.sql" >> "$list"
 printf '%s %s\n' 20260101000024 "$root/drizzle/migrations/0012_kiwi_price_refresh.sql" >> "$list"
 printf '%s %s\n' 20260101000028 "$root/drizzle/migrations/0013_kiwi_price_freshness.sql" >> "$list"
+printf '%s %s\n' 20260101000030 "$root/drizzle/migrations/0014_kiwi_first_session.sql" >> "$list"
 LC_ALL=C sort -o "$list" "$list"
 while read -r version file; do
   add_manifest "$version" "$file"
