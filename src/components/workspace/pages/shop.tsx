@@ -5,11 +5,11 @@ import { foodById, formatAmount } from '@/lib/foods';
 import { useWorkspace } from '../context';
 
 export function ShopPage() {
-  const { active, listItems, purchased, removeItem, undoPurchase, finishTrip } = useWorkspace();
+  const { active, listItems, purchased, removeItem, undoPurchase, finishTrip, priceOf } = useWorkspace();
   const totalItems = listItems.length + purchased.length;
   const progress = totalItems ? (purchased.length / totalItems) * 100 : 0;
   const estimatedTotal = [...listItems, ...purchased].reduce((total, item) => {
-    return total + (foodById(item.food_id)?.price ?? 0) * item.quantity;
+    return total + (priceOf(item.food_id) ?? 0) * item.quantity;
   }, 0);
 
   return (
@@ -31,6 +31,7 @@ export function ShopPage() {
             </div>
             <div className="shop-estimate"><span>Estimated total</span><strong>${estimatedTotal.toFixed(2)}</strong></div>
           </div>
+          {[...listItems, ...purchased].some(item => priceOf(item.food_id) === null) && <p>Partial estimate: some items have unknown prices.</p>}
           <div className="shop-progress-copy">
             <strong>{purchased.length} of {totalItems} {totalItems === 1 ? 'item' : 'items'} picked up</strong>
             <span>{listItems.length ? `${listItems.length} left to find` : totalItems ? 'Everything is in your cart' : 'Your list is ready when you are'}</span>
@@ -70,7 +71,7 @@ export function ShopPage() {
                     <span className="shop-checkbox" aria-hidden="true" />
                     <span className="shop-food-emoji" aria-hidden="true">{food.emoji}</span>
                     <span className="shop-row-name">{food.name}<small>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'} · {formatAmount(food.servings)} {food.unit} each</small></span>
-                    <span className="shop-item-price">${(food.price * item.quantity).toFixed(2)}<small>estimated</small></span>
+                    <span className="shop-item-price">{priceOf(food.id) != null ? `$${(priceOf(food.id)! * item.quantity).toFixed(2)}` : 'Price unknown'}<small>estimated</small></span>
                   </Button>
                 );
               })}
@@ -105,7 +106,7 @@ export function ShopPage() {
                   >
                     <span className="shop-cart-check"><Check size={15} aria-hidden="true" /></span>
                     <span className="shop-cart-name">{food.name}<small>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'} · {formatAmount(food.servings)} {food.unit} each</small></span>
-                    <span className="shop-cart-price">${(food.price * item.quantity).toFixed(2)}</span>
+                    <span className="shop-cart-price">{priceOf(food.id) != null ? `$${(priceOf(food.id)! * item.quantity).toFixed(2)}` : 'Price unknown'}</span>
                   </Button>
                 ) : null;
               })}

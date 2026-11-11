@@ -7,6 +7,7 @@ vi.mock('./context', () => ({ useWorkspace: () => ({ addFood, listItems: [] }) }
 const status = { isAdmin: false, added: 2, limit: 10, remaining: 8, quotaPending: false };
 const fns = vi.hoisted(() => ({
   finderStatus: vi.fn(),
+  finderCapability: vi.fn(),
   finderSearch: vi.fn(),
   finderAdd: vi.fn(),
   finderSubmitToAdmin: vi.fn(),
@@ -55,5 +56,15 @@ describe('FoodFinder', () => {
     render(<FoodFinder open onOpenChange={() => {}} />);
     fireEvent.click(await screen.findByRole('button', { name: /Request 10 more foods/ }));
     expect(await screen.findByRole('alert')).toHaveProperty('textContent', 'USDA is down');
+  });
+
+  it('disables the finder when a self-hosted server has no configuration', async () => {
+    vi.stubEnv('VITE_KIWI_SELF_HOSTED', 'true');
+    fns.finderStatus.mockResolvedValue({ ok: true, data: status });
+    fns.finderCapability.mockResolvedValue({ ok: true, data: { enabled: false } });
+    render(<FoodFinder open onOpenChange={() => {}} />);
+    expect(await screen.findByText('The food finder is not configured on this server.')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /Find it/ })).toBeNull();
+    vi.unstubAllEnvs();
   });
 });

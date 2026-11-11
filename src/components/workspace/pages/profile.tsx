@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { BUDGET_WEEK_OPTIONS, budgetWeeksLabel, toDateKey } from '@/lib/budget-period';
+import { passkeysEnabled } from '@/lib/auth-options';
 import {
   applyScheme,
   applyTheme,
@@ -37,6 +38,7 @@ export function ProfilePage() {
   }, []);
 
   useEffect(() => {
+    if (!passkeysEnabled) return;
     supabase.auth.passkey.list().then(({ data, error }) => {
       if (error) setPasskeyError(error.message);
       else setPasskeys(data ?? []);
@@ -78,7 +80,9 @@ export function ProfilePage() {
         </div>
       </div>
       <div className="profile-layout">
-        <form className="profile-form" onSubmit={saveProfile}>
+        <form className="profile-form" onSubmit={saveProfile} onKeyDown={e => {
+          if (e.key === 'Enter' && e.target instanceof HTMLInputElement) e.preventDefault();
+        }}>
           <div className="section-title"><div><h2>Tell us about you</h2></div></div>
           <div className="form-grid">
             <label className={profileErrors.includes('display_name') ? 'invalid' : ''}>
@@ -124,6 +128,10 @@ export function ProfilePage() {
                 <option value="variety">More variety</option>
                 <option value="convenience">More convenient meals</option>
               </select>
+            </label>
+            <label className={profileErrors.includes('zip_code') ? 'invalid' : ''}>
+              Shopping ZIP code <small>Used for local prices when available</small>
+              <input inputMode="numeric" autoComplete="postal-code" maxLength={5} value={profileDraft.zip_code} onChange={e => setProfileDraft({ ...profileDraft, zip_code: e.target.value })} />
             </label>
             <div className={`budget-field${profileErrors.includes('budget') ? ' invalid' : ''}`}>
               <span className="budget-field-label">Budget:</span>
@@ -180,7 +188,7 @@ export function ProfilePage() {
           <div><h2>Security</h2></div>
         </div>
         <p className="section-note">Manage how you sign in, your password, and this device.</p>
-        <div className="security-row">
+        {passkeysEnabled && <div className="security-row">
           <div className="security-row-header">
             <div><h3>Passkeys</h3><p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p></div>
             <Button onClick={addPasskey} disabled={passkeyBusy}><KeyRound size={16} /> {passkeyBusy ? 'Waiting…' : 'Add a passkey'}</Button>
@@ -195,7 +203,7 @@ export function ProfilePage() {
               <Button variant="outline" onClick={() => removePasskey(p.id)}>Remove</Button>
             </div>
           )) : <p className="empty-inline">No passkeys yet. Add one to sign in without your password.</p>}
-        </div>
+        </div>}
         <div className="security-row">
           <div className="security-row-header">
             <div><h3>Password</h3><p className="section-note">Pick a new password whenever you like. You'll stay signed in on this device.</p></div>

@@ -2,7 +2,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { getRememberMePreference, setRememberMePreference, supabase } from '@/integrations/supabase/client';
-import { googleSignInEnabled } from '@/lib/auth-options';
+import { googleSignInEnabled, passkeysEnabled, selfHosted } from '@/lib/auth-options';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { KeyRound, Leaf } from 'lucide-react';
@@ -32,7 +32,7 @@ function Login() {
   const [passkeySupported, setPasskeySupported] = useState(true);
 
   useEffect(() => {
-    setPasskeySupported('PublicKeyCredential' in window);
+    setPasskeySupported(passkeysEnabled && 'PublicKeyCredential' in window);
     const rememberPreference = getRememberMePreference();
     setRememberMe(rememberPreference);
 
@@ -143,9 +143,9 @@ function Login() {
 
             <div className="login-password-label">
               <label htmlFor="login-password">Password</label>
-              <Link className="text-link" to="/forgot-password">
+              {!selfHosted && <Link className="text-link" to="/forgot-password">
                 Forgot password?
-              </Link>
+              </Link>}
             </div>
 
             <input
@@ -173,7 +173,7 @@ function Login() {
             </Button>
           </form>
 
-          {(googleSignInEnabled || passkeySupported) && (
+          {(googleSignInEnabled || (passkeysEnabled && passkeySupported)) && (
             <div className="divider login-divider">
               <span>or</span>
             </div>
@@ -190,7 +190,7 @@ function Login() {
             </Button>
           )}
 
-          {passkeySupported && (
+          {passkeysEnabled && passkeySupported && (
             <Button
               className="google-button"
               variant="outline"

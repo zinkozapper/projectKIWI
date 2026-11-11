@@ -1,6 +1,6 @@
 // Kroger Products + Locations API (https://developer.kroger.com, scope product.compact). Server-only.
 // No app imports, so the backfill script (scripts/kroger) can use it too: credentials come in as a getter.
-import { RULES, foodRules, foodSpecs, rankCandidates, type Candidate, type PriceFood, type Ranked, type Spec } from './pricing.ts';
+import { RULES, foodRules, foodSpecs, isStoreBrand, rankCandidates, type Candidate, type PriceFood, type Ranked, type Spec } from './pricing.ts';
 
 const API = 'https://api.kroger.com/v1';
 
@@ -112,3 +112,19 @@ export function krogerClient(credentials: Credentials, { fetchImpl = fetch }: { 
   return { nearestStore, alternateStores, searchProducts, priceFood };
 }
 export type KrogerClient = ReturnType<typeof krogerClient>;
+
+// Cache the location lookup, but use the existing per-food home-first matching rules.
+export async function collectPrices(client: KrogerClient, foods: PriceFood[], home: KrogerStore, zip: string) {
+  let alternates: Promise<KrogerStore[]> | undefined;
+  const moreStores = () => (alternates ??= client.alternateStores(zip, home.location_id));
+  const prices = [], stores = new Map<string, KrogerStore>();
+  for (const food of foods) {
+    const { best, store } = await client.priceFood(food, home, moreStores);
+    if (!best || !store) continue;
+    const backup = store.location_id !== home.location_id;
+    if (backup) stores.set(store.location_id, store);
+    const flags = [...(best.flags || []), ...(backup ? [`from backup store: ${store.name}`] : [])];
+    prices.push({ food_id: food.food_id, location_id: home.location_id, source_location_id: backup ? store.location_id : null, product_id: best.product_id, upc: best.upc || null, brand: best.brand || null, description: best.description || null, package_size: best.size || null, sold_by: best.sold_by || null, package_price: best.regular, package_grams: best.package_grams ?? null, serving_grams: best.priced_g || Number(food.serving_grams) || 1, price_per_serving: best.price_per_serving, store_brand: isStoreBrand(best), flags: flags.join('; ') || null });
+  }
+  return { prices, stores: [...stores.values()] };
+}

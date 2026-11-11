@@ -1,0 +1,11 @@
+node_modules
+.git
+.env
+.env.*
+**/.env
+**/.env.*
+.output
+.nitro
+.wrangler
+.vite
+coverage

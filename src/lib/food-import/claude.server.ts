@@ -7,6 +7,10 @@ type Tool = { name: string; description: string; input_schema: Record<string, un
 
 // Forced tool use gives structured JSON back instead of free text.
 export async function askClaude<T>({ system, prompt, tool, maxTokens = 1500 }: { system: string; prompt: string; tool: Tool; maxTokens?: number }): Promise<T> {
+  if (import.meta.env['VITE_KIWI_SELF_HOSTED'] === 'true') {
+    const { askOpenAI } = await import('./openai.server');
+    return askOpenAI<T>({ system, prompt, tool, maxTokens });
+  }
   const key = await requireEnv('ANTHROPIC_API_KEY');
   const model = (await env('ANTHROPIC_MODEL')) || 'claude-haiku-5-5';
   const res = await fetch('https://api.anthropic.com/v1/messages', {

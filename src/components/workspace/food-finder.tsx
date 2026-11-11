@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { addFoodToCatalog } from '@/lib/foods';
 import {
-  finderAdd, finderCancel, finderRequestMore, finderSearch, finderStatus, finderSubmitToAdmin, type Result,
+  finderAdd, finderCancel, finderCapability, finderRequestMore, finderSearch, finderStatus, finderSubmitToAdmin, type Result,
 } from '@/lib/food-import/functions';
 import { GROUP_RULES } from '@/lib/food-import/rules';
 import { HOW_BOUGHT, type AddResult, type FinderOption, type FinderStatus, type HowBought, type SearchResult } from '@/lib/food-import/shared';
@@ -37,6 +37,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
   const [pending, setPending] = useState<number | null>(null);
   const [error, setError] = useState('');
   const [status, setStatus] = useState<FinderStatus | null>(null);
+  const [enabled, setEnabled] = useState<boolean | null>(import.meta.env['VITE_KIWI_SELF_HOSTED'] === 'true' ? null : true);
 
   const [query, setQuery] = useState(initialQuery);
   const [howBought, setHowBought] = useState<HowBought>('not_sure');
@@ -53,6 +54,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
   // Reset each time the dialog opens.
   useEffect(() => {
     if (!open) return;
+    let active = true;
     finished.current = false;
     requestId.current = adminRequest?.requestId ?? null;
     setStep('form');
@@ -66,11 +68,16 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
     setAdminNote('');
     setResult(null);
     setAdded(null);
+    if (import.meta.env['VITE_KIWI_SELF_HOSTED'] === 'true') {
+      setEnabled(null);
+      void finderCapability().then(r => { if (active) setEnabled(r.ok && r.data.enabled); }).catch(() => { if (active) setEnabled(false); });
+    }
     void finderStatus().then(r => {
       if (!r.ok) return;
       setStatus(r.data);
       if (r.data.remaining === 0) setStep('limit');
     });
+    return () => { active = false; };
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function close(next: boolean) {
@@ -154,7 +161,9 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
         {error && <div className="form-error" role="alert">{error}</div>}
         {busy && <div className="content-loading finder-busy" role="status"><LoaderCircle size={16} className="spin" aria-hidden="true" /> {busy}</div>}
 
-        {step === 'limit' && status && (
+        {enabled === null && <p role="status">Checking food finder availability…</p>}
+        {enabled === false && <p role="status">The food finder is not configured on this server.</p>}
+        {enabled && step === 'limit' && status && (
           <div className="finder-section">
             <p>You’ve added <strong>{status.added}</strong> foods, your current limit. An admin can approve 10 more.</p>
             {status.quotaPending ? (
@@ -169,7 +178,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
           </div>
         )}
 
-        {step === 'form' && (
+        {enabled && step === 'form' && (
           <form className="finder-section" onSubmit={submitForm}>
             <label className="control-label" htmlFor="finder-query">Food</label>
             <input id="finder-query" className="finder-input" maxLength={80} autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder="e.g. black lentils, gala apple, frozen edamame" />
@@ -188,7 +197,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
           </form>
         )}
 
-        {step === 'options' && result && (
+        {enabled && step === 'options' && result && (
           <div className="finder-section">
             {result.existing.length > 0 && (
               <div className="finder-existing">

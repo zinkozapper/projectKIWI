@@ -4,6 +4,7 @@ import { Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import groceries from '@/assets/kiwi-groceries.webp';
+import { selfHosted } from '@/lib/auth-options';
 
 export const Route = createFileRoute('/reset-password')({
   head: () => ({ meta: [{ title: 'Kiwi — Reset your password' }, { name: 'description', content: 'Choose a new password for your Kiwi account.' }] }),
@@ -50,7 +51,7 @@ function ResetPassword() {
             {notice && <p className="form-success" role="status">{notice}</p>}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'Updating…' : 'Update password'}</Button>
           </form>
-          <div className="enroll-cta"><span>Link expired? <Link to="/forgot-password">Request a new one</Link></span></div>
+          {!selfHosted && <div className="enroll-cta"><span>Link expired? <Link to="/forgot-password">Request a new one</Link></span></div>}
         </section>
       </div>
       <div className="auth-photo login-photo"><img src={groceries} width={800} height={1000} fetchPriority="high" decoding="async" alt="A balanced grocery haul with fresh produce and pantry staples" /><div className="photo-caption"><span className="photo-sparkle">✳</span><span>Good food.<br />Good days.</span></div></div>

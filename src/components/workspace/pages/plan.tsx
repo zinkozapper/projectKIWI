@@ -34,7 +34,7 @@ export function PlanPage() {
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
     suggestions, foodGapScores, foodPreferences, setFoodPreference, setSearch, setSelected, fail,
-    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile,
+    addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, priceOf, hasUnpricedBudgetItems,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
 
@@ -44,7 +44,8 @@ export function PlanPage() {
     daily,
     budgetRemaining,
     foodPreferences,
-    days
+    days,
+    priceOf
   );
 
   const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
@@ -128,6 +129,7 @@ export function PlanPage() {
         <div className="plan-budget-copy">
           <span>Budget · {formatBudgetPeriod(budgetPeriod)}</span>
           <strong>${used.toFixed(2)} / ${budget.toFixed(0)} per {budgetWeeksLabel(budgetPeriod.weeks).replace(/^1 /, '')}</strong>
+          {hasUnpricedBudgetItems && <small>Partial estimate: some items have unknown prices.</small>}
           <small className="plan-budget-detail">
             ${periodSpent.toFixed(2)} bought + ${spend.toFixed(2)} planned · {budgetRemaining >= 0 ? `$${budgetRemaining.toFixed(2)} left` : `$${(-budgetRemaining).toFixed(2)} over`} · {daysLeft} {daysLeft === 1 ? 'day' : 'days'} left
           </small>
@@ -202,7 +204,7 @@ export function PlanPage() {
                           <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setFoodDetails(f); }}>
                             <strong>{f.name}</strong>
                           </button>
-                          <small>{f.category} · ${f.price.toFixed(2)} / {f.unit}{inPantry(f.id) && <span className="in-pantry-note"> · In your pantry</span>}</small>
+                          <small>{f.category} · {priceOf(f.id) != null ? `$${priceOf(f.id)!.toFixed(2)} / ${f.unit}` : 'Price unknown'}{inPantry(f.id) && <span className="in-pantry-note"> · In your pantry</span>}</small>
                         </div>
                         <Button size="icon" title={`Add ${f.name}`} onClick={e => { e.stopPropagation(); void addFood(f.id); }}>
                           <Plus size={17} />
@@ -278,7 +280,7 @@ export function PlanPage() {
                       </div>
                       <span className="qty-caption">/day · {formatAmount(Number(item.quantity))} total</span>
                       <span className="row-price">
-                        ${(f.price * item.quantity).toFixed(2)}
+                        {priceOf(f.id) != null ? `$${(priceOf(f.id)! * item.quantity).toFixed(2)}` : 'Price unknown'}
                       </span>
                       <Button
                         size="icon"
@@ -326,7 +328,7 @@ export function PlanPage() {
                 ? recommendedFoods.map(f => {
                   const scored = foodGapScores.find(suggestion => suggestion.food.id === f.id);
                   const boosts = scored?.boosts ?? [];
-                  const addCost = f.price > 0 ? f.price * days : 0;
+                  const addCost = (priceOf(f.id) ?? 0) * days;
                   const overBudget = addCost > 0 && addCost > budgetRemaining;
                   const preference = foodPreferences[f.id];
 

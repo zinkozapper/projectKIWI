@@ -4,6 +4,7 @@ import { Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import groceries from '@/assets/kiwi-groceries.webp';
+import { selfHosted } from '@/lib/auth-options';
 
 export const Route = createFileRoute('/forgot-password')({
   head: () => ({ meta: [{ title: 'Kiwi — Reset your password' }, { name: 'description', content: 'Request a password reset link for your Kiwi account.' }] }),
@@ -36,12 +37,12 @@ function ForgotPassword() {
         <p className="login-tagline">Eat Healthy. Live Happy</p>
         <section className="login-card login-card-github" aria-labelledby="forgot-title">
           <h1 id="forgot-title">Reset your password</h1>
-          <form onSubmit={submit} className="login-form">
+          {selfHosted ? <p className="section-note">Email password recovery is not available on this instance. Contact your administrator.</p> : <form onSubmit={submit} className="login-form">
             <label>Email address<input required type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} /></label>
             {error && <p className="form-error" role="alert">{error}</p>}
             {notice && <p className="form-success" role="status">{notice}</p>}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'Sending…' : 'Send reset link'}</Button>
-          </form>
+          </form>}
           <div className="enroll-cta"><span><Link to="/">Back to sign in</Link></span></div>
         </section>
       </div>

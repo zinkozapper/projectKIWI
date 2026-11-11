@@ -9,20 +9,22 @@ import { nutrientBoosts, type NutrientBoost } from '@/lib/recommendation-boosts'
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
 import { useIsAdmin } from '@/lib/admin';
-import { itemsToRepeat, needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pantry-check';
+import { needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pantry-check';
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
+import { localizedPricingEnabled } from '@/lib/pricing-functions';
+import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
 
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
 export type PantryItem = { id: string; food_id: string; quantity: number };
-export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null };
-export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string };
+export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null; name?: string | null };
+export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string; zip_code: string };
 // addCost = price of one add (1 serving a day for the whole plan). fitsBudget = that add fits what's left.
 export type FoodSuggestion = { food: typeof foods[number]; score: number; boosts: NutrientBoost[]; addCost: number; fitsBudget: boolean };
 export type FoodPreferences = Record<string, boolean>;
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
 const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity) });
-const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at });
+const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at, name: r.name });
 
 export const CM_PER_INCH = 2.54;
 export const LB_PER_KG = 2.20462;
@@ -70,6 +72,10 @@ type WorkspaceValue = {
   combined: ReturnType<typeof totals>;
   daily: ReturnType<typeof targets>;
   spend: number;
+  priceOf: (id: string) => number | null;
+  hasUnpricedBudgetItems: boolean;
+  priceStatus: 'none' | 'fresh' | 'stale' | 'unknown';
+  priceRefreshUnavailable: boolean;
   biggestGaps: typeof nutrientKeys;
   suggestions: FoodSuggestion[];
   foodGapScores: FoodSuggestion[];
@@ -96,7 +102,9 @@ type WorkspaceValue = {
   startPlan: () => Promise<void>;
   saveProfile: (e: FormEvent) => Promise<void>;
   finishTrip: () => Promise<void>;
-  repeatTrip: (trip: Trip) => Promise<void>;
+  addTripToPlan: (trip: Trip) => Promise<void>;
+  deleteTrip: (trip: Trip) => () => void;
+  renameTrip: (trip: Trip, name: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -126,7 +134,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [budget, setBudget] = useState(75);
   const [budgetWeeks, setBudgetWeeks] = useState(1);
   const [budgetStart, setBudgetStart] = useState(() => toDateKey(new Date()));
-  const [profileDraft, setProfileDraft] = useState<ProfileDraft>({ display_name: '', age: '', height_ft: '', height_in: '', weight_lb: '', gender: '', activity: 'moderate', goal: 'maintain', budget: '75', budget_weeks: '1', budget_start: toDateKey(new Date()) });
+  const [profileDraft, setProfileDraft] = useState<ProfileDraft>({ display_name: '', age: '', height_ft: '', height_in: '', weight_lb: '', gender: '', activity: 'moderate', goal: 'maintain', budget: '75', budget_weeks: '1', budget_start: toDateKey(new Date()), zip_code: '84601' });
+  const [localizedPrices, setLocalizedPrices] = useState<Record<string, number> | null>(null);
+  const [pricingMode, setPricingMode] = useState<'loading' | 'generic' | 'local'>('loading');
+  const [priceStatus, setPriceStatus] = useState<'none' | 'fresh' | 'stale' | 'unknown'>('none');
+  const [priceRefreshUnavailable, setPriceRefreshUnavailable] = useState(false);
+  const priceSnapshotAt = useRef<string | null>(null);
   const [profileErrors, setProfileErrors] = useState<string[]>([]);
   const active = trips.find(t => t.status === 'active');
   // Pantry check dialog: confirmPantry() opens it and resolves with the food ids still at home
@@ -204,7 +217,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setBudget(Number(p.budget));
         setBudgetWeeks(weeks);
         setBudgetStart(start);
-        setProfileDraft({ display_name: p.display_name || '', age: String(p.age || ''), ...toFeetInches(p.height_cm), weight_lb: p.weight_kg ? String(Math.round(Number(p.weight_kg) * LB_PER_KG)) : '', gender: p.gender || '', activity: p.activity || 'moderate', goal: p.goal || 'maintain', budget: String(p.budget ?? 75), budget_weeks: String(weeks), budget_start: start });
+        setProfileDraft({ display_name: p.display_name || '', age: String(p.age || ''), ...toFeetInches(p.height_cm), weight_lb: p.weight_kg ? String(Math.round(Number(p.weight_kg) * LB_PER_KG)) : '', gender: p.gender || '', activity: p.activity || 'moderate', goal: p.goal || 'maintain', budget: String(p.budget ?? 75), budget_weeks: String(weeks), budget_start: start, zip_code: p.zip_code || '84601' });
       } else {
         setProfile(null);
         setBudget(75);
@@ -222,6 +235,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           budget: '75',
           budget_weeks: '1',
           budget_start: toDateKey(new Date()),
+          zip_code: '84601',
       });
     }
 
@@ -237,6 +251,57 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
     return () => { mounted = false; window.clearTimeout(timeout); };
   }, [navigate]);
+
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    setPricingMode('loading');
+    setLocalizedPrices(null);
+    setPriceStatus('none');
+    setPriceRefreshUnavailable(false);
+    priceSnapshotAt.current = null;
+    const refresh = async () => {
+      try {
+        const enabled = await localizedPricingEnabled();
+        if (cancelled) return;
+        if (!enabled) { setPricingMode('generic'); setPriceStatus('none'); return; }
+        setPricingMode('local');
+        // The RPC uses auth.uid() and queues only the saved profile ZIP.
+        const { error: queueError } = await (supabase.rpc as any)('request_price_refresh');
+        if (queueError) console.error('Could not queue localized pricing:', queueError.message);
+        if (!cancelled) setPriceRefreshUnavailable(!!queueError);
+        const zip = profile?.zip_code || '84601';
+        const { data: mapping, error: mappingError } = await supabase.from('zip_store').select('location_id').eq('zip_code', zip).maybeSingle();
+        if (mappingError) throw mappingError;
+        if (!mapping) return;
+        const before = await (supabase.rpc as any)('my_price_snapshot_at');
+        const rows: { food_id: number; price_per_serving: number }[] = [];
+        for (let offset = 0; ; offset += 1000) {
+          const { data, error } = await supabase.from('food_price').select('food_id, price_per_serving').eq('location_id', mapping.location_id).order('food_id').range(offset, offset + 999);
+          if (error) throw error;
+          rows.push(...(data || []));
+          if (!data || data.length < 1000) break;
+        }
+        const { data: snapshotAt, error: statusError } = await (supabase.rpc as any)('my_price_snapshot_at');
+        if (statusError) console.error('Could not check price freshness:', statusError.message);
+        // A refresh committed during pagination; keep the previous snapshot until the next poll.
+        if (!before.error && !statusError && before.data !== snapshotAt) return;
+        if (!cancelled) {
+          setLocalizedPrices(Object.fromEntries(rows.map(row => [String(row.food_id), Number(row.price_per_serving)])));
+          priceSnapshotAt.current = statusError ? null : snapshotAt;
+          setPriceStatus(priceFreshness(priceSnapshotAt.current));
+        }
+      } catch (error) {
+        console.error('Could not load localized prices:', error);
+        if (!cancelled) setPriceRefreshUnavailable(true);
+        if (!cancelled && priceSnapshotAt.current) setPriceStatus(priceFreshness(priceSnapshotAt.current));
+      }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 60_000);
+    window.addEventListener('kiwi:catalog-food-added', refresh);
+    return () => { cancelled = true; window.clearInterval(timer); window.removeEventListener('kiwi:catalog-food-added', refresh); };
+  }, [userId, profile?.zip_code]);
 
   useEffect(() => {
     setDays(budgetWeeks * 7);
@@ -261,7 +326,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     // daily is rebuilt every render from profile, so profile stands in for it here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, userId, pantryId, profile, pantry, pantryTotals, days]);
-  const cost = (list: Item[]) => list.reduce((sum, i) => sum + (foodById(i.food_id)?.price || 0) * Number(i.quantity), 0);
+  const priceOf = (id: string) => resolvedPrice(foodById(id)?.price, localizedPrices?.[id], pricingMode);
+  const cost = (list: Item[]) => list.reduce((sum, i) => sum + (priceOf(i.food_id) ?? 0) * Number(i.quantity), 0);
   // spend = what is still on the current list (planned, not bought yet).
   const spend = cost(listItems);
 
@@ -272,6 +338,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const budgetPeriod = currentBudgetPeriod(budgetStart, budgetWeeks);
   const periodTripIds = new Set(trips.filter(t => t.status === 'active' || (t.status === 'completed' && isInBudgetPeriod(t.completed_at, budgetPeriod))).map(t => t.id));
   const periodSpent = cost(items.filter(i => i.purchased && periodTripIds.has(i.trip_id)));
+  const hasUnpricedBudgetItems = [...listItems, ...items.filter(i => i.purchased && periodTripIds.has(i.trip_id))].some(i => priceOf(i.food_id) === null);
   const budgetRemaining = budget - periodSpent - spend;
 
   const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
@@ -281,7 +348,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // first, ranked by how much they close the biggest gaps; the rest follow ranked by gap-filling per
   // dollar. Over budget, nothing fits, so every suggestion is the cheapest way to fill the gaps.
   const addCostOf = (food: typeof foods[number]) => {
-    const price = Number(food.price);
+    const price = Number(priceOf(food.id));
     return Number.isFinite(price) && price > 0 ? price * days : 0;
   };
   const knownCosts = available.map(addCostOf).filter(c => c > 0).sort((a, b) => a - b);
@@ -547,7 +614,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       fail('Pick a budget start date that is today or earlier.');
       return;
     }
-    const payload = { user_id: userId, display_name: profileDraft.display_name.trim(), age, height_cm: height, weight_kg: weight, gender: profileDraft.gender, activity: profileDraft.activity, goal: profileDraft.goal, budget: cash, budget_period_weeks: weeks, budget_period_start: start };
+    if (!/^[0-9]{5}$/.test(profileDraft.zip_code)) {
+      setProfileErrors(['zip_code']);
+      fail('Enter a valid 5-digit ZIP code.');
+      return;
+    }
+    const payload = { user_id: userId, display_name: profileDraft.display_name.trim(), age, height_cm: height, weight_kg: weight, gender: profileDraft.gender, activity: profileDraft.activity, goal: profileDraft.goal, budget: cash, budget_period_weeks: weeks, budget_period_start: start, zip_code: profileDraft.zip_code };
     const { data, error } = await supabase.from('profiles').upsert(payload).select().single();
     if (error) fail(error.message);
     else {
@@ -580,27 +652,56 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     navigate({ to: '/plan' });
   }
 
-  async function repeatTrip(trip: Trip) {
-    if (active) {
-      navigate({ to: '/plan' });
-      fail('Finish your current trip before repeating a past one.');
-      return;
+  async function renameTrip(trip: Trip, name: string) {
+    const value = name.trim() || null;
+    const { data, error } = await supabase.from('shopping_list').update({ name: value } as never).eq('shopping_list_id', Number(trip.id)).eq('status', 'completed').select().maybeSingle();
+    if (error || !data) fail(error?.message || 'Could not rename trip');
+    else setTrips(prev => prev.map(t => t.id === trip.id ? toTrip(data) : t));
+  }
+
+  function deleteTrip(trip: Trip) {
+    if (trip.status !== 'completed') return () => {};
+    const tripItems = items.filter(i => i.trip_id === trip.id);
+    setTrips(prev => prev.filter(t => t.id !== trip.id));
+    setItems(prev => prev.filter(i => i.trip_id !== trip.id));
+    const restore = () => {
+      setTrips(prev => [...prev, trip].sort((a, b) => b.created_at.localeCompare(a.created_at)));
+      setItems(prev => [...prev, ...tripItems]);
+    };
+    const timer = window.setTimeout(async () => {
+      const { data, error } = await supabase.from('shopping_list').delete().eq('shopping_list_id', Number(trip.id)).eq('status', 'completed').select('shopping_list_id').maybeSingle();
+      if (error || !data) {
+        restore();
+        fail(error?.message || 'Could not delete trip');
+      }
+    }, 6000);
+    return () => { window.clearTimeout(timer); restore(); };
+  }
+
+  async function addTripToPlan(trip: Trip) {
+    if (!active && !(await confirmPantry())) return;
+    const tripId = await ensureTrip();
+    if (!tripId) return;
+    const current = items.filter(i => i.trip_id === tripId && !i.purchased).map(i => ({ ...i }));
+    for (const item of items.filter(i => i.trip_id === trip.id)) {
+      const existing = current.find(i => i.food_id === item.food_id);
+      const query = existing
+        ? supabase.from('shopping_list_item').update({ quantity: existing.quantity + item.quantity }).eq('shopping_list_item_id', Number(existing.id))
+        : supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(item.food_id), quantity: item.quantity, unit: foodById(item.food_id)?.unit ?? null });
+      const { data, error } = await query.select().single();
+      if (error || !data) {
+        fail('Some items could not be added to your plan: ' + (error?.message || 'Please try again.'));
+        return;
+      }
+      const saved = toItem(data);
+      if (existing) {
+        existing.quantity = saved.quantity;
+        setItems(prev => prev.map(i => i.id === saved.id ? saved : i));
+      } else {
+        current.push(saved);
+        setItems(prev => [...prev, saved]);
+      }
     }
-    // Confirm the pantry first, then leave out foods that are still at home.
-    const stillHave = await confirmPantry();
-    if (!stillHave) return;
-    const { data, error } = await supabase.from('shopping_list').insert({ user_id: userId, days: trip.days, budget: trip.budget, status: 'active' }).select().single();
-    if (error || !data) {
-      fail(error?.message || 'Could not repeat trip');
-      return;
-    }
-    const { copy: old } = itemsToRepeat(items.filter(i => i.trip_id === trip.id), stillHave);
-    if (old.length) {
-      const { data: copied, error: copyError } = await supabase.from('shopping_list_item').insert(old.map(i => ({ shopping_list_id: data.shopping_list_id, food_id: Number(i.food_id), quantity: i.quantity, unit: foodById(i.food_id)?.unit ?? null }))).select();
-      if (copyError) fail(copyError.message);
-      else setItems(prev => [...prev, ...(copied || []).map(toItem)]);
-    }
-    setTrips(prev => [toTrip(data), ...prev]);
     navigate({ to: '/plan' });
   }
 
@@ -618,13 +719,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     userId, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
-    pantryTotals, combined, daily, spend, biggestGaps, suggestions, foodGapScores,
+    pantryTotals, combined, daily, spend, priceOf, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores,
     foodPreferences, likedFoods, setFoodPreference, removeFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry,
     pantryCheckDue: needsPantryCheck(!!active, pantry.length), pantryCheckOpen, finishPantryCheck, startPlan,
-    saveProfile, finishTrip, repeatTrip, signOut,
+    saveProfile, finishTrip, addTripToPlan, deleteTrip, renameTrip, signOut,
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;

@@ -138,7 +138,10 @@ export function addFoodToCatalog(row: FoodRow): Food {
   const food = mapFoodRow(row);
   const at = foods.findIndex(f => f.id === food.id);
   if (at >= 0) foods[at] = food;
-  else foods.push(food);
+  else {
+    foods.push(food);
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event('kiwi:catalog-food-added'));
+  }
   for (const partner of foods) {
     if (food.pairs.includes(partner.id) && !partner.pairs.includes(food.id)) partner.pairs = [...partner.pairs, food.id];
   }
@@ -478,7 +481,8 @@ export function getFoodPairings(
   _dailyTargets: Nutrients,
   budgetRemaining: number,
   foodPreferences: Record<string, boolean> = {},
-  days = 1
+  days = 1,
+  priceOf: (id: string) => number | null = id => foodById(id)?.price || null
 ): Food[] {
   if (!selectedFood) return [];
 
@@ -516,7 +520,7 @@ export function getFoodPairings(
   // Never drop a pairing for budget: pairings whose add (price × days) fits the remaining budget come
   // first, then liked over neutral over disliked.
   const fits = (food: Food) => {
-    const price = Number(food.price);
+    const price = Number(priceOf(food.id));
     return !(Number.isFinite(price) && price > 0) || price * days <= budgetRemaining;
   };
   recommendations.sort((a, b) => {
@@ -553,6 +557,7 @@ export type Profile = {
   budget: number;
   budget_period_weeks?: number;
   budget_period_start?: string;
+  zip_code?: string;
 };
 
 // Calculate estimated daily nutritional targets.
@@ -647,4 +652,3 @@ export function targets(profile: Profile | null): Nutrients {
     selenium: 55,
   };
 }
-

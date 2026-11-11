@@ -1,0 +1,8 @@
+FROM node:24-bookworm-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+COPY scripts/kroger/worker.mjs ./scripts/kroger/worker.mjs
+COPY src/lib/food-import/kroger.server.ts src/lib/food-import/pricing.ts src/lib/food-import/price-rules.json ./src/lib/food-import/
+USER node
+CMD ["node", "scripts/kroger/worker.mjs"]

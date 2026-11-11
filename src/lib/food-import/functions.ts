@@ -27,13 +27,25 @@ const obj = <T,>(d: unknown) => {
 export const finderStatus = createServerFn({ method: 'POST' })
   .handler(() => run<FinderStatus>(async () => (await import('./workflow.server')).getStatus()));
 
+export const finderCapability = createServerFn({ method: 'POST' })
+  .handler(() => run(async () => {
+    await (await import('./workflow.server')).getStatus();
+    return { enabled: await (await import('./capability.server')).finderEnabled() };
+  }));
+
 export const finderSearch = createServerFn({ method: 'POST' })
   .inputValidator((d: unknown) => obj<SearchInput>(d))
-  .handler(({ data }) => run<SearchResult>(async () => (await import('./workflow.server')).search(data)));
+  .handler(({ data }) => run<SearchResult>(async () => {
+    await (await import('./capability.server')).requireFinderEnabled();
+    return (await import('./workflow.server')).search(data);
+  }));
 
 export const finderAdd = createServerFn({ method: 'POST' })
   .inputValidator((d: unknown) => obj<AddInput>(d))
-  .handler(({ data }) => run<AddResult>(async () => (await import('./workflow.server')).add(data)));
+  .handler(({ data }) => run<AddResult>(async () => {
+    await (await import('./capability.server')).requireFinderEnabled();
+    return (await import('./workflow.server')).add(data);
+  }));
 
 export const finderSubmitToAdmin = createServerFn({ method: 'POST' })
   .inputValidator((d: unknown) => obj<{ requestId: number; note?: string }>(d))

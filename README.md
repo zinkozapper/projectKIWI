@@ -11,11 +11,13 @@ Kiwi is built for young adults planning groceries on a budget. Live site: **http
 
 ## Features
 
-- **Profile and daily targets.** Age, height (ft/in), weight (lb), sex, activity and goal set daily targets for 27 nutrients from adult NIH DRIs. Height and weight are stored as cm/kg.
+- **Profile and daily targets.** Age, height (ft/in), weight (lb), sex, activity and goal set daily targets for 27 nutrients from adult NIH DRIs. Height and weight are stored as cm/kg; a ZIP code is used for local price estimates.
 - **My plan** (`/plan`). Search the catalog and build a grocery trip. Each add puts 1 serving per day on the list for the whole trip. Nutrient bars show what the pantry already covers and what the list adds. Suggestions rank foods by how much of your gaps they fill per dollar, and "Pairs well with" suggests foods that go together.
 - **Budget periods.** The budget is an amount per 1, 2 or 4 weeks that repeats from a start date, so spending resets on its own each period (`src/lib/budget-period.ts`, migration 0006).
-- **Persistent pantry** (`/plan/pantry`). Foods stay in the pantry until you mark them gone. Finishing a trip adds everything bought. Before each new trip a **pantry check** asks what's still at home, so a bag of rice isn't re-added every week (`src/lib/pantry-check.ts`).
-- **Shopping mode** (`/plan/shop`) to check items off in the store, and **History** (`/plan/history`) for finished trips.
+- **Persistent pantry** (`/plan/pantry`). Foods stay in the pantry until you mark them gone. Finishing a trip adds everything bought. Before a new plan starts, a **pantry check** asks what's still at home (`src/lib/pantry-check.ts`); adding a past list explicitly includes its items.
+- **Shopping mode** (`/plan/shop`) lets users check items off in the store. **Past Trips** (`/plan/history`) shows completed lists and estimated item prices; users can rename or delete trips and add their items to the current plan. Deletion can be undone for six seconds. Prices are current estimates, not historical receipts.
+- **Food preferences** (`/food-preferences`) lets users manage liked and disliked foods, which influence recommendation ranking.
+- **Local prices.** Kiwi uses store prices for the profile ZIP where available, identifies unknown prices and partial totals, and warns when a local price snapshot is stale. Prices are estimates, not guaranteed checkout prices.
 - **AI food workflow.** Add foods that aren't in the catalog (see below).
 - **Sign-in.** Email and password, passkeys (managed on `/profile`), and password reset. "Remember me" is on by default, so users stay signed in across browser restarts. Google sign-in is built but hidden until `VITE_GOOGLE_SIGN_IN=true` (it needs a Google Cloud OAuth client set up in Supabase first).
 - **Theme.** Light by default, with dark mode and four color schemes on `/profile`. The choice is saved on the device and applied before the page paints.
@@ -130,11 +132,18 @@ The workflow runs in the app's own server (TanStack Start server functions in `s
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase secret key; the server uses it to write foods after checking the user |
 | `KROGER_CLIENT_ID`, `KROGER_CLIENT_SECRET` | Kroger API app (free at https://developer.kroger.com, Production environment, Products + Locations). Optional: without them new foods are saved unpriced |
 
-The database side is `drizzle/migrations/0009_kiwi_food_import_workflow.sql` and, for prices, `0010_kiwi_localized_food_price.sql`.
+The database side includes `drizzle/migrations/0009_kiwi_food_import_workflow.sql` and `0010_kiwi_localized_food_price.sql`; migrations 0012–0013 add price refresh and freshness tracking.
 
 Prices for the existing catalog were loaded with the backfill script, which uses the same pricing code (`src/lib/food-import/pricing.ts`, `kroger.server.ts`): `node --env-file=.env scripts/kroger/1-search.mjs`, review `data/kroger/84601/candidates.csv`, then `node scripts/kroger/2-build.mjs` and run the generated SQL. Node 22.18+ is needed (it runs the TypeScript files directly).
 
+For ongoing local-price refreshes, run `node --env-file=.env scripts/kroger/worker.mjs` as a separate long-lived process with `DATABASE_URL`, `KROGER_CLIENT_ID`, and `KROGER_CLIENT_SECRET` set. It processes queued ZIP codes, refreshes store snapshots at most every 30 days when current, and retries failures; without a running worker, queued price updates will not be processed. Database credentials and Kroger secrets must stay server-side.
+
+The experimental self-hosted deployment uses an OpenAI-compatible provider rather than Claude; its configuration and limitations are documented in the [self-hosting guide](self-host/README.md).
+
 ## How to run
+
+For the experimental Docker Compose deployment, see the [self-hosting guide](self-host/README.md).
+
 ### First time install (DEV)
 You need Node 22 or newer.
 
@@ -171,7 +180,11 @@ Open the local URL printed by Vite, usually `http://localhost:8080`.
 
 ```bash
 npm test
+npm run test:watch
+npm run lint
 ```
+
+Lint currently reports existing formatting errors; avoid repo-wide formatting changes when working on unrelated files.
 
 ### Lighthouse performance testing
 
@@ -196,8 +209,9 @@ npm run dev
 
 If anyone added a migration since your last pull, apply it in Supabase too (next section).
 
-### Verify vertical slice
-On home page, fill out account information and select 'Create Account.' If email confirmation is turned on in Supabase, the app will send you an email to verify your account; click on the link in the email and then you will be logged in! You can also select logout in the bottom left hand corner of the screen and log back in using the email and password you provided.
+### Verify the app
+
+Create an account at `/enroll` and follow the confirmation email if your Supabase project requires one. Sign in, complete your profile, add foods to a plan, and finish a trip in shopping mode. Check that the trip appears in Past Trips and that purchased foods appear in the pantry. You can sign out from `/profile` and sign back in.
 
 ## Database migrations
 
@@ -216,6 +230,9 @@ Migrations are plain SQL files in `drizzle/migrations/`. Nothing applies them au
 | `0008_kiwi_admin_dashboard.sql` | `app_admin` and the admin dashboard functions |
 | `0009_kiwi_food_import_workflow.sql` | AI food workflow: quotas, requests, review flags |
 | `0010_kiwi_localized_food_price.sql` | Kroger stores and per-store food prices |
+| `0011_kiwi_trip_name.sql` | Optional names for shopping trips |
+| `0012_kiwi_price_refresh.sql` | Local-price refresh queue and store snapshots |
+| `0013_kiwi_price_freshness.sql` | Catalog revisions and price freshness tracking |
 
 The food catalog itself comes from the USDA scripts: import `data/usda/supabase/food_category.csv` before `data/usda/supabase/food.csv`.
 
@@ -244,4 +261,4 @@ CloudFront serves the site over HTTPS at **https://dfoo37gyp3r01.cloudfront.net*
 - `ANTHROPIC_API_KEY`, `FDC_API_KEY`
 - `KROGER_CLIENT_ID`, `KROGER_CLIENT_SECRET`
 
-To show Google sign-in on the live site, first enable the Google provider in Supabase, then add a `VITE_GOOGLE_SIGN_IN` secret set to `true` and pass it in the build step's `env` in `deploy.yml` (it isn't passed yet).
+The deployment workflow sets `VITE_GOOGLE_SIGN_IN=true` at build time; Google sign-in also requires the Google provider and OAuth client to be configured in Supabase.

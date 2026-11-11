@@ -3,6 +3,7 @@ import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShieldCheck,
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 import { PantryCheckDialog } from './pantry-check-dialog';
+import { PriceNotice } from './price-notice';
 
 const nav = [
   { id: 'plan', label: 'My plan', mobileLabel: 'Plan', to: '/plan', icon: ClipboardList },
@@ -18,7 +19,7 @@ const adminNav = { id: 'admin', label: 'Admin', mobileLabel: 'Admin', to: '/admi
 const isHere = (pathname: string, to: string) => pathname === to || pathname === `${to}/`;
 
 export function WorkspaceShell() {
-  const { loading, error, clearError, profile, listItems, signOut, isAdmin } = useWorkspace();
+  const { loading, error, clearError, profile, listItems, signOut, isAdmin, priceStatus, priceRefreshUnavailable } = useWorkspace();
   const pathname = useRouterState({ select: s => s.location.pathname });
 
   const items = isAdmin ? [...nav, adminNav] : nav;
@@ -54,6 +55,7 @@ export function WorkspaceShell() {
         {error && <div className={loadFailed ? 'toast-error load-error' : 'toast-error'} role="alert">{error}{!loadFailed && <Button variant="ghost" size="icon" onClick={clearError}>×</Button>}</div>}
         <main className="workspace">
           {loading && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading content…</div>}
+          <PriceNotice status={priceStatus} refreshUnavailable={priceRefreshUnavailable} />
           <Outlet />
         </main>
       </div>

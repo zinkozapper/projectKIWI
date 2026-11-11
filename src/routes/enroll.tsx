@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { googleSignInEnabled } from '@/lib/auth-options';
+import { googleSignInEnabled, selfHosted } from '@/lib/auth-options';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Leaf } from 'lucide-react';
@@ -38,7 +38,7 @@ function Enroll() {
       });
       if (error) throw error;
       if (data.session) navigate({ to: '/plan' });
-      else setNotice('Check your email to confirm your account, then sign in.');
+      else setNotice(selfHosted ? 'Account created. If you cannot sign in, contact your administrator.' : 'Check your email to confirm your account, then sign in.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
