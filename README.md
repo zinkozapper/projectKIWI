@@ -12,10 +12,11 @@ Kiwi is built for young adults planning groceries on a budget. Live site: **http
 ## Features
 
 - **Profile and daily targets.** Age, height (ft/in), weight (lb), sex, activity and goal set daily targets for 27 nutrients from adult NIH DRIs. Height and weight are stored as cm/kg; a ZIP code is used for local price estimates.
-- **My plan** (`/plan`). Search the catalog and build a grocery trip. Each add puts 1 serving per day on the list for the whole trip. Nutrient bars show what the pantry already covers and what the list adds. Suggestions rank foods by how much of your gaps they fill per dollar, and "Pairs well with" suggests foods that go together.
+- **First-session onboarding** (`/onboarding`). New accounts see a welcome screen, then go to the pantry to add foods already at home or skip to planning. During the first authenticated session, the default-estimates notice, budget summary and pantry-check prompts are hidden. Users without a profile see the default-estimates notice in later sessions. The session lasts until sign-out or expiration; refreshing the session token does not end it.
+- **My plan** (`/plan`). Use **Add to list** to search the catalog in a popup and build a grocery trip. Each add puts 1 serving per day on the list for the whole trip. Nutrient bars show what the pantry already covers and what the list adds. Suggestions rank foods by how much of your gaps they fill per dollar, and "Pairs well with" suggests foods that go together.
 - **Budget periods.** The budget is an amount per 1, 2 or 4 weeks that repeats from a start date, so spending resets on its own each period (`src/lib/budget-period.ts`, migration 0006).
-- **Persistent pantry** (`/plan/pantry`). Foods stay in the pantry until you mark them gone. Finishing a trip adds everything bought. Before a new plan starts, a **pantry check** asks what's still at home (`src/lib/pantry-check.ts`); adding a past list explicitly includes its items.
-- **Shopping mode** (`/plan/shop`) lets users check items off in the store. **Past Trips** (`/plan/history`) shows completed lists and estimated item prices; users can rename or delete trips and add their items to the current plan. Deletion can be undone for six seconds. Prices are current estimates, not historical receipts.
+- **Persistent pantry** (`/plan/pantry`). Foods stay in the pantry until you mark them gone. Finishing a trip adds everything bought. After the first session, a **pantry check** asks what's still at home before a new plan starts (`src/lib/pantry-check.ts`); adding a past list explicitly includes its items.
+- **Shopping mode** (`/plan/shop`) lets users check items off in the store. Finishing a trip opens **Past Trips** (`/plan/history`), which shows completed lists and estimated item prices; users can rename or delete trips and add their items to the current plan. Deletion can be undone for six seconds. Prices are current estimates, not historical receipts.
 - **Food preferences** (`/food-preferences`) lets users manage liked and disliked foods, which influence recommendation ranking.
 - **Local prices.** Kiwi uses store prices for the profile ZIP where available, identifies unknown prices and partial totals, and warns when a local price snapshot is stale. Prices are estimates, not guaranteed checkout prices.
 - **AI food workflow.** Add foods that aren't in the catalog (see below).
@@ -50,7 +51,7 @@ Daily snapshots are scheduled with `pg_cron` when it is enabled in Supabase (Dat
 
 ## AI food workflow
 
-Users can add foods that aren't in Kiwi's catalog. From the plan page, search for a food and choose **Can't find it? Add … to Kiwi**. The workflow connects the app to external services (USDA FoodData Central for nutrients, the Kroger API for store prices) with an AI step (Claude) in the middle, and a person makes the final choice:
+Users can add foods that aren't in Kiwi's catalog. From the plan page, choose **Add to list**, search for a food, and choose **Can't find it? Add … to Kiwi**. The workflow connects the app to external services (USDA FoodData Central for nutrients, the Kroger API for store prices) with an AI step (Claude) in the middle, and a person makes the final choice:
 
 1. **Request.** The user says what they want and how they buy it (fresh, dry, ready to eat or packaged). Each user can add 10 foods; an admin approves each further block of 10.
 2. **Search.** The app's server searches USDA FoodData Central. Kiwi's selection rules ([docs/usda-record-selection-rules.md](docs/usda-record-selection-rules.md)) drop unusable records (for example cooked "fat added" versions) and order the rest by how many of Kiwi's 27 nutrients they report.
@@ -132,6 +133,8 @@ The workflow runs in the app's own server (TanStack Start server functions in `s
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase secret key; the server uses it to write foods after checking the user |
 | `KROGER_CLIENT_ID`, `KROGER_CLIENT_SECRET` | Kroger API app (free at https://developer.kroger.com, Production environment, Products + Locations). Optional: without them new foods are saved unpriced |
 
+The service-role key is required by the food finder in both the normal and Docker deployments. It bypasses RLS and must remain server-only; never put it in a `VITE_` variable. If the finder reports that it is missing, configure it in the app server's runtime environment, not just in the browser build.
+
 The database side includes `drizzle/migrations/0009_kiwi_food_import_workflow.sql` and `0010_kiwi_localized_food_price.sql`; migrations 0012–0013 add price refresh and freshness tracking.
 
 Prices for the existing catalog were loaded with the backfill script, which uses the same pricing code (`src/lib/food-import/pricing.ts`, `kroger.server.ts`): `node --env-file=.env scripts/kroger/1-search.mjs`, review `data/kroger/84601/candidates.csv`, then `node scripts/kroger/2-build.mjs` and run the generated SQL. Node 22.18+ is needed (it runs the TypeScript files directly).
@@ -211,7 +214,7 @@ If anyone added a migration since your last pull, apply it in Supabase too (next
 
 ### Verify the app
 
-Create an account at `/enroll` and follow the confirmation email if your Supabase project requires one. Sign in, complete your profile, add foods to a plan, and finish a trip in shopping mode. Check that the trip appears in Past Trips and that purchased foods appear in the pantry. You can sign out from `/profile` and sign back in.
+After applying the migrations, create a new account at `/enroll` and follow the confirmation email if required. On the first sign-in, check that `/onboarding` leads to the pantry, where you can add foods or continue directly to the plan. Add foods to a list, finish a trip in shopping mode, and check that History opens and purchased foods appear in the pantry. Sign out and back in to check that the normal plan experience returns. Complete the optional profile to personalize nutrition targets.
 
 ## Database migrations
 
@@ -233,8 +236,11 @@ Migrations are plain SQL files in `drizzle/migrations/`. Nothing applies them au
 | `0011_kiwi_trip_name.sql` | Optional names for shopping trips |
 | `0012_kiwi_price_refresh.sql` | Local-price refresh queue and store snapshots |
 | `0013_kiwi_price_freshness.sql` | Catalog revisions and price freshness tracking |
+| `0014_kiwi_first_session.sql` | Records new accounts' first authenticated session for onboarding |
 
 The food catalog itself comes from the USDA scripts: import `data/usda/supabase/food_category.csv` before `data/usda/supabase/food.csv`.
+
+Migration 0014 must be applied before creating accounts that should see onboarding; it does not backfill existing accounts. It creates triggers on `auth.users` and `auth.sessions`, so the database role applying it needs permission on those tables. If its session check is unavailable, the app logs an error and falls back to the regular plan experience.
 
 To make the first admin, run this once in the SQL editor (after that, admins can make other admins from `/admin`):
 
