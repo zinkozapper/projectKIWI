@@ -23,6 +23,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPlanIndexRouteImport } from './routes/_authenticated/plan/index'
 import { Route as AuthenticatedPlanHistoryRouteImport } from './routes/_authenticated/plan/history'
 import { Route as AuthenticatedPlanPantryRouteImport } from './routes/_authenticated/plan/pantry'
+import { Route as AuthenticatedPlanRecipesRouteImport } from './routes/_authenticated/plan/recipes'
 import { Route as AuthenticatedPlanShopRouteImport } from './routes/_authenticated/plan/shop'
 
 const IndexRoute = IndexRouteImport.update({
@@ -96,6 +97,12 @@ const AuthenticatedPlanPantryRoute = AuthenticatedPlanPantryRouteImport.update({
   path: '/pantry',
   getParentRoute: () => AuthenticatedPlanRouteRoute,
 } as any)
+const AuthenticatedPlanRecipesRoute =
+  AuthenticatedPlanRecipesRouteImport.update({
+    id: '/recipes',
+    path: '/recipes',
+    getParentRoute: () => AuthenticatedPlanRouteRoute,
+  } as any)
 const AuthenticatedPlanShopRoute = AuthenticatedPlanShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -115,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
+  '/plan/recipes': typeof AuthenticatedPlanRecipesRoute
   '/plan/shop': typeof AuthenticatedPlanShopRoute
   '/plan/': typeof AuthenticatedPlanIndexRoute
 }
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/plan/pantry': typeof AuthenticatedPlanPantryRoute
+  '/plan/recipes': typeof AuthenticatedPlanRecipesRoute
   '/plan/shop': typeof AuthenticatedPlanShopRoute
   '/plan': typeof AuthenticatedPlanIndexRoute
 }
@@ -148,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/plan/history': typeof AuthenticatedPlanHistoryRoute
   '/_authenticated/plan/pantry': typeof AuthenticatedPlanPantryRoute
+  '/_authenticated/plan/recipes': typeof AuthenticatedPlanRecipesRoute
   '/_authenticated/plan/shop': typeof AuthenticatedPlanShopRoute
   '/_authenticated/plan/': typeof AuthenticatedPlanIndexRoute
 }
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/plan/history'
     | '/plan/pantry'
+    | '/plan/recipes'
     | '/plan/shop'
     | '/plan/'
   fileRoutesByTo: FileRoutesByTo
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/plan/history'
     | '/plan/pantry'
+    | '/plan/recipes'
     | '/plan/shop'
     | '/plan'
   id:
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/plan/history'
     | '/_authenticated/plan/pantry'
+    | '/_authenticated/plan/recipes'
     | '/_authenticated/plan/shop'
     | '/_authenticated/plan/'
   fileRoutesById: FileRoutesById
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlanPantryRouteImport
       parentRoute: typeof AuthenticatedPlanRouteRoute
     }
+    '/_authenticated/plan/recipes': {
+      id: '/_authenticated/plan/recipes'
+      path: '/recipes'
+      fullPath: '/plan/recipes'
+      preLoaderRoute: typeof AuthenticatedPlanRecipesRouteImport
+      parentRoute: typeof AuthenticatedPlanRouteRoute
+    }
     '/_authenticated/plan/shop': {
       id: '/_authenticated/plan/shop'
       path: '/shop'
@@ -324,6 +344,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedPlanRouteRouteChildren {
   AuthenticatedPlanHistoryRoute: typeof AuthenticatedPlanHistoryRoute
   AuthenticatedPlanPantryRoute: typeof AuthenticatedPlanPantryRoute
+  AuthenticatedPlanRecipesRoute: typeof AuthenticatedPlanRecipesRoute
   AuthenticatedPlanShopRoute: typeof AuthenticatedPlanShopRoute
   AuthenticatedPlanIndexRoute: typeof AuthenticatedPlanIndexRoute
 }
@@ -332,6 +353,7 @@ const AuthenticatedPlanRouteRouteChildren: AuthenticatedPlanRouteRouteChildren =
   {
     AuthenticatedPlanHistoryRoute: AuthenticatedPlanHistoryRoute,
     AuthenticatedPlanPantryRoute: AuthenticatedPlanPantryRoute,
+    AuthenticatedPlanRecipesRoute: AuthenticatedPlanRecipesRoute,
     AuthenticatedPlanShopRoute: AuthenticatedPlanShopRoute,
     AuthenticatedPlanIndexRoute: AuthenticatedPlanIndexRoute,
   }

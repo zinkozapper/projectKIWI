@@ -1,7 +1,7 @@
 
 import { useEffect, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { ArrowRight, ChefHat, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { usePhoneLayout } from '@/hooks/use-phone-layout';
@@ -108,6 +108,9 @@ export function PlanPage() {
         <div>
           <h1>Your grocery plan</h1>
         </div>
+        <Button asChild variant="outline">
+          <Link to="/plan/recipes"><ChefHat size={16} /> Recipes</Link>
+        </Button>
       </div>
 
       {!isFirstSession && <div className="budget-progress plan-budget-progress">

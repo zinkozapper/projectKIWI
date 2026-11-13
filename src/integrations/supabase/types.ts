@@ -720,6 +720,98 @@ export type Database = {
           },
         ]
       }
+      saved_recipe: {
+        Row: {
+          created_at: string
+          food_groups: string[]
+          minutes: number | null
+          recipe_id: number
+          servings: number
+          source: string
+          steps: string[]
+          summary: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          food_groups?: string[]
+          minutes?: number | null
+          recipe_id?: number
+          servings?: number
+          source?: string
+          steps?: string[]
+          summary?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          food_groups?: string[]
+          minutes?: number | null
+          recipe_id?: number
+          servings?: number
+          source?: string
+          steps?: string[]
+          summary?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_recipe_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      saved_recipe_ingredient: {
+        Row: {
+          amount: string
+          food_id: number | null
+          ingredient_id: number
+          name: string
+          position: number
+          recipe_id: number
+          servings: number
+        }
+        Insert: {
+          amount?: string
+          food_id?: number | null
+          ingredient_id?: number
+          name: string
+          position?: number
+          recipe_id: number
+          servings?: number
+        }
+        Update: {
+          amount?: string
+          food_id?: number | null
+          ingredient_id?: number
+          name?: string
+          position?: number
+          recipe_id?: number
+          servings?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_recipe_ingredient_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+          {
+            foreignKeyName: "saved_recipe_ingredient_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "saved_recipe"
+            referencedColumns: ["recipe_id"]
+          },
+        ]
+      }
       shopping_list: {
         Row: {
           budget: number

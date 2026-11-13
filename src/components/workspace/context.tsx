@@ -92,6 +92,8 @@ type WorkspaceValue = {
   clearError: () => void;
   fail: (message: string) => void;
   addFood: (id: string, q?: number) => Promise<Item | null>;
+  // Adds several foods at once (recipe ingredients). quantity = total servings. Returns how many were saved.
+  addFoods: (entries: { id: string; quantity: number }[]) => Promise<number>;
   updateQuantity: (item: Item, q: number) => Promise<void>;
   removeItem: (item: Item, shop?: boolean) => Promise<void>;
   undoPurchase: (item: Item) => Promise<void>;
@@ -564,6 +566,39 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return saved;
   }
 
+  // One pantry check and one trip for the whole batch; addFood in a loop would ask again for each food,
+  // because `active` doesn't update until the next render.
+  async function addFoods(entries: { id: string; quantity: number }[]): Promise<number> {
+    const valid = entries.filter(e => Number.isFinite(e.quantity) && e.quantity > 0);
+    if (!valid.length) return 0;
+    if (!active && !(await confirmPantry())) return 0;
+    const tripId = await ensureTrip();
+    if (!tripId) return 0;
+    let saved = 0;
+    const updated: Item[] = [];
+    const fresh: { id: string; quantity: number }[] = [];
+    for (const e of valid) {
+      const existing = items.find(i => i.trip_id === tripId && i.food_id === e.id && !i.purchased);
+      if (!existing) {
+        fresh.push(e);
+        continue;
+      }
+      const { data, error } = await supabase.from('shopping_list_item').update({ quantity: Number(existing.quantity) + e.quantity }).eq('shopping_list_item_id', Number(existing.id)).select().single();
+      if (error) fail(error.message);
+      else { updated.push(toItem(data)); saved++; }
+    }
+    let inserted: Item[] = [];
+    if (fresh.length) {
+      const { data, error } = await supabase.from('shopping_list_item')
+        .insert(fresh.map(e => ({ shopping_list_id: Number(tripId), food_id: Number(e.id), quantity: e.quantity, unit: foodById(e.id)?.unit ?? null })))
+        .select();
+      if (error) fail(error.message);
+      else { inserted = (data || []).map(toItem); saved += inserted.length; }
+    }
+    setItems(prev => [...prev.map(i => updated.find(u => u.id === i.id) ?? i), ...inserted]);
+    return saved;
+  }
+
   async function updateQuantity(item: Item, q: number) {
     if (!Number.isFinite(q) || q <= 0) {
       fail('Quantity must be a positive number.');
@@ -742,7 +777,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     pantryTotals, combined, daily, spend, priceOf, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores,
     foodPreferences, likedFoods, setFoodPreference, removeFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
-    addFood, updateQuantity, removeItem, undoPurchase, saveTripSettings,
+    addFood, addFoods, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry,
     pantryCheckDue: needsPantryCheck(!!active, pantry.length), pantryCheckOpen, finishPantryCheck, startPlan,
     saveProfile, finishTrip, addTripToPlan, deleteTrip, renameTrip, signOut,
