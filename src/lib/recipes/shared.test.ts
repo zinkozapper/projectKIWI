@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cartAdditions, cleanIds, ingredientStatus, listEntries, normalizeRecipes, recipePrompt, type Recipe } from './shared';
+import { cartAdditions, cleanGaps, cleanIds, haveByDefault, ingredientStatus, listEntries, normalizeRecipes, recipePrompt, stillNeeded, type Recipe } from './shared';
 
 const catalog = new Set(['1', '2', '3', '4']);
 
@@ -97,5 +97,34 @@ describe('input and prompt', () => {
     expect(prompt).toContain('Already in the pantry: nothing');
     expect(prompt).toContain('dislikes: Kale (#2)');
     expect(prompt).toContain('1 | Rice | grain | 45 g');
+  });
+});
+
+describe('have boxes and healthy mode', () => {
+  const recipe: Recipe = {
+    title: 'Bowl', summary: '', servings: 2, minutes: 10, steps: [], foodGroups: [],
+    ingredients: [
+      { name: 'Rice', amount: '', foodId: '1', servings: 2 },
+      { name: 'Eggs', amount: '', foodId: '2', servings: 1 },
+      { name: 'Beans', amount: '', foodId: '3', servings: 1 },
+      { name: 'Salt', amount: '', foodId: null, servings: 1 },
+    ],
+  };
+
+  it('ticks what is on the list or in the pantry', () => {
+    expect([...haveByDefault(recipe, new Set(['1']), new Set(['2']))]).toEqual([0, 1]);
+  });
+
+  it('adds only unticked Kiwi foods', () => {
+    expect(stillNeeded(recipe, new Set([0, 1])).map(i => i.name)).toEqual(['Beans']);
+    expect(stillNeeded(recipe, new Set([0, 1, 2]))).toEqual([]);
+  });
+
+  it('asks for nutritious recipes aimed at the gaps, not tied to the list', () => {
+    const prompt = recipePrompt({ mode: 'healthy', list: [], pantry: [], disliked: [], catalog: [], gaps: cleanGaps(['Vitamin D', 'Folate (B9)', '<script>']) });
+    expect(prompt).toContain('nutritious, balanced');
+    expect(prompt).toContain('do not have to use the shopping list');
+    expect(prompt).toContain('low on: Vitamin D, Folate (B9).');
+    expect(prompt).not.toContain('script');
   });
 });

@@ -1,5 +1,6 @@
 // Recipes page: shapes and pure helpers shared by the browser and the server.
-// Claude suggests recipes from the user's shopping list (suggest.server.ts); everything here checks and
+// Claude suggests recipes (suggest.server.ts) in two modes: 'list' builds on the user's shopping list,
+// 'healthy' suggests nutritious recipes aimed at the user's nutrient gaps. Everything here checks and
 // cleans its answer and works out which ingredients still need to go on the list. No network here.
 import { FOOD_GROUPS, isFoodGroup, type FoodGroup } from '@/lib/food-import/rules';
 
@@ -23,7 +24,8 @@ export type Recipe = {
 };
 export type SavedRecipe = Recipe & { id: string; createdAt: string };
 
-export type SuggestInput = { listFoodIds: string[]; pantryFoodIds: string[]; dislikedFoodIds?: string[] };
+export type RecipeMode = 'list' | 'healthy';
+export type SuggestInput = { mode?: RecipeMode; listFoodIds: string[]; pantryFoodIds: string[]; dislikedFoodIds?: string[]; gaps?: string[] };
 export type SuggestResult = { recipes: Recipe[] };
 
 export const FOOD_GROUP_LABELS: Record<FoodGroup, string> = {
@@ -41,6 +43,12 @@ const int = (v: unknown, min: number, max: number) => {
 export function cleanIds(v: unknown, max = 200): string[] {
   if (!Array.isArray(v)) return [];
   return [...new Set(v.map(String).filter(id => /^\d{1,9}$/.test(id)))].slice(0, max);
+}
+
+// Nutrient labels from the browser (like "Vitamin D" or "Folate (B9)"), for the healthy prompt.
+export function cleanGaps(v: unknown, max = 6): string[] {
+  if (!Array.isArray(v)) return [];
+  return [...new Set(v.map(g => clip(g, 40)).filter(g => /^[A-Za-z0-9 ()-]+$/.test(g)))].slice(0, max);
 }
 
 export function cleanFoodGroups(v: unknown): FoodGroup[] {
@@ -100,12 +108,25 @@ export function ingredientStatus(i: RecipeIngredient, listIds: ReadonlySet<strin
 }
 
 export const STATUS_LABELS: Record<IngredientStatus, string> = {
-  on_list: 'On your list', in_pantry: 'In your pantry', missing: 'Not on your list', not_in_catalog: 'Not in Kiwi',
+  on_list: 'On your list', in_pantry: 'In your pantry', missing: 'Need to buy', not_in_catalog: 'Not in Kiwi',
 };
 
 // The cart additions for a recipe: catalog foods that are neither on the list nor in the pantry.
 export function cartAdditions(r: Recipe, listIds: ReadonlySet<string>, pantryIds: ReadonlySet<string>): RecipeIngredient[] {
   return r.ingredients.filter(i => ingredientStatus(i, listIds, pantryIds) === 'missing');
+}
+
+// The ticked boxes mean "I have this". By default that's what is on the list or in the pantry.
+export function haveByDefault(r: Recipe, listIds: ReadonlySet<string>, pantryIds: ReadonlySet<string>): Set<number> {
+  return new Set(r.ingredients.flatMap((i, n) => {
+    const status = ingredientStatus(i, listIds, pantryIds);
+    return status === 'on_list' || status === 'in_pantry' ? [n] : [];
+  }));
+}
+
+// What to put on the list: unticked ingredients that are Kiwi foods.
+export function stillNeeded(r: Recipe, have: ReadonlySet<number>): RecipeIngredient[] {
+  return r.ingredients.filter((i, n) => i.foodId && !have.has(n));
 }
 
 // Picked ingredients → one list entry per food (two ingredients can be the same food), servings added up.
@@ -120,15 +141,26 @@ export const recipeKey = (r: Recipe) => r.title.toLowerCase().replace(/[^a-z0-9]
 
 export type CatalogLine = { id: string; name: string; group: string | null; serving: string };
 
-export function recipePrompt({ list, pantry, disliked, catalog }: { list: CatalogLine[]; pantry: CatalogLine[]; disliked: CatalogLine[]; catalog: CatalogLine[] }) {
+type PromptInput = { mode?: RecipeMode; list: CatalogLine[]; pantry: CatalogLine[]; disliked: CatalogLine[]; catalog: CatalogLine[]; gaps?: string[] };
+
+export function recipePrompt({ mode = 'list', list, pantry, disliked, catalog, gaps = [] }: PromptInput) {
   const names = (l: CatalogLine[]) => (l.length ? l.map(f => `${f.name} (#${f.id})`).join(', ') : 'nothing');
+  const ask = mode === 'healthy'
+    ? [
+      `Suggest exactly ${RECIPE_COUNT} different nutritious, balanced recipes (vegetables or fruit, lean protein or legumes, whole grains).`,
+      'They do not have to use the shopping list. Prefer Kiwi catalog foods so the ingredients can go on the list.',
+      ...(gaps.length ? [`The user is low on: ${gaps.join(', ')}. Pick recipes that help with these.`] : []),
+    ]
+    : [
+      `Suggest exactly ${RECIPE_COUNT} different recipes that use as much of the shopping list as possible, then the pantry.`,
+      'Add other ingredients only when a recipe needs them.',
+    ];
   return [
     `Shopping list: ${names(list)}`,
     `Already in the pantry: ${names(pantry)}`,
     ...(disliked.length ? [`The user dislikes: ${names(disliked)}. Avoid these.`] : []),
     '',
-    `Suggest exactly ${RECIPE_COUNT} different recipes that use as much of the shopping list as possible, then the pantry.`,
-    'Add other ingredients only when a recipe needs them.',
+    ...ask,
     '',
     'Kiwi catalog (id | name | food group | one serving):',
     ...catalog.map(f => `${f.id} | ${f.name} | ${f.group ?? 'other'} | ${f.serving}`),

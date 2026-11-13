@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Bookmark, BookmarkCheck, ChefHat, Clock, LoaderCircle, Plus, Sparkles, Trash2, Users } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Clock, HeartPulse, LoaderCircle, Plus, Sparkles, Trash2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { foodById } from '@/lib/foods';
+import { foodById, nutrientLabels } from '@/lib/foods';
 import { suggestRecipes } from '@/lib/recipes/functions';
 import {
-  cartAdditions, FOOD_GROUP_LABELS, FOOD_GROUPS, ingredientStatus, listEntries, recipeKey, STATUS_LABELS,
-  type FoodGroup, type Recipe, type SavedRecipe,
+  FOOD_GROUP_LABELS, FOOD_GROUPS, haveByDefault, ingredientStatus, listEntries, recipeKey, STATUS_LABELS, stillNeeded,
+  type FoodGroup, type Recipe, type RecipeMode, type SavedRecipe,
 } from '@/lib/recipes/shared';
 import { deleteRecipe, loadSavedRecipes, saveRecipe, setRecipeFoodGroups } from '@/lib/recipes/store';
 import { useWorkspace } from '../context';
@@ -16,18 +16,18 @@ type Picks = Record<string, Set<number>>;
 const errorText = (e: unknown) => (e && typeof e === 'object' && 'message' in e && String(e.message)) || 'unknown error';
 
 export function RecipesPage() {
-  const { userId, listItems, pantry, foodPreferences, addFoods, fail } = useWorkspace();
+  const { userId, listItems, pantry, foodPreferences, addFoods, fail, biggestGaps, combined, daily, days } = useWorkspace();
   const listIds = useMemo(() => new Set(listItems.map(i => i.food_id)), [listItems]);
   const pantryIds = useMemo(() => new Set(pantry.map(p => p.food_id)), [pantry]);
 
-  const [suggested, setSuggested] = useState<Recipe[]>([]);
-  const [asking, setAsking] = useState(false);
-  const [askError, setAskError] = useState('');
+  const [suggested, setSuggested] = useState<Record<RecipeMode, Recipe[]>>({ list: [], healthy: [] });
+  const [asking, setAsking] = useState<RecipeMode | ''>('');
+  const [askError, setAskError] = useState<Record<RecipeMode, string>>({ list: '', healthy: '' });
   const [saved, setSaved] = useState<SavedRecipe[]>([]);
   const [savedLoading, setSavedLoading] = useState(true);
   const [savingKey, setSavingKey] = useState('');
   const [filter, setFilter] = useState<FoodGroup | 'all'>('all');
-  // Which ingredient rows are ticked, per card. Defaults to the cart additions (missing catalog foods).
+  // Ticked = "I have this", per card. Defaults to what is on the list or in the pantry.
   const [picks, setPicks] = useState<Picks>({});
   const [adding, setAdding] = useState('');
   const [notice, setNotice] = useState('');
@@ -42,39 +42,44 @@ export function RecipesPage() {
     return () => { live = false; };
   }, [userId]);
 
-  const defaultPicks = (r: Recipe) => new Set(r.ingredients.flatMap((i, n) => (ingredientStatus(i, listIds, pantryIds) === 'missing' ? [n] : [])));
-  const picksFor = (key: string, r: Recipe) => picks[key] ?? defaultPicks(r);
+  const haveFor = (key: string, r: Recipe) => picks[key] ?? haveByDefault(r, listIds, pantryIds);
+  // Nutrients the plan is furthest below target on, for the healthy suggestions.
+  const gaps = biggestGaps.filter(k => combined[k] / days < daily[k]).slice(0, 5).map(k => nutrientLabels[k]);
 
-  async function ask() {
-    setAsking(true);
-    setAskError('');
+  async function ask(mode: RecipeMode) {
+    setAsking(mode);
+    setAskError(prev => ({ ...prev, [mode]: '' }));
     setNotice('');
     const result = await suggestRecipes({
       data: {
+        mode,
         listFoodIds: [...listIds],
         pantryFoodIds: [...pantryIds],
         dislikedFoodIds: Object.keys(foodPreferences).filter(id => foodPreferences[id] === false),
+        gaps,
       },
     }).catch(() => ({ ok: false as const, error: 'Could not reach Kiwi. Check your connection and try again.' }));
-    setAsking(false);
+    setAsking('');
     if (!result.ok) {
-      setAskError(result.error);
+      setAskError(prev => ({ ...prev, [mode]: result.error }));
       return;
     }
-    setSuggested(result.data.recipes);
-    setPicks(prev => Object.fromEntries(Object.entries(prev).filter(([k]) => k.startsWith('saved:'))));
+    setSuggested(prev => ({ ...prev, [mode]: result.data.recipes }));
+    setPicks(prev => Object.fromEntries(Object.entries(prev).filter(([k]) => !k.startsWith(`${mode}:`))));
   }
 
-  async function addPicked(key: string, r: Recipe) {
-    const chosen = r.ingredients.filter((_, n) => picksFor(key, r).has(n));
-    const entries = listEntries(chosen);
+  async function addNeeded(key: string, r: Recipe) {
+    const have = haveFor(key, r);
+    const needed = stillNeeded(r, have);
+    const entries = listEntries(needed);
     if (!entries.length) return;
     setAdding(key);
     const count = await addFoods(entries);
     setAdding('');
     if (count) {
       setNotice(`Added ${count} ${count === 1 ? 'food' : 'foods'} for ${r.title} to your list.`);
-      setPicks(prev => ({ ...prev, [key]: new Set() }));
+      // Added foods are now on the list, so tick them.
+      setPicks(prev => ({ ...prev, [key]: new Set([...have, ...r.ingredients.flatMap((i, n) => (needed.includes(i) ? [n] : []))]) }));
     }
   }
 
@@ -103,11 +108,14 @@ export function RecipesPage() {
     }
   }
 
-  function toggleSuggestedGroup(index: number, g: FoodGroup) {
-    setSuggested(prev => prev.map((r, n) => {
-      if (n !== index) return r;
-      const next = r.foodGroups.includes(g) ? r.foodGroups.filter(x => x !== g) : FOOD_GROUPS.filter(x => x === g || r.foodGroups.includes(x));
-      return { ...r, foodGroups: next };
+  function toggleSuggestedGroup(mode: RecipeMode, index: number, g: FoodGroup) {
+    setSuggested(prev => ({
+      ...prev,
+      [mode]: prev[mode].map((r, n) => {
+        if (n !== index) return r;
+        const next = r.foodGroups.includes(g) ? r.foodGroups.filter(x => x !== g) : FOOD_GROUPS.filter(x => x === g || r.foodGroups.includes(x));
+        return { ...r, foodGroups: next };
+      }),
     }));
   }
 
@@ -127,12 +135,11 @@ export function RecipesPage() {
   const shownSaved = filter === 'all' ? saved : saved.filter(s => s.foodGroups.includes(filter));
   const nothingToCook = !listIds.size && !pantryIds.size;
 
-  const card = (key: string, r: Recipe, extra: { saved?: SavedRecipe; index?: number }) => {
-    const chosen = picksFor(key, r);
-    const toAdd = listEntries(r.ingredients.filter((_, n) => chosen.has(n))).length;
-    const missing = cartAdditions(r, listIds, pantryIds).length;
+  const card = (key: string, r: Recipe, extra: { saved?: SavedRecipe; mode?: RecipeMode; index?: number }) => {
+    const have = haveFor(key, r);
+    const toAdd = listEntries(stillNeeded(r, have)).length;
     const isSaved = !!extra.saved || savedTitles.has(recipeKey(r));
-    const toggleGroup = (g: FoodGroup) => (extra.saved ? void toggleSavedGroup(extra.saved, g) : toggleSuggestedGroup(extra.index ?? 0, g));
+    const toggleGroup = (g: FoodGroup) => (extra.saved ? void toggleSavedGroup(extra.saved, g) : toggleSuggestedGroup(extra.mode ?? 'list', extra.index ?? 0, g));
     return (
       <article className="recipe-card" key={key} aria-label={r.title}>
         <header className="recipe-card-head">
@@ -142,7 +149,7 @@ export function RecipesPage() {
             <div className="recipe-meta">
               {r.minutes != null && <span><Clock size={13} aria-hidden="true" /> {r.minutes} min</span>}
               <span><Users size={13} aria-hidden="true" /> Serves {r.servings}</span>
-              <span>{missing ? `${missing} to buy` : 'You have everything in Kiwi'}</span>
+              <span>{toAdd ? `${toAdd} to buy` : 'You have everything'}</span>
             </div>
           </div>
           {extra.saved
@@ -174,14 +181,14 @@ export function RecipesPage() {
             const food = i.foodId ? foodById(i.foodId) : undefined;
             const id = `${key}-ing-${n}`;
             return (
-              <li key={n} className={`recipe-ingredient ${status}`}>
+              <li key={n} className={`recipe-ingredient ${status}${have.has(n) ? ' have' : ''}`}>
                 <input
                   id={id}
                   type="checkbox"
-                  disabled={!i.foodId}
-                  checked={chosen.has(n)}
+                  aria-label={`I have ${i.name}`}
+                  checked={have.has(n)}
                   onChange={e => setPicks(prev => {
-                    const next = new Set(picksFor(key, r));
+                    const next = new Set(haveFor(key, r));
                     if (e.target.checked) next.add(n); else next.delete(n);
                     return { ...prev, [key]: next };
                   })}
@@ -189,7 +196,7 @@ export function RecipesPage() {
                 <label htmlFor={id}>
                   <span className="recipe-ingredient-name">{food?.emoji ? `${food.emoji} ` : ''}{i.name}{i.amount && <small> · {i.amount}</small>}</span>
                   <span className="recipe-ingredient-status">
-                    {STATUS_LABELS[status]}{food && status !== 'not_in_catalog' ? ` · ${i.servings} × ${food.name}` : ''}
+                    {have.has(n) && (status === 'missing' || status === 'not_in_catalog') ? 'You have it' : STATUS_LABELS[status]}{food && status !== 'not_in_catalog' ? ` · ${i.servings} × ${food.name}` : ''}
                   </span>
                 </label>
               </li>
@@ -204,9 +211,9 @@ export function RecipesPage() {
           </details>
         )}
 
-        <Button className="recipe-add" disabled={!toAdd || adding === key} onClick={() => void addPicked(key, r)}>
+        <Button className="recipe-add" disabled={!toAdd || adding === key} onClick={() => void addNeeded(key, r)}>
           {adding === key ? <LoaderCircle size={16} className="spin" /> : <Plus size={16} />}
-          {toAdd ? `Add ${toAdd} to my list` : 'Pick ingredients to add'}
+          {toAdd ? `Add ${toAdd} missing to my list` : 'You have everything'}
         </Button>
       </article>
     );
@@ -217,7 +224,7 @@ export function RecipesPage() {
       <div className="page-heading">
         <div>
           <h1>Recipes</h1>
-          <p>Ideas built from your grocery list, and the recipes you saved.</p>
+          <p>Recipe ideas from your grocery list, healthy picks, and the recipes you saved.</p>
         </div>
         <Button asChild variant="outline">
           <Link to="/plan"><ArrowLeft size={16} /> Back to my plan</Link>
@@ -228,21 +235,40 @@ export function RecipesPage() {
 
       <section className="section-block">
         <div className="section-title">
-          <div><h2>Suggestions from your list</h2></div>
-          <Button onClick={() => void ask()} disabled={asking || nothingToCook}>
-            {asking ? <LoaderCircle size={16} className="spin" /> : <Sparkles size={16} />}
-            {asking ? 'Thinking…' : suggested.length ? 'Suggest 3 more' : 'Suggest recipes from my list'}
+          <div><h2>From your list</h2></div>
+          <Button onClick={() => void ask('list')} disabled={!!asking || nothingToCook}>
+            {asking === 'list' ? <LoaderCircle size={16} className="spin" /> : <Sparkles size={16} />}
+            {asking === 'list' ? 'Thinking…' : suggested.list.length ? 'Suggest 3 more' : 'Suggest recipes from my list'}
           </Button>
         </div>
         <p className="section-note">
           {nothingToCook
             ? <>Add foods to <Link to="/plan">your grocery list</Link> first.</>
-            : `Claude suggests 3 recipes using your ${listIds.size} list ${listIds.size === 1 ? 'food' : 'foods'}${pantryIds.size ? ` and ${pantryIds.size} pantry ${pantryIds.size === 1 ? 'food' : 'foods'}` : ''}. Ticked ingredients are the ones you still need.`}
+            : `3 recipes using your ${listIds.size} list ${listIds.size === 1 ? 'food' : 'foods'}${pantryIds.size ? ` and ${pantryIds.size} pantry ${pantryIds.size === 1 ? 'food' : 'foods'}` : ''}. Ticked = you have it.`}
         </p>
-        {askError && <p className="recipe-error" role="alert">{askError}</p>}
-        {suggested.length > 0 && (
+        {askError.list && <p className="recipe-error" role="alert">{askError.list}</p>}
+        {suggested.list.length > 0 && (
           <div className="recipe-grid">
-            {suggested.map((r, index) => card(`new:${index}:${recipeKey(r)}`, r, { index }))}
+            {suggested.list.map((r, index) => card(`list:${index}:${recipeKey(r)}`, r, { mode: 'list', index }))}
+          </div>
+        )}
+      </section>
+
+      <section className="section-block">
+        <div className="section-title">
+          <div><h2>Healthy recipes</h2></div>
+          <Button variant="outline" onClick={() => void ask('healthy')} disabled={!!asking}>
+            {asking === 'healthy' ? <LoaderCircle size={16} className="spin" /> : <HeartPulse size={16} />}
+            {asking === 'healthy' ? 'Thinking…' : suggested.healthy.length ? 'Suggest 3 more' : 'Suggest healthy recipes'}
+          </Button>
+        </div>
+        <p className="section-note">
+          Nutritious ideas that don’t have to use your list{gaps.length ? `, picked to help with ${gaps.join(', ')}` : ''}.
+        </p>
+        {askError.healthy && <p className="recipe-error" role="alert">{askError.healthy}</p>}
+        {suggested.healthy.length > 0 && (
+          <div className="recipe-grid">
+            {suggested.healthy.map((r, index) => card(`healthy:${index}:${recipeKey(r)}`, r, { mode: 'healthy', index }))}
           </div>
         )}
       </section>
@@ -266,7 +292,7 @@ export function RecipesPage() {
           ? <p className="empty-inline">Loading…</p>
           : shownSaved.length
             ? <div className="recipe-grid">{shownSaved.map(r => card(`saved:${r.id}`, r, { saved: r }))}</div>
-            : <div className="empty-state"><ChefHat size={18} aria-hidden="true" /> {saved.length ? 'No saved recipes in this food group.' : 'Save a suggestion to keep it here.'}</div>}
+            : <div className="empty-state">{saved.length ? 'No saved recipes in this food group.' : 'Save a suggestion to keep it here.'}</div>}
       </section>
     </>
   );

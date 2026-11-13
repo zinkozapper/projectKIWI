@@ -337,7 +337,7 @@ input,select,textarea{font-size:16px!important}
 .recipe-ingredient-status{font-size:11px;color:var(--muted-foreground)}
 .recipe-ingredient.missing .recipe-ingredient-status{color:var(--orange);font-weight:600}
 .recipe-ingredient.on_list .recipe-ingredient-status,.recipe-ingredient.in_pantry .recipe-ingredient-status{color:var(--primary)}
-.recipe-ingredient.not_in_catalog label{cursor:default}
+.recipe-ingredient.have .recipe-ingredient-status{color:var(--primary);font-weight:400}
 .recipe-steps summary{cursor:pointer;font-size:13px;font-weight:600}
 .recipe-steps ol{margin:8px 0 0;padding-left:20px;font-size:13px;display:flex;flex-direction:column;gap:5px}
 .recipe-add{margin-top:auto;align-self:stretch}

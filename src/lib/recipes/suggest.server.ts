@@ -4,7 +4,7 @@
 import { getRequest } from '@tanstack/react-start/server';
 import { adminClient } from '@/lib/food-import/env.server';
 import { askClaude } from '@/lib/food-import/claude.server';
-import { cleanIds, normalizeRecipes, RECIPE_SYSTEM, RECIPE_TOOL, recipePrompt, type CatalogLine, type SuggestInput, type SuggestResult } from './shared';
+import { cleanGaps, cleanIds, normalizeRecipes, RECIPE_SYSTEM, RECIPE_TOOL, recipePrompt, type CatalogLine, type SuggestInput, type SuggestResult } from './shared';
 
 export class RecipeError extends Error {}
 export const isRecipeError = (e: unknown): e is RecipeError => e instanceof RecipeError;
@@ -23,7 +23,8 @@ export async function suggest(input: SuggestInput): Promise<SuggestResult> {
   const listIds = cleanIds(input.listFoodIds);
   const pantryIds = cleanIds(input.pantryFoodIds);
   const dislikedIds = cleanIds(input.dislikedFoodIds);
-  if (!listIds.length && !pantryIds.length) throw new RecipeError('Add some foods to your list first.');
+  const mode = input.mode === 'healthy' ? 'healthy' : 'list';
+  if (mode === 'list' && !listIds.length && !pantryIds.length) throw new RecipeError('Add some foods to your list first.');
 
   const db = await requireUser();
   const { data, error } = await db.from('food').select('food_id,food_name,food_group,serving_size,unit').order('food_id');
@@ -35,11 +36,11 @@ export async function suggest(input: SuggestInput): Promise<SuggestResult> {
   const pick = (ids: string[]) => ids.map(id => byId.get(id)).filter((f): f is CatalogLine => !!f);
   const list = pick(listIds);
   const pantry = pick(pantryIds.filter(id => !listIds.includes(id)));
-  if (!list.length && !pantry.length) throw new RecipeError('Add some foods to your list first.');
+  if (mode === 'list' && !list.length && !pantry.length) throw new RecipeError('Add some foods to your list first.');
 
   const raw = await askClaude<unknown>({
     system: RECIPE_SYSTEM,
-    prompt: recipePrompt({ list, pantry, disliked: pick(dislikedIds), catalog }),
+    prompt: recipePrompt({ mode, list, pantry, disliked: pick(dislikedIds), catalog, gaps: cleanGaps(input.gaps) }),
     tool: RECIPE_TOOL,
     maxTokens: 4000,
   });
