@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Bookmark, BookmarkCheck, Clock, Lightbulb, LoaderCircle, Plus, ShoppingBasket, Sparkles, Trash2, TrendingUp, Users } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, ChevronDown, Clock, Lightbulb, LoaderCircle, Plus, ShoppingBasket, Sparkles, Trash2, TrendingUp, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foodById } from '@/lib/foods';
 import { suggestRecipes } from '@/lib/recipes/functions';
@@ -34,6 +34,13 @@ export function RecipesPage() {
   const [picks, setPicks] = useState<Picks>({});
   const [adding, setAdding] = useState('');
   const [notice, setNotice] = useState('');
+  // Cards start folded (title, summary, time); the rest opens on demand.
+  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
+  const toggleCard = (key: string) => setOpenCards(prev => {
+    const next = new Set(prev);
+    if (next.has(key)) next.delete(key); else next.add(key);
+    return next;
+  });
 
   useEffect(() => {
     if (!userId) return;
@@ -146,6 +153,8 @@ export function RecipesPage() {
     const have = haveFor(key, r);
     const toAdd = listEntries(stillNeeded(r, have)).length;
     const isSaved = !!extra.saved || savedTitles.has(recipeKey(r));
+    const isOpen = openCards.has(key);
+    const bodyId = `${key.replace(/[^a-z0-9-]/gi, '-')}-body`;
     // Popular cards show what users saved; their food groups are read-only.
     const toggleGroup = (g: FoodGroup) => {
       if (extra.saved) void toggleSavedGroup(extra.saved, g);
@@ -168,6 +177,9 @@ export function RecipesPage() {
               <span><Users size={13} aria-hidden="true" /> Serves {r.servings}</span>
               <span>{toAdd ? `${toAdd} to buy` : 'You have everything'}</span>
             </div>
+            <button type="button" className="recipe-toggle" aria-expanded={isOpen} aria-controls={bodyId} onClick={() => toggleCard(key)}>
+              <ChevronDown size={15} aria-hidden="true" /> {isOpen ? 'Hide recipe' : 'Show recipe'}
+            </button>
           </div>
           {extra.saved
             ? <Button size="icon" variant="ghost" title={`Delete ${r.title}`} aria-label={`Delete ${r.title}`} onClick={() => void remove(extra.saved!)}><Trash2 size={16} /></Button>
@@ -178,6 +190,7 @@ export function RecipesPage() {
             )}
         </header>
 
+        {isOpen && <div className="recipe-body" id={bodyId}>
         <div className="recipe-groups" role="group" aria-label={`Food groups for ${r.title}`}>
           {FOOD_GROUPS.map(g => (
             <button
@@ -232,6 +245,7 @@ export function RecipesPage() {
           {adding === key ? <LoaderCircle size={16} className="spin" /> : <Plus size={16} />}
           {toAdd ? `Add ${toAdd} missing to my list` : 'You have everything'}
         </Button>
+        </div>}
       </article>
     );
   };
