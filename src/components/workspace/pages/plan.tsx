@@ -463,12 +463,6 @@ export function PlanPage() {
         )}
       </div>
 
-      {listItems.length > 0 && (
-        <Button className="shop-action" onClick={() => navigate({ to: '/plan/shop' })}>
-          <ShoppingBasket size={17} /> Shop this list ({listItems.length}) <ArrowRight size={16} />
-        </Button>
-      )}
-
       {(isPhone || detailsFromSearch) && (
         <Dialog open={!!foodDetails} onOpenChange={open => { if (!open) { setFoodDetails(null); setDetailsFromSearch(false); } }}>
           <DialogContent className="food-details-dialog">
@@ -496,6 +490,11 @@ export function PlanPage() {
             <Undo2 size={15} aria-hidden="true" /> Undo
           </Button>
         </div>
+      )}
+      {listItems.length > 0 && (
+        <Button className="shop-action" onClick={() => navigate({ to: '/plan/shop' })}>
+          <ShoppingBasket size={17} /> Shop this list ({listItems.length}) <ArrowRight size={16} />
+        </Button>
       )}
     </>
   );
