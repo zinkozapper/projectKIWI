@@ -121,9 +121,12 @@ describe('have boxes and healthy mode', () => {
   });
 
   it('asks for nutritious recipes aimed at the gaps, not tied to the list', () => {
-    const prompt = recipePrompt({ mode: 'healthy', list: [], pantry: [], disliked: [], catalog: [], gaps: cleanGaps(['Vitamin D', 'Folate (B9)', '<script>']) });
+    const rice = { id: '1', name: 'Rice', group: 'grain', serving: '45 g' };
+    const prompt = recipePrompt({ mode: 'healthy', list: [rice], pantry: [rice], disliked: [], catalog: [], gaps: cleanGaps(['Vitamin D', 'Folate (B9)', '<script>']) });
+    expect(prompt).not.toContain('Shopping list');
+    expect(prompt).not.toContain('pantry:');
     expect(prompt).toContain('nutritious, balanced');
-    expect(prompt).toContain('do not have to use the shopping list');
+    expect(prompt).toContain('Do not build them around any particular foods the user has');
     expect(prompt).toContain('low on: Vitamin D, Folate (B9).');
     expect(prompt).not.toContain('script');
   });

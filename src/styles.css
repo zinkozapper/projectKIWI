@@ -324,6 +324,17 @@ input,select,textarea{font-size:16px!important}
 .recipe-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font-size:12px;color:var(--muted-foreground)}
 .recipe-meta span{display:inline-flex;align-items:center;gap:4px}
 .recipe-groups{display:flex;flex-wrap:wrap;gap:5px}
+.recipe-section{border:1px solid var(--border);border-radius:8px;padding:18px 18px 20px}
+.recipe-section.list{background:var(--card);border-left:4px solid var(--primary)}
+.recipe-section.healthy{background:color-mix(in oklab,var(--orange) 7%,var(--background));border-left:4px solid var(--orange)}
+.recipe-section h2{display:flex;align-items:center;gap:8px}
+.recipe-section.list h2 svg{color:var(--primary)}
+.recipe-section.healthy h2 svg{color:var(--orange)}
+.recipe-card.list{border-top:3px solid var(--primary)}
+.recipe-card.healthy{border-top:3px solid var(--orange)}
+.recipe-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;padding:3px 8px;border-radius:20px;color:var(--foreground)}
+.recipe-card.list .recipe-badge{background:var(--secondary)}
+.recipe-card.healthy .recipe-badge{background:color-mix(in oklab,var(--orange) 28%,transparent)}
 .recipe-filter{margin-bottom:4px}
 .group-chip{font-size:11px;font-weight:600;line-height:1;color:var(--muted-foreground);background:transparent;border:1px solid var(--border);padding:6px 9px;border-radius:20px;min-height:28px;cursor:pointer}
 .group-chip.on{color:var(--primary);background:var(--secondary);border-color:transparent;font-weight:700}

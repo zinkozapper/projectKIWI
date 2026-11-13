@@ -34,8 +34,9 @@ export async function suggest(input: SuggestInput): Promise<SuggestResult> {
   }));
   const byId = new Map(catalog.map(f => [f.id, f]));
   const pick = (ids: string[]) => ids.map(id => byId.get(id)).filter((f): f is CatalogLine => !!f);
-  const list = pick(listIds);
-  const pantry = pick(pantryIds.filter(id => !listIds.includes(id)));
+  // Healthy suggestions don't look at the cart at all.
+  const list = mode === 'list' ? pick(listIds) : [];
+  const pantry = mode === 'list' ? pick(pantryIds.filter(id => !listIds.includes(id))) : [];
   if (mode === 'list' && !list.length && !pantry.length) throw new RecipeError('Add some foods to your list first.');
 
   const raw = await askClaude<unknown>({

@@ -148,16 +148,16 @@ export function recipePrompt({ mode = 'list', list, pantry, disliked, catalog, g
   const ask = mode === 'healthy'
     ? [
       `Suggest exactly ${RECIPE_COUNT} different nutritious, balanced recipes (vegetables or fruit, lean protein or legumes, whole grains).`,
-      'They do not have to use the shopping list. Prefer Kiwi catalog foods so the ingredients can go on the list.',
+      'Do not build them around any particular foods the user has. Prefer Kiwi catalog foods so the ingredients can go on the list.',
       ...(gaps.length ? [`The user is low on: ${gaps.join(', ')}. Pick recipes that help with these.`] : []),
     ]
     : [
       `Suggest exactly ${RECIPE_COUNT} different recipes that use as much of the shopping list as possible, then the pantry.`,
       'Add other ingredients only when a recipe needs them.',
     ];
+  // Healthy ideas are independent of the cart, so the list and pantry are left out of that prompt.
   return [
-    `Shopping list: ${names(list)}`,
-    `Already in the pantry: ${names(pantry)}`,
+    ...(mode === 'list' ? [`Shopping list: ${names(list)}`, `Already in the pantry: ${names(pantry)}`] : []),
     ...(disliked.length ? [`The user dislikes: ${names(disliked)}. Avoid these.`] : []),
     '',
     ...ask,

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Bookmark, BookmarkCheck, Clock, HeartPulse, LoaderCircle, Plus, Sparkles, Trash2, Users } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Clock, HeartPulse, LoaderCircle, Plus, ShoppingBasket, Sparkles, Trash2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foodById, nutrientLabels } from '@/lib/foods';
 import { suggestRecipes } from '@/lib/recipes/functions';
@@ -53,8 +53,9 @@ export function RecipesPage() {
     const result = await suggestRecipes({
       data: {
         mode,
-        listFoodIds: [...listIds],
-        pantryFoodIds: [...pantryIds],
+        // Healthy ideas are not based on the cart.
+        listFoodIds: mode === 'list' ? [...listIds] : [],
+        pantryFoodIds: mode === 'list' ? [...pantryIds] : [],
         dislikedFoodIds: Object.keys(foodPreferences).filter(id => foodPreferences[id] === false),
         gaps,
       },
@@ -141,9 +142,14 @@ export function RecipesPage() {
     const isSaved = !!extra.saved || savedTitles.has(recipeKey(r));
     const toggleGroup = (g: FoodGroup) => (extra.saved ? void toggleSavedGroup(extra.saved, g) : toggleSuggestedGroup(extra.mode ?? 'list', extra.index ?? 0, g));
     return (
-      <article className="recipe-card" key={key} aria-label={r.title}>
+      <article className={`recipe-card ${extra.saved ? 'saved' : extra.mode ?? 'list'}`} key={key} aria-label={r.title}>
         <header className="recipe-card-head">
           <div>
+            {!extra.saved && (
+              <span className="recipe-badge">
+                {extra.mode === 'healthy' ? <><HeartPulse size={12} aria-hidden="true" /> Healthy pick</> : <><ShoppingBasket size={12} aria-hidden="true" /> From your list</>}
+              </span>
+            )}
             <h3>{r.title}</h3>
             {r.summary && <p>{r.summary}</p>}
             <div className="recipe-meta">
@@ -196,7 +202,7 @@ export function RecipesPage() {
                 <label htmlFor={id}>
                   <span className="recipe-ingredient-name">{food?.emoji ? `${food.emoji} ` : ''}{i.name}{i.amount && <small> · {i.amount}</small>}</span>
                   <span className="recipe-ingredient-status">
-                    {have.has(n) && (status === 'missing' || status === 'not_in_catalog') ? 'You have it' : STATUS_LABELS[status]}{food && status !== 'not_in_catalog' ? ` · ${i.servings} × ${food.name}` : ''}
+                    {have.has(n) && (status === 'missing' || status === 'not_in_catalog') ? 'You have it' : STATUS_LABELS[status]}
                   </span>
                 </label>
               </li>
@@ -233,19 +239,15 @@ export function RecipesPage() {
 
       {notice && <p className="recipe-notice" role="status">{notice}</p>}
 
-      <section className="section-block">
+      <section className="section-block recipe-section list">
         <div className="section-title">
-          <div><h2>From your list</h2></div>
+          <div><h2><ShoppingBasket size={20} aria-hidden="true" /> From your list</h2></div>
           <Button onClick={() => void ask('list')} disabled={!!asking || nothingToCook}>
             {asking === 'list' ? <LoaderCircle size={16} className="spin" /> : <Sparkles size={16} />}
             {asking === 'list' ? 'Thinking…' : suggested.list.length ? 'Suggest 3 more' : 'Suggest recipes from my list'}
           </Button>
         </div>
-        <p className="section-note">
-          {nothingToCook
-            ? <>Add foods to <Link to="/plan">your grocery list</Link> first.</>
-            : `3 recipes using your ${listIds.size} list ${listIds.size === 1 ? 'food' : 'foods'}${pantryIds.size ? ` and ${pantryIds.size} pantry ${pantryIds.size === 1 ? 'food' : 'foods'}` : ''}. Ticked = you have it.`}
-        </p>
+        {nothingToCook && <p className="section-note">Add foods to <Link to="/plan">your grocery list</Link> first.</p>}
         {askError.list && <p className="recipe-error" role="alert">{askError.list}</p>}
         {suggested.list.length > 0 && (
           <div className="recipe-grid">
@@ -254,16 +256,16 @@ export function RecipesPage() {
         )}
       </section>
 
-      <section className="section-block">
+      <section className="section-block recipe-section healthy">
         <div className="section-title">
-          <div><h2>Healthy recipes</h2></div>
+          <div><h2><HeartPulse size={20} aria-hidden="true" /> Healthy recipes</h2></div>
           <Button variant="outline" onClick={() => void ask('healthy')} disabled={!!asking}>
             {asking === 'healthy' ? <LoaderCircle size={16} className="spin" /> : <HeartPulse size={16} />}
             {asking === 'healthy' ? 'Thinking…' : suggested.healthy.length ? 'Suggest 3 more' : 'Suggest healthy recipes'}
           </Button>
         </div>
         <p className="section-note">
-          Nutritious ideas that don’t have to use your list{gaps.length ? `, picked to help with ${gaps.join(', ')}` : ''}.
+          Nutritious ideas, not based on your cart{gaps.length ? `. Picked to help with ${gaps.join(', ')}` : ''}.
         </p>
         {askError.healthy && <p className="recipe-error" role="alert">{askError.healthy}</p>}
         {suggested.healthy.length > 0 && (
