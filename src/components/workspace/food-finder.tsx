@@ -19,6 +19,8 @@ type Props = {
   // Admin queue: work on someone's "no good match" request.
   adminRequest?: { requestId: number; query: string; howBought?: string | null; notes?: string | null } | null;
   onFinished?: () => void;
+  // Where the found food goes: the grocery list (default) or the pantry.
+  target?: 'list' | 'pantry';
 };
 
 const DATASET_LABEL: Record<string, string> = { 'Survey (FNDDS)': 'FNDDS survey', 'SR Legacy': 'SR Legacy', Foundation: 'Foundation', Branded: 'Branded' };
@@ -30,8 +32,10 @@ async function call<T>(p: Promise<Result<T>>): Promise<T> {
   return r.data;
 }
 
-export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest = null, onFinished }: Props) {
-  const { addFood, listItems } = useWorkspace();
+export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest = null, onFinished, target = 'list' }: Props) {
+  const { addFood, listItems, addPantry, pantry } = useWorkspace();
+  const toPantry = target === 'pantry';
+  const addTo = (id: string) => (toPantry ? addPantry(id) : addFood(id).then(() => undefined));
   const [step, setStep] = useState<Step>('form');
   const [busy, setBusy] = useState('');
   const [pending, setPending] = useState<number | null>(null);
@@ -143,7 +147,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
     setStatus(await call(finderRequestMore({ data: { note: moreNote } })));
   });
 
-  const onList = added ? listItems.some(i => i.food_id === added.id) : false;
+  const alreadyThere = added ? (toPantry ? pantry : listItems).some(i => i.food_id === added.id) : false;
   const remaining = status?.remaining;
   const summary = added?.summary;
 
@@ -203,7 +207,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
               <div className="finder-existing">
                 <strong>Already in Kiwi:</strong>
                 {result.existing.map(f => (
-                  <Button key={f.id} variant="outline" size="sm" onClick={() => { void addFood(f.id); close(false); }}>
+                  <Button key={f.id} variant="outline" size="sm" onClick={() => { void addTo(f.id); close(false); }}>
                     <Plus size={14} /> {f.name}
                   </Button>
                 ))}
@@ -292,9 +296,9 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
               </>
             )}
             <div className="finder-actions">
-              {!adminRequest && (onList ? <Button variant="outline" disabled><Check size={16} /> On your list</Button> : (
-                <Button onClick={() => void addFood(added.id)}><Plus size={16} /> Add to my list</Button>
-              ))}
+              {!adminRequest && (alreadyThere
+                ? <Button variant="outline" disabled><Check size={16} /> {toPantry ? 'In your pantry' : 'On your list'}</Button>
+                : <Button onClick={() => void addTo(added.id)}><Plus size={16} /> {toPantry ? 'Add to my pantry' : 'Add to my list'}</Button>)}
               <Button variant="ghost" onClick={() => close(false)}>Done</Button>
             </div>
           </div>

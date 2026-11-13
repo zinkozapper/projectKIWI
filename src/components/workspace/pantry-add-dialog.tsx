@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
-import { Check, Plus, Search } from 'lucide-react';
+import { Check, Plus, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { foodById, foods, searchFoods, type Food } from '@/lib/foods';
 import { useWorkspace } from './context';
+import { FoodFinder } from './food-finder';
 
 const MAX_PICKS = 8;
 
@@ -30,6 +31,9 @@ function usePantryPicks(): Food[] {
 export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { pantry, addPantry } = useWorkspace();
   const [query, setQuery] = useState('');
+  // AI food finder (same one My Plan uses), set to add the found food to the pantry.
+  const [finderOpen, setFinderOpen] = useState(false);
+  const [finderQuery, setFinderQuery] = useState('');
   const picks = usePantryPicks();
   const results = searchFoods(foods, query, 8);
   const has = (id: string) => pantry.some(p => p.food_id === id);
@@ -39,7 +43,14 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
     onOpenChange(next);
   }
 
+  function openFinder() {
+    setFinderQuery(query.trim());
+    close(false);
+    setFinderOpen(true);
+  }
+
   return (
+    <>
     <Dialog open={open} onOpenChange={close}>
       <DialogContent className="pantry-dialog">
         <DialogHeader>
@@ -81,11 +92,18 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
             </div>
           ) : <p className="empty-inline">No match. Try “beans”, “rice”, or “yogurt”.</p>
         )}
+        {query.trim() && (
+          <button type="button" className="finder-launch" onClick={openFinder}>
+            <Sparkles size={15} aria-hidden="true" /> Can’t find it? Add “{query.trim()}” to Kiwi
+          </button>
+        )}
 
         <DialogFooter>
           <Button onClick={() => close(false)}>Done</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    <FoodFinder open={finderOpen} onOpenChange={setFinderOpen} initialQuery={finderQuery} target="pantry" />
+    </>
   );
 }

@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 const addFood = vi.fn(async () => null);
-vi.mock('./context', () => ({ useWorkspace: () => ({ addFood, listItems: [] }) }));
+const addPantry = vi.fn(async () => {});
+vi.mock('./context', () => ({ useWorkspace: () => ({ addFood, listItems: [], addPantry, pantry: [] }) }));
 
 const status = { isAdmin: false, added: 2, limit: 10, remaining: 8, quotaPending: false };
 const fns = vi.hoisted(() => ({
@@ -48,6 +49,24 @@ describe('FoodFinder', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Add to my list/ }));
     await waitFor(() => expect(addFood).toHaveBeenCalledWith('101'));
+  });
+
+  it('adds the found food to the pantry when opened from My Pantry', async () => {
+    addFood.mockClear();
+    fns.finderStatus.mockResolvedValue({ ok: true, data: status });
+    fns.finderSearch.mockResolvedValue({ ok: true, data: { requestId: 8, group: 'legume', groupLabel: 'Beans & legumes', options: [option], followUpQuestion: null, noGoodMatch: false, existing: [{ id: '55', name: 'Black beans' }], status } });
+    fns.finderAdd.mockResolvedValue({ ok: true, data: {
+      food: { food_id: 102, food_name: 'Lentils', emoji: '🫘', unit: 'cup', price: 0, serving_size: 0.25, nutrition: {}, food_description: '', pairs: [], needs_review: false, food_category: null },
+      status, alreadyExisted: false, summary: null,
+    } });
+
+    render(<FoodFinder open onOpenChange={() => {}} initialQuery="lentils" target="pantry" />);
+    fireEvent.click(await screen.findByRole('button', { name: /Find it/ }));
+    await screen.findByText('Brown lentils');
+    fireEvent.click(screen.getByText('Brown lentils'));
+    fireEvent.click(await screen.findByRole('button', { name: /Add to my pantry/ }));
+    await waitFor(() => expect(addPantry).toHaveBeenCalledWith('102'));
+    expect(addFood).not.toHaveBeenCalled();
   });
 
   it('shows the limit screen and server errors', async () => {
