@@ -6,7 +6,7 @@ import { googleSignInEnabled, passkeysEnabled, selfHosted } from '@/lib/auth-opt
 import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
-import { KeyRound, Leaf } from 'lucide-react';
+import { Eye, EyeOff, KeyRound, Leaf } from 'lucide-react';
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -26,6 +26,7 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -144,19 +145,31 @@ function Login() {
 
             <div className="login-password-label">
               <label htmlFor="login-password">Password</label>
-              {!selfHosted && <Link className="text-link" to="/forgot-password">
-                Forgot password?
-              </Link>}
+              {!selfHosted && (
+                <Link className="text-link" to="/forgot-password">
+                  Forgot password?
+                </Link>
+              )}
             </div>
 
-            <input
-              id="login-password"
-              className="login-password-input"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
+            <div className="password-field">
+              <input
+                id="login-password"
+                className="login-password-input"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+              </button>
+            </div>
 
             <label className="remember-me">
               <input
