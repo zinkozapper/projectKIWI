@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Bookmark, BookmarkCheck, Clock, HeartPulse, LoaderCircle, Plus, ShoppingBasket, Sparkles, Trash2, Users } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Clock, Lightbulb, LoaderCircle, Plus, ShoppingBasket, Sparkles, Trash2, TrendingUp, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { foodById, nutrientLabels } from '@/lib/foods';
+import { foodById } from '@/lib/foods';
 import { suggestRecipes } from '@/lib/recipes/functions';
 import {
   FOOD_GROUP_LABELS, FOOD_GROUPS, haveByDefault, ingredientStatus, listEntries, recipeKey, STATUS_LABELS, stillNeeded,
-  type FoodGroup, type Recipe, type RecipeMode, type SavedRecipe,
+  type FoodGroup, type PopularRecipe, type Recipe, type RecipeMode, type SavedRecipe,
 } from '@/lib/recipes/shared';
-import { deleteRecipe, loadSavedRecipes, saveRecipe, setRecipeFoodGroups } from '@/lib/recipes/store';
+import { deleteRecipe, loadPopularRecipes, loadSavedRecipes, saveRecipe, setRecipeFoodGroups } from '@/lib/recipes/store';
 import { useWorkspace } from '../context';
 
 type Picks = Record<string, Set<number>>;
@@ -16,13 +16,16 @@ type Picks = Record<string, Set<number>>;
 const errorText = (e: unknown) => (e && typeof e === 'object' && 'message' in e && String(e.message)) || 'unknown error';
 
 export function RecipesPage() {
-  const { userId, listItems, pantry, foodPreferences, addFoods, fail, biggestGaps, combined, daily, days } = useWorkspace();
+  const { userId, listItems, pantry, foodPreferences, addFoods, fail } = useWorkspace();
   const listIds = useMemo(() => new Set(listItems.map(i => i.food_id)), [listItems]);
   const pantryIds = useMemo(() => new Set(pantry.map(p => p.food_id)), [pantry]);
 
-  const [suggested, setSuggested] = useState<Record<RecipeMode, Recipe[]>>({ list: [], healthy: [] });
+  const [suggested, setSuggested] = useState<Record<RecipeMode, Recipe[]>>({ list: [], popular: [] });
   const [asking, setAsking] = useState<RecipeMode | ''>('');
-  const [askError, setAskError] = useState<Record<RecipeMode, string>>({ list: '', healthy: '' });
+  const [askError, setAskError] = useState<Record<RecipeMode, string>>({ list: '', popular: '' });
+  // Most saved by Kiwi users (migration 0016). AI ideas fill in below them.
+  const [popular, setPopular] = useState<PopularRecipe[]>([]);
+  const [popularLoading, setPopularLoading] = useState(true);
   const [saved, setSaved] = useState<SavedRecipe[]>([]);
   const [savedLoading, setSavedLoading] = useState(true);
   const [savingKey, setSavingKey] = useState('');
@@ -39,12 +42,13 @@ export function RecipesPage() {
       .then(rows => { if (live) setSaved(rows); })
       .catch(e => fail('Could not load saved recipes: ' + errorText(e)))
       .finally(() => { if (live) setSavedLoading(false); });
+    loadPopularRecipes()
+      .then(rows => { if (live) setPopular(rows); })
+      .finally(() => { if (live) setPopularLoading(false); });
     return () => { live = false; };
   }, [userId]);
 
   const haveFor = (key: string, r: Recipe) => picks[key] ?? haveByDefault(r, listIds, pantryIds);
-  // Nutrients the plan is furthest below target on, for the healthy suggestions.
-  const gaps = biggestGaps.filter(k => combined[k] / days < daily[k]).slice(0, 5).map(k => nutrientLabels[k]);
 
   async function ask(mode: RecipeMode) {
     setAsking(mode);
@@ -53,11 +57,11 @@ export function RecipesPage() {
     const result = await suggestRecipes({
       data: {
         mode,
-        // Healthy ideas are not based on the cart.
+        // Popular ideas are not based on the cart.
         listFoodIds: mode === 'list' ? [...listIds] : [],
         pantryFoodIds: mode === 'list' ? [...pantryIds] : [],
         dislikedFoodIds: Object.keys(foodPreferences).filter(id => foodPreferences[id] === false),
-        gaps,
+        avoidTitles: mode === 'popular' ? [...popular, ...suggested.popular].map(r => r.title) : [],
       },
     }).catch(() => ({ ok: false as const, error: 'Could not reach Kiwi. Check your connection and try again.' }));
     setAsking('');
@@ -91,6 +95,8 @@ export function RecipesPage() {
       const row = await saveRecipe(userId, r);
       setSaved(prev => [row, ...prev]);
       setNotice(`Saved ${r.title}.`);
+      // A save changes the counts.
+      void loadPopularRecipes().then(setPopular);
     } catch (e) {
       fail('Could not save the recipe: ' + errorText(e));
     } finally {
@@ -136,20 +142,25 @@ export function RecipesPage() {
   const shownSaved = filter === 'all' ? saved : saved.filter(s => s.foodGroups.includes(filter));
   const nothingToCook = !listIds.size && !pantryIds.size;
 
-  const card = (key: string, r: Recipe, extra: { saved?: SavedRecipe; mode?: RecipeMode; index?: number }) => {
+  const card = (key: string, r: Recipe, extra: { saved?: SavedRecipe; mode?: RecipeMode; index?: number; saves?: number }) => {
     const have = haveFor(key, r);
     const toAdd = listEntries(stillNeeded(r, have)).length;
     const isSaved = !!extra.saved || savedTitles.has(recipeKey(r));
-    const toggleGroup = (g: FoodGroup) => (extra.saved ? void toggleSavedGroup(extra.saved, g) : toggleSuggestedGroup(extra.mode ?? 'list', extra.index ?? 0, g));
+    // Popular cards show what users saved; their food groups are read-only.
+    const toggleGroup = (g: FoodGroup) => {
+      if (extra.saved) void toggleSavedGroup(extra.saved, g);
+      else if (extra.saves == null) toggleSuggestedGroup(extra.mode ?? 'list', extra.index ?? 0, g);
+    };
+    const badge = extra.saves != null
+      ? <><TrendingUp size={12} aria-hidden="true" /> Saved by {extra.saves} {extra.saves === 1 ? 'person' : 'people'}</>
+      : extra.mode === 'popular'
+        ? <><Lightbulb size={12} aria-hidden="true" /> New idea</>
+        : <><ShoppingBasket size={12} aria-hidden="true" /> From your list</>;
     return (
-      <article className={`recipe-card ${extra.saved ? 'saved' : extra.mode ?? 'list'}`} key={key} aria-label={r.title}>
+      <article className={`recipe-card ${extra.saved ? 'saved' : extra.saves != null ? 'popular' : extra.mode ?? 'list'}`} key={key} aria-label={r.title}>
         <header className="recipe-card-head">
           <div>
-            {!extra.saved && (
-              <span className="recipe-badge">
-                {extra.mode === 'healthy' ? <><HeartPulse size={12} aria-hidden="true" /> Healthy pick</> : <><ShoppingBasket size={12} aria-hidden="true" /> From your list</>}
-              </span>
-            )}
+            {!extra.saved && <span className="recipe-badge">{badge}</span>}
             <h3>{r.title}</h3>
             {r.summary && <p>{r.summary}</p>}
             <div className="recipe-meta">
@@ -230,7 +241,7 @@ export function RecipesPage() {
       <div className="page-heading">
         <div>
           <h1>Recipes</h1>
-          <p>Recipe ideas from your grocery list, healthy picks, and the recipes you saved.</p>
+          <p>Recipe ideas from your grocery list, popular recipes, and the recipes you saved.</p>
         </div>
         <Button asChild variant="outline">
           <Link to="/plan"><ArrowLeft size={16} /> Back to my plan</Link>
@@ -256,21 +267,24 @@ export function RecipesPage() {
         )}
       </section>
 
-      <section className="section-block recipe-section healthy">
+      <section className="section-block recipe-section popular">
         <div className="section-title">
-          <div><h2><HeartPulse size={20} aria-hidden="true" /> Healthy recipes</h2></div>
-          <Button variant="outline" onClick={() => void ask('healthy')} disabled={!!asking}>
-            {asking === 'healthy' ? <LoaderCircle size={16} className="spin" /> : <HeartPulse size={16} />}
-            {asking === 'healthy' ? 'Thinking…' : suggested.healthy.length ? 'Suggest 3 more' : 'Suggest healthy recipes'}
+          <div><h2><TrendingUp size={20} aria-hidden="true" /> Popular recipes</h2></div>
+          <Button variant="outline" onClick={() => void ask('popular')} disabled={!!asking}>
+            {asking === 'popular' ? <LoaderCircle size={16} className="spin" /> : <Lightbulb size={16} />}
+            {asking === 'popular' ? 'Thinking…' : suggested.popular.length ? 'More ideas' : 'Get new ideas'}
           </Button>
         </div>
-        <p className="section-note">
-          Nutritious ideas, not based on your cart{gaps.length ? `. Picked to help with ${gaps.join(', ')}` : ''}.
-        </p>
-        {askError.healthy && <p className="recipe-error" role="alert">{askError.healthy}</p>}
-        {suggested.healthy.length > 0 && (
+        {!popularLoading && (
+          <p className="section-note">
+            {popular.length ? 'Most saved by Kiwi users.' : 'No saved recipes yet. Get new ideas and save the ones you like.'}
+          </p>
+        )}
+        {askError.popular && <p className="recipe-error" role="alert">{askError.popular}</p>}
+        {(popular.length > 0 || suggested.popular.length > 0) && (
           <div className="recipe-grid">
-            {suggested.healthy.map((r, index) => card(`healthy:${index}:${recipeKey(r)}`, r, { mode: 'healthy', index }))}
+            {popular.map(r => card(`top:${recipeKey(r)}`, r, { saves: r.saves }))}
+            {suggested.popular.map((r, index) => card(`popular:${index}:${recipeKey(r)}`, r, { mode: 'popular', index }))}
           </div>
         )}
       </section>

@@ -1,6 +1,6 @@
 // Saved recipes (browser side). Rows are protected by RLS (migration 0015): each user sees only their own.
 import { supabase } from '@/integrations/supabase/client';
-import { cleanFoodGroups, type FoodGroup, type Recipe, type SavedRecipe } from './shared';
+import { cleanFoodGroups, toPopularRecipe, type FoodGroup, type PopularRecipe, type Recipe, type SavedRecipe } from './shared';
 
 type IngredientRow = { position: number; name: string; amount: string; food_id: number | null; servings: number };
 type RecipeRow = {
@@ -59,4 +59,18 @@ export async function setRecipeFoodGroups(recipeId: string, groups: FoodGroup[])
 export async function deleteRecipe(recipeId: string) {
   const { error } = await supabase.from('saved_recipe').delete().eq('recipe_id', Number(recipeId));
   if (error) throw error;
+}
+
+// Recipes saved by the most users (migration 0016). Returns [] if the migration isn't applied yet.
+export async function loadPopularRecipes(max = 6): Promise<PopularRecipe[]> {
+  const { data, error } = await supabase.rpc('popular_recipes', { max_count: max });
+  if (error) {
+    console.error('Could not load popular recipes:', error.message);
+    return [];
+  }
+  // food_id is a foreign key to food, so every id in a saved ingredient is a real catalog food.
+  const ids = (row: { ingredients: unknown }) => new Set((Array.isArray(row.ingredients) ? row.ingredients : [])
+    .map(i => (i && typeof i === 'object' ? (i as { food_id?: unknown }).food_id : null))
+    .filter(id => id != null).map(String));
+  return (data || []).map(row => toPopularRecipe(row, ids(row))).filter(r => r.title && r.ingredients.length);
 }

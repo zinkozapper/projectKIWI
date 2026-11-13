@@ -1,6 +1,7 @@
 // Recipes page: shapes and pure helpers shared by the browser and the server.
 // Claude suggests recipes (suggest.server.ts) in two modes: 'list' builds on the user's shopping list,
-// 'healthy' suggests nutritious recipes aimed at the user's nutrient gaps. Everything here checks and
+// 'popular' suggests well-loved everyday recipes, not based on the cart. The Popular section shows the
+// recipes saved by the most users first (migration 0016) and uses these only to fill in. Everything here checks and
 // cleans its answer and works out which ingredients still need to go on the list. No network here.
 import { FOOD_GROUPS, isFoodGroup, type FoodGroup } from '@/lib/food-import/rules';
 
@@ -23,9 +24,12 @@ export type Recipe = {
   ingredients: RecipeIngredient[];
 };
 export type SavedRecipe = Recipe & { id: string; createdAt: string };
+// saves = how many different users saved it.
+export type PopularRecipe = Recipe & { saves: number };
 
-export type RecipeMode = 'list' | 'healthy';
-export type SuggestInput = { mode?: RecipeMode; listFoodIds: string[]; pantryFoodIds: string[]; dislikedFoodIds?: string[]; gaps?: string[] };
+// 'popular' asks the AI for well-loved everyday recipes; it fills the Popular section until enough users save recipes.
+export type RecipeMode = 'list' | 'popular';
+export type SuggestInput = { mode?: RecipeMode; listFoodIds: string[]; pantryFoodIds: string[]; dislikedFoodIds?: string[]; avoidTitles?: string[] };
 export type SuggestResult = { recipes: Recipe[] };
 
 export const FOOD_GROUP_LABELS: Record<FoodGroup, string> = {
@@ -45,10 +49,10 @@ export function cleanIds(v: unknown, max = 200): string[] {
   return [...new Set(v.map(String).filter(id => /^\d{1,9}$/.test(id)))].slice(0, max);
 }
 
-// Nutrient labels from the browser (like "Vitamin D" or "Folate (B9)"), for the healthy prompt.
-export function cleanGaps(v: unknown, max = 6): string[] {
+// Recipe titles already on screen, so the AI suggests different ones. Plain text only.
+export function cleanTitles(v: unknown, max = 12): string[] {
   if (!Array.isArray(v)) return [];
-  return [...new Set(v.map(g => clip(g, 40)).filter(g => /^[A-Za-z0-9 ()-]+$/.test(g)))].slice(0, max);
+  return [...new Set(v.map(t => clip(String(t).replace(/[^\p{L}\p{N} ,&'()-]/gu, ''), 80)).filter(Boolean))].slice(0, max);
 }
 
 export function cleanFoodGroups(v: unknown): FoodGroup[] {
@@ -67,6 +71,22 @@ function cleanIngredient(v: unknown, catalogIds: Set<string>): RecipeIngredient 
   // Whole catalog servings, at least 1, so the list never gets a fraction of a package.
   const servings = Math.min(MAX_SERVINGS, Math.max(1, Math.ceil(Number(o['servings']) || 1)));
   return { name, amount: clip(o['amount'], 60), foodId, servings };
+}
+
+// One row of popular_recipes() (migration 0016) → a recipe with its save count.
+export function toPopularRecipe(row: { title: string; summary: string | null; servings: number; minutes: number | null; steps: string[] | null; food_groups: string[] | null; ingredients: unknown; saves: number | string }, catalogIds: Set<string>): PopularRecipe {
+  return {
+    title: clip(row.title, 120),
+    summary: clip(row.summary, 400),
+    servings: int(row.servings, 1, 12) ?? 2,
+    minutes: int(row.minutes, 1, 600),
+    steps: (row.steps || []).map(s => clip(s, 500)).filter(Boolean),
+    foodGroups: cleanFoodGroups(row.food_groups),
+    ingredients: (Array.isArray(row.ingredients) ? row.ingredients : [])
+      .map(i => cleanIngredient(i, catalogIds))
+      .filter((i): i is RecipeIngredient => !!i),
+    saves: Number(row.saves) || 0,
+  };
 }
 
 // Claude's tool input → at most 3 clean recipes. Food ids Claude made up (not in the catalog) are dropped,
@@ -137,25 +157,26 @@ export function listEntries(ingredients: RecipeIngredient[]): { id: string; quan
 }
 
 // Stable key for a recipe on the page (picks and saved state).
-export const recipeKey = (r: Recipe) => r.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+// Same normalization as popular_recipes() in migration 0016, so saves of one recipe group together.
+export const recipeKey = (r: Pick<Recipe, 'title'>) => r.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 export type CatalogLine = { id: string; name: string; group: string | null; serving: string };
 
-type PromptInput = { mode?: RecipeMode; list: CatalogLine[]; pantry: CatalogLine[]; disliked: CatalogLine[]; catalog: CatalogLine[]; gaps?: string[] };
+type PromptInput = { mode?: RecipeMode; list: CatalogLine[]; pantry: CatalogLine[]; disliked: CatalogLine[]; catalog: CatalogLine[]; avoidTitles?: string[] };
 
-export function recipePrompt({ mode = 'list', list, pantry, disliked, catalog, gaps = [] }: PromptInput) {
+export function recipePrompt({ mode = 'list', list, pantry, disliked, catalog, avoidTitles = [] }: PromptInput) {
   const names = (l: CatalogLine[]) => (l.length ? l.map(f => `${f.name} (#${f.id})`).join(', ') : 'nothing');
-  const ask = mode === 'healthy'
+  const ask = mode === 'popular'
     ? [
-      `Suggest exactly ${RECIPE_COUNT} different nutritious, balanced recipes (vegetables or fruit, lean protein or legumes, whole grains).`,
+      `Suggest exactly ${RECIPE_COUNT} different well-known, widely loved everyday recipes that home cooks make often, reasonably balanced.`,
       'Do not build them around any particular foods the user has. Prefer Kiwi catalog foods so the ingredients can go on the list.',
-      ...(gaps.length ? [`The user is low on: ${gaps.join(', ')}. Pick recipes that help with these.`] : []),
+      ...(avoidTitles.length ? [`Already shown, suggest different ones: ${avoidTitles.join('; ')}.`] : []),
     ]
     : [
       `Suggest exactly ${RECIPE_COUNT} different recipes that use as much of the shopping list as possible, then the pantry.`,
       'Add other ingredients only when a recipe needs them.',
     ];
-  // Healthy ideas are independent of the cart, so the list and pantry are left out of that prompt.
+  // Popular ideas are independent of the cart, so the list and pantry are left out of that prompt.
   return [
     ...(mode === 'list' ? [`Shopping list: ${names(list)}`, `Already in the pantry: ${names(pantry)}`] : []),
     ...(disliked.length ? [`The user dislikes: ${names(disliked)}. Avoid these.`] : []),

@@ -16,10 +16,11 @@ it('generates balanced psql conditionals for each migration', () => {
 it('includes the first-session migration after earlier migrations', () => {
   const script = readFileSync('self-host/migrate.sh', 'utf8');
   expect(script).toContain('20260101000030 "$root/drizzle/migrations/0014_kiwi_first_session.sql"');
-  expect(script).toContain('"$root/drizzle/migrations/0014_kiwi_first_session.sql" "$root/drizzle/migrations/0015_kiwi_saved_recipes.sql" "$root/supabase/seed.sql"');
+  expect(script).toContain('"$root/drizzle/migrations/0015_kiwi_saved_recipes.sql" "$root/drizzle/migrations/0016_kiwi_popular_recipes.sql" "$root/supabase/seed.sql"');
 });
 
 it('includes the saved recipes migration after the first-session migration', () => {
   const script = readFileSync('self-host/migrate.sh', 'utf8');
   expect(script).toContain('20260101000032 "$root/drizzle/migrations/0015_kiwi_saved_recipes.sql"');
+  expect(script).toContain('20260101000034 "$root/drizzle/migrations/0016_kiwi_popular_recipes.sql"');
 });

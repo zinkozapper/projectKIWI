@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cartAdditions, cleanGaps, cleanIds, haveByDefault, ingredientStatus, listEntries, normalizeRecipes, recipePrompt, stillNeeded, type Recipe } from './shared';
+import { cartAdditions, cleanIds, cleanTitles, haveByDefault, ingredientStatus, listEntries, normalizeRecipes, recipeKey, recipePrompt, stillNeeded, toPopularRecipe, type Recipe } from './shared';
 
 const catalog = new Set(['1', '2', '3', '4']);
 
@@ -100,7 +100,7 @@ describe('input and prompt', () => {
   });
 });
 
-describe('have boxes and healthy mode', () => {
+describe('have boxes and popular mode', () => {
   const recipe: Recipe = {
     title: 'Bowl', summary: '', servings: 2, minutes: 10, steps: [], foodGroups: [],
     ingredients: [
@@ -120,14 +120,29 @@ describe('have boxes and healthy mode', () => {
     expect(stillNeeded(recipe, new Set([0, 1, 2]))).toEqual([]);
   });
 
-  it('asks for nutritious recipes aimed at the gaps, not tied to the list', () => {
+  it('asks for well-loved recipes without the cart, skipping ones already shown', () => {
     const rice = { id: '1', name: 'Rice', group: 'grain', serving: '45 g' };
-    const prompt = recipePrompt({ mode: 'healthy', list: [rice], pantry: [rice], disliked: [], catalog: [], gaps: cleanGaps(['Vitamin D', 'Folate (B9)', '<script>']) });
+    const prompt = recipePrompt({ mode: 'popular', list: [rice], pantry: [rice], disliked: [], catalog: [], avoidTitles: cleanTitles(['Chili', '<b>Tacos</b>', 'Chili']) });
     expect(prompt).not.toContain('Shopping list');
     expect(prompt).not.toContain('pantry:');
-    expect(prompt).toContain('nutritious, balanced');
-    expect(prompt).toContain('Do not build them around any particular foods the user has');
-    expect(prompt).toContain('low on: Vitamin D, Folate (B9).');
-    expect(prompt).not.toContain('script');
+    expect(prompt).toContain('widely loved everyday recipes');
+    expect(prompt).toContain('suggest different ones: Chili; bTacosb.');
+  });
+});
+
+describe('popular recipes', () => {
+  it('maps a popular_recipes() row and keeps its save count', () => {
+    const r = toPopularRecipe({
+      title: 'Chili', summary: null, servings: 4, minutes: 45, steps: ['Cook.'], food_groups: ['legume', 'nope'], saves: '3',
+      ingredients: [{ name: 'Beans', amount: '1 can', food_id: 3, servings: 2 }, { name: 'Salt', amount: '', food_id: null, servings: 1 }],
+    }, new Set(['3']));
+    expect(r).toEqual({
+      title: 'Chili', summary: '', servings: 4, minutes: 45, steps: ['Cook.'], foodGroups: ['legume'], saves: 3,
+      ingredients: [{ name: 'Beans', amount: '1 can', foodId: '3', servings: 2 }, { name: 'Salt', amount: '', foodId: null, servings: 1 }],
+    });
+  });
+
+  it('groups saves of the same recipe by title, like the database does', () => {
+    expect(recipeKey({ title: '  Egg Fried Rice! ' })).toBe('egg-fried-rice');
   });
 });

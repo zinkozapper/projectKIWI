@@ -238,6 +238,7 @@ Migrations are plain SQL files in `drizzle/migrations/`. Nothing applies them au
 | `0013_kiwi_price_freshness.sql` | Catalog revisions and price freshness tracking |
 | `0014_kiwi_first_session.sql` | Records new accounts' first authenticated session for onboarding |
 | `0015_kiwi_saved_recipes.sql` | Recipes page: saved recipes, their ingredients and food groups |
+| `0016_kiwi_popular_recipes.sql` | Recipes page: `popular_recipes()` = recipes saved by the most users |
 
 The food catalog itself comes from the USDA scripts: import `data/usda/supabase/food_category.csv` before `data/usda/supabase/food.csv`.
 

@@ -1099,6 +1099,20 @@ export type Database = {
         }[]
       }
       is_kiwi_admin: { Args: never; Returns: boolean }
+      popular_recipes: {
+        Args: { max_count?: number }
+        Returns: {
+          food_groups: string[]
+          ingredients: Json
+          minutes: number | null
+          recipe_key: string
+          saves: number
+          servings: number
+          steps: string[]
+          summary: string
+          title: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
