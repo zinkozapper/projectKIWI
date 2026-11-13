@@ -84,8 +84,8 @@ type WorkspaceValue = {
   foodGapScores: FoodSuggestion[];
   foodPreferences: FoodPreferences;
   likedFoods: typeof foods;
-  setFoodPreference: (foodId: string, liked: boolean) => Promise<void>;
-  removeFoodPreference: (foodId: string) => Promise<void>;
+  setFoodPreference: (foodId: string, liked: boolean) => Promise<boolean>;
+  removeFoodPreference: (foodId: string) => Promise<boolean>;
   setProfileDraft: (draft: ProfileDraft) => void;
   setSearch: (search: string) => void;
   setSelected: (id: string) => void;
@@ -415,37 +415,39 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setError('');
   }
 
-  async function setFoodPreference(foodId: string, liked: boolean) {
-    if (!userId) {
-      fail('Please sign in before rating foods.');
-      return;
-    }
-
-    const { error } = await supabase.from('food_preferences').upsert(
-      {
-        user_id: userId,
-        food_id: Number(foodId),
-        liked,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,food_id' }
-    );
-
-    if (error) {
-      fail('Could not save your food rating: ' + error.message);
-      return;
-    }
-
-    setFoodPreferences(prev => ({
-      ...prev,
-      [foodId]: liked,
-    }));
+  async function setFoodPreference(foodId: string, liked: boolean): Promise<boolean> {
+  if (!userId) {
+    fail('Please sign in before rating foods.');
+    return false;
   }
 
-  async function removeFoodPreference(foodId: string) {
+  const { error } = await supabase.from('food_preferences').upsert(
+    {
+      user_id: userId,
+      food_id: Number(foodId),
+      liked,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id,food_id' }
+  );
+
+  if (error) {
+    fail('Could not save your food rating: ' + error.message);
+    return false;
+  }
+
+  setFoodPreferences(prev => ({
+    ...prev,
+    [foodId]: liked,
+  }));
+
+  return true;
+}
+
+async function removeFoodPreference(foodId: string): Promise<boolean> {
   if (!userId) {
     fail('Please sign in before removing food preferences.');
-    return;
+    return false;
   }
 
   const { error } = await supabase
@@ -456,7 +458,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   if (error) {
     fail('Could not remove food preference: ' + error.message);
-    return;
+    return false;
   }
 
   setFoodPreferences(prev => {
@@ -464,6 +466,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     delete updated[foodId];
     return updated;
   });
+
+  return true;
 }
 
   async function ensureTrip() {

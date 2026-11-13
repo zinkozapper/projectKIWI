@@ -266,7 +266,7 @@ textarea.finder-input{resize:vertical}
 .phone-nutrition-summary>p{font-size:12px;color:var(--muted-foreground);line-height:1.5;margin:6px 0 16px}
 
 /* Pantry: undo after marking a food gone; dialogs fit the screen */
-.undo-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding:6px 6px 6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-size:13px}
+.undo-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:10px;width:min(500px,calc(100% - 32px));margin:0;padding:6px 6px 6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,0.12)}
 .pantry-dialog{width:calc(100vw - 32px);max-height:calc(100dvh - 32px);overflow-y:auto}
 
 /* History: food names as text */

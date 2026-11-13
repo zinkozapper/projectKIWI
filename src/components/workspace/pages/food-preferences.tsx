@@ -1,8 +1,17 @@
-import { ArrowLeft, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
+import { ArrowLeft, ThumbsDown, ThumbsUp, Undo2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foods } from '@/lib/foods';
 import { useWorkspace } from '../context';
+
+type PendingUndo = {
+  foodId: string;
+  foodName: string;
+  previousPreference: boolean | undefined;
+  message: string;
+};
 
 export function FoodPreferencesPage() {
   const {
@@ -10,6 +19,67 @@ export function FoodPreferencesPage() {
     setFoodPreference,
     removeFoodPreference,
   } = useWorkspace();
+
+  const [lastChange, setLastChange] = useState<PendingUndo | null>(null);
+
+  // Keep the Undo notification visible for 8 seconds.
+  useEffect(() => {
+    if (!lastChange) return;
+
+    const timer = window.setTimeout(() => setLastChange(null), 8000);
+
+    return () => window.clearTimeout(timer);
+  }, [lastChange]);
+
+  async function changePreference(
+    foodId: string,
+    foodName: string,
+    liked: boolean
+  ) {
+    const previousPreference = foodPreferences[foodId];
+
+    const succeeded = await setFoodPreference(foodId, liked);
+
+    if (!succeeded) return;
+
+    setLastChange({
+      foodId,
+      foodName,
+      previousPreference,
+      message: `Added ${foodName} to ${liked ? 'liked' : 'disliked'} foods.`,
+    });
+  }
+
+  async function removePreference(foodId: string, foodName: string) {
+    const previousPreference = foodPreferences[foodId];
+
+    const succeeded = await removeFoodPreference(foodId);
+
+    if (!succeeded) return;
+
+    setLastChange({
+      foodId,
+      foodName,
+      previousPreference,
+      message: `Removed ${foodName} from your preferences.`,
+    });
+  }
+
+  async function undoPreferenceChange() {
+    if (!lastChange) return;
+
+    const previousChange = lastChange;
+    setLastChange(null);
+
+    if (previousChange.previousPreference === undefined) {
+      await removeFoodPreference(previousChange.foodId);
+    } else {
+      await setFoodPreference(
+        previousChange.foodId,
+        previousChange.previousPreference
+      );
+    }
+  }
 
   const likedFoods = foods.filter(
     food => foodPreferences[String(food.id)] === true
@@ -63,7 +133,9 @@ export function FoodPreferencesPage() {
                   size="icon"
                   variant="outline"
                   title={`Dislike ${food.name}`}
-                  onClick={() => void setFoodPreference(String(food.id), false)}
+                  onClick={() =>
+                    void changePreference(String(food.id), food.name, false)
+                  }
                 >
                   <ThumbsDown size={16} />
                 </Button>
@@ -72,7 +144,9 @@ export function FoodPreferencesPage() {
                   size="icon"
                   variant="ghost"
                   title={`Remove ${food.name} preference`}
-                  onClick={() => void removeFoodPreference(String(food.id))}
+                  onClick={() =>
+                    void removePreference(String(food.id), food.name)
+                  }
                 >
                   <X size={16} />
                 </Button>
@@ -113,7 +187,9 @@ export function FoodPreferencesPage() {
                   size="icon"
                   variant="outline"
                   title={`Like ${food.name}`}
-                  onClick={() => void setFoodPreference(String(food.id), true)}
+                  onClick={() =>
+                    void changePreference(String(food.id), food.name, true)
+                  }
                 >
                   <ThumbsUp size={16} />
                 </Button>
@@ -122,7 +198,9 @@ export function FoodPreferencesPage() {
                   size="icon"
                   variant="ghost"
                   title={`Remove ${food.name} preference`}
-                  onClick={() => void removeFoodPreference(String(food.id))}
+                  onClick={() =>
+                    void removePreference(String(food.id), food.name)
+                  }
                 >
                   <X size={16} />
                 </Button>
@@ -133,6 +211,19 @@ export function FoodPreferencesPage() {
           )}
         </div>
       </section>
+
+      {lastChange && (
+        <div className="undo-bar" role="status">
+          <span>{lastChange.message}</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => void undoPreferenceChange()}
+          >
+            <Undo2 size={15} aria-hidden="true" /> Undo
+          </Button>
+        </div>
+      )}
     </>
   );
 }

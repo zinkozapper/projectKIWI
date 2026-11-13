@@ -1,7 +1,7 @@
 
 import { useEffect, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, ChefHat, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { ArrowRight, ChefHat, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2, Undo2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { usePhoneLayout } from '@/hooks/use-phone-layout';
@@ -27,13 +27,56 @@ export function PlanPage() {
   const [detailsFromSearch, setDetailsFromSearch] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
+  const [lastChange, setLastChange] = useState<{
+    foodId: string;
+    foodName: string;
+    previousPreference: boolean | undefined;
+    message: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!lastChange) return;
+
+    const timer = window.setTimeout(() => setLastChange(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [lastChange]);
+
+  async function changePreference(foodId: string, foodName: string, liked: boolean) {
+    const previousPreference = foodPreferences[foodId];
+
+    const succeeded = await setFoodPreference(foodId, liked);
+    if (!succeeded) return;
+
+    setLastChange({
+      foodId,
+      foodName,
+      previousPreference,
+      message: `Added ${foodName} to ${liked ? 'liked' : 'disliked'} foods.`,
+    });
+  }
+
+  async function undoPreferenceChange() {
+    if (!lastChange) return;
+
+    const previousChange = lastChange;
+    setLastChange(null);
+
+    if (previousChange.previousPreference === undefined) {
+      await removeFoodPreference(previousChange.foodId);
+    } else {
+      await setFoodPreference(
+        previousChange.foodId,
+        previousChange.previousPreference
+      );
+    }
+  }
   // On phones the nutrition panel sits below everything else, so food details open in a dialog
   // instead, and the plan's nutrition summary moves above the list as a collapsible section.
   const isPhone = usePhoneLayout();
 
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
-    suggestions, foodGapScores, foodPreferences, setFoodPreference, setSearch, setSelected, fail,
+    suggestions, foodGapScores, foodPreferences, setFoodPreference, removeFoodPreference, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, isFirstSession, priceOf, hasUnpricedBudgetItems,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
@@ -365,7 +408,7 @@ export function PlanPage() {
                           title={`Like ${f.name}`}
                           aria-label={`Like ${f.name}`}
                           aria-pressed={preference === true}
-                          onClick={() => void setFoodPreference(f.id, true)}
+                          onClick={() => void changePreference(f.id, f.name, true)}
                         >
                           <ThumbsUp size={16} />
                         </Button>
@@ -375,7 +418,7 @@ export function PlanPage() {
                           title={`Dislike ${f.name}`}
                           aria-label={`Dislike ${f.name}`}
                           aria-pressed={preference === false}
-                          onClick={() => void setFoodPreference(f.id, false)}
+                          onClick={() => void changePreference(f.id, f.name, false)}
                         >
                           <ThumbsDown size={16} />
                         </Button>
@@ -441,6 +484,18 @@ export function PlanPage() {
             )}
           </DialogContent>
         </Dialog>
+      )}
+      {lastChange && (
+        <div className="undo-bar" role="status">
+          <span>{lastChange.message}</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => void undoPreferenceChange()}
+          >
+            <Undo2 size={15} aria-hidden="true" /> Undo
+          </Button>
+        </div>
       )}
     </>
   );
