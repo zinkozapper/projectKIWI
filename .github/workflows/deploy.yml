@@ -50,7 +50,8 @@ jobs:
         run: |
           echo "web: node server/index.mjs" > .output/Procfile
           cd .output
-          zip -r ../deploy.zip Procfile server public
+          cp -r ../.platform .platform
+          zip -r ../deploy.zip Procfile server public .platform
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
