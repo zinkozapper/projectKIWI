@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fallbackRows, packageRows, sizeCandidates, type SizeCandidate } from './package-sizes';
+import { fallbackRows, forStyle, packageRows, sizeCandidates, type SizeCandidate } from './package-sizes';
 import type { Scored } from './pricing';
 
 const scored = (o: Partial<Scored>): Scored => ({
@@ -50,4 +50,15 @@ describe('fallbackRows', () => {
     expect(rows.map(r => r.product_id)).toEqual(['p1', 'p0', 'p3']);
   });
   it('returns nothing without candidates', () => expect(fallbackRows([])).toEqual([]));
+});
+
+describe('forStyle', () => {
+  const c = (key: number, description: string, size = '') => ({ key, product_id: String(key), description, brand: '', size, byWeight: false, price: 1, servings: 1, package_grams: null });
+  const cands = [c(0, 'Large California Pomegranate', '1 ct'), c(1, 'POM Wonderful Pomegranate Arils', '8 oz'), c(2, 'Frozen Pomegranate Arils', '10 oz'), c(3, 'Pomegranate Box', '6 ct')];
+  it('keeps whole items for Fresh, only frozen for Frozen, everything without a style', () => {
+    expect(forStyle(cands, 'fresh').map(x => x.key)).toEqual([0, 3]);
+    expect(forStyle(cands, 'frozen').map(x => x.key)).toEqual([2]);
+    expect(forStyle(cands, null)).toHaveLength(4);
+    expect(forStyle(cands, 'ready_to_eat')).toHaveLength(4);
+  });
 });

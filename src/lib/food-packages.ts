@@ -75,13 +75,28 @@ export const defaultPackage = (list: FoodPackage[]): FoodPackage | undefined => 
 export const servingsOf = (quantity: number, pkg: FoodPackage | undefined): number => (pkg ? quantity * pkg.servings : quantity);
 
 /**
- * Price of one package: the shopper's store price per serving × servings (so localized pricing still applies),
- * else the package's own shelf price, else null.
+ * Price of one package: its own shelf price (a 2-pack is often cheaper per serving than two singles).
+ * Shelf prices come from the default store, so at another store they're scaled by how that store's price per
+ * serving compares (`perServing` / `defaultPerServing`). A package with no shelf price falls back to
+ * price per serving × servings; with neither, null.
  */
-export function packagePrice(pkg: FoodPackage, perServing: number | null): number | null {
-  if (perServing != null && perServing > 0) return perServing * pkg.servings;
-  return pkg.price > 0 ? pkg.price : null;
+export function packagePrice(pkg: FoodPackage, perServing: number | null, defaultPerServing: number | null = null): number | null {
+  if (pkg.price > 0) {
+    const ratio = perServing != null && perServing > 0 && defaultPerServing != null && defaultPerServing > 0 ? perServing / defaultPerServing : 1;
+    return pkg.price * ratio;
+  }
+  return perServing != null && perServing > 0 ? perServing * pkg.servings : null;
 }
+
+/** What one of this package is called on the list: "unit" for a single item (1 ct, each, whole fruit), else "package". */
+export function packageNoun(pkg: FoodPackage, quantity: number): string {
+  const single = /^\s*(1\s*(ct|count|each|ea)\b|each\b|whole\b)|\bwhole\b/i.test(pkg.label);
+  const word = single ? 'unit' : 'package';
+  return quantity === 1 ? word : `${word}s`;
+}
+
+/** "1 serving", "2.5 servings" */
+export const servingsText = (n: number, format: (n: number) => string = String) => `${format(n)} ${n === 1 ? 'serving' : 'servings'}`;
 
 /** "3 lb · 12 servings" */
 export function packageCaption(pkg: FoodPackage): string {

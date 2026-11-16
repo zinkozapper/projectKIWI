@@ -7,10 +7,10 @@ import { getRequest } from '@tanstack/react-start/server';
 import { adminClient } from './env.server';
 import { askClaude } from './claude.server';
 import { fdcDetail, searchFdc } from './usda.server';
-import { priceNewFood, priceOptions, type OptionPricing, type PricingOutcome } from './price.server';
+import { discoverOptions, priceNewFood, type OptionPricing, type PricingOutcome } from './price.server';
 import { chooseSizes } from './package-sizes.server';
 import type { PackageRow } from './package-sizes';
-import { OPTIONS_INSTRUCTIONS, OPTIONS_SCHEMA, averagePrice, cleanOptions, type PurchaseOption } from './purchase-options';
+import { averagePrice, type PurchaseOption } from './purchase-options';
 import {
   EXCLUDE_PREPARED, FLAVOR_TAGS, FOOD_GROUPS, GROUP_RULES, NUTRIENT_COLUMNS, SERVING_CHOICES,
   cleanFlavorTags, computeFood, isFoodGroup, isServingChoice, legacyNutrition, median, pickRawReference, rankCandidates, servingColumns,
@@ -215,7 +215,7 @@ export async function search(input: SearchInput): Promise<SearchResult> {
 
 // ---------- Step 2: add ----------
 
-type EnrichAnswer = { name: string; description: string; emoji: string; categoryId: number; flavorTags: string[]; pairIds: number[]; groceryTerm?: string; groceryMust?: string[]; purchaseOptions?: unknown };
+type EnrichAnswer = { name: string; description: string; emoji: string; categoryId: number; flavorTags: string[]; pairIds: number[]; groceryTerm?: string; groceryMust?: string[] };
 
 const ENRICH_SYSTEM = `You catalog a new grocery food for Kiwi, a nutrition-aware grocery planner. Given the USDA record the shopper chose and Kiwi's existing catalog, return:
 - name: the plain grocery name a shopper would search for (max 40 characters, no USDA jargon like "NFS" or "from dried").
@@ -225,8 +225,7 @@ const ENRICH_SYSTEM = `You catalog a new grocery food for Kiwi, a nutrition-awar
 - flavorTags: 2–4 tags describing its flavor profile, only from: ${FLAVOR_TAGS.join(', ')}.
 - pairIds: 3–6 ids of catalog foods that pair well with it in everyday meals (flavor and meal compatibility). Only use ids from the catalog list; never the food itself.
 - groceryTerm: what to type into a grocery store's search box to find this food as it is bought (2–5 words, plain store wording, e.g. "boneless skinless chicken thighs", "dry red lentils", "frozen mixed berries"). Not organic, no brand names.
-- groceryMust: 1–2 words that any correct product's name must contain (e.g. ["thigh"], ["lentil"], ["berry|berries"]); use "a|b" when either spelling works.
-- ${OPTIONS_INSTRUCTIONS}`;
+- groceryMust: 1–2 words that any correct product's name must contain (e.g. ["thigh"], ["lentil"], ["berry|berries"]); use "a|b" when either spelling works. Use whole words, never cut-off stems.`;
 
 const ENRICH_TOOL = {
   name: 'catalog_food',
@@ -242,7 +241,6 @@ const ENRICH_TOOL = {
       pairIds: { type: 'array', items: { type: 'integer' }, maxItems: 6 },
       groceryTerm: { type: 'string' },
       groceryMust: { type: 'array', items: { type: 'string' }, maxItems: 2 },
-      purchaseOptions: OPTIONS_SCHEMA,
     },
     required: ['name', 'description', 'emoji', 'categoryId', 'flavorTags', 'pairIds', 'groceryTerm'],
   },
@@ -316,17 +314,20 @@ export async function add(input: AddInput): Promise<AddResult> {
 
   // Store price (Kroger, docs/kroger-price-selection-rules.md): the AI's grocery search term + the same
   // selection rules as the backfill. Runs before the insert so food.price is set; never blocks adding the food.
-  // Purchase options (raw, rotisserie, frozen, canned …), priced alongside the food itself.
-  const options = cleanOptions(ai.purchaseOptions, name);
+  // Purchase styles (fresh, frozen, canned …) come from what the store actually sells: its shelf is searched
+  // and the AI sorts those products into styles (purchase-styles.ts), priced alongside the food itself.
+  const groceryTerm = clip(ai.groceryTerm, 60) || name;
+  const groceryMust = (ai.groceryMust || []).map(t => clip(t, 30)).filter(Boolean).slice(0, 2);
   const servingInfo = { food_name: name, food_category_id: categoryId, serving_size, unit, serving_grams: computed.servingGrams, prepared_grams: computed.factor * 100 };
-  const [pricing, optionPricing]: [PricingOutcome, OptionPricing] = await Promise.all([priceNewFood({
+  const [pricing, discovered]: [PricingOutcome, { options: PurchaseOption[]; pricing: OptionPricing }] = await Promise.all([priceNewFood({
     food_name: name,
     food_category_id: categoryId,
     serving_size,
     unit,
     serving_grams: computed.servingGrams,
-    search: { term: clip(ai.groceryTerm, 60) || name, must: (ai.groceryMust || []).map(t => clip(t, 30)).filter(Boolean).slice(0, 2) },
-  }, who.id), priceOptions(servingInfo, options, who.id)]);
+    search: newFoodSearch(groceryTerm, groceryMust),
+  }, who.id), discoverOptions(servingInfo, groceryTerm, groceryMust)]);
+  const { options, pricing: optionPricing } = discovered;
 
   const row = {
     food_name: name,
@@ -367,9 +368,9 @@ export async function add(input: AddInput): Promise<AddResult> {
   // Package sizes (as bought): the AI picks up to 3 per option, or for the food itself when it has no options.
   const servingText = `${serving_size} ${unit} (${Math.round(computed.servingGrams)} g)`;
   const sizeGroups = savedOptions.length
-    ? savedOptions.map(o => ({ optionId: o.id, label: o.label, cands: optionPricing.sizeCandidates?.[o.index] ?? [] }))
-    : [{ optionId: null as number | null, label: null as string | null, cands: pricing.sizeCandidates ?? [] }];
-  const sizes = await Promise.all(sizeGroups.map(async g => ({ optionId: g.optionId, rows: await chooseSizes(name, g.label, servingText, g.cands) })));
+    ? savedOptions.map(o => ({ optionId: o.id, label: o.label, form: o.form as string | null, cands: optionPricing.sizeCandidates?.[o.index] ?? [] }))
+    : [{ optionId: null as number | null, label: null as string | null, form: null as string | null, cands: pricing.sizeCandidates ?? [] }];
+  const sizes = await Promise.all(sizeGroups.map(async g => ({ optionId: g.optionId, rows: await chooseSizes(name, g.label, servingText, g.cands, g.form) })));
   await savePackages(db, food.food_id, sizes);
 
   // Pairings go both ways so the partner foods suggest the new one too.
@@ -477,3 +478,13 @@ export async function requestMoreFoods(input: { note?: string }) {
 export async function getStatus() {
   return statusFor(await caller());
 }
+
+// A new food's store search: the AI's grocery term, then just its must word if that finds nothing (Kroger's search
+// is literal). Its own words are never excluded ("ice cream" for ice cream); pricing.ts adds the relaxed last pass.
+export function newFoodSearch(term: string, must: string[]) {
+  const phrases = [term, ...must.flatMap(m => m.split('|'))].map(t => t.trim().toLowerCase()).filter(Boolean);
+  const allow = [...new Set([...phrases, ...phrases.flatMap(p => p.split(/\s+/))])];
+  const simple = must[0]?.split('|')[0]?.trim().toLowerCase();
+  return { term, must, allow, ...(simple && simple !== term.trim().toLowerCase() ? { alternates: [{ term: simple, label: 'simpler search' }] } : {}) };
+}
+

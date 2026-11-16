@@ -8,6 +8,7 @@ import { NutrientPanel } from '../nutrient-bar';
 import { PantryAddDialog } from '../pantry-add-dialog';
 import { SizeSelect } from '../package-controls';
 import { formatAmount } from '@/lib/foods';
+import { packageNoun, servingsText } from '@/lib/food-packages';
 
 export function PantryPage() {
   const { pantry, listItems, days, daily, pantryTotals, combined, addPantry, removePantry, profile, isFirstSession, packagesFor, packageOf, packagePriceOf, pantryServings, setPantryQuantity, setPantryPackage } = useWorkspace();
@@ -84,7 +85,7 @@ export function PantryPage() {
                           </Button>
                         </div>
                         <small className="qty-caption">
-                          {pkg ? `${q === 1 ? 'package' : 'packages'} · ` : `${q === 1 ? 'week' : 'weeks'} · `}{formatAmount(pantryServings(item))} servings
+                          {pkg ? `${packageNoun(pkg, q)} · ` : `${q === 1 ? 'week' : 'weeks'} · `}{servingsText(pantryServings(item), formatAmount)}
                         </small>
                       </div>
                     </div>

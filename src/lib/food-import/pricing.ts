@@ -16,6 +16,10 @@ export type SearchSpec = {
   unitsPerPackageItem?: number;
   servingGrams?: number;
   packageYield?: number;
+  /** Searches to try, in order, when the main one finds nothing. */
+  alternates?: SearchSpec[];
+  /** Last-resort pass: only the must words and the always-excluded words apply (no aisle or food-group excludes). */
+  relaxed?: boolean;
 };
 type FoodRule = SearchSpec & { alternates?: SearchSpec[] };
 type CategoryRule = { exclude?: string[]; categories?: string[]; density?: number };
@@ -123,7 +127,26 @@ const ruleFor = (food: PriceFood): FoodRule => RULES.foods[String(food.food_id)]
 
 /** Search specs for a food: the main one, then its `alternates` (other preparations / closest substitutes) in order. */
 export function foodSpecs(food: PriceFood): Spec[] {
-  return [{ label: 'primary' }, ...(ruleFor(food).alternates ?? []).map((a, i) => ({ ...a, label: a.label || `alternate ${i + 1}` }))];
+  const rule = ruleFor(food);
+  const specs: Spec[] = [{ label: 'primary' }, ...(rule.alternates ?? []).map((a, i) => ({ ...a, label: a.label || `alternate ${i + 1}` }))];
+  // A food with no search rule (one the finder added, priced again by the backfill) searches its name, which
+  // Kroger may not know ("Atlantic cod", "Full-fat cottage cheese"). Then try shorter endings of the name
+  // ("cod", "cottage cheese"), each requiring its last word, and finish with the relaxed pass on that word.
+  if (!rule.term && !rule.must?.length && !rule.alternates?.length) {
+    const words = lc(food.food_name).replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean);
+    const last = words[words.length - 1];
+    // The first search must find the whole name ("cream of wheat"), or a store-brand oat box wins on brand tier.
+    if (words.length) specs[0] = { label: 'primary', must: [words.join(' ')] };
+    if (last && words.length > 1) {
+      for (let i = 1; i < words.length; i++) specs.push({ label: 'shorter name', term: words.slice(i).join(' '), must: [last] });
+    }
+    if (last) specs.push({ label: 'relaxed match (review)', relaxed: true, must: [last], ...(words.length > 1 ? { term: last } : {}) });
+    return specs;
+  }
+  // Last resort, only when must words still pin the product down: drop the aisle and food-group excludes, which
+  // are tuned for the typical food in a group (dairy rejects "vanilla", so ice cream never matched). Flagged for review.
+  if (rule.must?.length) specs.push({ label: 'relaxed match (review)', relaxed: true });
+  return specs;
 }
 
 export type FoodRules = {
@@ -133,14 +156,14 @@ export type FoodRules = {
 
 export function foodRules(food: PriceFood, spec: Spec | null = null): FoodRules {
   const base = ruleFor(food);
-  const o: FoodRule = spec && spec.label !== 'primary' ? { ...base, ...spec } : base;
+  const o: FoodRule = spec ? { ...base, ...spec } : base;
   const cat: CategoryRule = RULES.categories[String(food.food_category_id)] ?? {};
   const allow = o.allow ?? [];
   return {
     term: o.term || food.food_name,
     must: o.must ?? [],
-    exclude: [...RULES.excludeAlways, ...(cat.exclude ?? []), ...(o.exclude ?? [])].filter(t => !allow.includes(t)),
-    categories: o.categories ?? cat.categories ?? [],
+    exclude: [...RULES.excludeAlways, ...(o.relaxed ? [] : cat.exclude ?? []), ...(o.exclude ?? [])].filter(t => !allow.includes(t)),
+    categories: o.relaxed ? [] : o.categories ?? cat.categories ?? [],
     density: o.density ?? cat.density ?? 1,
     unitGrams: o.unitGrams, unitsPerPackageItem: o.unitsPerPackageItem,
     servingGrams: o.servingGrams, packageYield: o.packageYield, label: spec?.label ?? 'primary',
@@ -197,7 +220,8 @@ export function ineligible(food: PriceFood, c: Candidate, { allowOrganic = false
   if (!(Number(c.regular) > 0)) return 'no regular price at this store';
   if (isOrganic(c) && !allowOrganic) return 'organic';
   if (r.categories.length && !String(c.categories || '').split(/;\s*/).some(k => r.categories.includes(k))) return `category: ${c.categories || 'none'}`;
-  const word = (alt: string) => new RegExp(`(^|[^a-z0-9])${escape(alt)}(s|es)?($|[^a-z0-9])`, 'i');
+  // Whole words, plus plural endings; "blueberr" (a stem the AI sometimes writes) matches blueberry / blueberries.
+  const word = (alt: string) => new RegExp(`(^|[^a-z0-9])${escape(alt)}(s|es|ies|y)?($|[^a-z0-9])`, 'i');
   const miss = r.must.filter(t => !lc(t).split('|').some(alt => word(alt).test(d)));
   if (miss.length) return `missing: ${miss.join(', ')}`;
   const hit = r.exclude.filter(t => new RegExp(`\\b${escape(t)}\\b`, 'i').test(d));

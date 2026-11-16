@@ -17,7 +17,7 @@ import { FoodFinder } from '../food-finder';
 import { NutrientPanel } from '../nutrient-bar';
 import { PrepSelect } from '../prep-select';
 import { PriceEstimate, SizeSelect } from '../package-controls';
-import { defaultPackage, packageCaption } from '@/lib/food-packages';
+import { defaultPackage, packageCaption, packageNoun, servingsText } from '@/lib/food-packages';
 import { LIMITS, numberKeyGuard } from '@/lib/validation';
 
 // "Suggestions for vitamin A", "for zinc", "for omega-3 (ALA)": vitamins keep their capital letter.
@@ -347,10 +347,12 @@ export function PlanPage() {
                       <div className="food-description">
                         <strong>{f.name}</strong>
                         <small>{inPantry(f.id) && <span className="in-pantry-note">Already in your pantry · </span>}{f.note}</small>
-                        <PrepSelect foodName={f.name} options={optionsFor(f.id)} value={item.option_id} average={priceOf(f.id)} priceOf={optionPriceOf}
-                          onChange={id => void setItemOption(item, id)} />
-                        <SizeSelect foodName={f.name} packages={packagesFor(f.id, item.option_id)} value={item.package_id}
-                          priceOf={p => packagePriceOf(p, item.option_id)} onChange={id => void setItemPackage(item, id)} />
+                        <div className="row-selects">
+                          <PrepSelect foodName={f.name} options={optionsFor(f.id)} value={item.option_id} average={priceOf(f.id)} priceOf={optionPriceOf}
+                            onChange={id => void setItemOption(item, id)} />
+                          <SizeSelect foodName={f.name} packages={packagesFor(f.id, item.option_id)} value={item.package_id}
+                            priceOf={p => packagePriceOf(p, item.option_id)} onChange={id => void setItemPackage(item, id)} />
+                        </div>
                       </div>
                       {pkg ? (
                         // Bought as packages: quantity = packages; their servings are spread across the trip.
@@ -429,7 +431,7 @@ export function PlanPage() {
                       )}
                       <span className="qty-caption">
                         {pkg
-                          ? `${Number(item.quantity) === 1 ? 'package' : 'packages'} · ${formatAmount(itemServings(item))} servings`
+                          ? `${packageNoun(pkg, Number(item.quantity))} · ${servingsText(itemServings(item), formatAmount)}`
                           : `${Number(item.quantity) / days === 1 ? 'serving' : 'servings'} a day · ${formatAmount(Number(item.quantity))} for the trip`}
                       </span>
                       <span className="row-price">

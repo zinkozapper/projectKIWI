@@ -1,0 +1,335 @@
+{
+  "35": {
+    "food": "Blueberries",
+    "searches": [
+      "fresh blueberries",
+      "blueberries",
+      "frozen blueberries",
+      "canned blueberries",
+      "dried blueberries"
+    ],
+    "styles": [
+      {
+        "label": "Fresh",
+        "form": "fresh",
+        "basis": "as_bought",
+        "products": [
+          "Fresh Blueberries - 18 OZ - Clamshell",
+          "Private Selection® Fresh Colossal Blueberries",
+          "Simple Truth Organic® Blueberries",
+          "Simple Truth Organic® Blueberries",
+          "Fresh Blueberries - 1 PT Clamshell"
+        ],
+        "pick": "Private Selection® Fresh Colossal Blueberries · 9.8 oz · $6.99 -> $2.52/serving",
+        "sizes": [
+          "18 oz clamshell · $7.29",
+          "1 pt clamshell · $5.49",
+          "9.8 oz container · $6.99"
+        ]
+      },
+      {
+        "label": "Frozen",
+        "form": "frozen",
+        "basis": "as_bought",
+        "products": [
+          "Simple Truth Organic® Frozen Blueberries",
+          "Simple Truth Organic® Frozen Blueberries BIG DEAL!",
+          "Kroger® Frozen Blueberries BIG DEAL!",
+          "Kroger® Frozen Blueberries",
+          "Private Selection® Frozen Wild Blueberries",
+          "Wyman's® Frozen Wild Blueberries"
+        ],
+        "pick": "Kroger® Frozen Blueberries BIG DEAL! · 4 lb · $10.99 -> $0.61/serving",
+        "sizes": [
+          "16 oz bag · $3.29",
+          "40 oz bag · $10.99",
+          "4 lb bag · $10.99"
+        ]
+      },
+      {
+        "label": "Dried",
+        "form": "dried",
+        "basis": "as_bought",
+        "products": [
+          "Mariani® Dried Sweetened Wild Blueberries"
+        ],
+        "pick": "Mariani® Dried Sweetened Wild Blueberries · 3.5 oz · $3.99 -> $4.02/serving",
+        "sizes": [
+          "3.5 oz · $3.99"
+        ]
+      }
+    ],
+    "dropped": [
+      "V8 Energy Pomegranate Blueberry Energy Drink Cans",
+      "Bubly™ Blueberry Pomegranate Flavored Sparkling Water Cans",
+      "Ocean Spray® Sour Blueberry Lemon Flavored Craisins® Dried Cranberries",
+      "V8 Energy Pomegranate Blueberry Energy Drink Cans",
+      "Tru Fru Freeze Dried Blueberries & Crème",
+      "Topo Chico® Sabores Blueberry with Hibiscus Extract Sparkling Water Cans",
+      "Happy Baby Organics Greek Yogis Blueberry & Purple Carrot Organic Freeze-Dried Baby Snack Bag",
+      "Humm® Blueberry Mint Probiotic Kombucha Single Can",
+      "Tru Fru Fresh Frozen Blueberries in Dark & White Chocolate",
+      "V8 Energy® Zero Sugar Blueberry Raspberry, 8 fl. oz. Can 6 Pack",
+      "POM Wonderful 100% Juice, Pomegranate Blueberry, 16 Ounce",
+      "Sunshine® Blueberry Lemonade Caffeinated Sparkling Energy Drink Can",
+      "POM Wonderful 100% Juice, Pomegranate Blueberry, 48 Ounce",
+      "Private Selection® Frozen Blueberries Strawberries & Mangoes",
+      "Vizzy Blueberry Pomegranate Hard Seltzer Single Can",
+      "Bakery Fresh Goodness Blueberry Bagels",
+      "Simple Truth Organic® Sliced Strawberries Blackberries and Blueberries Triple Berry Smoothie Blend",
+      "Bakery Fresh Blueberry Muffins",
+      "Kroger® Blueberry Frozen Waffles",
+      "Bakery Fresh Mini Blueberry Muffins",
+      "Kodiak® Protein-Packed Blueberry Frozen Power Waffles® with 12g Protein",
+      "Bakery Fresh Blueberry and Chocolate Chip Muffins Variety Pack",
+      "Eggo® Protein Blueberry Frozen Waffles",
+      "Bakery Fresh Cream Cheese Blueberry Coffee Cake Bites",
+      "Fage® Total Blueberry 2% Milkfat Low Fat Greek Yogurt Cup",
+      "Kodiak® Protein-Packed Blueberry Frozen Thick and Fluffy Power Waffles® with 10g Protein",
+      "Bakery Fresh Blueberry Pie",
+      "Activia Strawberry & Blueberry Probiotic Low Fat Yogurt Cups"
+    ]
+  },
+  "36": {
+    "food": "Blackberries",
+    "searches": [
+      "fresh blackberries",
+      "blackberries",
+      "frozen blackberries",
+      "canned blackberries",
+      "dried blackberries"
+    ],
+    "styles": [
+      {
+        "label": "Fresh",
+        "form": "fresh",
+        "basis": "as_bought",
+        "products": [
+          "Fresh Blackberries - 6 OZ Clamshell",
+          "Fresh Blackberries - 12 OZ Clamshell",
+          "Fresh Organic Blackberries",
+          "Private Selection® Sweet Karoline Fresh Blackberries"
+        ],
+        "pick": "Private Selection® Sweet Karoline Fresh Blackberries · 10 oz · $4.99 -> $1.76/serving",
+        "sizes": [
+          "10 oz clamshell · $4.99",
+          "6 oz clamshell · $3.59",
+          "12 oz clamshell · $5.99"
+        ]
+      },
+      {
+        "label": "Frozen",
+        "form": "frozen",
+        "basis": "as_bought",
+        "products": [
+          "Simple Truth Organic® Sliced Strawberries Blackberries and Blueberries Triple Berry Smoothie Blend"
+        ],
+        "pick": "Simple Truth Organic® Sliced Strawberries Blackberries and Blueberries Triple Berry Smoothie Blend · 32 oz · $8.79 -> $0.97/serving",
+        "sizes": []
+      }
+    ],
+    "dropped": [
+      "Bubly Sparkling Water Blackberry Cans",
+      "Rockstar Punched Energy Drink Blackberry, 16 Fl Oz Single Can",
+      "Umpqua Mountain Blackberry Revel Ice Cream Tub",
+      "Dr Pepper Blackberry Zero Sugar Soda Cans",
+      "FITAID Blackberry Pineapple Energy Drink Can",
+      "Polar Blackberry Mango Flavored Seltzer Water Cans",
+      "mio Cherry Blackberry Water Enhancer Bottle",
+      "Dr Pepper Blackberry Soda Cans",
+      "Stur® Real Fruit Zero Sugar Liquid Water Enhancer - Blue & Blackberry",
+      "Clearly Canadian® Original Mountain Blackberry Sparkling Water Cans",
+      "Crystal Light Zero Sugar Blackberry Lemonade Water Enhancer Bottle",
+      "Happy Baby Clearly Crafted Stage 2 Pears Squash & Blackberries Organic Baby Food Pouch",
+      "Bonsai Blackberry Lime Sweetened Sparkling Water Cans",
+      "HAPPY TOT Stage 4 Baby Food Pouches, Super Bellies, Organic, Pears, Beets & Blackberries, 4 oz​",
+      "Rambler Blackberry Sparkling Water 8 - 12 fl oz Cans",
+      "Noosa® Blackberry Yogurt Cup",
+      "Humm® Blackberry Probiotic Kombucha Single Can",
+      "Kroger® Blackberry Citrus Sparkling Water",
+      "Clearly Canadian® Zero Sugar Mountain Blackberry Sparkling Water Cans",
+      "Chobani® Non-Fat Greek Yogurt Blackberry on the Bottom",
+      "Kroger® CARBmaster® Blackberry Lactose Free Lowfatˆ Yogurt Cup",
+      "Waterloo® Blackberry Lemonade Sparkling Water",
+      "White Claw Blackberry Hard Seltzer",
+      "Kroger® Real Brewed Zero Sugar Blackberry Sweet Decaf Tea",
+      "Smucker's Seedless Blackberry Jam",
+      "Hint® Blackberry Flavored Bottled Water",
+      "Clearly Canadian® Mountain Blackberry Flavored Sparkling Bottled Water",
+      "Dr Pepper Blackberry Soda Bottle",
+      "Bonne Maman® Blackberry Preserves",
+      "Kroger® Blackberry Preserves Seedless",
+      "Comforts™ Stage 2 Banana Blackberry Baby Food Puree Pouch",
+      "IZZE No Sugar Added Blackberry Sparkling Juice Beverage Blend",
+      "Mamma Chia® Organic Chia Squeeze Blackberry Bliss Vitality Snacks",
+      "OLLY Sleep Blackberry Flavor Gummy Supplement Melatonin 3mg",
+      "Private Selection® Blackberry Preserves Seedless"
+    ]
+  },
+  "37": {
+    "food": "Raspberries",
+    "searches": [
+      "fresh raspberries",
+      "raspberries",
+      "frozen raspberries",
+      "canned raspberries",
+      "dried raspberries"
+    ],
+    "styles": [
+      {
+        "label": "Fresh",
+        "form": "fresh",
+        "basis": "as_bought",
+        "products": [
+          "Fresh Organic Red Raspberries - 6 OZ Clamshell",
+          "Fresh Red Raspberries - 6 OZ Clamshell",
+          "Fresh Red Raspberries - 12 OZ Clamshell"
+        ],
+        "pick": "Fresh Red Raspberries - 12 OZ Clamshell · 12 oz · $6.49 -> $1.91/serving",
+        "sizes": [
+          "6 oz clamshell · $3.49",
+          "12 oz clamshell · $6.49"
+        ]
+      },
+      {
+        "label": "Frozen",
+        "form": "frozen",
+        "basis": "as_bought",
+        "products": [
+          "Private Selection® Frozen Red Raspberries",
+          "Simple Truth Organic® Freshly Frozen Raspberries"
+        ],
+        "pick": "Private Selection® Frozen Red Raspberries · 12 oz · $4.99 -> $1.47/serving",
+        "sizes": [
+          "12 oz · $4.99"
+        ]
+      }
+    ],
+    "dropped": [
+      "Bloom Nutrition Zero Sugar Raspberry Lemon Energy Drink Can",
+      "Tru Fru Freeze Dried Raspberries in Dark & White Chocolate",
+      "Ghost Zero Sugar Blue Raspberry Energy Drink Can",
+      "Simple Truth® Freeze-Dried Raspberries in Dark Chocolate",
+      "Tru Fru Frozen Raspberries in Dark & White Chocolate",
+      "Poppi Raspberry Rose Prebiotic Soda Can",
+      "Tru Fru Freeze Dried Raspberries & Crème",
+      "Tru Fru Fresh Frozen Raspberries in Dark & White Chocolate",
+      "Sparkling Ice® Caffeinated Black Raspberry Flavored Sparkling Water Can",
+      "Trü Frü Greek Yogurt with White Chocolate + Granola Frozen Fresh Raspberries",
+      "Trü Frü Frozen Raspberries in White & Milk Chocolate",
+      "Kroger® KroFro Dark Chocolate Covered Raspberries",
+      "Sparkling Ice® Caffeinated Blue Raspberry Flavored Sparkling Water Can",
+      "Evolution Fresh® Watermelon Raspberry Energy Drink",
+      "Mountain Dew® Voltage Raspberry Soda Cans",
+      "Evolution Fresh® Energize Organic Raspberry Passion Fruit Black Tea",
+      "Pillsbury™ Raspberry Toaster Strudel Frozen Pastries",
+      "Polar Raspberry Lime Flavored Seltzer Water Cans",
+      "Bakery Fresh Raspberry Danish Coffee Cake",
+      "JonnyPops® No Sugar Added Organic Hydro Blue Raspberry Punch Minis Frozen Pops",
+      "Bubly™ Raspberry Flavored Sparkling Water Cans",
+      "Bakery Fresh Raspberry Cream Crunch Cake",
+      "Simply® Lemonade with Raspberry Bottle",
+      "Simple Truth® Dairy Free Oatmilk Black Raspberry Chocolate Chip Frozen Dessert Pint",
+      "Bloom Pop Raspberry Lemonade Prebiotic Soda Can",
+      "Ocean Spray® Cran-Raspberry™ Juice Drink",
+      "Smucker’s Uncrustables Peanut Butter & Raspberry Spread Sandwiches",
+      "BUBBL'R Peach Raspberry Dazzl'r Antioxidant Sparkling Water Cans",
+      "Kroger® Cranberry Raspberry Flavored Juice Cocktail",
+      "Smucker’s Uncrustables Peanut Butter & Raspberry Sandwiches",
+      "Ghost Zero Sugar Energy Drink, Raspberry Cream, 16 fl oz can",
+      "Ocean Spray® Diet Cran-Raspberry® Cranberry Raspberry Juice Drink",
+      "Smucker’s Uncrustables Peanut Butter & Raspberry Spread Sandwiches",
+      "AriZona® Raspberry Iced Tea Can",
+      "Ocean Spray® Cran-Raspberry® Cranberry Raspberry Juice Drink"
+    ]
+  },
+  "38": {
+    "food": "Strawberries",
+    "searches": [
+      "fresh strawberries",
+      "strawberries",
+      "frozen strawberries",
+      "canned strawberries",
+      "dried strawberries"
+    ],
+    "styles": [
+      {
+        "label": "Fresh",
+        "form": "fresh",
+        "basis": "as_bought",
+        "products": [
+          "Fresh Strawberries – 1 LB Clamshell",
+          "Fresh Strawberries - 2 LB Clamshell",
+          "Fresh Organic Strawberries - 1 LB clamshell"
+        ],
+        "pick": "Fresh Strawberries - 2 LB Clamshell · 2 lb · $9.39 -> $1.04/serving",
+        "sizes": [
+          "1 lb clamshell · $4.79",
+          "2 lb clamshell · $9.39"
+        ]
+      },
+      {
+        "label": "Frozen",
+        "form": "frozen",
+        "basis": "as_bought",
+        "products": [
+          "Kroger® Frozen Sliced Strawberries",
+          "Private Selection® Frozen Sliced Strawberries",
+          "Simple Truth Organic® Frozen Sliced Strawberries",
+          "Simple Truth Organic® Frozen Sliced Strawberries BIG DEAL!",
+          "Private Selection® Sliced Frozen Strawberries in Sugar",
+          "Kroger® Sliced Strawberries BIG DEAL!",
+          "Simple Truth Organic® Frozen Whole Strawberries",
+          "Private Selection® Frozen Whole Strawberries"
+        ],
+        "pick": "Kroger® Sliced Strawberries BIG DEAL! · 4 lb · $10.99 -> $0.61/serving",
+        "sizes": [
+          "16 oz bag · $3.29",
+          "48 oz bag · $10.99"
+        ]
+      },
+      {
+        "label": "Freeze-dried",
+        "form": "dried",
+        "basis": "as_bought",
+        "products": [
+          "Simple Truth® No Sugar Added Freeze-Dried Strawberries BIG DEAL!",
+          "Simple Truth® Freeze-Dried Strawberries Multipack",
+          "Simple Truth® No Sugar Added Freeze-Dried Strawberries"
+        ],
+        "pick": "Simple Truth® No Sugar Added Freeze-Dried Strawberries BIG DEAL! · 2 oz · $8.49 -> $14.97/serving",
+        "sizes": [
+          "2 oz · $8.49"
+        ]
+      }
+    ],
+    "dropped": [
+      "Jumex® Strawberry-Banana Nectar Can",
+      "V8 Energy Strawberry Banana Energy Drink Cans",
+      "V8 Energy® Zero Sugar Strawberry Lemonade, 8 fl. oz. Can 6 Pack",
+      "Tru Fru Frozen Fresh Strawberries in Milk & White Chocolate",
+      "V8 Energy® Zero Sugar Strawberry Lemonade, 11.5 fl. oz. Can",
+      "Simple Truth™ Freeze-Dried Strawberries & Bananas",
+      "Trü Frü Greek Yogurt with White Chocolate + Granola Frozen Fresh Strawberries",
+      "Monster® Zero Sugar Ultra Strawberry Dreams Energy Drink Can",
+      "Simple Truth® No Sugar Added Freeze-Dried Strawberries and Bananas BIG DEAL!",
+      "Bakery Fresh Strawberries and Creme Ice Cream Cake",
+      "Monster® Zero Sugar Ultra Strawberry Dreams Energy Drink Can",
+      "Ocean Spray® Craisins® Dried Cranberries, Strawberry, 1 Ounce, 5 Count",
+      "Bakery Fresh Strawberry Shortcake Mini Cupcakes",
+      "Lifeway® Strawberry Probiotic Low Fat Kefir Drink",
+      "Clearly Canadian Summer Strawberry Sparkling Water Cans",
+      "Happy Baby Organics Yogis Strawberry Freeze-Dried Yogurt and Fruit Bites",
+      "Bakery Fresh Strawberry Cake Square",
+      "Yoplait™ Original Low Fat Strawberry and Strawberry Banana Yogurt Cups",
+      "Alani Nu Strawberry Sunrise Sugar Free Energy Drink Can",
+      "Happy Baby Organics Greek Yogis Strawberry Banana & Organic Freeze-Dried Baby Snack Bag",
+      "Bakery Fresh Strawberry Cake Parfait Cup",
+      "Danimals Smoothie Strawberry Low Fat Dairy Drink Smoothie Bottles",
+      "Bloom Nutrition Zero Sugar Strawberry Watermelon Energy Drink Can",
+      "Tru Fru Freeze Dried Strawberries in Dark & White Chocolate",
+      "Bakery Fresh Strawberry Crunch Cake",
+      "Chobani® Monterey Strawberry Less Sugar Low Fat Greek Yogurt Cup"
+    ]
+  }
+}

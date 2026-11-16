@@ -1,12 +1,9 @@
 // Package size dropdown and "your price" box for list rows and the pantry (migration 0019).
 // Inline theme-variable styles like prep-select.tsx, so these don't depend on the shared stylesheet.
-import { useEffect, useState, type CSSProperties } from 'react';
-import { packageCaption, type FoodPackage } from '@/lib/food-packages';
+import { useEffect, useState } from 'react';
+import type { FoodPackage } from '@/lib/food-packages';
+import { selectStyle } from './prep-select';
 
-const selectStyle: CSSProperties = {
-  height: 30, maxWidth: '100%', minWidth: 120, margin: '6px 0 2px', padding: '0 28px 0 10px', border: '1px solid var(--border)', borderRadius: 5,
-  background: 'var(--card)', color: 'var(--foreground)', fontSize: 12, cursor: 'pointer', justifySelf: 'start',
-};
 const stop = { onClick: (e: { stopPropagation: () => void }) => e.stopPropagation(), onKeyDown: (e: { stopPropagation: () => void }) => e.stopPropagation() };
 const money = (n: number | null) => (n == null ? '' : ` · $${n.toFixed(2)}`);
 
@@ -26,7 +23,7 @@ export function SizeSelect({ foodName, packages, value, onChange, priceOf, class
   if (!packages.length) return null;
   const current = packages.find(p => p.id === value);
   if (packages.length === 1 && current) {
-    return <small className={className} style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{packageCaption(current)}</small>;
+    return <small className={className} style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{current.label}</small>;
   }
   return (
     <select
@@ -39,7 +36,7 @@ export function SizeSelect({ foodName, packages, value, onChange, priceOf, class
       onChange={e => { if (e.target.value) onChange(e.target.value); }}
     >
       {!current && <option value="">Pick a size</option>}
-      {packages.map(p => <option key={p.id} value={p.id}>{packageCaption(p)}{money(priceOf(p))}</option>)}
+      {packages.map(p => <option key={p.id} value={p.id}>{p.label}{money(priceOf(p))}</option>)}
     </select>
   );
 }

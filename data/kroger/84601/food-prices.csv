@@ -53,21 +53,21 @@ food_id,food,brand,description,size,regular,serving_g,price_per_serving,how,flag
 53,Sweet Potato,Fresh Potatoes,Kroger® Sweet Potato,3 lb,4.99,130.0,0.4767,$4.99 × 130.0 g / 1361 g,,home
 54,Carrot,Kroger,Kroger® Whole Carrots,5 lb,4.99,100.0,0.2200,$4.99 × 100.0 g / 2268 g,,home
 55,Spinach,Kroger,Kroger® Baby Spinach,10 oz,3.99,100.0,1.4074,$3.99 × 100.0 g / 283 g,,home
-56,Avocado,Fresh Avocados,Fresh Medium Ripe Avocado,1 each,1,136.0,1.0000,$1 / 1 units,,home
+56,Avocado,Private Selection,Private Selection® California Gem Avocados,4 ct,6,136.0,1.5000,$6 / 4 units,,home
 57,Beets,,Golden Beets,1 lb,1.99,100.0,0.4387,$1.99/lb × 100.0 g,priced per lb,home
 58,Black Beans,Kroger,Kroger® Black Beans BIG DEAL!,4 pk / 15.5 oz,3.89,100.0,0.2213,$3.89 × 100.0 g / 1758 g,,home
-59,Edamame,Pictsweet Farms,Pictsweet Farms® Steam'ables® Shelled Edamame with Sea Salt Packs,5 pk / 4 oz,7.49,100.0,1.3210,$7.49 × 100.0 g / 567 g,no store brand: national brand used,home
+59,Edamame,Birds Eye,"Birds Eye Steamfresh Shelled Edamame, Frozen Vegetables",10 oz,3.49,100.0,1.2311,$3.49 × 100.0 g / 283 g,no store brand: national brand used,home
 60,Tofu,Simple Truth Organic,Simple Truth Organic® Firm Tofu,14 oz,1.99,100.0,0.5014,$1.99 × 100.0 g / 397 g,only organic available,home
 61,Kimchi,Simple Truth,Simple Truth® Raw-Fermented Korean Style Kimchi,17 oz,7.99,100.0,1.6579,$7.99 × 100.0 g / 482 g,,home
 62,Yellow Onion,,Kroger® Yellow Onion 3 lb Bag,3 lb,3.39,148.0,0.3687,$3.39 × 148.0 g / 1361 g,,home
-63,Garlic,Kroger,Kroger® Whole Garlic Bulbs,5 ct,1.99,3.0,0.0398,$1.99 / 50 cloves,,home
-64,Tomatoes,Fresh Tomatoes,Fresh Roma Tomato,1 lb,1.79,125.0,0.4933,$1.79/lb × 125.0 g,priced per lb,home
+63,Garlic,Kroger,Kroger® Garlic Bulbs,5 ct,1.99,3.0,0.0398,$1.99 / 50 cloves,,home
+64,Tomatoes,Fresh Tomatoes,Fresh Roma Tomato,1 lb,1.99,125.0,0.5484,$1.99/lb × 125.0 g,priced per lb,home
 65,Cucumber,,Cucumber,1 ct,0.79,200.0,0.7900,$0.79 / 1 units,,home
 66,Kale,,Kale Bag,16 oz,3.49,100.0,0.7694,$3.49 × 100.0 g / 454 g,,home
 67,Zucchini,,Zucchini,1 lb,1.69,196.0,0.7303,$1.69/lb × 196.0 g,priced per lb,home
 68,Skim Milk,Kroger,Kroger® Fat Free Skim Milk Quart,1 qt,2.19,240.0,0.5392,$2.19 × 240.0 g / (946 ml × 1.03),density 1.03 g/ml,home
 69,Almond Milk,Simple Truth,Simple Truth™ Dairy Free Shelf Stable Unsweetened Plain Almond Milk Quart,1 qt,1.99,200.0,0.4083,$1.99 × 200.0 g / (946 ml × 1.03),density 1.03 g/ml,home
-70,Nonfat Greek yogurt,Kroger,Kroger® Plain Nonfat Greek Yogurt Cup,5.3 oz,0.89,170.0,1.0070,$0.89 × 170.0 g / 150 g,,home
+70,Nonfat Greek yogurt,Kroger,Kroger® Plain Nonfat Greek Yogurt Tub,32 oz,4.19,170.0,0.7852,$4.19 × 170.0 g / 907 g,,home
 71,Low-fat Cottage Cheese,Kroger,Kroger® 2% Low Fat Small Curd Cottage Cheese,24 oz,3.19,113.0,0.5298,$3.19 × 113.0 g / 680 g,,home
 72,Parmesan Cheese,Kroger,Kroger® Grated Parmesan Cheese,16 oz,5.99,25.0,0.3301,$5.99 × 25.0 g / 454 g,,home
 73,Egg,Simple Truth,Simple Truth® Cage Free Grade AA Large Brown Eggs,24 ct,6.79,50.0,0.2829,$6.79 / 24 × 50 g / 50 g,50 g per unit,home
@@ -78,7 +78,7 @@ food_id,food,brand,description,size,regular,serving_g,price_per_serving,how,flag
 78,Whole Milk,Kroger,Kroger® Whole Vitamin D Milk Quart,1 qt,2.19,244.0,0.5475,$2.19 × 236.6 ml / 946 ml,,home
 79,Cheddar Cheese,Kroger,Kroger® Sharp Cheddar Block Cheese BIG DEAL!,32 oz,7.29,28.3,0.2278,$7.29 × 28.3 g / 907 g,,home
 80,Mozzarella Cheese,Kroger,Kroger® Mozzarella Shredded Cheese BIG DEAL!,4 lb,13.99,28.3,0.2186,$13.99 × 28.3 g / 1814 g,,home
-81,Protein Powder,Ghirardelli,Ghirardelli x ProSupps Whey Protein Chocolate Peanut Butter 18 sv,1.58 lbs,35.99,38.0,1.9083,$35.99 × 38.0 g / 717 g,no store brand: national brand used,home
+81,Protein Powder,Body Fortress,Body Fortress® Super Advanced Whey Orange Cream Protein Powder,28.5 oz,29.99,38.0,1.4105,$29.99 × 38.0 g / 808 g,no store brand: national brand used,home
 82,Powdered Peanut Butter,Simple Truth,Simple Truth® Powdered Plant Based Peanut Butter BIG DEAL!,24 oz,12.99,16.0,0.3055,$12.99 × 16.0 g / 680 g,,home
 83,Peanut Butter,Kroger,Kroger® Peanut Butter Creamy BIG Deal!,64 oz,6.49,32.0,0.1145,$6.49 × 32.0 g / 1814 g,,home
 84,Peanuts,Kroger,Kroger® Shelled Salted Roasted Peanuts,16 oz,2.49,28.0,0.1537,$2.49 × 28.0 g / 454 g,,home
@@ -90,12 +90,29 @@ food_id,food,brand,description,size,regular,serving_g,price_per_serving,how,flag
 90,Pumpkin Seeds,Simple Truth,Simple Truth® Raw Pepitas,14.5 oz,6.99,30.0,0.5101,$6.99 × 30.0 g / 411 g,,home
 91,Dark Chocolate,Private Selection,Private Selection® 72% Cacao Dark Chocolate Swiss Candy Bar,3.5 oz,3.99,30.0,1.2064,$3.99 × 30.0 g / 99 g,,home
 92,Avocado Oil,Private Selection,Private Selection® Avocado Oil,67.6 fl oz,32.99,15.0,0.2691,$32.99 × 15.0 g / (1999 ml × 0.92),density 0.92 g/ml,home
-93,Olive Oil,Kroger,Kroger® Extra Virgin Olive Oil,67.6 fl oz,24.99,15.0,0.2038,$24.99 × 15.0 g / (1999 ml × 0.92),density 0.92 g/ml,home
+93,Olive Oil,Kroger,Kroger® Extra Virgin Olive Oil,68 fl oz,24.99,15.0,0.2026,$24.99 × 15.0 g / (2011 ml × 0.92),density 0.92 g/ml,home
 94,Ground Flax Seeds,Bob's Red Mill,Bob's Red Mill Gluten Free Non GMO Flaxseed Meal,16 oz,4.99,28.3,0.3119,$4.99 × 28.3 g / 454 g,no store brand: national brand used,home
 95,Cashews,Kroger,Kroger® Halves & Pieces Salted Cashews,32 oz,13.99,28.3,0.4372,$13.99 × 28.3 g / 907 g,,home
 96,Sunflower Seeds,Kroger,Kroger® Dry Roasted Salted Sunflower Kernels,7.25 oz,2.59,28.3,0.3572,$2.59 × 28.3 g / 206 g,,home
 97,Apple Cider Vinegar,Kroger,Kroger® Apple Cider Vinegar,1 gal,7.29,14.9,0.0285,$7.29 × 14.8 ml / 3785 ml,,home
 98,Soy Sauce / Tamari,Kroger,Kroger® Brewed Soy Sauce BIG DEAL!,32 fl oz,3.99,16.0,0.0623,$3.99 × 14.8 ml / 946 ml,,home
 99,Honey,Kroger,Kroger® Clover Honey Bear,24 oz,7.79,20.0,0.2290,$7.79 × 20.0 g / 680 g,,home
-100,Maple Syrup,Private Selection,Private Selection™ 100% Pure Grade A Amber Maple Syrup,32 fl oz,18.99,20.0,0.2967,$18.99 × 14.8 ml / 946 ml,,home
-101,Pineapple,,Fresh Ripe Whole Pineapple,1 ct,3.29,1,3.2900,$3.29 / 1 units,,home
+100,Maple Syrup,Private Selection,Private Selection® Pure Maple Syrup,32 fl oz,18.99,20.0,0.2967,$18.99 × 14.8 ml / 946 ml,,home
+101,Pineapple,,Fresh Ripe Whole Pineapple,1 ct,3.29,905.0,3.2900,$3.29 / 1 units,,home
+102,Yerba mate,Yerba Madre,Yerba Madre Lemon Elation Yerba Mate Energy Drink Can,15.5 fl oz,2.99,28.3,0.1849,$2.99 × 28.3 g / (458 ml × 1),density 1 g/ml; no store brand: national brand used,home
+103,Fresh coconut,Simple Truth Organic,Simple Truth Organic® Unsweetened Coconut Flakes,8 oz,3.69,100.0,1.6270,$3.69 × 100.0 g / 227 g,only organic available,home
+104,Grapes,,Kroger® Fresh Seedless Green Grapes,3 lb,7.99,100.0,0.5872,$7.99 × 100.0 g / 1361 g,,home
+105,High-fiber bread,Kroger,Kroger® Zero Gram Net Carbs Street Taco Tortillas,14 ct / 8.89 oz,2.99,56.7,0.6727,$2.99 × 56.7 g / 252 g,,home
+106,Black olives,Kroger,Kroger® Sliced Black Olives,3.8 oz,2.69,5.0,0.1249,$2.69 × 5.0 g / 108 g,,home
+107,Honeydew,Fresh Melons,Organic Honeydew,1 lb,5.99,100.0,1.3206,$5.99 × 100.0 g / 454 g,only organic available,home
+108,Lettuce,Kroger,Kroger® Romaine Hearts BIG DEAL!,36 oz,6,100.0,0.5879,$6 × 100.0 g / 1021 g,,home
+109,Jelly,Smart Way,Smart Way™ Grape Jelly,32 oz,2.79,20.0,0.0615,$2.79 × 20.0 g / 907 g,,home
+110,Flour tortilla,Kroger,Kroger® Fajita Size Flour Tortillas,20 ct / 23 oz,2.29,45.0,0.1145,$2.29 / 20 units,,home
+112,White bread,Smart Way,Smart Way® Enriched White Bread,16 oz,1.29,56.7,0.1613,$1.29 × 56.7 g / 454 g,,home
+113,Cream of wheat,Cream of Wheat,Cream of Wheat Original 2 1/2- Minute,28 oz,6.49,44.5,0.3638,$6.49 × 44.5 g / 794 g,no store brand: national brand used,home
+114,Applesauce,Smart Way,Smart Way™ Original Applesauce,48 oz,3.69,100.0,0.2712,$3.69 × 100.0 g / 1361 g,alternate: relaxed match (review),home
+115,Italian dressing,Kroger,Kroger® Zesty Italian Salad Dressing BIG DEAL!,36 fl oz,4,14.7,0.0556,$4 × 14.8 ml / 1065 ml,,home
+116,Ice cream,Kroger,Kroger® 1883 Vanilla Ice Cream Tub,48 oz,3.19,67.5,0.1582,$3.19 × 67.5 g / 1361 g,,home
+117,Atlantic cod,Simple Truth,Simple Truth® Wild Caught Pacific Cod Loins,12 oz,7.99,113.4,2.6633,$7.99 × 113.4 g / 340 g,alternate: shorter name,home
+118,Full-fat cottage cheese,Kroger,Kroger® 4% Milkfat Small Curd Cottage Cheese BIG DEAL!,48 oz,5.99,105.0,0.4622,$5.99 × 105.0 g / 1361 g,,home
+119,Pomegranate,Fresh Pomegranate,California Pomegranate,1 ct,2.49,250.0,2.4900,$2.49 / 1 units,,home

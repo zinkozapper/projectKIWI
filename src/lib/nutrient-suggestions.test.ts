@@ -48,6 +48,12 @@ describe('rankSuggestions', () => {
     expect(r.suggestions.map(s => s.food.id)).toEqual(['cheap', 'pricey']);
   });
 
+  it('never suggests a food the user thumbed down', () => {
+    const r = rankSuggestions({ ...base, available: [carrot, sweetPotato], combined: emptyNutrients(), preferences: { 'sweet potato': false } });
+    expect(r.suggestions.map(s => s.food.id)).toEqual(['carrot']);
+    expect(r.gapScores.map(s => s.food.id)).not.toContain('sweet potato');
+  });
+
   it('never targets calories or the upper limits', () => {
     expect(NUTRIENT_PRIORITY).not.toContain('calories');
     for (const limit of nutrientLimits) expect(NUTRIENT_PRIORITY).not.toContain(limit);

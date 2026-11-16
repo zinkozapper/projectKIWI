@@ -70,13 +70,31 @@ export function sizeCandidates(scored: Scored[]): SizeCandidate[] {
     }));
 }
 
+// ---------- purchase style ----------
+// The purchase style (fresh, frozen, canned …) decides which sizes can be picked; the size decides the price.
+// Kroger's results for "fresh pomegranate" also hold cups of arils, so prepared products are dropped for Fresh,
+// and Frozen / Canned keep only products that say so. With no style (a food without options) nothing is dropped.
+const PREPARED = /\b(arils?|cut|cubed|cubes|chunks?|sliced|slices|diced|chopped|spears|cups?|peeled|spiralized|riced|juice|dried|frozen|canned|snacks?|bowls?|trays?|salad|smoothie|puree|sauce)\b/i;
+const STYLE_RULES: Record<string, (text: string) => boolean> = {
+  fresh: text => !PREPARED.test(text),
+  frozen: text => /\bfrozen\b/i.test(text),
+  canned: text => /\b(canned|can|cans|jar|jarred)\b/i.test(text),
+};
+
+/** Size candidates that match the purchase style (option form). */
+export function forStyle(cands: SizeCandidate[], form: string | null | undefined): SizeCandidate[] {
+  const rule = form ? STYLE_RULES[form] : undefined;
+  return rule ? cands.filter(c => rule(`${c.description} ${c.size}`)) : cands;
+}
+
 // ---------- AI step ----------
 export const SIZES_SYSTEM = `You help Kiwi, a nutrition-aware grocery planner. Shoppers add a food to their list as it's sold: one package. Given the store products found for one food, pick the package sizes a shopper should choose between. Rules:
 - Pick 1 to 3 products by key. Pick fewer when the sizes are nearly the same or only one size is common; never more than 3.
 - Spread them out: an everyday size first (what most households buy for a week), then a smaller and/or a larger bulk size if they exist.
 - label: what the shopper sees, 1–4 plain words with the amount, e.g. "1 lb", "3 lb family pack", "12 ct", "15 oz can", "Half gallon". Max 25 characters. No brand names.
 - For products sold by weight (byWeight true), also give pounds (0.5–10): the amount bought, e.g. 1 or 2.5. You may pick the same by-weight product more than once with different pounds.
-- Order: the everyday size first.`;
+- Order: the everyday size first.
+- Purchase style: when the food line names one in parentheses (e.g. "Fresh", "Frozen", "Arils"), every pick must be sold that way. Fresh means the whole, uncut item (a single fruit, a bag or box of them), never cut fruit, cups or arils. Pick nothing that doesn't match.`;
 
 export const SIZES_TOOL = {
   name: 'package_sizes',

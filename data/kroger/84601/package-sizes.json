@@ -1,0 +1,1602 @@
+{
+  "3": {
+    "food": "Pork Tenderloin",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 5.99,
+        "perServing": 1.5,
+        "product": "PORK · Pork Tenderloin Boneless (Whole)",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "4": {
+    "food": "Pork Butt/Shoulder",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 2.99,
+        "perServing": 0.75,
+        "product": "Kroger · Kroger® Fresh Natural Pork Shoulder Butt Bone In",
+        "size": "1 lb"
+      },
+      {
+        "option": null,
+        "label": "2 pk, 1 lb",
+        "servings": 8,
+        "price": 4.99,
+        "perServing": 0.62,
+        "product": "PORK · Bone-In Pork Shoulder Steak",
+        "size": "2 pk / 1 lb"
+      }
+    ]
+  },
+  "5": {
+    "food": "Sirloin",
+    "sizes": [
+      {
+        "option": null,
+        "label": "10 oz steak",
+        "servings": 2.5,
+        "price": 10.99,
+        "perServing": 4.4,
+        "product": "Private Selection · Private Selection® Natural USDA Choice Angus Beef Top Sirloin Steak",
+        "size": "10 oz"
+      },
+      {
+        "option": null,
+        "label": "8 oz steak",
+        "servings": 2,
+        "price": 11.99,
+        "perServing": 6,
+        "product": "Private Selection · Private Selection® Culinary Cuts USDA Prime Beef Top Sirloin Steak",
+        "size": "8 oz"
+      }
+    ]
+  },
+  "6": {
+    "food": "Chuck",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1.5 lb",
+        "servings": 6,
+        "price": 20,
+        "perServing": 3.33,
+        "product": "Private Selection · Private Selection® Natural Choice Angus Chuck Roast",
+        "size": "1.5 lb"
+      },
+      {
+        "option": null,
+        "label": "24 oz roast",
+        "servings": 6,
+        "price": 23.99,
+        "perServing": 4,
+        "product": "Simple Truth · Simple Truth® Natural Bison Chuck Roast",
+        "size": "24 oz"
+      },
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 10.99,
+        "perServing": 2.75,
+        "product": "Kroger Mercado · Kroger® Thin Sliced Beef Chuck Shoulder Steak",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "7": {
+    "food": "Ground beef 90/10",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 9.99,
+        "perServing": 2.5,
+        "product": "Private Selection · Private Selection Angus Beef 90% Lean Ground Sirloin",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "8": {
+    "food": "Ribeye Whole",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 oz",
+        "servings": 3,
+        "price": 17.99,
+        "perServing": 6,
+        "product": "Private Selection · Private Selection® Natural USDA Choice Angus Beef Ribeye Steak",
+        "size": "12 oz"
+      },
+      {
+        "option": null,
+        "label": "10 oz",
+        "servings": 2.5,
+        "price": 18.99,
+        "perServing": 7.6,
+        "product": "Private Selection · Private Selection® Culinary Cuts USDA Prime Beef Ribeye Steak",
+        "size": "10 oz"
+      },
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 19.99,
+        "perServing": 5,
+        "product": "Kroger Mercado · Kroger® Thin Sliced Beef Ribeye Steak",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "12": {
+    "food": "Sardines",
+    "sizes": [
+      {
+        "option": null,
+        "label": "3.75 oz can",
+        "servings": 0.94,
+        "price": 1.69,
+        "perServing": 1.8,
+        "product": "Chicken of the Sea · Chicken of the Sea Wild Caught Sardines in Water",
+        "size": "3.75 oz"
+      },
+      {
+        "option": null,
+        "label": "4.37 oz can",
+        "servings": 1.09,
+        "price": 3.99,
+        "perServing": 3.66,
+        "product": "Crown Prince Natural · Crown Prince Natural Skinless & Boneless Sardines in Water",
+        "size": "4.37 oz"
+      }
+    ]
+  },
+  "13": {
+    "food": "Oysters",
+    "sizes": [
+      {
+        "option": null,
+        "label": "3.75 oz can",
+        "servings": 0.94,
+        "price": 3.79,
+        "perServing": 4.03,
+        "product": "Geisha · Geisha® Fancy Smoked Oysters in Sunflower Oil",
+        "size": "3.75 oz"
+      },
+      {
+        "option": null,
+        "label": "3 oz can",
+        "servings": 0.75,
+        "price": 2.69,
+        "perServing": 3.59,
+        "product": "Ocean Prince · Ocean Prince Cocktail Smoked Oysters",
+        "size": "3 oz"
+      }
+    ]
+  },
+  "14": {
+    "food": "Ground Turkey",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 5.49,
+        "perServing": 1.37,
+        "product": "Kroger · Kroger® 93/7 Lean Fresh Ground Turkey - 1 LB",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "15": {
+    "food": "Chicken Liver",
+    "sizes": [
+      {
+        "option": null,
+        "label": "20 oz",
+        "servings": 5,
+        "price": 2.49,
+        "perServing": 0.5,
+        "product": "Heritage Farm · Heritage Farm Natural Chicken Livers",
+        "size": "20 oz"
+      }
+    ]
+  },
+  "16": {
+    "food": "Liver",
+    "sizes": [
+      {
+        "option": null,
+        "label": "4 ct (4 oz each)",
+        "servings": 1,
+        "price": 6.49,
+        "perServing": 6.49,
+        "product": "Skylark · Skylark® Sliced Beef Liver",
+        "size": "4 ct / 4 oz"
+      },
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4,
+        "price": 3.99,
+        "perServing": 1,
+        "product": "Rumba Meats® Beef Liver Sliced (Higado de Res Rebanado)",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "21": {
+    "food": "Pasta",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 8,
+        "price": 1.33,
+        "perServing": 0.17,
+        "product": "Kroger · Kroger® Spaghetti",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz",
+        "servings": 16,
+        "price": 2,
+        "perServing": 0.13,
+        "product": "Kroger · KROGER 32 oz Spaghetti",
+        "size": "32 oz"
+      },
+      {
+        "option": null,
+        "label": "14.5 oz protein",
+        "servings": 7.25,
+        "price": 2.19,
+        "perServing": 0.3,
+        "product": "Kroger · Kroger® Protein Grain & Legume Spaghetti",
+        "size": "14.5 oz"
+      }
+    ]
+  },
+  "22": {
+    "food": "Whole Wheat Pasta",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 8,
+        "price": 1.33,
+        "perServing": 0.17,
+        "product": "Kroger · Kroger® 100% Whole Grain Penne Rigate",
+        "size": "16 oz"
+      }
+    ]
+  },
+  "23": {
+    "food": "Rice",
+    "sizes": [
+      {
+        "option": null,
+        "label": "32 oz",
+        "servings": 16,
+        "price": 1.89,
+        "perServing": 0.12,
+        "product": "Kroger · Kroger® Enriched Long Grain White Rice",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "25": {
+    "food": "Rolled oats",
+    "sizes": [
+      {
+        "option": null,
+        "label": "18 oz",
+        "servings": 9,
+        "price": 2.89,
+        "perServing": 0.32,
+        "product": "Kroger · Kroger® 100% Whole Grain Old Fashioned Oats",
+        "size": "18 oz"
+      },
+      {
+        "option": null,
+        "label": "42 oz",
+        "servings": 21,
+        "price": 4.49,
+        "perServing": 0.21,
+        "product": "Kroger · Kroger® 100% Whole Grain Old Fashioned Oats",
+        "size": "42 oz"
+      }
+    ]
+  },
+  "26": {
+    "food": "Multi-grain Bread",
+    "sizes": [
+      {
+        "option": null,
+        "label": "17.6 oz loaf",
+        "servings": 11.09,
+        "price": 3.99,
+        "perServing": 0.36,
+        "product": "Private Selection · Private Selection® Multigrain Loaf",
+        "size": "17.6 oz"
+      },
+      {
+        "option": null,
+        "label": "24 oz wide pan loaf",
+        "servings": 15.12,
+        "price": 3.49,
+        "perServing": 0.23,
+        "product": "Private Selection · Private Selection® Multigrain Bread Wide Pan",
+        "size": "24 oz"
+      }
+    ]
+  },
+  "27": {
+    "food": "Brown Rice",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz bag",
+        "servings": 9.8,
+        "price": 1.19,
+        "perServing": 0.12,
+        "product": "Kroger · Kroger® Long Grain Brown Rice",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz bag",
+        "servings": 19.59,
+        "price": 1.89,
+        "perServing": 0.1,
+        "product": "Kroger · Kroger® Long Grain Brown Rice",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "28": {
+    "food": "Whole Wheat Tortillas",
+    "sizes": [
+      {
+        "option": null,
+        "label": "10 ct / 16 oz",
+        "servings": 10,
+        "price": 2.79,
+        "perServing": 0.28,
+        "product": "Kroger · Kroger® 100% Whole Wheat Tortillas",
+        "size": "10 ct / 16 oz"
+      }
+    ]
+  },
+  "30": {
+    "food": "Couscous",
+    "sizes": [
+      {
+        "option": null,
+        "label": "7 oz",
+        "servings": 4.58,
+        "price": 2.49,
+        "perServing": 0.54,
+        "product": "Kroger · Kroger® Original Couscous",
+        "size": "7 oz"
+      }
+    ]
+  },
+  "32": {
+    "food": "Dates",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 oz",
+        "servings": 3.4,
+        "price": 5.99,
+        "perServing": 1.76,
+        "product": "Oasis · Oasis Dates Conventional Pitted Medjool Dates",
+        "size": "12 oz"
+      },
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 4.54,
+        "price": 7.99,
+        "perServing": 1.76,
+        "product": "Oasis · Oasis Dates Conventional Whole Medjool Dates",
+        "size": "16 oz"
+      }
+    ]
+  },
+  "36": {
+    "food": "Blackberries",
+    "sizes": [
+      {
+        "option": null,
+        "label": "10 oz",
+        "servings": 2.83,
+        "price": 4.99,
+        "perServing": 1.76,
+        "product": "Private Selection · Private Selection® Sweet Karoline Fresh Blackberries",
+        "size": "10 oz"
+      },
+      {
+        "option": null,
+        "label": "6 oz",
+        "servings": 1.7,
+        "price": 3.59,
+        "perServing": 2.11,
+        "product": "Fresh Berries · Fresh Blackberries - 6 OZ Clamshell",
+        "size": "6 oz"
+      },
+      {
+        "option": null,
+        "label": "12 oz",
+        "servings": 3.4,
+        "price": 5.99,
+        "perServing": 1.76,
+        "product": "Fresh Berries · Fresh Blackberries - 12 OZ Clamshell",
+        "size": "12 oz"
+      }
+    ]
+  },
+  "39": {
+    "food": "Kiwis",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 ct",
+        "servings": 1,
+        "price": 0.6,
+        "perServing": 0.6,
+        "product": "Kiwi",
+        "size": "1 ct"
+      },
+      {
+        "option": null,
+        "label": "2 lb",
+        "servings": 13.15,
+        "price": 6,
+        "perServing": 0.46,
+        "product": "Mighties Green Fresh Kiwi Fruit",
+        "size": "2 lb"
+      }
+    ]
+  },
+  "40": {
+    "food": "Acerola Juice",
+    "sizes": []
+  },
+  "42": {
+    "food": "Apples",
+    "sizes": [
+      {
+        "option": null,
+        "label": "3 lb bag",
+        "servings": 8.05,
+        "price": 2.59,
+        "perServing": 0.32,
+        "product": "Kroger® Gala Apples – 3 Pound Bag",
+        "size": "3 lb"
+      },
+      {
+        "option": null,
+        "label": "5 lb bag",
+        "servings": 13.42,
+        "price": 5,
+        "perServing": 0.37,
+        "product": "Kroger · Kroger® Gala Apples – 5 Pound Bag",
+        "size": "5 lb"
+      },
+      {
+        "option": null,
+        "label": "4 ct tray",
+        "servings": 4,
+        "price": 4,
+        "perServing": 1,
+        "product": "Kroger® Gala Apples - 4 Pack Tray",
+        "size": "4 ct"
+      }
+    ]
+  },
+  "43": {
+    "food": "Lemon",
+    "sizes": [
+      {
+        "option": null,
+        "label": "2 lb bag",
+        "servings": 13.96,
+        "price": 4.99,
+        "perServing": 0.36,
+        "product": "Fresh Citrus · Kroger® Fresh Lemons Bag",
+        "size": "2 lb"
+      },
+      {
+        "option": null,
+        "label": "1 lb bag",
+        "servings": 6.98,
+        "price": 2.99,
+        "perServing": 0.43,
+        "product": "Private Selection · Private Selection® Fresh Meyer Lemons Bag",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "44": {
+    "food": "Lime",
+    "sizes": [
+      {
+        "option": null,
+        "label": "2 lb bag",
+        "servings": 13.96,
+        "price": 4.99,
+        "perServing": 0.36,
+        "product": "Fresh Citrus · Kroger® Fresh Limes Bag",
+        "size": "2 lb"
+      },
+      {
+        "option": null,
+        "label": "1 lb bag",
+        "servings": 6.98,
+        "price": 3.99,
+        "perServing": 0.57,
+        "product": "Fresh Citrus · Kroger® Fresh Key Limes Bag",
+        "size": "1 lb"
+      }
+    ]
+  },
+  "45": {
+    "food": "Frozen Mixed Berries",
+    "sizes": [
+      {
+        "option": null,
+        "label": "48 oz",
+        "servings": 13.61,
+        "price": 12.99,
+        "perServing": 0.95,
+        "product": "Private Selection · Private Selection® Triple Berry Blend Frozen Fruit",
+        "size": "48 oz"
+      }
+    ]
+  },
+  "52": {
+    "food": "Potato",
+    "sizes": [
+      {
+        "option": null,
+        "label": "10 lb bag",
+        "servings": 21.3,
+        "price": 3.99,
+        "perServing": 0.19,
+        "product": "Fresh Potatoes · Kroger® Russet Potatoes Bag BIG DEAL!",
+        "size": "10 lb"
+      },
+      {
+        "option": null,
+        "label": "8 lb jumbo bag",
+        "servings": 17.04,
+        "price": 6.29,
+        "perServing": 0.37,
+        "product": "Kroger® Jumbo Russet Potatoes",
+        "size": "8 lb"
+      }
+    ]
+  },
+  "58": {
+    "food": "Black Beans",
+    "sizes": [
+      {
+        "option": null,
+        "label": "15 oz can",
+        "servings": 4.25,
+        "price": 1,
+        "perServing": 0.24,
+        "product": "Kroger · Kroger® Black Beans",
+        "size": "15 oz"
+      },
+      {
+        "option": null,
+        "label": "4 pk / 15.5 oz",
+        "servings": 17.58,
+        "price": 3.89,
+        "perServing": 0.22,
+        "product": "Kroger · Kroger® Black Beans BIG DEAL!",
+        "size": "4 pk / 15.5 oz"
+      }
+    ]
+  },
+  "61": {
+    "food": "Kimchi",
+    "sizes": [
+      {
+        "option": null,
+        "label": "17 oz",
+        "servings": 4.82,
+        "price": 7.99,
+        "perServing": 1.66,
+        "product": "Simple Truth · Simple Truth® Raw-Fermented Korean Style Kimchi",
+        "size": "17 oz"
+      }
+    ]
+  },
+  "65": {
+    "food": "Cucumber",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 ct",
+        "servings": 1,
+        "price": 0.79,
+        "perServing": 0.79,
+        "product": "Cucumber",
+        "size": "1 ct"
+      }
+    ]
+  },
+  "68": {
+    "food": "Skim Milk",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 qt",
+        "servings": 4.06,
+        "price": 2.19,
+        "perServing": 0.54,
+        "product": "Kroger · Kroger® Fat Free Skim Milk Quart",
+        "size": "1 qt"
+      },
+      {
+        "option": null,
+        "label": "16 fl oz bottle",
+        "servings": 2.03,
+        "price": 1.39,
+        "perServing": 0.68,
+        "product": "Kroger · Kroger® Skim Fat Free Milk 16 fl. oz. Bottle",
+        "size": "1 pt"
+      }
+    ]
+  },
+  "69": {
+    "food": "Almond Milk",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 qt",
+        "servings": 4.87,
+        "price": 1.99,
+        "perServing": 0.41,
+        "product": "Simple Truth · Simple Truth™ Dairy Free Shelf Stable Unsweetened Plain Almond Milk Quart",
+        "size": "1 qt"
+      }
+    ]
+  },
+  "70": {
+    "food": "Nonfat Greek yogurt",
+    "sizes": [
+      {
+        "option": null,
+        "label": "5.3 oz cup",
+        "servings": 0.88,
+        "price": 0.89,
+        "perServing": 1.01,
+        "product": "Kroger · Kroger® Plain Nonfat Greek Yogurt Cup",
+        "size": "5.3 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz tub",
+        "servings": 5.34,
+        "price": 4.19,
+        "perServing": 0.78,
+        "product": "Kroger · Kroger® Plain Nonfat Greek Yogurt Tub",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "71": {
+    "food": "Low-fat Cottage Cheese",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz tub",
+        "servings": 4.01,
+        "price": 2.59,
+        "perServing": 0.65,
+        "product": "Kroger · Kroger® 2% Low Fat Small Curd Cottage Cheese",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "24 oz tub",
+        "servings": 6.02,
+        "price": 3.19,
+        "perServing": 0.53,
+        "product": "Kroger · Kroger® 2% Low Fat Small Curd Cottage Cheese",
+        "size": "24 oz"
+      }
+    ]
+  },
+  "72": {
+    "food": "Parmesan Cheese",
+    "sizes": [
+      {
+        "option": null,
+        "label": "3 oz",
+        "servings": 3.4,
+        "price": 2.39,
+        "perServing": 0.7,
+        "product": "Kroger · Kroger® 100% Grated Parmesan Cheese",
+        "size": "3 oz"
+      },
+      {
+        "option": null,
+        "label": "8 oz",
+        "servings": 9.07,
+        "price": 3.49,
+        "perServing": 0.38,
+        "product": "Kroger · Kroger® Parmesan Grated Cheese",
+        "size": "8 oz"
+      },
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 18.14,
+        "price": 5.99,
+        "perServing": 0.33,
+        "product": "Kroger · Kroger® Grated Parmesan Cheese",
+        "size": "16 oz"
+      }
+    ]
+  },
+  "73": {
+    "food": "Egg",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 ct",
+        "servings": 12,
+        "price": 3.99,
+        "perServing": 0.33,
+        "product": "Simple Truth · Simple Truth™ Natural Cage Free Grade AA Large Brown Eggs",
+        "size": "12 ct"
+      },
+      {
+        "option": null,
+        "label": "18 ct",
+        "servings": 18,
+        "price": 5.49,
+        "perServing": 0.31,
+        "product": "Simple Truth · Simple Truth™ Natural Cage Free Large Brown Eggs",
+        "size": "18 ct"
+      },
+      {
+        "option": null,
+        "label": "24 ct",
+        "servings": 24,
+        "price": 6.79,
+        "perServing": 0.28,
+        "product": "Simple Truth · Simple Truth® Cage Free Grade AA Large Brown Eggs",
+        "size": "24 ct"
+      }
+    ]
+  },
+  "74": {
+    "food": "Egg white",
+    "sizes": [
+      {
+        "option": null,
+        "label": "32 oz",
+        "servings": 19.72,
+        "price": 7.49,
+        "perServing": 0.38,
+        "product": "Kroger · Kroger® Cage Free Liquid Egg Whites",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "75": {
+    "food": "Cheese",
+    "sizes": [
+      {
+        "option": null,
+        "label": "8 oz",
+        "servings": 8.1,
+        "price": 2,
+        "perServing": 0.25,
+        "product": "Kroger · Kroger® Monterey Jack Shredded Cheese",
+        "size": "8 oz"
+      },
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 16.2,
+        "price": 3.69,
+        "perServing": 0.23,
+        "product": "Kroger · Kroger® Monterey Jack Shredded Cheese",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz block",
+        "servings": 32.4,
+        "price": 7.29,
+        "perServing": 0.23,
+        "product": "Kroger · Kroger® Monterey Jack Block Cheese BIG DEAL!",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "76": {
+    "food": "Nonfat Cheese",
+    "sizes": [
+      {
+        "option": null,
+        "label": "8 oz",
+        "servings": 8.1,
+        "price": 2,
+        "perServing": 0.25,
+        "product": "Kroger · Kroger® Reduced Fat Mexican Style Shredded Cheese",
+        "size": "8 oz"
+      }
+    ]
+  },
+  "77": {
+    "food": "Butter",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz (4 sticks)",
+        "servings": 64.8,
+        "price": 3.49,
+        "perServing": 0.05,
+        "product": "Kroger · Kroger® Salted Butter Sticks",
+        "size": "4 sticks / 16 oz"
+      },
+      {
+        "option": null,
+        "label": "2 pk, 32 oz",
+        "servings": 64.8,
+        "price": 6.49,
+        "perServing": 0.1,
+        "product": "Kroger · Kroger® Salted Butter Sticks BIG DEAL!",
+        "size": "4 sticks / 16 oz / 2 pk"
+      },
+      {
+        "option": null,
+        "label": "8 oz block",
+        "servings": 32.4,
+        "price": 3.59,
+        "perServing": 0.11,
+        "product": "Private Selection · Private Selection® Grass Fed Salted Butter Block",
+        "size": "8 oz"
+      }
+    ]
+  },
+  "78": {
+    "food": "Whole Milk",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 qt",
+        "servings": 4,
+        "price": 2.19,
+        "perServing": 0.55,
+        "product": "Kroger · Kroger® Whole Vitamin D Milk Quart",
+        "size": "1 qt"
+      },
+      {
+        "option": null,
+        "label": "16 fl oz bottle",
+        "servings": 2,
+        "price": 1.39,
+        "perServing": 0.7,
+        "product": "Kroger · Kroger® Vitamin D Whole Milk 16 fl. oz. Bottle",
+        "size": "1 pt"
+      }
+    ]
+  },
+  "80": {
+    "food": "Mozzarella Cheese",
+    "sizes": [
+      {
+        "option": null,
+        "label": "8 oz shredded",
+        "servings": 8,
+        "price": 2,
+        "perServing": 0.25,
+        "product": "Kroger · Kroger® Mozzarella Shredded Cheese",
+        "size": "8 oz"
+      },
+      {
+        "option": null,
+        "label": "16 oz block",
+        "servings": 16,
+        "price": 3.69,
+        "perServing": 0.23,
+        "product": "Kroger · Kroger® Mozzarella Block Cheese",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "4 lb bulk bag",
+        "servings": 64,
+        "price": 13.99,
+        "perServing": 0.22,
+        "product": "Kroger · Kroger® Mozzarella Shredded Cheese BIG DEAL!",
+        "size": "4 lb"
+      }
+    ]
+  },
+  "81": {
+    "food": "Protein Powder",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1.5 lb tub",
+        "servings": 17.9,
+        "price": 35.99,
+        "perServing": 2.01,
+        "product": "Optimum Nutrition · Optimum Nutrition Gold Standard 100% Whey Double Rich Chocolate Protein Powder",
+        "size": "1.5 lb"
+      },
+      {
+        "option": null,
+        "label": "28.5 oz tub",
+        "servings": 21.26,
+        "price": 29.99,
+        "perServing": 1.41,
+        "product": "Body Fortress · Body Fortress® Super Advanced Whey Orange Cream Protein Powder",
+        "size": "28.5 oz"
+      },
+      {
+        "option": null,
+        "label": "1.1 lb tub",
+        "servings": 13.13,
+        "price": 33.99,
+        "perServing": 2.59,
+        "product": "Ghost® · Ghost® Cinnabon® Whey Protein Powder",
+        "size": "1.1 lb"
+      }
+    ]
+  },
+  "82": {
+    "food": "Powdered Peanut Butter",
+    "sizes": [
+      {
+        "option": null,
+        "label": "6.5 oz",
+        "servings": 11.52,
+        "price": 5.29,
+        "perServing": 0.46,
+        "product": "Simple Truth · Simple Truth® Powdered Plant Based Peanut Butter",
+        "size": "6.5 oz"
+      },
+      {
+        "option": null,
+        "label": "24 oz",
+        "servings": 42.52,
+        "price": 12.99,
+        "perServing": 0.31,
+        "product": "Simple Truth · Simple Truth® Powdered Plant Based Peanut Butter BIG DEAL!",
+        "size": "24 oz"
+      }
+    ]
+  },
+  "83": {
+    "food": "Peanut Butter",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz jar",
+        "servings": 14.17,
+        "price": 2.29,
+        "perServing": 0.16,
+        "product": "Smart Way · Smart Way™ Creamy Peanut Butter",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "40 oz jar",
+        "servings": 35.44,
+        "price": 4.99,
+        "perServing": 0.14,
+        "product": "Kroger · Kroger® Creamy Peanut Butter",
+        "size": "40 oz"
+      },
+      {
+        "option": null,
+        "label": "64 oz jar",
+        "servings": 56.7,
+        "price": 6.49,
+        "perServing": 0.11,
+        "product": "Kroger · Kroger® Peanut Butter Creamy BIG Deal!",
+        "size": "64 oz"
+      }
+    ]
+  },
+  "85": {
+    "food": "Cocoa Powder",
+    "sizes": [
+      {
+        "option": null,
+        "label": "8 oz",
+        "servings": 11.34,
+        "price": 7.49,
+        "perServing": 0.66,
+        "product": "Hershey's · HERSHEY'S Natural Unsweetened Cocoa Powder Can",
+        "size": "8 oz"
+      }
+    ]
+  },
+  "86": {
+    "food": "Almond Butter",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 16.2,
+        "price": 6.99,
+        "perServing": 0.43,
+        "product": "Simple Truth · Simple Truth® Creamy No Sugar Added Almond Butter",
+        "size": "16 oz"
+      }
+    ]
+  },
+  "87": {
+    "food": "Walnuts",
+    "sizes": [
+      {
+        "option": null,
+        "label": "4 oz bag",
+        "servings": 4.05,
+        "price": 3.79,
+        "perServing": 0.94,
+        "product": "Kroger · Kroger® Pieces Walnuts",
+        "size": "4 oz"
+      },
+      {
+        "option": null,
+        "label": "8 oz bag",
+        "servings": 8.1,
+        "price": 6.29,
+        "perServing": 0.78,
+        "product": "Kroger · Kroger® Pieces Walnuts",
+        "size": "8 oz"
+      },
+      {
+        "option": null,
+        "label": "12 oz bag",
+        "servings": 12.15,
+        "price": 7.99,
+        "perServing": 0.66,
+        "product": "Simple Truth · Simple Truth® Halves & Pieces Walnuts",
+        "size": "12 oz"
+      }
+    ]
+  },
+  "88": {
+    "food": "Chia Seeds",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 oz",
+        "servings": 11.34,
+        "price": 4.79,
+        "perServing": 0.42,
+        "product": "Simple Truth · Simple Truth Organic® Whole Black Chia Seeds",
+        "size": "12 oz"
+      }
+    ]
+  },
+  "89": {
+    "food": "Hemp Seeds",
+    "sizes": [
+      {
+        "option": null,
+        "label": "8 oz",
+        "servings": 7.56,
+        "price": 9.99,
+        "perServing": 1.32,
+        "product": "Manitoba Harvest · Manitoba Harvest ® Hemp Hearts",
+        "size": "8 oz"
+      }
+    ]
+  },
+  "90": {
+    "food": "Pumpkin Seeds",
+    "sizes": [
+      {
+        "option": null,
+        "label": "5 oz bag",
+        "servings": 4.72,
+        "price": 3.99,
+        "perServing": 0.85,
+        "product": "Kroger · Kroger® Salted Pumpkin Seeds",
+        "size": "5 oz"
+      },
+      {
+        "option": null,
+        "label": "14.5 oz bag",
+        "servings": 13.7,
+        "price": 6.99,
+        "perServing": 0.51,
+        "product": "Simple Truth · Simple Truth® Raw Pepitas",
+        "size": "14.5 oz"
+      }
+    ]
+  },
+  "91": {
+    "food": "Dark Chocolate",
+    "sizes": [
+      {
+        "option": null,
+        "label": "3.5 oz",
+        "servings": 3.31,
+        "price": 3.99,
+        "perServing": 1.21,
+        "product": "Private Selection · Private Selection® 72% Cacao Dark Chocolate Swiss Candy Bar",
+        "size": "3.5 oz"
+      }
+    ]
+  },
+  "93": {
+    "food": "Olive Oil",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16.9 fl oz",
+        "servings": 30.65,
+        "price": 6.79,
+        "perServing": 0.22,
+        "product": "Kroger · Kroger® Extra Virgin Olive Oil",
+        "size": "16.9 fl oz"
+      },
+      {
+        "option": null,
+        "label": "25.36 fl oz",
+        "servings": 46,
+        "price": 9.49,
+        "perServing": 0.21,
+        "product": "Kroger · Kroger® Extra Virgin Olive Oil",
+        "size": "25.36 fl oz"
+      },
+      {
+        "option": null,
+        "label": "67.6 fl oz",
+        "servings": 122.62,
+        "price": 24.99,
+        "perServing": 0.2,
+        "product": "Kroger · Kroger® Extra Virgin Olive Oil",
+        "size": "67.6 fl oz"
+      }
+    ]
+  },
+  "94": {
+    "food": "Ground Flax Seeds",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz",
+        "servings": 16,
+        "price": 4.99,
+        "perServing": 0.31,
+        "product": "Bob's Red Mill · Bob's Red Mill Gluten Free Non GMO Flaxseed Meal",
+        "size": "16 oz"
+      }
+    ]
+  },
+  "95": {
+    "food": "Cashews",
+    "sizes": [
+      {
+        "option": null,
+        "label": "8 oz bag",
+        "servings": 8,
+        "price": 4.99,
+        "perServing": 0.62,
+        "product": "Kroger · Kroger® Halves & Pieces Lightly Salted Cashews",
+        "size": "8 oz"
+      },
+      {
+        "option": null,
+        "label": "16 oz bag",
+        "servings": 16,
+        "price": 8.99,
+        "perServing": 0.56,
+        "product": "Simple Truth · Simple Truth® Sea Salt Roasted Cashews",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz bag",
+        "servings": 32,
+        "price": 13.99,
+        "perServing": 0.44,
+        "product": "Kroger · Kroger® Halves & Pieces Salted Cashews",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "96": {
+    "food": "Sunflower Seeds",
+    "sizes": [
+      {
+        "option": null,
+        "label": "7.25 oz",
+        "servings": 7.25,
+        "price": 2.59,
+        "perServing": 0.36,
+        "product": "Kroger · Kroger® Dry Roasted Salted Sunflower Kernels",
+        "size": "7.25 oz"
+      }
+    ]
+  },
+  "97": {
+    "food": "Apple Cider Vinegar",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 fl oz bottle",
+        "servings": 32,
+        "price": 1.69,
+        "perServing": 0.05,
+        "product": "Kroger · Kroger® 5% Apple Cider Vinegar",
+        "size": "16 fl oz"
+      },
+      {
+        "option": null,
+        "label": "1 gal jug",
+        "servings": 256,
+        "price": 7.29,
+        "perServing": 0.03,
+        "product": "Kroger · Kroger® Apple Cider Vinegar",
+        "size": "1 gal"
+      }
+    ]
+  },
+  "98": {
+    "food": "Soy Sauce / Tamari",
+    "sizes": [
+      {
+        "option": null,
+        "label": "10 fl oz",
+        "servings": 20,
+        "price": 1.49,
+        "perServing": 0.07,
+        "product": "Kroger · Kroger® Brewed Soy Sauce",
+        "size": "10 fl oz"
+      },
+      {
+        "option": null,
+        "label": "15 fl oz",
+        "servings": 30,
+        "price": 1.99,
+        "perServing": 0.07,
+        "product": "Kroger · Kroger® Brewed Soy Sauce",
+        "size": "15 fl oz"
+      },
+      {
+        "option": null,
+        "label": "32 fl oz bulk",
+        "servings": 64,
+        "price": 3.99,
+        "perServing": 0.06,
+        "product": "Kroger · Kroger® Brewed Soy Sauce BIG DEAL!",
+        "size": "32 fl oz"
+      }
+    ]
+  },
+  "99": {
+    "food": "Honey",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 oz bear",
+        "servings": 17.01,
+        "price": 4,
+        "perServing": 0.24,
+        "product": "Kroger · Kroger® Clover Honey Bear",
+        "size": "12 oz"
+      },
+      {
+        "option": null,
+        "label": "24 oz bear",
+        "servings": 34.02,
+        "price": 7.79,
+        "perServing": 0.23,
+        "product": "Kroger · Kroger® Clover Honey Bear",
+        "size": "24 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz jar",
+        "servings": 45.36,
+        "price": 11.99,
+        "perServing": 0.26,
+        "product": "Private Selection · Private Selection® Wildflower Honey",
+        "size": "32 oz"
+      }
+    ]
+  },
+  "100": {
+    "food": "Maple Syrup",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 fl oz",
+        "servings": 24,
+        "price": 10.49,
+        "perServing": 0.44,
+        "product": "Private Selection · Private Selection® Pure Grade A Amber Color Rich Taste Maple Syrup",
+        "size": "12 fl oz"
+      },
+      {
+        "option": null,
+        "label": "32 fl oz",
+        "servings": 64,
+        "price": 18.99,
+        "perServing": 0.3,
+        "product": "Private Selection · Private Selection® Pure Maple Syrup",
+        "size": "32 fl oz"
+      }
+    ]
+  },
+  "102": {
+    "food": "Yerba mate",
+    "sizes": [
+      {
+        "option": null,
+        "label": "15.5 fl oz",
+        "servings": 16.17,
+        "price": 2.99,
+        "perServing": 0.18,
+        "product": "Yerba Madre · Yerba Madre Lemon Elation Yerba Mate Energy Drink Can",
+        "size": "15.5 fl oz"
+      }
+    ]
+  },
+  "104": {
+    "food": "Grapes",
+    "sizes": [
+      {
+        "option": null,
+        "label": "1 lb",
+        "servings": 4.54,
+        "price": 2.79,
+        "perServing": 0.61,
+        "product": "Kroger · Fresh Seedless Green Grapes",
+        "size": "1 lb"
+      },
+      {
+        "option": null,
+        "label": "2 lb bag",
+        "servings": 9.07,
+        "price": 6.99,
+        "perServing": 0.77,
+        "product": "Private Selection · Private Selection® AutumnCrisp® Seedless Green Grapes",
+        "size": "2 lb"
+      },
+      {
+        "option": null,
+        "label": "3 lb bag",
+        "servings": 13.61,
+        "price": 7.99,
+        "perServing": 0.59,
+        "product": "Kroger® Fresh Seedless Green Grapes",
+        "size": "3 lb"
+      }
+    ]
+  },
+  "105": {
+    "food": "High-fiber bread",
+    "sizes": [
+      {
+        "option": null,
+        "label": "24 oz",
+        "servings": 12,
+        "price": 3.49,
+        "perServing": 0.29,
+        "product": "Private Selection · Private Selection® 100% Whole Wheat Bread Wide Pan",
+        "size": "24 oz"
+      }
+    ]
+  },
+  "106": {
+    "food": "Black olives",
+    "sizes": [
+      {
+        "option": null,
+        "label": "2.25 oz can",
+        "servings": 12.76,
+        "price": 1.99,
+        "perServing": 0.16,
+        "product": "Kroger · Kroger® Sliced Black Olives",
+        "size": "2.25 oz"
+      },
+      {
+        "option": null,
+        "label": "3.8 oz can",
+        "servings": 21.55,
+        "price": 2.69,
+        "perServing": 0.12,
+        "product": "Kroger · Kroger® Sliced Black Olives",
+        "size": "3.8 oz"
+      }
+    ]
+  },
+  "109": {
+    "food": "Jelly",
+    "sizes": [
+      {
+        "option": null,
+        "label": "18 oz jar",
+        "servings": 25.51,
+        "price": 2.09,
+        "perServing": 0.08,
+        "product": "Smart Way · Smart Way™ Grape Jelly",
+        "size": "18 oz"
+      },
+      {
+        "option": null,
+        "label": "32 oz jar",
+        "servings": 45.36,
+        "price": 2.79,
+        "perServing": 0.06,
+        "product": "Smart Way · Smart Way™ Grape Jelly",
+        "size": "32 oz"
+      },
+      {
+        "option": null,
+        "label": "20.5 oz squeeze",
+        "servings": 29.06,
+        "price": 3.29,
+        "perServing": 0.11,
+        "product": "Kroger · Kroger® Grape Jelly Squeezable",
+        "size": "20.5 oz"
+      }
+    ]
+  },
+  "111": {
+    "food": "Cheese Fiesta Blend",
+    "sizes": []
+  },
+  "113": {
+    "food": "Cream of wheat",
+    "sizes": [
+      {
+        "option": null,
+        "label": "12 ct packets",
+        "servings": 0.64,
+        "price": 5.99,
+        "perServing": 9.36,
+        "product": "Cream of Wheat · Cream of Wheat Original Instant Hot Cereal, 12-1 oz Packets",
+        "size": "12 ct / 1 oz"
+      },
+      {
+        "option": null,
+        "label": "28 oz box",
+        "servings": 17.84,
+        "price": 6.49,
+        "perServing": 0.36,
+        "product": "Cream of Wheat · Cream of Wheat Original 2 1/2- Minute",
+        "size": "28 oz"
+      }
+    ]
+  },
+  "114": {
+    "food": "Applesauce",
+    "sizes": [
+      {
+        "option": null,
+        "label": "46 oz jar",
+        "servings": 13.04,
+        "price": 3.99,
+        "perServing": 0.31,
+        "product": "Kroger · Kroger® No Sugar Added Classic Apple Applesauce",
+        "size": "46 oz"
+      },
+      {
+        "option": null,
+        "label": "12 ct pouches",
+        "servings": 0.91,
+        "price": 6.99,
+        "perServing": 7.68,
+        "product": "Kroger · Kroger® No Sugar Added Classic Apple Applesauce Pouches",
+        "size": "12 ct / 3.2 oz"
+      },
+      {
+        "option": null,
+        "label": "48 oz jar",
+        "servings": 13.61,
+        "price": 3.69,
+        "perServing": 0.27,
+        "product": "Smart Way · Smart Way™ Original Applesauce",
+        "size": "48 oz"
+      }
+    ]
+  },
+  "115": {
+    "food": "Italian dressing",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 fl oz",
+        "servings": 32,
+        "price": 2.39,
+        "perServing": 0.07,
+        "product": "Smart Way · Smart Way™ Italian Dressing and Marinade",
+        "size": "16 fl oz"
+      },
+      {
+        "option": null,
+        "label": "12 fl oz",
+        "servings": 24,
+        "price": 4.79,
+        "perServing": 0.2,
+        "product": "Simple Truth · Simple Truth® Italian Dressing Made with Avocado Oil",
+        "size": "12 fl oz"
+      }
+    ]
+  },
+  "116": {
+    "food": "Ice cream",
+    "sizes": [
+      {
+        "option": null,
+        "label": "48 oz tub",
+        "servings": 20.16,
+        "price": 3.19,
+        "perServing": 0.16,
+        "product": "Kroger · Kroger® 1883 Vanilla Ice Cream Tub",
+        "size": "48 oz"
+      },
+      {
+        "option": null,
+        "label": "1 gal party pail",
+        "servings": 32,
+        "price": 7.99,
+        "perServing": 0.25,
+        "product": "Kroger · Kroger® 1883 Vanilla Ice Cream Party Pail BIG DEAL!",
+        "size": "1 gal"
+      }
+    ]
+  },
+  "118": {
+    "food": "Full-fat cottage cheese",
+    "sizes": [
+      {
+        "option": null,
+        "label": "16 oz tub",
+        "servings": 4.32,
+        "price": 2.59,
+        "perServing": 0.6,
+        "product": "Kroger · Kroger® 4% Milkfat Small Curd Cottage Cheese",
+        "size": "16 oz"
+      },
+      {
+        "option": null,
+        "label": "24 oz tub",
+        "servings": 6.48,
+        "price": 3.19,
+        "perServing": 0.49,
+        "product": "Kroger · Kroger® 4% Milkfat Small Curd Cottage Cheese",
+        "size": "24 oz"
+      },
+      {
+        "option": null,
+        "label": "48 oz family tub",
+        "servings": 12.96,
+        "price": 5.99,
+        "perServing": 0.46,
+        "product": "Kroger · Kroger® 4% Milkfat Small Curd Cottage Cheese BIG DEAL!",
+        "size": "48 oz"
+      }
+    ]
+  }
+}

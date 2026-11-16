@@ -1,0 +1,208 @@
+food_id,food,option,form,basis,search_term,brand,product,size,regular,serving_g,price_per_serving,store,flags
+1,Chicken breast,Raw,fresh,as_bought,boneless skinless chicken breast,Heritage Farm,Heritage Farm® Boneless Skinless Chicken Breasts,1 lb,2.59,113.4,0.6475,home,priced per lb
+1,Chicken breast,Frozen,frozen,as_bought,frozen chicken breast,Kroger,Kroger® Boneless Skinless Frozen Chicken Breast BIG DEAL!,8 lb,24.99,113.4,0.7809,home,
+1,Chicken breast,Rotisserie,ready_to_eat,prepared,rotisserie chicken,Kroger,Kroger® 90 Second Roasted Chicken Rice,8.8 oz,1.49,94.0,0.5614,home,
+1,Chicken breast,Canned,canned,prepared,canned chicken breast,Kroger,Kroger® Premium Chunk Chicken Breast in Water,10 oz,2.49,94.0,1.376,home,60% of package usable
+2,Chicken thighs,Raw,fresh,as_bought,raw chicken thighs,Kroger,Kroger® Frozen Raw Boneless Skinless Chicken Thighs,3 lb,10.99,113.4,0.9158,home,
+2,Chicken thighs,Frozen,frozen,as_bought,frozen chicken thighs,Kroger,Kroger® Frozen Raw Boneless Skinless Chicken Thighs,3 lb,10.99,113.4,0.9158,home,
+3,Pork Tenderloin,Raw,fresh,as_bought,fresh pork tenderloin,PORK,Pork Tenderloin Boneless (Whole),1 lb,5.99,113.4,1.4975,home,alternate: simpler search; priced per lb
+3,Pork Tenderloin,Frozen,frozen,as_bought,frozen pork tenderloin,,,,,,,,no product found
+4,Pork Butt/Shoulder,Raw,fresh,as_bought,raw pork shoulder roast,Kroger,Kroger® Boneless Natural Fresh Pork Sirloins 2 Piece,1 lb,2.49,113.4,0.6225,home,alternate: simpler search; priced per lb
+4,Pork Butt/Shoulder,Frozen,frozen,as_bought,frozen pork shoulder,Kroger,Kroger® Pork and Vegetable Mini Wontons Family Size,48 oz,11.99,113.4,0.9992,home,alternate: simpler search
+4,Pork Butt/Shoulder,Pulled Pork,ready_to_eat,prepared,pulled pork,Private Selection,Private Selection® Mild Pulled Pork Enchiladas Verdes Family Size,30 oz,9.49,94.0,1.0489,home,
+5,Sirloin,Raw,fresh,as_bought,beef sirloin steak,Private Selection,Private Selection Angus Beef 90% Lean Ground Sirloin,1 lb,9.99,113.4,2.4975,home,priced per lb
+5,Sirloin,Frozen,frozen,as_bought,frozen beef sirloin steak,Kevin's Natural Foods,Kevin's™ Natural Foods Ranchero Sirloin Steak,16 oz,9.99,113.4,2.4975,home,no store brand: national brand used
+6,Chuck,Raw,fresh,as_bought,beef chuck roast,Kroger Mercado,Kroger® Thin Sliced Beef Chuck Shoulder Steak,1 lb,10.99,113.4,2.7475,home,priced per lb
+6,Chuck,Frozen,frozen,as_bought,frozen beef chuck,,,,,,,,no product found
+7,Ground beef 90/10,Raw,fresh,as_bought,ground beef 90/10,Simple Truth Organic,Simple Truth Organic® 90/10 Grass Fed Ground Beef Pack 1 LB,1 lb,9.99,113.4,2.4975,home,only organic available
+7,Ground beef 90/10,Frozen,frozen,as_bought,frozen ground beef 90/10,Kroger,Kroger® 73% Lean 100% Pure Beef Quarter Pound Burgers BIG Deal!,24 ct / 6 lb,29,113.4,1.2083,home,alternate: simpler search
+9,Tilapia,Raw,fresh,as_bought,fresh tilapia fillets,,Kroger® Fresh Farm Raised Tilapia Fillets,16 oz,8,113.4,2,home,
+9,Tilapia,Frozen,frozen,as_bought,frozen tilapia fillets,Morey's,"Morey's Tilapia, Blackened, 4 Fillets, 20 oz",20 oz,16.99,113.4,3.398,home,no store brand: national brand used
+9,Tilapia,Canned,canned,prepared,canned tilapia,,,,,,,,no product found
+10,Salmon,Fresh,fresh,as_bought,fresh salmon fillet,Kroger,Kroger® Fresh Farm Raised Atlantic Salmon Fillet,1 lb,9.99,113.4,2.4975,home,priced per lb
+10,Salmon,Frozen,frozen,as_bought,frozen salmon fillet,SeaPak,"Morey's Wild Salmon Seasoned Grill, 2 Fillets, Individually Wrapped Frozen Seafood",20 oz,16.99,113.4,3.398,home,no store brand: national brand used
+10,Salmon,Canned,canned,prepared,canned salmon,Kroger,Kroger® Wild Caught Canned Alaskan Pink Salmon,14.75 oz,4.49,94.0,1.6822,home,60% of package usable
+11,Tuna,Fresh,fresh,as_bought,fresh tuna steak,Kroger,Kroger® Wild Caught Ahi Tuna Steak,8 oz,7,113.4,3.5,home,
+11,Tuna,Frozen,frozen,as_bought,frozen tuna steak,Kroger,Kroger® Wild Caught Ahi Tuna Steak,8 oz,7,113.4,3.5,home,
+11,Tuna,Canned,canned,prepared,canned tuna in water,Kroger,Kroger® Wild Caught Chunk Light Tuna in Water,12 oz,2.29,113.0,1.2678,home,60% of package usable
+12,Sardines,Fresh,fresh,as_bought,fresh sardines,Season Brand,Season Brand® Skinless & Boneless Sardines in 100% Olive Oil,4.375 oz,4.79,113.4,4.3794,Smith's Marketplace - Springville Marketplace,alternate: simpler search; no store brand: national brand used; price/serving outside $0.02–$4; from backup store: Smith's Marketplace - Springville Marketplace
+12,Sardines,Canned,canned,prepared,canned sardines,El Mexicano,El Mexicano® Sardines in Tomato Sauce,15 oz,2.99,106.0,1.2422,home,60% of package usable; no store brand: national brand used
+13,Oysters,Raw,fresh,as_bought,fresh raw oysters,Oyster Bay,Alaska Cod Pieces Retail (1 lbs),1 lbs,10,113.4,2.5,home,alternate: simpler search; no store brand: national brand used
+13,Oysters,Frozen,frozen,as_bought,frozen oysters,,,,,,,,no product found
+13,Oysters,Canned,canned,prepared,canned oysters,Ocean Prince,Ocean Prince Cocktail Smoked Oysters,3 oz,2.69,8.0,0.4217,home,60% of package usable; no store brand: national brand used
+14,Ground Turkey,Raw,fresh,as_bought,raw ground turkey,Kroger,Kroger® Tender and Juicy Whole Frozen Turkey (14-16 lb)  - Limit 5 at sale retail,1 lb,0.98,113.4,0.245,home,alternate: simpler search; priced per lb
+14,Ground Turkey,Frozen,frozen,as_bought,frozen ground turkey,Kroger,Kroger® Tender and Juicy Whole Frozen Turkey (14-16 lb)  - Limit 5 at sale retail,1 lb,0.98,113.4,0.245,home,alternate: simpler search; priced per lb
+15,Chicken Liver,Raw,fresh,as_bought,raw chicken livers,Heritage Farm,Heritage Farm Natural Chicken Livers,20 oz,2.49,113.4,0.498,home,alternate: simpler search
+15,Chicken Liver,Frozen,frozen,as_bought,frozen chicken livers,Skylark,Skylark® Sliced Beef Liver,4 ct / 4 oz,6.49,113.4,6.49,home,alternate: simpler search; no store brand: national brand used; price/serving outside $0.02–$4
+16,Liver,Raw,fresh,as_bought,beef liver,,Rumba Meats® Beef Liver Sliced (Higado de Res Rebanado),1 lb,3.99,113.4,0.9975,home,priced per lb
+16,Liver,Frozen,frozen,as_bought,frozen beef liver,Skylark,Skylark® Sliced Beef Liver,4 ct / 4 oz,6.49,113.4,6.49,home,no store brand: national brand used; price/serving outside $0.02–$4
+17,Shrimp,Raw,fresh,as_bought,raw shrimp,Kroger,Kroger® Peeled & Deveined Tail Off White Raw Shrimp,2 lb,17.98,113.4,2.2475,home,
+17,Shrimp,Frozen,frozen,as_bought,frozen raw shrimp,Kroger,Kroger® Peeled & Deveined Tail Off White Raw Shrimp,2 lb,17.98,113.4,2.2475,home,
+17,Shrimp,Canned,canned,prepared,canned shrimp,Bumble Bee,Bumble Bee® Tiny Shrimp,6 oz,4.99,81.0,3.9604,home,60% of package usable; no store brand: national brand used
+17,Shrimp,Cooked,ready_to_eat,prepared,cooked shrimp,Kroger,Kroger® Extra Large Shrimp Cooked Peeled and Deveined Tail On BIG DEAL!,2 lb,19.98,81.0,1.784,home,
+18,Chickpeas / Garbanzo Beans,Dried,dried,as_bought,dried chickpeas,Kroger,Kroger® Garbanzo Beans,15.5 oz,1,50.0,0.1138,home,alternate: simpler search
+18,Chickpeas / Garbanzo Beans,Canned,canned,prepared,canned chickpeas,Kroger,Kroger® Garbanzo Beans,15.5 oz,1,116.0,0.4398,home,60% of package usable
+18,Chickpeas / Garbanzo Beans,Frozen,frozen,prepared,frozen chickpeas,Saffron Road,Saffron Road® Chickpea Masala with Cumin Basmati Rice Gluten-Free Vegan Indian Frozen Meal,10 oz,5.99,116.0,2.4499,home,alternate: relaxed match (review); no store brand: national brand used
+19,Lentils,Dried,dried,as_bought,dried lentils,La Preferida,La Preferida® Lentils (Dry),16 oz,1.79,48.0,0.1894,home,no store brand: national brand used
+19,Lentils,Canned,canned,prepared,canned lentils,Simple Truth Organic,Simple Truth Organic® Low Sodium Lentils,15 oz,1.25,146.9,0.7198,home,60% of package usable; only organic available
+19,Lentils,Ready to eat,ready_to_eat,prepared,ready to eat lentils,Simple Truth,Simple Truth® Protein Black Pepper Lentils Brown Rice and Ancient Grains Whole Grain Blend,8.8 oz,3.29,146.9,1.9375,home,alternate: simpler search
+20,Bagels,Fresh,fresh,as_bought,plain bagels,Kroger,Kroger® Plain Bagels,6 ct / 18 oz,2.49,85.0,0.4148,home,
+20,Bagels,Frozen,frozen,as_bought,frozen bagels,Green Giant,Green Giant® Everything Bagel Seasoned Green Beans & Potatoes,9 oz,2.19,85.0,0.7296,home,no store brand: national brand used
+21,Pasta,Dried,dried,as_bought,dried pasta,Goodles,GOODLES Spirali Coiled Again Dry Protein Pasta,8 oz,3.99,56.7,0.9975,home,no store brand: national brand used
+21,Pasta,Fresh,fresh,as_bought,fresh pasta,Kroger,Kroger® Penne Rigate Pasta,16 oz,1.33,56.7,0.1663,home,alternate: simpler search
+21,Pasta,Ready to eat,ready_to_eat,prepared,refrigerated cooked pasta,Pagasa,Pagasa® Cut Coiled Fideo Pasta,7 oz,0.49,127.0,0.3136,home,alternate: simpler search; no store brand: national brand used
+22,Whole Wheat Pasta,Dried,dried,as_bought,whole wheat pasta,Kroger,Kroger® Penne Rigate Pasta,16 oz,1.33,56.7,0.1663,home,
+22,Whole Wheat Pasta,Fresh,fresh,as_bought,fresh whole wheat pasta,Kroger,Kroger® Penne Rigate Pasta,16 oz,1.33,56.7,0.1663,home,alternate: simpler search
+22,Whole Wheat Pasta,Ready to eat,ready_to_eat,prepared,whole wheat pasta cooked,Pagasa,Pagasa® Cut Coiled Fideo Pasta,7 oz,0.49,135.0,0.3333,home,alternate: simpler search; no store brand: national brand used
+23,Rice,Dried,dried,as_bought,long grain white rice,Kroger,Kroger® Enriched Long Grain White Rice,32 oz,1.89,56.7,0.1181,home,
+23,Rice,Cooked cups,ready_to_eat,prepared,microwave cooked rice cups,Kroger,Kroger® Long Grain Rice,10 lb,6.99,140.0,0.2157,home,alternate: simpler search
+24,Quinoa,Dried,dried,as_bought,dried quinoa,Kroger,Kroger® Quinoa,16 oz,4.79,56.7,0.5988,home,alternate: simpler search
+24,Quinoa,Cooked cups,ready_to_eat,prepared,cooked quinoa cups,Simple Truth,Simple Truth® Protein Garlic Brown Rice and Quinoa with Chia Seeds,8.8 oz,3.29,142.0,1.8726,home,alternate: simpler search
+25,Rolled oats,Dried,dried,as_bought,rolled oats,Simple Truth,Simple Truth® Protein Classic Rolled Oats,16 oz,4.49,56.7,0.5613,home,
+25,Rolled oats,Cooked,ready_to_eat,prepared,cooked oatmeal,Kroger,Kroger® 100% Whole Grain Old Fashioned Oats,42 oz,4.49,197.0,0.7429,home,alternate: simpler search
+26,Multi-grain Bread,Sliced,fresh,as_bought,multigrain sliced bread,ACE Bakery,"ACE Bakery® Multigrain Protein Sourdough Bistro Sliced Bread, 22.6 oz, 11 Slices",22.6 oz,5.99,45.0,0.4207,home,no store brand: national brand used
+26,Multi-grain Bread,Frozen,frozen,as_bought,frozen multigrain bread,Kroger,Kroger® Homestyle Bread Dough,5 ct / 5 lb,7.29,45.0,0.1446,home,alternate: simpler search
+27,Brown Rice,Dried,dried,as_bought,brown rice,Kroger,Kroger® Long Grain Brown Rice,32 oz,1.89,46.3,0.0965,home,
+27,Brown Rice,Ready to eat,ready_to_eat,prepared,cooked brown rice pouch,Kroger,Kroger® Long Grain Brown Rice,32 oz,1.89,138.0,0.2875,home,alternate: simpler search
+27,Brown Rice,Frozen,frozen,prepared,frozen brown rice,Kroger,Kroger® Classic Grains Brown Rice,2 ct / 10 oz,3.39,138.0,1.6502,home,
+29,Sourdough Bread,Fresh,fresh,as_bought,sourdough bread loaf,Private Selection,Private Selection® Sourdough Loaf,17.6 oz,3.99,56.7,0.4534,home,
+29,Sourdough Bread,Frozen,frozen,as_bought,frozen sourdough bread,Private Selection,Private Selection® San Francisco Style Asiago Peppercorn Sourdough Bread,20 oz,4.99,56.7,0.499,home,
+30,Couscous,Dried,dried,as_bought,dry couscous,Kroger,Kroger® Original Couscous,7 oz,2.49,43.3,0.5433,home,alternate: simpler search
+30,Couscous,Ready to eat,ready_to_eat,prepared,cooked couscous,Near East,Near East® Roasted Garlic & Olive Oil Pearled Couscous,4.7 oz,2.99,146.5,3.2875,home,alternate: simpler search; no store brand: national brand used
+31,Mandarin Oranges,Fresh,fresh,as_bought,fresh mandarin oranges,Private Selection,Private Selection® Fresh Seedless Gold Nugget Mandarin Oranges Bag,3 lb,4.99,88.0,0.3227,home,
+31,Mandarin Oranges,Canned,canned,prepared,canned mandarin oranges,Dole,Dole Mandarin Oranges 15 oz,15 oz,2.49,88.0,0.8588,home,60% of package usable; no store brand: national brand used
+32,Dates,Fresh,fresh,as_bought,fresh dates,Kroger,Kroger® Pitted Dates BIG DEAL!,32 oz,11.99,100.0,1.3217,home,
+32,Dates,Dried,dried,as_bought,dried dates,Great Grains,"Post Great Grains Raisins Dates and Pecans Breakfast Cereal, 16 OZ Box",16 oz,5.49,100.0,1.2103,home,alternate: simpler search; no store brand: national brand used
+33,Bananas,Fresh,fresh,as_bought,fresh bananas,Fresh Bananas,Fresh Bunch of Bananas – 5-7 Bananas,1 lb,0.55,118.0,0.1431,home,priced per lb
+33,Bananas,Frozen,frozen,as_bought,frozen sliced bananas,Kroger,Kroger® Frozen Sliced Bananas,16 oz,2.49,118.0,0.6478,home,
+33,Bananas,Dried,dried,as_bought,dried banana chips,Simple Truth,Simple Truth® Sweetened Banana Chips,9.5 oz,3.99,118.0,1.7482,home,
+34,Peaches,Fresh,fresh,as_bought,fresh peaches,Fresh Stone fruit,Kroger® Peaches 2 Pound Bag,2 lb,5.99,150.0,0.9904,home,
+34,Peaches,Frozen,frozen,as_bought,frozen sliced peaches,Private Selection,Private Selection® Sliced Freestone Frozen Peaches,16 oz,4.49,150.0,1.4848,home,
+34,Peaches,Canned,canned,prepared,canned sliced peaches,Kroger,KRO SLICED PEACHES 15 OZ,4 - 15 oz,1.99,150.0,1.1699,home,60% of package usable
+35,Blueberries,Fresh,fresh,as_bought,fresh blueberries,Private Selection,Private Selection® Fresh Colossal Blueberries,9.8 oz,6.99,100.0,2.516,home,
+35,Blueberries,Frozen,frozen,as_bought,frozen blueberries,Kroger,Kroger® Frozen Blueberries BIG DEAL!,4 lb,10.99,100.0,0.6057,home,
+35,Blueberries,Dried,dried,as_bought,dried blueberries,Mariani,Mariani® Dried Sweetened Wild Blueberries,3.5 oz,3.99,100.0,4.0212,home,no store brand: national brand used; price/serving outside $0.02–$4
+36,Blackberries,Fresh,fresh,as_bought,fresh blackberries,Private Selection,Private Selection® Sweet Karoline Fresh Blackberries,10 oz,4.99,100.0,1.7602,home,
+36,Blackberries,Frozen,frozen,as_bought,frozen blackberries,Simple Truth,Simple Truth Organic® Sliced Strawberries Blackberries and Blueberries Triple Berry Smoothie Blend,32 oz,8.79,100.0,0.9689,home,alternate: relaxed match (review); only organic available
+37,Raspberries,Fresh,fresh,as_bought,fresh raspberries,Fresh Berries,Fresh Red Raspberries - 12 OZ Clamshell,12 oz,6.49,100.0,1.9077,home,
+37,Raspberries,Frozen,frozen,as_bought,frozen raspberries,Private Selection,Private Selection® Frozen Red Raspberries,12 oz,4.99,100.0,1.4668,home,
+38,Strawberries,Fresh,fresh,as_bought,fresh strawberries,Fresh Berries,Fresh Strawberries - 2 LB Clamshell,2 lb,9.39,100.0,1.0351,home,
+38,Strawberries,Frozen,frozen,as_bought,frozen strawberries,Kroger,Kroger® Sliced Strawberries BIG DEAL!,4 lb,10.99,100.0,0.6057,home,
+40,Acerola Juice,Fresh,fresh,as_bought,fresh acerola cherries,,,,,,,,no product found
+40,Acerola Juice,Frozen,frozen,as_bought,frozen acerola puree,,,,,,,,no product found
+40,Acerola Juice,Juice,canned,prepared,acerola juice,,,,,,,,no product found
+41,Cantaloupe,Fresh,fresh,as_bought,fresh cantaloupe,,Cantaloupe,1 ct,3.5,552.0,3.5,home,
+41,Cantaloupe,Frozen,frozen,as_bought,frozen cantaloupe chunks,,,,,,,,no product found
+42,Apples,Fresh,fresh,as_bought,fresh apples,,Kroger® Gala Apples – 3 Pound Bag,3 lb,2.59,169.0,0.3217,home,
+42,Apples,Dried,dried,as_bought,dried apple slices,,,,,,,,no product found
+42,Apples,Frozen,frozen,as_bought,frozen apple slices,Uncrustables,Smucker’s Uncrustables Peanut Butter & Apple Cinnamon Jelly Sandwiches on Wheat Bread,8 ct,9.99,169.0,1.2488,home,alternate: simpler search; no store brand: national brand used
+43,Lemon,Fresh,fresh,as_bought,fresh lemons,Fresh Citrus,Kroger® Fresh Lemons Bag,2 lb,4.99,65.0,0.3575,home,
+43,Lemon,Frozen,frozen,as_bought,frozen lemon juice,Talenti,Talenti Dairy Free Zesty Lemon Sorbetto Pint,16 oz,6.29,65.0,0.9014,home,alternate: simpler search; no store brand: national brand used
+44,Lime,Fresh,fresh,as_bought,fresh limes,Fresh Citrus,Kroger® Fresh Limes Bag,2 lb,4.99,65.0,0.3575,home,
+44,Lime,Frozen,frozen,as_bought,frozen lime juice,Kroger,Kroger® Low Fat Lime Sherbet,48 fl oz,3.19,65.0,0.1461,home,alternate: simpler search; density 1 g/ml
+44,Lime,Bottled juice,canned,prepared,lime juice,McCormick,McCormick Mayonesa (Mayonnaise) With Lime Juice,28 fl oz,7.99,65.0,0.6272,home,density 1 g/ml; no store brand: national brand used
+45,Frozen Mixed Berries,Frozen,frozen,as_bought,frozen mixed berries,Wyman's,Wyman's® Mango Berry Frozen Fruit,3 lb,15.99,100.0,1.1751,home,no store brand: national brand used
+45,Frozen Mixed Berries,Fresh,fresh,as_bought,fresh mixed berries,Fresh Berries,Fresh Strawberries - 2 LB Clamshell,2 lb,9.39,100.0,1.0351,home,alternate: simpler search
+46,Broccoli,Fresh,fresh,as_bought,fresh broccoli crowns,Fresh Broccoli & Cauliflower,Broccoli Crown,1 lb,2.39,100.0,0.5269,home,priced per lb
+46,Broccoli,Frozen,frozen,as_bought,frozen broccoli florets,Kroger,Kroger® Frozen Broccoli Florets BIG DEAL!,52 oz,6.29,100.0,0.4267,home,
+47,Cauliflower,Fresh,fresh,as_bought,fresh cauliflower head,Kroger,Kroger® Cauliflower Florets Bag BIG DEAL!,24 oz,6,588.0,5.1853,home,alternate: simpler search; price/serving outside $0.02–$4
+47,Cauliflower,Frozen,frozen,as_bought,frozen cauliflower florets,Birds Eye,"Birds Eye Steamfresh Cauliflower Florets, Frozen Vegetables",10.8 oz,2.29,588.0,4.3979,home,no store brand: national brand used; price/serving outside $0.02–$4
+48,Butternut squash,Fresh,fresh,as_bought,fresh butternut squash,,Butternut Squash,1 lb,1.49,100.0,0.3285,home,priced per lb
+48,Butternut squash,Frozen,frozen,as_bought,frozen butternut squash cubes,Private Selection,Private Selection® Sweet Butternut Squash Ravioli,12 oz,6.99,100.0,2.0547,home,alternate: simpler search
+48,Butternut squash,Cubed,ready_to_eat,as_bought,cubed butternut squash,Simple Truth,Simple Truth® Protein Bean and Butternut Meatless Chili,24 oz,4.29,100.0,0.6305,home,alternate: simpler search
+49,Red Bell Pepper,Fresh,fresh,as_bought,fresh red bell pepper,,Fresh Red Bell Pepper,1 ct,1.59,119.0,1.59,home,
+49,Red Bell Pepper,Frozen,frozen,as_bought,frozen sliced red bell pepper,Kroger,Kroger® Frozen Fajita Blend Tricolor Pepper and Onion Mix BIG DEAL!,48 oz,6.29,119.0,0.5501,home,alternate: simpler search
+50,Asparagus,Fresh,fresh,as_bought,fresh asparagus,,Green Asparagus,1 lb,4.69,100.0,1.034,home,priced per lb
+50,Asparagus,Frozen,frozen,as_bought,frozen asparagus cuts,Pictsweet Farms,Pictsweet Farms® Seasoned Vegetables for the Air Fryer Cut Asparagus Spears,11 oz,4.29,100.0,1.3757,home,no store brand: national brand used
+50,Asparagus,Canned,canned,prepared,canned asparagus spears,Napoleon,Napoleon® Pickled Green Asparagus,9.9 oz,13.49,100.0,8.0109,home,60% of package usable; alternate: simpler search; no store brand: national brand used; price/serving outside $0.02–$4
+51,Brussels Sprouts,Fresh,fresh,as_bought,fresh brussels sprouts,Kroger,Kroger® Brussels Sprouts BIG DEAL!,24 oz,6,100.0,0.8818,home,
+51,Brussels Sprouts,Frozen,frozen,as_bought,frozen brussels sprouts,Kroger,Kroger® Frozen Brussels Sprouts,12 oz,1.89,100.0,0.5556,home,
+52,Potato,Fresh,fresh,as_bought,fresh russet potatoes,Fresh Potatoes,Kroger® Russet Potatoes Bag BIG DEAL!,10 lb,3.99,213.0,0.1874,home,
+52,Potato,Frozen,frozen,as_bought,frozen potato hash browns,Ore-Ida,Ore-Ida Potatoes O'Brien Hash Browns Frozen Potatoes with onions & peppers,28 oz,4.49,213.0,1.2048,home,no store brand: national brand used
+52,Potato,Canned,canned,prepared,canned whole potatoes,Kroger,Kroger Whole White Potatoes - 15oz can,15 oz,1.09,213.0,0.91,home,60% of package usable
+53,Sweet Potato,Fresh,fresh,as_bought,fresh sweet potatoes,Fresh Potatoes,Kroger® Sweet Potato,3 lb,4.99,130.0,0.4767,home,
+53,Sweet Potato,Frozen,frozen,as_bought,frozen sweet potato cubes,Kroger,Kroger® Sweet Potato Crinkle-Cut Frozen French Fries,19 oz,3.79,130.0,0.9147,home,alternate: simpler search
+53,Sweet Potato,Canned,canned,prepared,canned sweet potatoes,Kroger,Kroger® Cut Candied Sweet Potato Yams,16 oz,2.49,130.0,1.1894,home,60% of package usable
+54,Carrot,Fresh,fresh,as_bought,fresh carrots,Kroger,Kroger® Whole Carrots,5 lb,4.99,100.0,0.22,home,
+54,Carrot,Frozen,frozen,as_bought,frozen carrots,Kroger,Kroger® Frozen Peas & Carrots,12 oz,1.29,100.0,0.3792,home,
+54,Carrot,Canned,canned,prepared,canned carrots,Kroger,Kroger Sweet Peas & Carrots - 15oz can,15 oz,1.09,100.0,0.4272,home,60% of package usable
+55,Spinach,Fresh,fresh,as_bought,fresh spinach,Kroger,Kroger® Baby Spinach,10 oz,3.99,100.0,1.4074,home,
+55,Spinach,Frozen,frozen,as_bought,frozen spinach,Kroger,Kroger® Frozen Spinach Chopped,12 oz,1.59,100.0,0.4674,home,
+55,Spinach,Canned,canned,prepared,canned spinach,Kroger,Kroger® Leaf Spinach,13.5 oz,1.39,100.0,0.6053,home,60% of package usable
+56,Avocado,Fresh,fresh,as_bought,fresh avocado,Kroger,Kroger® Fresh Hass Avocados Bag,4 ct,3.99,136.0,0.9975,home,
+56,Avocado,Frozen,frozen,as_bought,frozen avocado chunks,Private Selection,Private Selection® Avocado Oil Salt and Pepper Petite Red Potatoes,16 oz,4.49,136.0,1.3462,home,alternate: simpler search
+57,Beets,Fresh,fresh,as_bought,fresh beets,,Golden Beets,1 lb,1.99,100.0,0.4387,home,priced per lb
+57,Beets,Frozen,frozen,as_bought,frozen beets,,,,,,,,no product found
+57,Beets,Canned,canned,prepared,canned beets,Kroger,Kroger Sliced Beets - 15oz can,15 oz,1.09,100.0,0.4272,home,60% of package usable
+58,Black Beans,Dried,dried,as_bought,dried black beans,,,,,,,,no product found
+58,Black Beans,Canned,canned,prepared,canned black beans,Kroger,Kroger® Black Beans BIG DEAL!,4 pk / 15.5 oz,3.89,100.0,0.3689,home,60% of package usable
+59,Edamame,In pods,fresh,as_bought,fresh edamame in pods,,,,,,,,no product found
+59,Edamame,Frozen,frozen,as_bought,frozen shelled edamame,Kroger,Kroger® Steamable Edamame,12 oz,2.29,100.0,0.6731,home,
+59,Edamame,Ready to eat,ready_to_eat,prepared,roasted edamame snack,Seapoint Farms,Seapoint Farms Dry Roasted Sea Salt Edamame,4 oz,2.99,100.0,2.6367,home,no store brand: national brand used
+60,Tofu,Fresh,fresh,as_bought,firm tofu,Mori-Nu,Mori-Nu® Silken Firm Tofu,10.8 oz,2.69,100.0,0.8786,home,no store brand: national brand used
+60,Tofu,Frozen,frozen,as_bought,frozen tofu,Private Selection,Private Selection® Vegetable Fried Rice with Tofu,16 oz,4.79,100.0,1.056,home,
+60,Tofu,Ready to eat,ready_to_eat,prepared,baked tofu,Simple Truth Organic,Simple Truth Organic® Super Firm Teriyaki Flavored Pre-Marinated Baked Tofu,7 oz,3.99,100.0,2.0106,home,only organic available
+61,Kimchi,Fresh,fresh,as_bought,fresh kimchi,Cleveland,Cleveland Kitchen Spicy Kimchi 16 oz,16 oz,5.99,100.0,1.3206,home,alternate: simpler search; no store brand: national brand used
+61,Kimchi,Jarred,ready_to_eat,prepared,jarred kimchi,Simple Truth,Simple Truth® Raw-Fermented Korean Style Kimchi,17 oz,7.99,100.0,1.6579,home,alternate: simpler search
+62,Yellow Onion,Fresh,fresh,as_bought,yellow onion,,Kroger® Yellow Onion 3 lb Bag,3 lb,3.39,148.0,0.3687,home,
+62,Yellow Onion,Frozen,frozen,as_bought,frozen chopped onions,Kroger,Kroger® Frozen Onions Chopped,12 oz,1.79,148.0,0.7787,home,
+62,Yellow Onion,Dried,dried,as_bought,dried minced onion,,,,,,,,no product found
+64,Tomatoes,Fresh,fresh,as_bought,fresh tomatoes,Private Selection,Private Selection® Fresh Petite Cherry Snacking Tomatoes,24 oz,6,125.0,1.1023,home,
+64,Tomatoes,Frozen,frozen,as_bought,frozen tomatoes,Private Selection,Private Selection® Tomato Feta and Kale Egg White Frittatas,2 ct / 7.2 oz,5.99,125.0,2.995,home,
+64,Tomatoes,Canned,canned,prepared,canned diced tomatoes,Kroger,Kroger® Italian Style Diced Tomatoes,14.5 oz,1,125.0,0.3041,home,
+65,Cucumber,Fresh,fresh,as_bought,fresh cucumber,Private Selection,Private Selection® Seedless Mini Cucumbers,16 oz,3.49,200.0,1.5388,home,
+65,Cucumber,Frozen,frozen,as_bought,frozen cucumber slices,,,,,,,,no product found
+66,Kale,Fresh,fresh,as_bought,fresh kale,,Kale Bag,16 oz,3.49,100.0,0.7694,home,
+66,Kale,Frozen,frozen,as_bought,frozen kale,Private Selection,Private Selection® Tomato Feta and Kale Egg White Frittatas,2 ct / 7.2 oz,5.99,100.0,2.9346,home,
+67,Zucchini,Fresh,fresh,as_bought,fresh zucchini,,Zucchini,1 lb,1.69,196.0,0.7303,home,priced per lb
+67,Zucchini,Frozen,frozen,as_bought,frozen zucchini,Green Giant,"Green Giant Zucchini Veggie Spirals, Gluten-Free",12 oz,3.99,196.0,2.2988,home,no store brand: national brand used
+70,Nonfat Greek yogurt,Refrigerated,fresh,as_bought,nonfat greek yogurt plain,Kroger,Kroger® Plain Nonfat Greek Yogurt Tub,32 oz,4.19,170.0,0.7852,home,
+70,Nonfat Greek yogurt,Single cup,ready_to_eat,prepared,nonfat greek yogurt cup,Kroger,Kroger® Plain Nonfat Greek Yogurt Cup,5.3 oz,0.89,170.0,1.007,home,
+74,Egg white,Raw,fresh,as_bought,liquid egg whites,Kroger,Kroger® Cage Free Liquid Egg Whites,32 oz,7.49,46.0,0.3798,home,
+74,Egg white,Frozen,frozen,as_bought,frozen egg whites,Kroger,Kroger® Lite Turkey Sausage Egg White and Cheese English Muffin Breakfast Sandwich,4 ct / 19.2 oz,6.79,46.0,0.5738,home,
+75,Cheese,Block,fresh,as_bought,cheddar cheese block,Kroger,Kroger® Sharp Cheddar Block Cheese BIG DEAL!,32 oz,7.29,28.0,0.225,home,
+75,Cheese,Shredded,ready_to_eat,as_bought,shredded cheese,Kroger,Kroger® Colby Jack Shredded Cheese Family Size,32 oz,7.29,28.0,0.225,home,
+76,Nonfat Cheese,Fresh,fresh,as_bought,nonfat cheese,Kroger,Kroger® Singles American Sliced Cheese,16 slices / 12 oz,2.19,28.0,0.1803,home,alternate: simpler search
+76,Nonfat Cheese,Shredded,ready_to_eat,as_bought,nonfat shredded cheese,Kroger,Kroger® Singles American Sliced Cheese,16 slices / 12 oz,2.19,28.0,0.1803,home,alternate: simpler search
+80,Mozzarella Cheese,Fresh,fresh,as_bought,fresh mozzarella cheese,Private Selection,Private Selection® Cherry Size Fresh Mozzarella Cheese,8 oz,3.99,28.3,0.4988,home,
+80,Mozzarella Cheese,Shredded,ready_to_eat,as_bought,shredded mozzarella cheese,Kroger,Kroger® Mozzarella Shredded Cheese BIG DEAL!,4 lb,13.99,28.3,0.2186,home,
+84,Peanuts,Raw,fresh,as_bought,raw peanuts in shell,Kroger,Kroger® Shelled Raw Peanuts,16 oz,2.49,28.0,0.1537,home,
+84,Peanuts,Roasted,dried,as_bought,roasted peanuts,Kroger,Kroger® Shelled Salted Roasted Peanuts,16 oz,2.49,28.0,0.1537,home,
+84,Peanuts,Salted,ready_to_eat,prepared,salted roasted peanuts,Crazy Richard's,Crazy Richard's® Creamy Natural Peanut Butter,16 oz,4.19,28.0,0.2586,home,alternate: simpler search; no store brand: national brand used
+87,Walnuts,Raw,fresh,as_bought,raw walnut halves,Private Selection,Private Selection® Shelled Jumbo Walnuts,16 oz,5.99,28.0,0.3698,home,alternate: simpler search
+87,Walnuts,Roasted,ready_to_eat,prepared,roasted walnut halves,Simple Truth,Simple Truth® Halves & Pieces Walnuts,9 oz,5.99,28.0,0.6574,home,alternate: simpler search
+87,Walnuts,Dried,dried,as_bought,walnut pieces,Kroger,Kroger® Halves and Pieces Walnuts BIG DEAL!,32 oz,19.99,28.0,0.617,home,
+90,Pumpkin Seeds,Raw,fresh,as_bought,raw pumpkin seeds,Kroger,"Kroger Pumpkin, 29oz",29 oz,3.29,30.0,0.1201,home,alternate: simpler search
+90,Pumpkin Seeds,Roasted,ready_to_eat,prepared,roasted salted pumpkin seeds,Kroger,Kroger® Pumpkin Egg Nog Half Gallon,1/2 gal,4.99,30.0,0.0791,home,alternate: simpler search; density 1 g/ml
+94,Ground Flax Seeds,Seeds,fresh,as_bought,whole flax seeds,Kashi Go,Kashi GO Honey Almond Flax Crunch Protein Cereal,17.7 oz,5.99,28.3,0.3384,home,alternate: simpler search; no store brand: national brand used
+94,Ground Flax Seeds,Ground,ready_to_eat,as_bought,ground flaxseed meal,Great Grains,Great Grains Bakery™ Flax Seeds & Omega-3 Multigrain Bread,24 oz,3.49,28.3,0.1454,home,alternate: simpler search; no store brand: national brand used
+95,Cashews,Raw,fresh,as_bought,raw cashews,Simple Truth,Simple Truth® Raw Cashews,16 oz,8.99,28.3,0.5619,home,
+95,Cashews,Roasted,dried,as_bought,roasted cashews,Simple Truth,Simple Truth® Sea Salt Roasted Cashews BIG DEAL!,32 oz,15.99,28.3,0.4997,home,
+95,Cashews,Salted,ready_to_eat,prepared,salted roasted cashews,Simple Truth Organic,Simple Truth Organic® Salted Roasted Cashews,8 oz,6.99,28.3,0.8738,home,only organic available
+96,Sunflower Seeds,Raw,fresh,as_bought,raw sunflower seeds shelled,Kroger,Kroger® 100% Pure Sunflower Oil,48 fl oz,8.99,28.3,0.1795,home,alternate: simpler search; density 1 g/ml
+96,Sunflower Seeds,Roasted,ready_to_eat,prepared,roasted salted sunflower seeds,La Brea Bakery,Kroger Honey Sunflower Loaf Sliced,16 oz,4.99,28.3,0.3119,home,alternate: simpler search
+101,Pineapple,Fresh,fresh,as_bought,fresh whole pineapple,,Fresh Ripe Whole Pineapple,1 ct,3.29,905.0,3.29,home,
+101,Pineapple,Frozen,frozen,as_bought,frozen pineapple chunks,Private Selection,Private Selection® Chunked Super Sweet Frozen Pineapple,48 oz,10.99,905.0,7.309,home,price/serving outside $0.02–$4
+101,Pineapple,Canned,canned,prepared,canned pineapple chunks,Dole,Dole® Pineapple Chunks No Sugar Added,20 oz,2.49,905.0,6.624,home,60% of package usable; no store brand: national brand used; price/serving outside $0.02–$4
+102,Yerba mate,Loose leaf,fresh,as_bought,loose leaf yerba mate,Yerba Madre,Yerba Madre Lemon Elation Yerba Mate Energy Drink Can,15.5 fl oz,2.99,28.3,0.1849,home,alternate: simpler search; density 1 g/ml; no store brand: national brand used
+102,Yerba mate,Ready to drink,ready_to_eat,prepared,yerba mate tea bags,Yerba Madre,Yerba Madre Lemon Elation Yerba Mate Energy Drink Can,15.5 fl oz,2.99,28.3,0.1849,home,alternate: simpler search; density 1 g/ml; no store brand: national brand used
+103,Fresh coconut,Fresh,fresh,as_bought,fresh coconut,,Fresh Brown Coconuts,1 ct,4.99,100.0,0.7338,home,680 g per unit
+103,Fresh coconut,Frozen,frozen,as_bought,frozen coconut meat,Saffron Road,Saffron Road® Coconut Curry Chicken Gluten-Free Indian Frozen Dinner,10 oz,5.99,100.0,2.1129,home,alternate: simpler search; no store brand: national brand used
+103,Fresh coconut,Dried,dried,as_bought,shredded dried coconut,Bare,Bare® Baked Crunchy Toasted Coconut Chips,2.7 oz,6.29,100.0,8.2175,home,alternate: simpler search; no store brand: national brand used; price/serving outside $0.02–$4
+104,Grapes,Fresh,fresh,as_bought,fresh grapes,,Kroger® Fresh Seedless Green Grapes,3 lb,7.99,100.0,0.5872,home,
+104,Grapes,Frozen,frozen,as_bought,frozen grapes,Kroger,Kroger® KroFro Sour Coated Grapes,8 oz,5.29,100.0,2.3325,home,
+104,Grapes,Dried,dried,as_bought,raisins,Smart Way,Smart Way™ Seedless Raisins,20 oz,4.39,100.0,0.7743,home,
+105,High-fiber bread,Sliced,fresh,as_bought,high fiber sliced bread,Nature's Own,"Nature's Own Life Keto Multigrain Bread, Net 1 Carb Non-GMO Sliced Multigrain Keto Bread, 16 oz Loaf",16 oz,6.99,56.7,0.8738,home,no store brand: national brand used
+105,High-fiber bread,Frozen,frozen,as_bought,frozen high fiber bread,Base Culture,Base Culture Simply Sourdough Bread 15 oz,15 oz,7.99,56.7,1.0653,home,no store brand: national brand used
+106,Black olives,Fresh,fresh,as_bought,fresh black olives,Kroger,Kroger® Stuffed Manzanilla Olives with Pimiento,21 oz,6.29,5.0,0.0528,home,alternate: simpler search
+106,Black olives,Canned,canned,prepared,canned black olives,Kroger,Kroger® Sliced Black Olives,3.8 oz,2.69,5.0,0.2081,home,60% of package usable
+107,Honeydew,Fresh,fresh,as_bought,fresh honeydew melon,Fresh Melons,Organic Honeydew,1 lb,5.99,100.0,1.3206,home,only organic available
+107,Honeydew,Frozen,frozen,as_bought,frozen honeydew melon balls,,,,,,,,no product found
+108,Lettuce,Fresh,fresh,as_bought,fresh lettuce head,Private Selection,Private Selection™ Artisan Lettuce,17 oz,3.49,100.0,0.7242,home,
+108,Lettuce,Salad mix,ready_to_eat,prepared,packaged lettuce salad mix,Gotham Greens,Gotham Greens® Gourmet Spring Mix Lettuce,9 oz,5.49,100.0,2.1517,home,no store brand: national brand used
+110,Flour tortilla,Fresh,fresh,as_bought,flour tortillas,Kroger,Kroger® Fajita Size Flour Tortillas,20 ct / 23 oz,2.29,45.0,0.1145,home,
+110,Flour tortilla,Frozen,frozen,as_bought,frozen flour tortillas,Siete,Siete Almond Flour Grain-Free Frozen Tortillas,8 ct / 7 oz,9.49,45.0,1.1863,home,no store brand: national brand used
+112,White bread,Sliced,fresh,as_bought,sliced white bread,Dunford,Dunford White Cottage Bread,24 oz,3.99,56.7,0.3325,home,no store brand: national brand used
+112,White bread,Frozen,frozen,as_bought,frozen white bread,Rhodes,Rhodes Bake-N-Serv® Frozen White Bread Dough 3 loaf,3 lbs,5.99,56.7,0.2496,home,no store brand: national brand used
+113,Cream of wheat,Dry,dried,as_bought,cream of wheat cereal,Cream of Wheat,"Cream of Wheat Maple Brown Sugar Instant Hot Cereal, Kosher, 10-1.23 oz Packets",10 ct / 1.23 oz,5.99,44.5,7.6442,home,no store brand: national brand used; price/serving outside $0.02–$4
+113,Cream of wheat,Ready to eat,ready_to_eat,prepared,instant cream of wheat packets,Frosted Mini-Wheats,Kellogg's Mini-wheats Original,29.5 oz,6.49,319.3,2.4782,home,alternate: simpler search; no store brand: national brand used

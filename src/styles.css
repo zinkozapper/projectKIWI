@@ -390,3 +390,10 @@ input,select,textarea{font-size:16px!important}
 .row-price .price-estimate::placeholder{color:var(--muted-foreground);font-weight:400}
 .list-search{margin-bottom:6px}.list-search .search-results{max-height:420px;overflow-y:auto}
 .searchbox-clear{display:grid;place-items:center;width:26px;height:26px;border:0;border-radius:50%;background:transparent;color:var(--muted-foreground)}.searchbox-clear:hover{background:var(--muted)}
+/* List rows: style and size dropdowns side by side; the +/- stepper stands upright (+ on top) to leave them room. */
+.row-selects{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:6px}.row-selects:empty{display:none}
+.grocery-row .qty-control{flex-direction:column-reverse;height:auto;width:24px;align-items:stretch;border-radius:4px}
+.grocery-row .qty-control button{width:100%!important;height:16px!important;min-height:0;padding:0}
+.grocery-row .qty-control button svg{width:10px;height:10px}
+.grocery-row .qty-control input{width:100%;height:18px;padding:0;font-size:11px;border-block:1px solid var(--border)}
+.grocery-row{padding-block:16px}

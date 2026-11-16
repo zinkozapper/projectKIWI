@@ -4,706 +4,1070 @@
   "food_name": "Chicken breast",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 2,
   "food_name": "Chicken thighs",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 3,
   "food_name": "Pork Tenderloin",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 4,
   "food_name": "Pork Butt/Shoulder",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 5,
   "food_name": "Sirloin",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.05,
+  "cook_ratio": 0.925942256477187
  },
  {
   "food_id": 6,
   "food_name": "Chuck",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.05,
+  "cook_ratio": 0.925942256477187
  },
  {
   "food_id": 7,
   "food_name": "Ground beef 90/10",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.05,
+  "cook_ratio": 0.925942256477187
  },
  {
   "food_id": 8,
   "food_name": "Ribeye Whole",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.05,
+  "cook_ratio": 0.925942256477187
  },
  {
   "food_id": 9,
   "food_name": "Tilapia",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 10,
   "food_name": "Salmon",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 11,
   "food_name": "Tuna",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.13,
+  "cook_ratio": 0.996490237923067
  },
  {
   "food_id": 12,
   "food_name": "Sardines",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.06,
+  "cook_ratio": 0.934760754157922
  },
  {
   "food_id": 13,
   "food_name": "Oysters",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.08,
+  "cook_ratio": 0.0705479814458809
  },
  {
   "food_id": 14,
   "food_name": "Ground Turkey",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.94,
+  "cook_ratio": 0.8289387819891
  },
  {
   "food_id": 15,
   "food_name": "Chicken Liver",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.44,
+  "cook_ratio": 0.388013897952345
  },
  {
   "food_id": 16,
   "food_name": "Liver",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.12,
+  "cook_ratio": 0.987671740242332
  },
  {
   "food_id": 17,
   "food_name": "Shrimp",
   "food_category_id": 1,
   "serving_size": 4,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.81,
+  "cook_ratio": 0.714298312139544
  },
  {
   "food_id": 18,
   "food_name": "Chickpeas / Garbanzo Beans",
   "food_category_id": 1,
   "serving_size": 0.25,
-  "unit": "cup"
+  "unit": "cup",
+  "factor": 1.1595,
+  "cook_ratio": 2.319
  },
  {
   "food_id": 19,
   "food_name": "Lentils",
   "food_category_id": 1,
   "serving_size": 0.25,
-  "unit": "cup"
+  "unit": "cup",
+  "factor": 1.4692,
+  "cook_ratio": 3.06083333333333
  },
  {
   "food_id": 20,
   "food_name": "Bagels",
   "food_category_id": 2,
   "serving_size": 85,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.85,
+  "cook_ratio": null
  },
  {
   "food_id": 21,
   "food_name": "Pasta",
   "food_category_id": 2,
   "serving_size": 2,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.27,
+  "cook_ratio": 2.23989841090672
  },
  {
   "food_id": 22,
   "food_name": "Whole Wheat Pasta",
   "food_category_id": 2,
   "serving_size": 2,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.35,
+  "cook_ratio": 2.38099437379848
  },
  {
   "food_id": 23,
   "food_name": "Rice",
   "food_category_id": 2,
   "serving_size": 2,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.4,
+  "cook_ratio": 2.46917935060583
  },
  {
   "food_id": 24,
   "food_name": "Quinoa",
   "food_category_id": 2,
   "serving_size": 2,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.42,
+  "cook_ratio": 2.50445334132877
  },
  {
   "food_id": 25,
   "food_name": "Rolled oats",
   "food_category_id": 2,
   "serving_size": 2,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 1.97,
+  "cook_ratio": 3.47448808620963
  },
  {
   "food_id": 26,
   "food_name": "Multi-grain Bread",
   "food_category_id": 2,
   "serving_size": 45,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.45,
+  "cook_ratio": null
  },
  {
   "food_id": 27,
   "food_name": "Brown Rice",
   "food_category_id": 2,
   "serving_size": 0.25,
-  "unit": "cup"
+  "unit": "cup",
+  "factor": 1.38,
+  "cook_ratio": 2.98056155507559
  },
  {
   "food_id": 28,
   "food_name": "Whole Wheat Tortillas",
   "food_category_id": 2,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 0.45,
+  "cook_ratio": null
  },
  {
   "food_id": 29,
   "food_name": "Sourdough Bread",
   "food_category_id": 2,
   "serving_size": 2,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.567,
+  "cook_ratio": null
  },
  {
   "food_id": 30,
   "food_name": "Couscous",
   "food_category_id": 2,
   "serving_size": 0.25,
-  "unit": "cup"
+  "unit": "cup",
+  "factor": 1.465,
+  "cook_ratio": 3.38337182448037
  },
  {
   "food_id": 31,
   "food_name": "Mandarin Oranges",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 0.88,
+  "cook_ratio": null
  },
  {
   "food_id": 32,
   "food_name": "Dates",
   "food_category_id": 3,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 33,
   "food_name": "Bananas",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.18,
+  "cook_ratio": null
  },
  {
   "food_id": 34,
   "food_name": "Peaches",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.5,
+  "cook_ratio": null
  },
  {
   "food_id": 35,
   "food_name": "Blueberries",
   "food_category_id": 3,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 36,
   "food_name": "Blackberries",
   "food_category_id": 3,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 37,
   "food_name": "Raspberries",
   "food_category_id": 3,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 38,
   "food_name": "Strawberries",
   "food_category_id": 3,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 39,
   "food_name": "Kiwis",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 0.69,
+  "cook_ratio": null
  },
  {
   "food_id": 40,
   "food_name": "Acerola Juice",
   "food_category_id": 3,
   "serving_size": 6,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.06,
+  "cook_ratio": null
  },
  {
   "food_id": 41,
   "food_name": "Cantaloupe",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 5.52,
+  "cook_ratio": null
  },
  {
   "food_id": 42,
   "food_name": "Apples",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.69,
+  "cook_ratio": null
  },
  {
   "food_id": 43,
   "food_name": "Lemon",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 0.65,
+  "cook_ratio": null
  },
  {
   "food_id": 44,
   "food_name": "Lime",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 0.65,
+  "cook_ratio": null
  },
  {
   "food_id": 45,
   "food_name": "Frozen Mixed Berries",
   "food_category_id": 3,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 46,
   "food_name": "Broccoli",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 47,
   "food_name": "Cauliflower",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 5.88,
+  "cook_ratio": null
  },
  {
   "food_id": 48,
   "food_name": "Butternut squash",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 49,
   "food_name": "Red Bell Pepper",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.19,
+  "cook_ratio": null
  },
  {
   "food_id": 50,
   "food_name": "Asparagus",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 51,
   "food_name": "Brussels Sprouts",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 52,
   "food_name": "Potato",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 2.13,
+  "cook_ratio": null
  },
  {
   "food_id": 53,
   "food_name": "Sweet Potato",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.3,
+  "cook_ratio": null
  },
  {
   "food_id": 54,
   "food_name": "Carrot",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 55,
   "food_name": "Spinach",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 56,
   "food_name": "Avocado",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.36,
+  "cook_ratio": null
  },
  {
   "food_id": 57,
   "food_name": "Beets",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 58,
   "food_name": "Black Beans",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 59,
   "food_name": "Edamame",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 60,
   "food_name": "Tofu",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 61,
   "food_name": "Kimchi",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 62,
   "food_name": "Yellow Onion",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.48,
+  "cook_ratio": null
  },
  {
   "food_id": 63,
   "food_name": "Garlic",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "clove"
+  "unit": "clove",
+  "factor": 0.03,
+  "cook_ratio": null
  },
  {
   "food_id": 64,
   "food_name": "Tomatoes",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.25,
+  "cook_ratio": null
  },
  {
   "food_id": 65,
   "food_name": "Cucumber",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 2,
+  "cook_ratio": null
  },
  {
   "food_id": 66,
   "food_name": "Kale",
   "food_category_id": 4,
   "serving_size": 100,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
  },
  {
   "food_id": 67,
   "food_name": "Zucchini",
   "food_category_id": 4,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 1.96,
+  "cook_ratio": null
  },
  {
   "food_id": 68,
   "food_name": "Skim Milk",
   "food_category_id": 5,
   "serving_size": 240,
-  "unit": "g"
+  "unit": "g",
+  "factor": 2.4,
+  "cook_ratio": null
  },
  {
   "food_id": 69,
   "food_name": "Almond Milk",
   "food_category_id": 5,
   "serving_size": 200,
-  "unit": "g"
+  "unit": "g",
+  "factor": 2,
+  "cook_ratio": null
  },
  {
   "food_id": 70,
   "food_name": "Nonfat Greek yogurt",
   "food_category_id": 5,
   "serving_size": 170,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1.7,
+  "cook_ratio": null
  },
  {
   "food_id": 71,
   "food_name": "Low-fat Cottage Cheese",
   "food_category_id": 5,
   "serving_size": 113,
-  "unit": "g"
+  "unit": "g",
+  "factor": 1.13,
+  "cook_ratio": null
  },
  {
   "food_id": 72,
   "food_name": "Parmesan Cheese",
   "food_category_id": 5,
   "serving_size": 25,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.25,
+  "cook_ratio": null
  },
  {
   "food_id": 73,
   "food_name": "Egg",
   "food_category_id": 5,
   "serving_size": 50,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.5,
+  "cook_ratio": null
  },
  {
   "food_id": 74,
   "food_name": "Egg white",
   "food_category_id": 5,
   "serving_size": 46,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.46,
+  "cook_ratio": null
  },
  {
   "food_id": 75,
   "food_name": "Cheese",
   "food_category_id": 5,
   "serving_size": 28,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.28,
+  "cook_ratio": null
  },
  {
   "food_id": 76,
   "food_name": "Nonfat Cheese",
   "food_category_id": 5,
   "serving_size": 28,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.28,
+  "cook_ratio": null
  },
  {
   "food_id": 77,
   "food_name": "Butter",
   "food_category_id": 5,
   "serving_size": 7,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.07,
+  "cook_ratio": null
  },
  {
   "food_id": 78,
   "food_name": "Whole Milk",
   "food_category_id": 5,
   "serving_size": 1,
-  "unit": "cup"
+  "unit": "cup",
+  "factor": 2.44,
+  "cook_ratio": null
  },
  {
   "food_id": 79,
   "food_name": "Cheddar Cheese",
   "food_category_id": 5,
   "serving_size": 1,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
  },
  {
   "food_id": 80,
   "food_name": "Mozzarella Cheese",
   "food_category_id": 5,
   "serving_size": 1,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
  },
  {
   "food_id": 81,
   "food_name": "Protein Powder",
   "food_category_id": 6,
   "serving_size": 38,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.38,
+  "cook_ratio": null
  },
  {
   "food_id": 82,
   "food_name": "Powdered Peanut Butter",
   "food_category_id": 6,
   "serving_size": 16,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.16,
+  "cook_ratio": null
  },
  {
   "food_id": 83,
   "food_name": "Peanut Butter",
   "food_category_id": 6,
   "serving_size": 32,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.32,
+  "cook_ratio": null
  },
  {
   "food_id": 84,
   "food_name": "Peanuts",
   "food_category_id": 6,
   "serving_size": 28,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.28,
+  "cook_ratio": null
  },
  {
   "food_id": 85,
   "food_name": "Cocoa Powder",
   "food_category_id": 6,
   "serving_size": 20,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.2,
+  "cook_ratio": null
  },
  {
   "food_id": 86,
   "food_name": "Almond Butter",
   "food_category_id": 6,
   "serving_size": 28,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.28,
+  "cook_ratio": null
  },
  {
   "food_id": 87,
   "food_name": "Walnuts",
   "food_category_id": 6,
   "serving_size": 28,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.28,
+  "cook_ratio": null
  },
  {
   "food_id": 88,
   "food_name": "Chia Seeds",
   "food_category_id": 6,
   "serving_size": 30,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.3,
+  "cook_ratio": null
  },
  {
   "food_id": 89,
   "food_name": "Hemp Seeds",
   "food_category_id": 6,
   "serving_size": 30,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.3,
+  "cook_ratio": null
  },
  {
   "food_id": 90,
   "food_name": "Pumpkin Seeds",
   "food_category_id": 6,
   "serving_size": 30,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.3,
+  "cook_ratio": null
  },
  {
   "food_id": 91,
   "food_name": "Dark Chocolate",
   "food_category_id": 6,
   "serving_size": 30,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.3,
+  "cook_ratio": null
  },
  {
   "food_id": 92,
   "food_name": "Avocado Oil",
   "food_category_id": 6,
   "serving_size": 15,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.15,
+  "cook_ratio": null
  },
  {
   "food_id": 93,
   "food_name": "Olive Oil",
   "food_category_id": 6,
   "serving_size": 15,
-  "unit": "g"
+  "unit": "g",
+  "factor": 0.15,
+  "cook_ratio": null
  },
  {
   "food_id": 94,
   "food_name": "Ground Flax Seeds",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
  },
  {
   "food_id": 95,
   "food_name": "Cashews",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
  },
  {
   "food_id": 96,
   "food_name": "Sunflower Seeds",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "oz"
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
  },
  {
   "food_id": 97,
   "food_name": "Apple Cider Vinegar",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "tbsp"
+  "unit": "tbsp",
+  "factor": 0.149,
+  "cook_ratio": null
  },
  {
   "food_id": 98,
   "food_name": "Soy Sauce / Tamari",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "tbsp"
+  "unit": "tbsp",
+  "factor": 0.16,
+  "cook_ratio": null
  },
  {
   "food_id": 99,
   "food_name": "Honey",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "tbsp"
+  "unit": "tbsp",
+  "factor": 0.2,
+  "cook_ratio": null
  },
  {
   "food_id": 100,
   "food_name": "Maple Syrup",
   "food_category_id": 6,
   "serving_size": 1,
-  "unit": "tbsp"
+  "unit": "tbsp",
+  "factor": 0.2,
+  "cook_ratio": null
  },
  {
   "food_id": 101,
   "food_name": "Pineapple",
   "food_category_id": 3,
   "serving_size": 1,
-  "unit": "unit"
+  "unit": "unit",
+  "factor": 9.05,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 102,
+  "food_name": "Yerba mate",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 103,
+  "food_name": "Fresh coconut",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 104,
+  "food_name": "Grapes",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 105,
+  "food_name": "High-fiber bread",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz",
+  "factor": 0.567,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 106,
+  "food_name": "Black olives",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "unit",
+  "factor": 0.05,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 107,
+  "food_name": "Honeydew",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 108,
+  "food_name": "Lettuce",
+  "food_category_id": 4,
+  "serving_size": 100,
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 109,
+  "food_name": "Jelly",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "tbsp",
+  "factor": 0.2,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 110,
+  "food_name": "Flour tortilla",
+  "food_category_id": 2,
+  "serving_size": 1,
+  "unit": "unit",
+  "factor": 0.45,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 111,
+  "food_name": "Cheese Fiesta Blend",
+  "food_category_id": 5,
+  "serving_size": 1,
+  "unit": "oz",
+  "factor": 0.2835,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 112,
+  "food_name": "White bread",
+  "food_category_id": 2,
+  "serving_size": 2,
+  "unit": "oz",
+  "factor": 0.567,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 113,
+  "food_name": "Cream of wheat",
+  "food_category_id": 2,
+  "serving_size": 0.25,
+  "unit": "cup",
+  "factor": 3.1935,
+  "cook_ratio": 7.1765
+ },
+ {
+  "food_id": 114,
+  "food_name": "Applesauce",
+  "food_category_id": 3,
+  "serving_size": 100,
+  "unit": "g",
+  "factor": 1,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 115,
+  "food_name": "Italian dressing",
+  "food_category_id": 6,
+  "serving_size": 1,
+  "unit": "tbsp",
+  "factor": 0.147,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 116,
+  "food_name": "Ice cream",
+  "food_category_id": 5,
+  "serving_size": 0.5,
+  "unit": "cup",
+  "factor": 0.675,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 117,
+  "food_name": "Atlantic cod",
+  "food_category_id": 1,
+  "serving_size": 4,
+  "unit": "oz",
+  "factor": 1.7148,
+  "cook_ratio": 1.5122
+ },
+ {
+  "food_id": 118,
+  "food_name": "Full-fat cottage cheese",
+  "food_category_id": 5,
+  "serving_size": 0.5,
+  "unit": "cup",
+  "factor": 1.05,
+  "cook_ratio": null
+ },
+ {
+  "food_id": 119,
+  "food_name": "Pomegranate",
+  "food_category_id": 3,
+  "serving_size": 1,
+  "unit": "unit",
+  "factor": 2.5,
+  "cook_ratio": null
  }
 ]

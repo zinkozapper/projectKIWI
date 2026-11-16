@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultPackage, packagePrice, packagesFor, servingsOf, type FoodPackage, type PackageCatalog } from './food-packages';
+import { defaultPackage, packagePrice, packagesFor, servingsOf, type FoodPackage, type PackageCatalog, packageNoun, servingsText } from './food-packages';
 import type { FoodOption } from './food-options';
 
 const pkg = (id: string, optionId: string | null, sort: number, servings = 4, price = 5): FoodPackage => ({ id, foodId: '1', optionId, label: `p${id}`, servings, price, grams: null, sort });
@@ -27,9 +27,23 @@ describe('package math', () => {
     expect(servingsOf(2, pkg('a', null, 0, 4))).toBe(8);
     expect(servingsOf(3, undefined)).toBe(3);
   });
-  it('prices a package from the store price per serving, else its shelf price', () => {
-    expect(packagePrice(pkg('a', null, 0, 4, 5), 1.5)).toBe(6);
+  it('prices a package at its shelf price, scaled to the shopper\'s store, else per serving', () => {
+    expect(packagePrice(pkg('a', null, 0, 2, 9.99), 5, 5)).toBe(9.99); // a 2-pack keeps its own (cheaper) price
+    expect(packagePrice(pkg('a', null, 0, 4, 5), 1.5, 1.25)).toBeCloseTo(6); // another store, 20% dearer
     expect(packagePrice(pkg('a', null, 0, 4, 5), null)).toBe(5);
+    expect(packagePrice(pkg('a', null, 0, 4, 0), 1.5)).toBe(6); // no shelf price
     expect(packagePrice(pkg('a', null, 0, 4, 0), null)).toBeNull();
+  });
+});
+
+describe('list wording', () => {
+  const named = (label: string): FoodPackage => ({ id: 'x', foodId: '1', optionId: null, label, servings: 1, price: 1, grams: null, sort: 0 });
+  it('calls a single item a unit and everything else a package', () => {
+    expect(packageNoun(named('1 ct whole fruit'), 1)).toBe('unit');
+    expect(packageNoun(named('Each'), 3)).toBe('units');
+    expect(packageNoun(named('8 oz'), 1)).toBe('package');
+    expect(packageNoun(named('2 pk, 8 oz each'), 2)).toBe('packages');
+    expect(servingsText(1)).toBe('1 serving');
+    expect(servingsText(2.5)).toBe('2.5 servings');
   });
 });

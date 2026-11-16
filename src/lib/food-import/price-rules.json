@@ -1348,6 +1348,77 @@
         "flavored",
         "butter"
       ]
+    },
+    "116": {
+      "term": "vanilla ice cream",
+      "must": [
+        "ice cream"
+      ],
+      "allow": [
+        "vanilla",
+        "ice cream"
+      ],
+      "categories": [
+        "Frozen"
+      ],
+      "exclude": [
+        "sandwich",
+        "sandwiches",
+        "bars",
+        "cone",
+        "cones",
+        "pops",
+        "novelty",
+        "sherbet",
+        "frozen yogurt",
+        "non-dairy",
+        "dairy free",
+        "oat",
+        "almond"
+      ]
+    },
+    "111": {
+      "term": "fiesta blend shredded cheese",
+      "must": [
+        "cheese",
+        "fiesta|mexican"
+      ]
+    },
+    "113": {
+      "term": "cream of wheat",
+      "must": [
+        "cream of wheat"
+      ],
+      "allow": [
+        "cereal",
+        "hot cereal"
+      ],
+      "categories": [
+        "Breakfast",
+        "Pasta, Sauces, Grain",
+        "Natural & Organic"
+      ]
+    },
+    "118": {
+      "term": "4% cottage cheese",
+      "must": [
+        "cottage cheese"
+      ],
+      "exclude": [
+        "low fat",
+        "lowfat",
+        "nonfat",
+        "non fat",
+        "fat free",
+        "2%",
+        "1%"
+      ],
+      "alternates": [
+        {
+          "term": "cottage cheese",
+          "label": "plain cottage cheese"
+        }
+      ]
     }
   },
   "altStores": {

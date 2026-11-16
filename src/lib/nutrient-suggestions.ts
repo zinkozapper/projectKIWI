@@ -40,7 +40,9 @@ export function nutrientGap(k: NutrientKey, daily: Nutrients, combined: Nutrient
 }
 
 export function rankSuggestions(input: SuggestionInput): SuggestionResult {
-  const { available, daily, combined, days, preferences, chosen, addCostOf, budgetRemaining, count = 3 } = input;
+  const { daily, combined, days, preferences, chosen, addCostOf, budgetRemaining, count = 3 } = input;
+  // A thumbs-down takes the food out of suggestions (the user can undo it, or find it in search).
+  const available = input.available.filter(f => preferences[f.id] !== false);
   const gap = (k: NutrientKey) => nutrientGap(k, daily, combined, days);
   const openGaps = NUTRIENT_PRIORITY.filter(k => daily[k] > 0 && gap(k).remaining > 0);
 
@@ -52,7 +54,7 @@ export function rankSuggestions(input: SuggestionInput): SuggestionResult {
     const impact = remaining > 0 ? (remaining / target) * Math.min(amount / remaining, 1) : 0;
     return { key: k, amount, percentage, impact };
   };
-  const preferenceWeight = (food: Food) => (preferences[food.id] === true ? 1.25 : preferences[food.id] === false ? 0.75 : 1);
+  const preferenceWeight = (food: Food) => (preferences[food.id] === true ? 1.25 : 1);
   const withBudget = (food: Food, score: number, boosts: NutrientBoost[]): FoodSuggestion => {
     const addCost = addCostOf(food);
     // Unknown price (0): fits while there's budget left.

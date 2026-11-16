@@ -1,0 +1,3039 @@
+{
+  "1": {
+    "food": "Chicken breast",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "boneless skinless chicken breast",
+        "must": [
+          "chicken"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen chicken breast",
+        "must": [
+          "chicken"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Rotisserie",
+        "search_term": "rotisserie chicken",
+        "must": [
+          "chicken"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": 700,
+        "sort_order": 2
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned chicken breast",
+        "must": [
+          "chicken"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 3
+      }
+    ]
+  },
+  "2": {
+    "food": "Chicken thighs",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw chicken thighs",
+        "must": [
+          "chicken",
+          "thigh|thighs"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen chicken thighs",
+        "must": [
+          "chicken",
+          "thigh|thighs"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "3": {
+    "food": "Pork Tenderloin",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "fresh pork tenderloin",
+        "must": [
+          "pork",
+          "tenderloin"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen pork tenderloin",
+        "must": [
+          "pork",
+          "tenderloin"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "4": {
+    "food": "Pork Butt/Shoulder",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw pork shoulder roast",
+        "must": [
+          "pork"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen pork shoulder",
+        "must": [
+          "pork"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Pulled Pork",
+        "search_term": "pulled pork",
+        "must": [
+          "pork"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "5": {
+    "food": "Sirloin",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "beef sirloin steak",
+        "must": [
+          "sirloin"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen beef sirloin steak",
+        "must": [
+          "sirloin"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "6": {
+    "food": "Chuck",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "beef chuck roast",
+        "must": [
+          "chuck",
+          "beef"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen beef chuck",
+        "must": [
+          "chuck",
+          "beef"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "7": {
+    "food": "Ground beef 90/10",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "ground beef 90/10",
+        "must": [
+          "beef"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen ground beef 90/10",
+        "must": [
+          "beef"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "8": {
+    "food": "Ribeye Whole",
+    "options": []
+  },
+  "9": {
+    "food": "Tilapia",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "fresh tilapia fillets",
+        "must": [
+          "tilapia"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen tilapia fillets",
+        "must": [
+          "tilapia"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned tilapia",
+        "must": [
+          "tilapia"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "10": {
+    "food": "Salmon",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh salmon fillet",
+        "must": [
+          "salmon"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen salmon fillet",
+        "must": [
+          "salmon"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned salmon",
+        "must": [
+          "salmon"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "11": {
+    "food": "Tuna",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh tuna steak",
+        "must": [
+          "tuna"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen tuna steak",
+        "must": [
+          "tuna"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned tuna in water",
+        "must": [
+          "tuna"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "12": {
+    "food": "Sardines",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh sardines",
+        "must": [
+          "sardine|sardines"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned sardines",
+        "must": [
+          "sardine|sardines"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "13": {
+    "food": "Oysters",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "fresh raw oysters",
+        "must": [
+          "oyster|oysters"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen oysters",
+        "must": [
+          "oyster|oysters"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned oysters",
+        "must": [
+          "oyster|oysters"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "14": {
+    "food": "Ground Turkey",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw ground turkey",
+        "must": [
+          "turkey"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen ground turkey",
+        "must": [
+          "turkey"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "15": {
+    "food": "Chicken Liver",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw chicken livers",
+        "must": [
+          "liver|livers"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen chicken livers",
+        "must": [
+          "liver|livers"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "16": {
+    "food": "Liver",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "beef liver",
+        "must": [
+          "liver"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen beef liver",
+        "must": [
+          "liver"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "17": {
+    "food": "Shrimp",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw shrimp",
+        "must": [
+          "shrimp"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen raw shrimp",
+        "must": [
+          "shrimp"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned shrimp",
+        "must": [
+          "shrimp"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Cooked",
+        "search_term": "cooked shrimp",
+        "must": [
+          "shrimp"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 3
+      }
+    ]
+  },
+  "18": {
+    "food": "Chickpeas / Garbanzo Beans",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried chickpeas",
+        "must": [
+          "chickpea|chickpeas|garbanzo"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned chickpeas",
+        "must": [
+          "chickpea|chickpeas|garbanzo"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen chickpeas",
+        "must": [
+          "chickpea|chickpeas|garbanzo"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "19": {
+    "food": "Lentils",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried lentils",
+        "must": [
+          "lentil|lentils"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned lentils",
+        "must": [
+          "lentil|lentils"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "ready to eat lentils",
+        "must": [
+          "lentil|lentils"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "20": {
+    "food": "Bagels",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "plain bagels",
+        "must": [
+          "bagel|bagels"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen bagels",
+        "must": [
+          "bagel|bagels"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "21": {
+    "food": "Pasta",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried pasta",
+        "must": [
+          "pasta"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh pasta",
+        "must": [
+          "pasta"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "refrigerated cooked pasta",
+        "must": [
+          "pasta"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "22": {
+    "food": "Whole Wheat Pasta",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "whole wheat pasta",
+        "must": [
+          "pasta"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh whole wheat pasta",
+        "must": [
+          "pasta"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "whole wheat pasta cooked",
+        "must": [
+          "pasta"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "23": {
+    "food": "Rice",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "long grain white rice",
+        "must": [
+          "rice"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Cooked cups",
+        "search_term": "microwave cooked rice cups",
+        "must": [
+          "rice"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": 200,
+        "sort_order": 1
+      }
+    ]
+  },
+  "24": {
+    "food": "Quinoa",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried quinoa",
+        "must": [
+          "quinoa"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Cooked cups",
+        "search_term": "cooked quinoa cups",
+        "must": [
+          "quinoa"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "25": {
+    "food": "Rolled oats",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "rolled oats",
+        "must": [
+          "oat|oats"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Cooked",
+        "search_term": "cooked oatmeal",
+        "must": [
+          "oat|oats|oatmeal"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "26": {
+    "food": "Multi-grain Bread",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Sliced",
+        "search_term": "multigrain sliced bread",
+        "must": [
+          "multigrain|multi-grain|multi g"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen multigrain bread",
+        "must": [
+          "bread"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "27": {
+    "food": "Brown Rice",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "brown rice",
+        "must": [
+          "brown rice"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "cooked brown rice pouch",
+        "must": [
+          "brown rice"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen brown rice",
+        "must": [
+          "brown rice"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "28": {
+    "food": "Whole Wheat Tortillas",
+    "options": []
+  },
+  "29": {
+    "food": "Sourdough Bread",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "sourdough bread loaf",
+        "must": [
+          "sourdough"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen sourdough bread",
+        "must": [
+          "sourdough"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "30": {
+    "food": "Couscous",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dry couscous",
+        "must": [
+          "couscous"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "cooked couscous",
+        "must": [
+          "couscous"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "31": {
+    "food": "Mandarin Oranges",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh mandarin oranges",
+        "must": [
+          "mandarin|tangerine|clementine"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 88,
+        "sort_order": 0
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned mandarin oranges",
+        "must": [
+          "mandarin"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "32": {
+    "food": "Dates",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh dates",
+        "must": [
+          "date|dates"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried dates",
+        "must": [
+          "date|dates"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "33": {
+    "food": "Bananas",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh bananas",
+        "must": [
+          "banana|bananas"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 118,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen sliced bananas",
+        "must": [
+          "banana|bananas"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried banana chips",
+        "must": [
+          "banana|bananas"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "34": {
+    "food": "Peaches",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh peaches",
+        "must": [
+          "peach|peaches"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 150,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen sliced peaches",
+        "must": [
+          "peach|peaches"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned sliced peaches",
+        "must": [
+          "peach|peaches"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "35": {
+    "food": "Blueberries",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh blueberries",
+        "must": [
+          "blueberr"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen blueberries",
+        "must": [
+          "blueberr"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried blueberries",
+        "must": [
+          "blueberr"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "36": {
+    "food": "Blackberries",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh blackberries",
+        "must": [
+          "blackberr"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen blackberries",
+        "must": [
+          "blackberr"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "37": {
+    "food": "Raspberries",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh raspberries",
+        "must": [
+          "raspberry|raspberries"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen raspberries",
+        "must": [
+          "raspberry|raspberries"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "38": {
+    "food": "Strawberries",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh strawberries",
+        "must": [
+          "strawberry|strawberries"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen strawberries",
+        "must": [
+          "strawberry|strawberries"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "39": {
+    "food": "Kiwis",
+    "options": []
+  },
+  "40": {
+    "food": "Acerola Juice",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh acerola cherries",
+        "must": [
+          "acerola"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen acerola puree",
+        "must": [
+          "acerola"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Juice",
+        "search_term": "acerola juice",
+        "must": [
+          "acerola"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "41": {
+    "food": "Cantaloupe",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh cantaloupe",
+        "must": [
+          "cantaloupe|melon"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 800,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen cantaloupe chunks",
+        "must": [
+          "cantaloupe|melon"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "42": {
+    "food": "Apples",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh apples",
+        "must": [
+          "apple|apples"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 182,
+        "sort_order": 0
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried apple slices",
+        "must": [
+          "apple|apples"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen apple slices",
+        "must": [
+          "apple|apples"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "43": {
+    "food": "Lemon",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh lemons",
+        "must": [
+          "lemon"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 58,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen lemon juice",
+        "must": [
+          "lemon"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "44": {
+    "food": "Lime",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh limes",
+        "must": [
+          "lime|limes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 67,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen lime juice",
+        "must": [
+          "lime"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Bottled juice",
+        "search_term": "lime juice",
+        "must": [
+          "lime"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "45": {
+    "food": "Frozen Mixed Berries",
+    "options": [
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen mixed berries",
+        "must": [
+          "berries|berry"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh mixed berries",
+        "must": [
+          "berries|berry"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "46": {
+    "food": "Broccoli",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh broccoli crowns",
+        "must": [
+          "broccoli"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen broccoli florets",
+        "must": [
+          "broccoli"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "47": {
+    "food": "Cauliflower",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh cauliflower head",
+        "must": [
+          "cauliflower"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen cauliflower florets",
+        "must": [
+          "cauliflower"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "48": {
+    "food": "Butternut squash",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh butternut squash",
+        "must": [
+          "butternut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen butternut squash cubes",
+        "must": [
+          "butternut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Cubed",
+        "search_term": "cubed butternut squash",
+        "must": [
+          "butternut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "49": {
+    "food": "Red Bell Pepper",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh red bell pepper",
+        "must": [
+          "pepper|peppers"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 120,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen sliced red bell pepper",
+        "must": [
+          "pepper|peppers"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "50": {
+    "food": "Asparagus",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh asparagus",
+        "must": [
+          "asparagus"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen asparagus cuts",
+        "must": [
+          "asparagus"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned asparagus spears",
+        "must": [
+          "asparagus"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "51": {
+    "food": "Brussels Sprouts",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh brussels sprouts",
+        "must": [
+          "brussels"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen brussels sprouts",
+        "must": [
+          "brussels"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "52": {
+    "food": "Potato",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh russet potatoes",
+        "must": [
+          "potato|potatoes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen potato hash browns",
+        "must": [
+          "potato|potatoes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned whole potatoes",
+        "must": [
+          "potato|potatoes"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "53": {
+    "food": "Sweet Potato",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh sweet potatoes",
+        "must": [
+          "sweet potato|sweet potatoes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen sweet potato cubes",
+        "must": [
+          "sweet potato|sweet potatoes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned sweet potatoes",
+        "must": [
+          "sweet potato|sweet potatoes|ya"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "54": {
+    "food": "Carrot",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh carrots",
+        "must": [
+          "carrot"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen carrots",
+        "must": [
+          "carrot"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned carrots",
+        "must": [
+          "carrot"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "55": {
+    "food": "Spinach",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh spinach",
+        "must": [
+          "spinach"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen spinach",
+        "must": [
+          "spinach"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned spinach",
+        "must": [
+          "spinach"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "56": {
+    "food": "Avocado",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh avocado",
+        "must": [
+          "avocado"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 150,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen avocado chunks",
+        "must": [
+          "avocado"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "57": {
+    "food": "Beets",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh beets",
+        "must": [
+          "beet|beets"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen beets",
+        "must": [
+          "beet|beets"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned beets",
+        "must": [
+          "beet|beets"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "58": {
+    "food": "Black Beans",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried black beans",
+        "must": [
+          "black",
+          "bean|beans"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned black beans",
+        "must": [
+          "black",
+          "bean|beans"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "59": {
+    "food": "Edamame",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "In pods",
+        "search_term": "fresh edamame in pods",
+        "must": [
+          "edamame"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen shelled edamame",
+        "must": [
+          "edamame"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "roasted edamame snack",
+        "must": [
+          "edamame"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "60": {
+    "food": "Tofu",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "firm tofu",
+        "must": [
+          "tofu"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen tofu",
+        "must": [
+          "tofu"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "baked tofu",
+        "must": [
+          "tofu"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "61": {
+    "food": "Kimchi",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh kimchi",
+        "must": [
+          "kimchi"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Jarred",
+        "search_term": "jarred kimchi",
+        "must": [
+          "kimchi"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "62": {
+    "food": "Yellow Onion",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "yellow onion",
+        "must": [
+          "onion"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen chopped onions",
+        "must": [
+          "onion"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "dried minced onion",
+        "must": [
+          "onion"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "63": {
+    "food": "Garlic",
+    "options": []
+  },
+  "64": {
+    "food": "Tomatoes",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh tomatoes",
+        "must": [
+          "tomato|tomatoes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 123,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen tomatoes",
+        "must": [
+          "tomato|tomatoes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned diced tomatoes",
+        "must": [
+          "tomato|tomatoes"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "65": {
+    "food": "Cucumber",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh cucumber",
+        "must": [
+          "cucumber"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 300,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen cucumber slices",
+        "must": [
+          "cucumber"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "66": {
+    "food": "Kale",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh kale",
+        "must": [
+          "kale"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen kale",
+        "must": [
+          "kale"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "67": {
+    "food": "Zucchini",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh zucchini",
+        "must": [
+          "zucchini"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 196,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen zucchini",
+        "must": [
+          "zucchini"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "68": {
+    "food": "Skim Milk",
+    "options": []
+  },
+  "69": {
+    "food": "Almond Milk",
+    "options": []
+  },
+  "70": {
+    "food": "Nonfat Greek yogurt",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Refrigerated",
+        "search_term": "nonfat greek yogurt plain",
+        "must": [
+          "yogurt|yoghurt"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Single cup",
+        "search_term": "nonfat greek yogurt cup",
+        "must": [
+          "yogurt|yoghurt"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": 170,
+        "sort_order": 1
+      }
+    ]
+  },
+  "71": {
+    "food": "Low-fat Cottage Cheese",
+    "options": []
+  },
+  "72": {
+    "food": "Parmesan Cheese",
+    "options": []
+  },
+  "73": {
+    "food": "Egg",
+    "options": []
+  },
+  "74": {
+    "food": "Egg white",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "liquid egg whites",
+        "must": [
+          "egg"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen egg whites",
+        "must": [
+          "egg"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "75": {
+    "food": "Cheese",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Block",
+        "search_term": "cheddar cheese block",
+        "must": [
+          "cheese"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Shredded",
+        "search_term": "shredded cheese",
+        "must": [
+          "cheese"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "76": {
+    "food": "Nonfat Cheese",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "nonfat cheese",
+        "must": [
+          "cheese"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Shredded",
+        "search_term": "nonfat shredded cheese",
+        "must": [
+          "cheese"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "77": {
+    "food": "Butter",
+    "options": []
+  },
+  "78": {
+    "food": "Whole Milk",
+    "options": []
+  },
+  "79": {
+    "food": "Cheddar Cheese",
+    "options": []
+  },
+  "80": {
+    "food": "Mozzarella Cheese",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh mozzarella cheese",
+        "must": [
+          "mozzarella"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Shredded",
+        "search_term": "shredded mozzarella cheese",
+        "must": [
+          "mozzarella"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "81": {
+    "food": "Protein Powder",
+    "options": []
+  },
+  "82": {
+    "food": "Powdered Peanut Butter",
+    "options": []
+  },
+  "83": {
+    "food": "Peanut Butter",
+    "options": []
+  },
+  "84": {
+    "food": "Peanuts",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw peanuts in shell",
+        "must": [
+          "peanut|peanuts"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "dried",
+        "label": "Roasted",
+        "search_term": "roasted peanuts",
+        "must": [
+          "peanut|peanuts"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Salted",
+        "search_term": "salted roasted peanuts",
+        "must": [
+          "peanut|peanuts"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "85": {
+    "food": "Cocoa Powder",
+    "options": []
+  },
+  "86": {
+    "food": "Almond Butter",
+    "options": []
+  },
+  "87": {
+    "food": "Walnuts",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw walnut halves",
+        "must": [
+          "walnut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Roasted",
+        "search_term": "roasted walnut halves",
+        "must": [
+          "walnut"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "walnut pieces",
+        "must": [
+          "walnut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "88": {
+    "food": "Chia Seeds",
+    "options": []
+  },
+  "89": {
+    "food": "Hemp Seeds",
+    "options": []
+  },
+  "90": {
+    "food": "Pumpkin Seeds",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw pumpkin seeds",
+        "must": [
+          "pumpkin"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Roasted",
+        "search_term": "roasted salted pumpkin seeds",
+        "must": [
+          "pumpkin"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "91": {
+    "food": "Dark Chocolate",
+    "options": []
+  },
+  "92": {
+    "food": "Avocado Oil",
+    "options": []
+  },
+  "93": {
+    "food": "Olive Oil",
+    "options": []
+  },
+  "94": {
+    "food": "Ground Flax Seeds",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Seeds",
+        "search_term": "whole flax seeds",
+        "must": [
+          "flax"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ground",
+        "search_term": "ground flaxseed meal",
+        "must": [
+          "flax"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "95": {
+    "food": "Cashews",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw cashews",
+        "must": [
+          "cashew"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "dried",
+        "label": "Roasted",
+        "search_term": "roasted cashews",
+        "must": [
+          "cashew"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Salted",
+        "search_term": "salted roasted cashews",
+        "must": [
+          "cashew"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "96": {
+    "food": "Sunflower Seeds",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Raw",
+        "search_term": "raw sunflower seeds shelled",
+        "must": [
+          "sunflower"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Roasted",
+        "search_term": "roasted salted sunflower seeds",
+        "must": [
+          "sunflower"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "97": {
+    "food": "Apple Cider Vinegar",
+    "options": []
+  },
+  "98": {
+    "food": "Soy Sauce / Tamari",
+    "options": []
+  },
+  "99": {
+    "food": "Honey",
+    "options": []
+  },
+  "100": {
+    "food": "Maple Syrup",
+    "options": []
+  },
+  "101": {
+    "food": "Pineapple",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh whole pineapple",
+        "must": [
+          "pineapple"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen pineapple chunks",
+        "must": [
+          "pineapple"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned pineapple chunks",
+        "must": [
+          "pineapple"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "102": {
+    "food": "Yerba mate",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Loose leaf",
+        "search_term": "loose leaf yerba mate",
+        "must": [
+          "yerba|mate"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to drink",
+        "search_term": "yerba mate tea bags",
+        "must": [
+          "yerba|mate"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "103": {
+    "food": "Fresh coconut",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh coconut",
+        "must": [
+          "coconut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 680,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen coconut meat",
+        "must": [
+          "coconut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "shredded dried coconut",
+        "must": [
+          "coconut"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "104": {
+    "food": "Grapes",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh grapes",
+        "must": [
+          "grape|grapes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen grapes",
+        "must": [
+          "grape|grapes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      },
+      {
+        "form": "dried",
+        "label": "Dried",
+        "search_term": "raisins",
+        "must": [
+          "raisin|raisins|grape|grapes"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 2
+      }
+    ]
+  },
+  "105": {
+    "food": "High-fiber bread",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Sliced",
+        "search_term": "high fiber sliced bread",
+        "must": [
+          "bread"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen high fiber bread",
+        "must": [
+          "bread"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "106": {
+    "food": "Black olives",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh black olives",
+        "must": [
+          "olive|olives"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "canned",
+        "label": "Canned",
+        "search_term": "canned black olives",
+        "must": [
+          "olive|olives"
+        ],
+        "basis": "prepared",
+        "package_yield": 0.6,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "107": {
+    "food": "Honeydew",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh honeydew melon",
+        "must": [
+          "honeydew"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen honeydew melon balls",
+        "must": [
+          "honeydew"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "108": {
+    "food": "Lettuce",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "fresh lettuce head",
+        "must": [
+          "lettuce"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Salad mix",
+        "search_term": "packaged lettuce salad mix",
+        "must": [
+          "lettuce|salad"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "109": {
+    "food": "Jelly",
+    "options": []
+  },
+  "110": {
+    "food": "Flour tortilla",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Fresh",
+        "search_term": "flour tortillas",
+        "must": [
+          "tortilla"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": 45,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen flour tortillas",
+        "must": [
+          "tortilla"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "111": {
+    "food": "Cheese Fiesta Blend",
+    "options": []
+  },
+  "112": {
+    "food": "White bread",
+    "options": [
+      {
+        "form": "fresh",
+        "label": "Sliced",
+        "search_term": "sliced white bread",
+        "must": [
+          "bread"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "frozen",
+        "label": "Frozen",
+        "search_term": "frozen white bread",
+        "must": [
+          "bread"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "113": {
+    "food": "Cream of wheat",
+    "options": [
+      {
+        "form": "dried",
+        "label": "Dry",
+        "search_term": "cream of wheat cereal",
+        "must": [
+          "cream of wheat|wheat"
+        ],
+        "basis": "as_bought",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 0
+      },
+      {
+        "form": "ready_to_eat",
+        "label": "Ready to eat",
+        "search_term": "instant cream of wheat packets",
+        "must": [
+          "cream of wheat|wheat"
+        ],
+        "basis": "prepared",
+        "package_yield": 1,
+        "unit_grams": null,
+        "sort_order": 1
+      }
+    ]
+  },
+  "115": {
+    "food": "Italian dressing",
+    "options": []
+  },
+  "118": {
+    "food": "Full-fat cottage cheese",
+    "options": []
+  }
+}

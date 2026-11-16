@@ -27,8 +27,15 @@ const FORM_CATEGORIES: Record<PurchaseForm, string[] | null> = {
   fresh: null,
   frozen: ['Frozen', 'Natural & Organic'],
   canned: ['Canned & Packaged', 'International', 'Natural & Organic', 'Meat & Seafood', 'Condiment & Sauces'],
-  dried: ['Pasta, Sauces, Grain', 'Canned & Packaged', 'Snacks', 'Baking Goods', 'International', 'Natural & Organic', 'Produce'],
-  ready_to_eat: ['Deli', 'Meat & Seafood', 'Produce', 'Frozen', 'Bakery', 'Canned & Packaged', 'Dairy', 'International', 'Natural & Organic'],
+  dried: ['Pasta, Sauces, Grain', 'Canned & Packaged', 'Snacks', 'Baking Goods', 'Breakfast', 'International', 'Natural & Organic', 'Produce'],
+  ready_to_eat: ['Deli', 'Meat & Seafood', 'Produce', 'Frozen', 'Bakery', 'Breakfast', 'Canned & Packaged', 'Dairy', 'International', 'Natural & Organic'],
+};
+// food_category ids for fruit and vegetables (price-rules.json categories 3 and 4).
+const DRIED_PRODUCE_CATEGORIES = [3, 4];
+// Products in the form's aisle that aren't the food itself (the frozen aisle holds ice cream with raspberries).
+const FORM_EXCLUDE: Partial<Record<PurchaseForm, string[]>> = {
+  frozen: ['ice cream', 'fudge', 'dessert', 'pie', 'cake', 'cheesecake', 'sorbet', 'popsicle', 'pops', 'bars', 'chocolate', 'yogurt', 'waffles', 'pancakes'],
+  dried: ['chocolate', 'muffin', 'muffins', 'granola', 'bagels'],
 };
 // Words the food group's excludes would otherwise reject for this form (meat excludes "cooked"/"rotisserie",
 // fruit and vegetables exclude "frozen"/"canned"/"dried").
@@ -49,7 +56,7 @@ export const OPTIONS_INSTRUCTIONS = `purchaseOptions: the common ways shoppers b
 - Only forms most stores actually sell for this food, at most one per form: fresh, frozen, canned, dried, ready_to_eat. Keep them general, never brands or package sizes (no "Tyson", no "family pack", no two kinds of canned).
 - Include the form Kiwi's nutrition is based on (usually fresh/raw, or dried for dry grains and beans) first.
 - 2–4 options when the food is commonly sold several ways (chicken breast: Raw, Rotisserie, Frozen, Canned; black beans: Dried, Canned; broccoli: Fresh, Frozen; corn: Fresh, Frozen, Canned). Return an empty list when there is really only one way to buy it (olive oil, honey, garlic, eggs, milk).
-- label: 1–2 plain words the shopper sees (e.g. "Raw", "Rotisserie", "Frozen", "Canned", "Dried", "Fresh"), max 20 characters.
+- label: 1–2 plain, everyday words the shopper sees (e.g. "Raw", "Rotisserie", "Frozen", "Canned", "Dried", "Fresh", "Seeds"), max 20 characters. No grocer or botanical jargon: "Seeds", not "Arils".
 - term: grocery search text for that form (2–5 words, e.g. "rotisserie chicken", "canned chicken breast", "frozen broccoli florets"). Not organic, no brands.
 - must: 1–2 words every correct product name contains ("a|b" for either), e.g. ["chicken"], ["broccoli"], ["bean|beans"].
 - basis: "as_bought" when it is bought raw/dry like Kiwi's serving (raw, frozen raw, dried); "prepared" when it is already cooked or ready to eat (rotisserie, canned meat or beans, cooked rice cups).
@@ -130,16 +137,27 @@ export type ServingInfo = {
  * own per-food rules in price-rules.json don't override the option's search.
  */
 export function optionPriceFood(food: ServingInfo, o: Pick<PurchaseOption, 'form' | 'search_term' | 'must' | 'basis' | 'package_yield'> & { unit_grams?: number | null }): PriceFood {
-  const allow = [...FORM_ALLOW[o.form], ...words(o.search_term), ...o.must.flatMap(m => words(m))];
+  // The option's own words are never excluded, as single words or phrases ("ice cream" for ice cream).
+  const phrases = [o.search_term, ...o.must.flatMap(m => m.split('|'))].map(t => t.trim().toLowerCase()).filter(Boolean);
+  const allow = [...FORM_ALLOW[o.form], ...words(o.search_term), ...o.must.flatMap(m => words(m)), ...phrases];
+  // Dried fruit or vegetables must say so; otherwise a fresh bag of apples wins the "Dried" search.
+  const must = o.form === 'dried' && DRIED_PRODUCE_CATEGORIES.includes(Number(food.food_category_id))
+    ? [...o.must, 'dried|dehydrated|chips|crisps|freeze|raisin|prune'] : o.must;
   const categories = FORM_CATEGORIES[o.form];
   const search: SearchSpec = {
     term: o.search_term,
-    must: o.must,
+    must,
     allow,
+    ...(FORM_EXCLUDE[o.form] ? { exclude: FORM_EXCLUDE[o.form] } : {}),
     ...(categories ? { categories } : {}),
     ...(o.package_yield < 1 ? { packageYield: o.package_yield } : {}),
     ...(o.unit_grams ? { unitGrams: o.unit_grams } : {}),
   };
+  // Kroger's search is literal: "fresh cauliflower head" or "frozen butternut squash cubes" can come back empty
+  // when "cauliflower" alone finds the product. If the AI's term finds nothing, retry with just the food word
+  // (plus "frozen" / "canned" for those forms); the same must words and categories still apply.
+  const simple = simplerTerm(o.form, o.must, food.food_name);
+  if (simple && simple !== o.search_term.trim().toLowerCase()) search.alternates = [{ term: simple, label: 'simpler search' }];
   const prepared = o.basis === 'prepared' && Number(food.prepared_grams) > 0 ? Number(food.prepared_grams) : null;
   if (prepared) search.servingGrams = prepared;
   return {
@@ -151,6 +169,12 @@ export function optionPriceFood(food: ServingInfo, o: Pick<PurchaseOption, 'form
     serving_grams: food.serving_grams ?? null,
     search,
   };
+}
+
+function simplerTerm(form: PurchaseForm, must: string[], foodName: string): string {
+  const core = (must[0]?.split('|')[0] || foodName).trim().toLowerCase();
+  if (!core) return '';
+  return form === 'frozen' ? `frozen ${core}` : form === 'canned' ? `canned ${core}` : core;
 }
 
 /** Average of the priced options (0 / null = unpriced), rounded to cents. null when none is priced. */

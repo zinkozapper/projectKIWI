@@ -14,7 +14,7 @@ import { needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pant
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 import { localizedPricingEnabled } from '@/lib/pricing-functions';
 import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
-import { averageOptionPrice, itemOptionPrice, loadFoodOptions, loadLocalOptionPrices, optionPrice, type FoodOption, type OptionCatalog } from '@/lib/food-options';
+import { averageOptionPrice, itemOptionPrice, loadFoodOptions, loadLocalOptionPrices, optionPrice, resolveOptionId, type FoodOption, type OptionCatalog } from '@/lib/food-options';
 import { isFirstAccountSession } from '@/lib/first-session';
 import { PANTRY_SERVINGS_WITHOUT_SIZE, defaultPackage, loadFoodPackages, packagePrice, packagesFor as sizesFor, servingsOf, type FoodPackage, type PackageCatalog } from '@/lib/food-packages';
 
@@ -389,7 +389,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // (a 4-serving pack on a 7-day plan = 4/7 of a serving a day). Older rows without a size count servings.
   const packageById = useMemo(() => new Map(Object.values(packageCatalog).flat().map(p => [p.id, p])), [packageCatalog]);
   const packageOf = (row: { package_id: string | null; food_id: string }) => (row.package_id ? packageById.get(row.package_id) : undefined);
-  const packagesFor = (foodId: string, optionId?: string | null) => sizesFor(packageCatalog, foodId, optionId, foodOptions[foodId] ?? []);
+  // Sizes of the item's style: its pick, else the food's default (most whole) style.
+  const packagesFor = (foodId: string, optionId?: string | null) => sizesFor(packageCatalog, foodId, resolveOptionId(optionId, foodOptions[foodId]), foodOptions[foodId] ?? []);
   const itemServings = (item: Item) => servingsOf(Number(item.quantity), packageOf(item));
   const pantryServings = (item: PantryItem) => {
     const pkg = packageOf(item);
@@ -415,14 +416,22 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, [loading, userId, pantryId, profile, pantry, pantryTotals, days]);
   const basePrice = (id: string) => resolvedPrice(foodById(id)?.price, localizedPrices?.[id], pricingMode);
   // A food sold several ways (purchase options) costs the average of its priced options unless an option is picked.
-  const priceOf = (id: string) => averageOptionPrice(foodOptions[id], localOptionPrices, pricingMode) ?? basePrice(id);
+  // A food's price before any pick: its default style's price (as added), else the average of its styles, else its own.
+  const priceOf = (id: string) => itemOptionPrice(null, foodOptions[id], localOptionPrices, pricingMode, basePrice(id)) ?? averageOptionPrice(foodOptions[id], localOptionPrices, pricingMode);
   const optionsFor = (foodId: string) => foodOptions[foodId] ?? [];
   const optionPriceOf = (option: FoodOption) => optionPrice(option, localOptionPrices, pricingMode);
   const itemPrice = (item: Item) => itemOptionPrice(item.option_id, foodOptions[item.food_id], localOptionPrices, pricingMode, basePrice(item.food_id));
-  const packagePriceOf = (pkg: FoodPackage, optionId?: string | null) =>
-    packagePrice(pkg, itemOptionPrice(optionId ?? pkg.optionId, foodOptions[pkg.foodId], localOptionPrices, pricingMode, basePrice(pkg.foodId)));
-  // Store price first; with none, the shopper's estimate (per package, or per serving without a package).
+  const packagePriceOf = (pkg: FoodPackage, optionId?: string | null) => {
+    const id = optionId ?? pkg.optionId;
+    const defaultPerServing = (id ? foodOptions[pkg.foodId]?.find(o => o.id === id)?.price : undefined) || foodById(pkg.foodId)?.price || null;
+    return packagePrice(pkg, itemOptionPrice(id, foodOptions[pkg.foodId], localOptionPrices, pricingMode, basePrice(pkg.foodId)), Number(defaultPerServing) || null);
+  };
+  // A package's shelf price first, then the store price per serving; with neither, the shopper's estimate
+  // (per package, or per serving without a package).
   const lineCost = (item: Item): number | null => {
+    const itemPkg = packageOf(item);
+    const pkgPrice = itemPkg ? packagePriceOf(itemPkg, item.option_id) : null;
+    if (pkgPrice != null) return pkgPrice * Number(item.quantity);
     const per = itemPrice(item);
     if (per != null) return per * itemServings(item);
     const pkg = packageOf(item);
@@ -592,7 +601,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
   // q = servings per day. One add puts 1 serving a day on the list for the whole plan (7 servings on a
   // 7-day plan, 14 on a 14-day plan). shopping_list_item.quantity stores the total servings to buy.
   // Returns the saved list row (or null on failure) so callers like recommendation tracking can link to it.
-  // optionId: the prep style picked when adding (undefined = keep the item's current pick; null = no preference).
+  // optionId: the prep style picked when adding (undefined = keep the item's current pick; null = the default style).
   // One add = `count` packages of the food's default size for the picked option, as it's sold. A food with no
   // sizes (or an older list row without one) falls back to `count` servings a day for the whole trip.
   async function addFood(id: string, count = 1, optionId?: string | null): Promise<Item | null> {
@@ -619,7 +628,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
         setItems(prev => prev.map(i => i.id === existing.id ? row : i));
       }
     } else {
-      const { data, error } = await supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(id), quantity: q, unit: food?.unit ?? null, food_option_id: optionId ? Number(optionId) : null, ...(pkg ? { food_package_id: Number(pkg.id) } : {}) } as any).select().single();
+      const { data, error } = await supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(id), quantity: q, unit: food?.unit ?? null, food_option_id: (() => { const o = resolveOptionId(optionId, foodOptions[id]); return o ? Number(o) : null; })(), ...(pkg ? { food_package_id: Number(pkg.id) } : {}) } as any).select().single();
       if (error) fail(error.message);
       else {
         const row = toItem(data);

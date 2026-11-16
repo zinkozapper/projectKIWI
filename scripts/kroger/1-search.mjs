@@ -25,7 +25,7 @@ async function loadFoods() {
   else {
     const url = process.env.VITE_SUPABASE_URL, key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
     if (!url || !key) throw new Error('Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in .env');
-    const res = await fetch(`${url}/rest/v1/food?select=food_id,food_name,food_category_id,serving_size,unit&order=food_id`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+    const res = await fetch(`${url}/rest/v1/food?select=food_id,food_name,food_category_id,serving_size,unit,factor,cook_ratio&order=food_id`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
     if (!res.ok) throw new Error(`Supabase food ${res.status}: ${await res.text()}`);
     foods = await res.json();
     fs.writeFileSync(cache, JSON.stringify(foods, null, 1));
@@ -36,7 +36,10 @@ async function loadFoods() {
   for (const r of readCsv(path.join(usda, 'existing-factor-updates.csv'))) if (+r.serving_g) grams[r.food] = +r.serving_g;
   for (const r of readCsv(path.join(usda, 'import-log.csv'))) if (+r.serving_g_unprepared) grams[r.food] = +r.serving_g_unprepared;
   grams['Soy Sauce / Tamari'] ??= grams['Soy Sauce'];
-  return foods.map(f => ({ ...f, serving_grams: servingAmount(f).grams ?? grams[f.food_name] ?? null }));
+  // Foods added by the AI finder aren't in the USDA files: their as-bought grams = factor × 100 ÷ cook ratio
+  // (the same basis the options and package-size scripts use), so a "0.25 cup" serving can still be priced.
+  const fromFactor = f => Number(f.factor) > 0 ? Number(f.factor) * 100 / (Number(f.cook_ratio) > 0 ? Number(f.cook_ratio) : 1) : null;
+  return foods.map(f => ({ ...f, serving_grams: servingAmount(f).grams ?? grams[f.food_name] ?? fromFactor(f) }));
 }
 
 const head = ['food_id', 'food', 'serving', 'serving_g', 'selected', 'tier', 'eligible', 'reason', 'product_id', 'upc', 'brand', 'description', 'size', 'package_g', 'sold_by', 'regular', 'promo', 'price_per_serving', 'how', 'flags', 'search_term', 'rank', 'categories', 'store_id', 'spec', 'priced_g'];

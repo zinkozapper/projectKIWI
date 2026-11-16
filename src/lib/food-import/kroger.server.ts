@@ -94,8 +94,11 @@ export function krogerClient(credentials: Credentials, { fetchImpl = fetch }: { 
   async function priceFood(food: PriceFood, home: KrogerStore, moreStores?: () => Promise<KrogerStore[]>) {
     const tried: { store: KrogerStore; spec: Spec; result: Ranked }[] = [];
     const tryStore = async (store: KrogerStore) => {
+      const searched = new Map<string, Awaited<ReturnType<typeof searchProducts>>>(); // the relaxed pass reuses a term's results
       for (const spec of foodSpecs(food)) {
-        const result = rankCandidates(food, await searchProducts(foodRules(food, spec).term, store.location_id), spec);
+        const term = foodRules(food, spec).term;
+        if (!searched.has(term)) searched.set(term, await searchProducts(term, store.location_id));
+        const result = rankCandidates(food, searched.get(term)!, spec);
         tried.push({ store, spec, result });
         if (result.best) return { best: result.best, store, spec };
       }

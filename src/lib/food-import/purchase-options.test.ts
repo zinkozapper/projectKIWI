@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { averagePrice, cleanOptions, optionPriceFood } from './purchase-options';
-import { foodRules, perServing, rankCandidates, type Candidate } from './pricing';
+import { newFoodSearch } from './workflow.server';
+import { foodRules, foodSpecs, perServing, rankCandidates, type Candidate } from './pricing';
 
 const chicken = { food_name: 'Chicken breast', food_category_id: 1, serving_size: 4, unit: 'oz', serving_grams: 113.4, prepared_grams: 94 };
 const c = (over: Partial<Candidate>): Candidate => ({ rank: 0, product_id: 'p', brand: 'Kroger', description: '', categories: 'Meat & Seafood', size: '1 lb', sold_by: 'UNIT', regular: 5, promo: null, ...over });
@@ -38,6 +39,63 @@ describe('optionPriceFood', () => {
     expect(r.price_per_serving).toBeCloseTo(7 * 94 / 700, 4);
     const { best } = rankCandidates(food, [c({ description: 'Kroger® Rotisserie Chicken', categories: 'Deli', size: '1 ct', regular: 7 })]);
     expect(best?.description).toBe('Kroger® Rotisserie Chicken');
+  });
+
+  it('retries with a plain search when the AI\'s wording finds nothing', () => {
+    const [fresh, frozen] = cleanOptions([
+      { form: 'fresh', label: 'Fresh', term: 'fresh cauliflower head', must: ['cauliflower'], basis: 'as_bought' },
+      { form: 'frozen', label: 'Frozen', term: 'frozen cauliflower florets', must: ['cauliflower'], basis: 'as_bought' },
+    ]);
+    const specs = (o: NonNullable<typeof fresh>) => foodSpecs(optionPriceFood(chicken, o)).map(s => foodRules(optionPriceFood(chicken, o), s).term);
+    expect(specs(fresh!)).toEqual(['fresh cauliflower head', 'cauliflower', 'fresh cauliflower head']); // last: relaxed pass
+    expect(specs(frozen!)).toEqual(['frozen cauliflower florets', 'frozen cauliflower', 'frozen cauliflower florets']);
+    expect(foodRules(optionPriceFood(chicken, frozen!), foodSpecs(optionPriceFood(chicken, frozen!))[1]!).categories).toContain('Frozen');
+  });
+
+  it('matches the AI\'s word stems and keeps desserts out of the frozen aisle', () => {
+    const [fresh, frozen] = cleanOptions([
+      { form: 'fresh', label: 'Fresh', term: 'fresh blueberries', must: ['blueberr'], basis: 'as_bought' },
+      { form: 'frozen', label: 'Frozen', term: 'frozen raspberries', must: ['raspberr'], basis: 'as_bought' },
+    ]);
+    const fruit = { ...chicken, food_name: 'Berries', food_category_id: null };
+    const picked = (o: NonNullable<typeof fresh>, cands: Partial<Candidate>[]) => rankCandidates(optionPriceFood(fruit, o), cands.map(x => c(x))).best?.description;
+    expect(picked(fresh!, [{ description: 'Fresh Blueberries - 1 PT Clamshell', brand: 'Fresh Berries', categories: 'Produce', size: '1 pt' }])).toBe('Fresh Blueberries - 1 PT Clamshell');
+    expect(picked(frozen!, [{ description: 'Private Selection® Black Raspberry Fudge Chunk Ice Cream Tub', categories: 'Frozen', size: '48 oz' }])).toBeUndefined();
+  });
+
+  it('never excludes the option\'s own phrase, and dried fruit has to say dried', () => {
+    const [, frozen] = cleanOptions([
+      { form: 'fresh', label: 'Regular', term: 'ice cream', must: ['ice cream'], basis: 'as_bought' },
+      { form: 'frozen', label: 'Frozen', term: 'ice cream', must: ['ice cream'], basis: 'as_bought' },
+    ]);
+    expect(foodRules(optionPriceFood({ ...chicken, food_category_id: 5 }, frozen!)).exclude).not.toContain('ice cream');
+    const [, dried] = cleanOptions([
+      { form: 'fresh', label: 'Fresh', term: 'apples', must: ['apple'], basis: 'as_bought' },
+      { form: 'dried', label: 'Dried', term: 'dried apples', must: ['apple'], basis: 'as_bought' },
+    ]);
+    const apples = optionPriceFood({ ...chicken, food_name: 'Apples', food_category_id: 3 }, dried!);
+    const best = (description: string) => rankCandidates(apples, [c({ description, brand: 'Kroger', categories: 'Produce', size: '3 lb' })]).best?.description;
+    expect(best('Kroger® Gala Apples – 3 Pound Bag')).toBeUndefined();
+    expect(best('Kroger® Dried Apple Rings')).toBe('Kroger® Dried Apple Rings');
+  });
+
+  it('falls back to a relaxed pass (must words only) when the group rules reject everything', () => {
+    const iceCream = { ...chicken, food_name: 'Ice cream', food_category_id: 5, serving_size: 0.5, unit: 'cup', serving_grams: 67.5 };
+    const food = { ...iceCream, food_id: null, search: newFoodSearch('ice cream', ['ice cream']) };
+    const tub = [c({ description: 'Kroger® Vanilla Ice Cream', categories: 'Frozen', size: '48 fl oz', regular: 3.99 })];
+    const specs = foodSpecs(food);
+    const [primary, relaxed] = [specs[0]!, specs[specs.length - 1]!];
+    expect(rankCandidates(food, tub, primary).best).toBeUndefined(); // dairy rules: wrong aisle, "vanilla" excluded
+    expect(rankCandidates(food, tub, relaxed).best?.description).toBe('Kroger® Vanilla Ice Cream');
+  });
+
+  it('a food with no search rule tries shorter endings of its name, then a relaxed pass', () => {
+    const cod = { ...chicken, food_id: 999, food_name: 'Atlantic cod' };
+    expect(foodSpecs(cod).map(s => [foodRules(cod, s).term, foodRules(cod, s).must])).toEqual([
+      ['Atlantic cod', ['atlantic cod']], ['cod', ['cod']], ['cod', ['cod']],
+    ]);
+    const cottage = { ...chicken, food_id: 998, food_name: 'Full-fat cottage cheese' };
+    expect(foodSpecs(cottage).map(s => foodRules(cottage, s).term)).toContain('cottage cheese');
   });
 
   it('uses the frozen aisle and keeps the raw serving for an as-bought frozen option', () => {

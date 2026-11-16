@@ -82,9 +82,9 @@ vi.mock('./claude.server', () => ({ askClaude: (a: unknown) => askClaude(a) }));
 // ---------- Kroger pricing stand-in (price.server is tested through kroger.server.test.ts) ----------
 const unpriced = { rows: [], defaultPrice: null, forUser: null, note: 'Store prices aren’t set up yet.' };
 const priceNewFood = vi.fn();
-const priceOptions = vi.fn();
-vi.mock('./price.server', () => ({ priceNewFood: (...a: unknown[]) => priceNewFood(...a), priceOptions: (...a: unknown[]) => priceOptions(...a) }));
-const noOptionPrices = (o: unknown[]) => ({ rows: o.map(() => []), defaultPrices: o.map(() => null), userPrices: o.map(() => null), average: null });
+const discoverOptions = vi.fn();
+vi.mock('./price.server', () => ({ priceNewFood: (...a: unknown[]) => priceNewFood(...a), discoverOptions: (...a: unknown[]) => discoverOptions(...a) }));
+const noStyles = { options: [], pricing: { rows: [], defaultPrices: [], userPrices: [], average: null, sizeCandidates: [] } };
 
 const wf = await import('./workflow.server');
 
@@ -101,8 +101,8 @@ beforeEach(() => {
   db.app_admin = [];
   priceNewFood.mockReset();
   priceNewFood.mockResolvedValue(unpriced);
-  priceOptions.mockReset();
-  priceOptions.mockImplementation(async (_s: unknown, o: unknown[]) => noOptionPrices(o));
+  discoverOptions.mockReset();
+  discoverOptions.mockResolvedValue(noStyles);
   askClaude.mockReset();
   askClaude
     .mockResolvedValueOnce({ group: 'legume', options: [{ fdcId: 1, label: 'Brown lentils', reason: 'Cooked without fat', serving: '1/4 cup' }, { fdcId: 999, label: 'invented', reason: '', serving: '1 cup' }], followUpQuestion: null, noGoodMatch: false })
@@ -175,7 +175,7 @@ describe('food import workflow', () => {
     const r = await wf.add({ requestId: s.requestId, fdcId: 1, group: 'legume', serving: '1/4 cup' });
 
     // AI search term, the computed as-bought grams and the AI's category go to pricing
-    expect(priceNewFood).toHaveBeenCalledWith(expect.objectContaining({ food_name: 'Lentils', food_category_id: 1, serving_size: 0.25, unit: 'cup', serving_grams: 48, search: { term: 'dry brown lentils', must: ['lentil'] } }), 'user-1');
+    expect(priceNewFood).toHaveBeenCalledWith(expect.objectContaining({ food_name: 'Lentils', food_category_id: 1, serving_size: 0.25, unit: 'cup', serving_grams: 48, search: expect.objectContaining({ term: 'dry brown lentils', must: ['lentil'], alternates: [{ term: 'lentil', label: 'simpler search' }] }) }), 'user-1');
     const food = db.food!.find(f => f.food_name === 'Lentils')!;
     expect(food.price).toBe(0.19);
     expect(db.food_price).toEqual([expect.objectContaining({ food_id: food.food_id, location_id: '70600136', price_per_serving: 0.1894 })]);
@@ -214,28 +214,28 @@ describe('food import workflow', () => {
     expect(priceNewFood).not.toHaveBeenCalled();
   });
 
-  it('saves purchase options with their prices; food.price is their average', async () => {
+  it('saves the purchase styles found on the store shelf with their prices; food.price is their average', async () => {
     askClaude.mockReset();
     askClaude
       .mockResolvedValueOnce({ group: 'legume', options: [{ fdcId: 1, label: 'Brown lentils', reason: '', serving: '1/4 cup' }], followUpQuestion: null, noGoodMatch: false })
       .mockResolvedValueOnce({
-        name: 'Lentils', description: '', emoji: '🫘', categoryId: 1, flavorTags: [], pairIds: [], groceryTerm: 'dry lentils',
-        purchaseOptions: [
-          { form: 'dried', label: 'Dried', term: 'dry lentils', must: ['lentil'], basis: 'as_bought' },
-          { form: 'canned', label: 'Canned', term: 'canned lentils', must: ['lentil'], basis: 'prepared', drained: true },
-          { form: 'canned', label: 'Canned again', term: 'x', basis: 'prepared' }, // second canned option dropped
-        ],
+        name: 'Lentils', description: '', emoji: '🫘', categoryId: 1, flavorTags: [], pairIds: [], groceryTerm: 'dry lentils', groceryMust: ['lentil'],
       });
     const row = (price: number) => ({ location_id: '70600136', source_location_id: null, product_id: 'p', upc: null, brand: 'Kroger', description: 'x', package_size: '15 oz', sold_by: 'UNIT', package_price: 1, package_grams: 425, serving_grams: 147, price_per_serving: price, store_brand: true, flags: null });
-    priceOptions.mockResolvedValueOnce({ rows: [[row(0.19)], [row(0.61)]], defaultPrices: [0.19, 0.61], userPrices: [0.19, 0.61], average: 0.4 });
+    const opt = (form: string, label: string, basis: string, package_yield: number, sort_order: number) => ({ form, label, search_term: `${form} lentils`, must: ['lentil'], basis, package_yield, unit_grams: null, sort_order });
+    discoverOptions.mockResolvedValueOnce({
+      options: [opt('dried', 'Dried', 'as_bought', 1, 0), opt('canned', 'Canned', 'prepared', 0.6, 1)],
+      pricing: { rows: [[row(0.19)], [row(0.61)]], defaultPrices: [0.19, 0.61], userPrices: [0.19, 0.61], average: 0.4, sizeCandidates: [[], []] },
+    });
 
     const s = await wf.search({ query: 'lentils', howBought: 'dry' });
     const r = await wf.add({ requestId: s.requestId, fdcId: 1, group: 'legume', serving: '1/4 cup' });
 
-    const [servingInfo, opts] = priceOptions.mock.calls[0]! as [{ serving_grams: number; prepared_grams: number }, { form: string; basis: string; package_yield: number }[]];
+    // Styles are discovered from the store shelf with the food's grocery term and must word
+    const [servingInfo, term, must] = discoverOptions.mock.calls[0]! as [{ serving_grams: number; prepared_grams: number }, string, string[]];
     expect(servingInfo.serving_grams).toBe(48);
     expect(servingInfo.prepared_grams).toBeGreaterThan(48); // cooked lentils weigh more than dry
-    expect(opts.map(o => [o.form, o.basis, o.package_yield])).toEqual([['dried', 'as_bought', 1], ['canned', 'prepared', 0.6]]);
+    expect([term, must]).toEqual(['dry lentils', ['lentil']]);
 
     const food = db.food!.find(f => f.food_name === 'Lentils')!;
     expect(food.price).toBe(0.4);

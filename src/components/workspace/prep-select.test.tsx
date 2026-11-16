@@ -7,15 +7,14 @@ const opt = (id: string, label: string, price: number): FoodOption => ({ id, foo
 const options = [opt('1', 'Raw', 0.65), opt('2', 'Rotisserie', 0.94), opt('3', 'Canned', 0)];
 
 describe('PrepSelect', () => {
-  it('lists each prep style with its price and "Any" at the average', () => {
+  it('lists each prep style by name only: the package size sets the price', () => {
     const onChange = vi.fn();
     render(<PrepSelect foodName="Chicken breast" options={options} value={null} average={0.8} priceOf={o => (o.price > 0 ? o.price : null)} onChange={onChange} />);
     const select = screen.getByRole('combobox', { name: /how you'll buy chicken breast/i });
-    expect([...select.querySelectorAll('option')].map(o => o.textContent)).toEqual(['Any (avg $0.80)', 'Raw · $0.65', 'Rotisserie · $0.94', 'Canned']);
+    expect([...select.querySelectorAll('option')].map(o => o.textContent)).toEqual(['Raw', 'Rotisserie', 'Canned']);
+    expect((select as HTMLSelectElement).value).toBe('1'); // no pick shows the default style, never "Any"
     fireEvent.change(select, { target: { value: '2' } });
     expect(onChange).toHaveBeenLastCalledWith('2');
-    fireEvent.change(select, { target: { value: '' } });
-    expect(onChange).toHaveBeenLastCalledWith(null);
   });
 
   it('shows nothing for a food sold one way', () => {

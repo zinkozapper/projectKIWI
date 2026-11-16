@@ -527,7 +527,7 @@ export function getFoodPairings(
   }
 
   // Never drop a pairing for budget: pairings whose add (price × days) fits the remaining budget come
-  // first, then liked over neutral over disliked.
+  // first, then liked over neutral. Disliked foods are never suggested.
   const fits = (food: Food) => {
     const price = Number(priceOf(food.id));
     return !(Number.isFinite(price) && price > 0) || price * days <= budgetRemaining;
@@ -549,7 +549,7 @@ export function getFoodPairings(
     return scoreB - scoreA;
   });
 
-  return recommendations.slice(0, 3);
+  return recommendations.filter(food => foodPreferences[food.id] !== false).slice(0, 3);
 }
 
 

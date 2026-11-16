@@ -8,6 +8,7 @@ import { krogerClient, type KrogerClient, type KrogerStore } from './kroger.serv
 import { RULES, isStoreBrand, type PriceFood } from './pricing';
 import { averagePrice, optionPriceFood, type PurchaseOption, type ServingInfo } from './purchase-options';
 import { sizeCandidates, type SizeCandidate } from './package-sizes';
+import { STYLES_SYSTEM, STYLES_TOOL, cleanStyles, coreWord, priceStyle, shelfProducts, styleSearchTerms, stylesPrompt, type AiStyle } from './purchase-styles';
 
 export type FoodPriceRow = {
   location_id: string;
@@ -165,3 +166,57 @@ export async function priceOptions(serving: ServingInfo, options: PurchaseOption
   }
 }
 
+
+// ---------- purchase styles from the shelf (purchase-styles.ts) ----------
+
+const STYLES_TIMEOUT_MS = 30_000;
+
+/**
+ * Search the default store's shelf for the food (its usual term, the plain word, and the frozen / canned / dried
+ * aisles), have the AI sort what's there into styles, and price each style from its own products. Never throws:
+ * no Kroger key, no products or an AI error just means no styles (the food is priced on its own as before).
+ * Styles are priced at the default store; the price refresh worker localizes them like any option.
+ */
+export async function discoverOptions(serving: ServingInfo, term: string, must: string[]): Promise<{ options: PurchaseOption[]; pricing: OptionPricing }> {
+  const none = { options: [] as PurchaseOption[], pricing: { rows: [], defaultPrices: [], userPrices: [], average: null, sizeCandidates: [] } as OptionPricing };
+  try {
+    if (!(await env('KROGER_CLIENT_ID')) || !(await env('KROGER_CLIENT_SECRET'))) return none;
+    const work = (async () => {
+      const db = await adminClient();
+      const home = await storeForZip(db, RULES.defaultZip);
+      if (!home) return none;
+      const core = coreWord(serving.food_name, must);
+      if (!core) return none;
+      const lists = await Promise.all(styleSearchTerms(term || serving.food_name, core).map(t => kroger().searchProducts(t, home.location_id).catch(() => [])));
+      const products = shelfProducts(core, lists);
+      if (products.length < 2) return none;
+      const { askClaude } = await import('./claude.server');
+      const servingText = `${serving.serving_size} ${serving.unit}${serving.serving_grams ? ` (${Math.round(Number(serving.serving_grams))} g)` : ''}`;
+      const answer = await askClaude<{ styles?: AiStyle[] }>({ system: STYLES_SYSTEM, prompt: stylesPrompt(serving.food_name, servingText, products), tool: STYLES_TOOL as never, maxTokens: 1200 });
+      const styles = cleanStyles(answer.styles, products, serving.food_name, core);
+      // One style = nothing to choose between: the food's own price and sizes cover it.
+      if (styles.length < 2) return none;
+      const priced = styles.map(s => {
+        const { best, scored } = priceStyle(serving, s);
+        const row: FoodPriceRow | null = best ? {
+          location_id: home.location_id, source_location_id: null, product_id: best.product_id, upc: best.upc || null, brand: best.brand || null,
+          description: best.description || null, package_size: best.size || null, sold_by: best.sold_by || null, package_price: Number(best.regular),
+          package_grams: best.package_grams ?? null, serving_grams: best.priced_g ?? (Number(serving.serving_grams) || 1),
+          price_per_serving: round4(best.price_per_serving ?? 0), store_brand: isStoreBrand(best), flags: (best.flags ?? []).join('; ') || null,
+        } : null;
+        return { option: s.option, row, sizes: sizeCandidates(scored) };
+      });
+      const defaultPrices = priced.map(p => (p.row ? Math.round(p.row.price_per_serving * 100) / 100 : null));
+      return {
+        options: priced.map(p => p.option),
+        pricing: { rows: priced.map(p => (p.row ? [p.row] : [])), defaultPrices, userPrices: defaultPrices, average: averagePrice(defaultPrices), sizeCandidates: priced.map(p => p.sizes) },
+      };
+    })();
+    const timeout = new Promise<'timeout'>(resolve => setTimeout(() => resolve('timeout'), STYLES_TIMEOUT_MS));
+    const done = await Promise.race([work, timeout]);
+    return done === 'timeout' ? none : done;
+  } catch (e) {
+    console.error('[food-import] purchase styles', e);
+    return none;
+  }
+}
