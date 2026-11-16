@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, ThumbsDown, ThumbsUp, Undo2, X } from 'lucide-react';
+import { ArrowLeft, Search, ThumbsDown, ThumbsUp, Undo2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foods } from '@/lib/foods';
+import { LIMITS } from '@/lib/validation';
 import { useWorkspace } from '../context';
 
 type PendingUndo = {
@@ -15,6 +16,9 @@ type PendingUndo = {
 
 export function FoodPreferencesPage() {
   const {
+    search,
+    results,
+    setSearch,
     foodPreferences,
     setFoodPreference,
     removeFoodPreference,
@@ -38,7 +42,12 @@ export function FoodPreferencesPage() {
   ) {
     const previousPreference = foodPreferences[foodId];
 
-    const succeeded = await setFoodPreference(foodId, liked);
+    // Clicking the currently selected preference removes it.
+    const removing = previousPreference === liked;
+
+    const succeeded = removing
+      ? await removeFoodPreference(foodId)
+      : await setFoodPreference(foodId, liked);
 
     if (!succeeded) return;
 
@@ -46,7 +55,9 @@ export function FoodPreferencesPage() {
       foodId,
       foodName,
       previousPreference,
-      message: `Added ${foodName} to ${liked ? 'liked' : 'disliked'} foods.`,
+      message: removing
+        ? `Removed ${foodName} from ${liked ? 'liked' : 'disliked'} foods.`
+        : `Added ${foodName} to ${liked ? 'liked' : 'disliked'} foods.`,
     });
   }
 
@@ -103,6 +114,99 @@ export function FoodPreferencesPage() {
           </Link>
         </Button>
       </div>
+
+      {/* Search for any food to like or dislike */}
+      <section className="section-block suggestions-block">
+        <div className="section-title">
+          <div>
+            <h2>Find foods</h2>
+          </div>
+        </div>
+
+        <p className="section-note">
+          Search for any food and tell KIWI whether you like it.
+        </p>
+
+        <div className="list-search">
+          <div className="searchbox">
+            <Search size={19} aria-hidden="true" />
+            <input
+              aria-label="Search foods"
+              maxLength={LIMITS.search}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search foods, like eggs or spinach…"
+              onKeyDown={e => {
+                if (e.key === 'Escape') setSearch('');
+              }}
+            />
+
+            {search && (
+              <button
+                type="button"
+                className="searchbox-clear"
+                aria-label="Clear search"
+                onClick={() => setSearch('')}
+              >
+                <X size={15} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          {search.trim() && (
+            <div className="search-results food-preferences-results">
+              {results.length ? (
+                results.map(food => {
+                  const preference = foodPreferences[food.id];
+
+                  return (
+                    <div className="search-result" key={food.id}>
+                      <span className="food-emoji">{food.emoji}</span>
+
+                      <div className="suggestion-copy">
+                        <strong>{food.name}</strong>
+                        <small>{food.category} · {food.note}</small>
+                      </div>
+
+                      <div className="suggestion-actions">
+                        <Button
+                          size="icon"
+                          variant={preference === true ? 'default' : 'outline'}
+                          title={`Like ${food.name}`}
+                          aria-label={`Like ${food.name}`}
+                          aria-pressed={preference === true}
+                          onClick={() =>
+                            void changePreference(food.id, food.name, true)
+                          }
+                        >
+                          <ThumbsUp size={16} />
+                        </Button>
+
+                        <Button
+                          size="icon"
+                          variant={preference === false ? 'default' : 'outline'}
+                          title={`Dislike ${food.name}`}
+                          aria-label={`Dislike ${food.name}`}
+                          aria-pressed={preference === false}
+                          onClick={() =>
+                            void changePreference(food.id, food.name, false)
+                          }
+                        >
+                          <ThumbsDown size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="empty-inline">
+                  No matching foods found. Try another search.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
 
       <section className="section-block suggestions-block">
         <div className="section-title">
