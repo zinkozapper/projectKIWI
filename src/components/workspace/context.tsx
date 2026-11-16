@@ -24,7 +24,7 @@ import { PANTRY_SERVINGS_WITHOUT_SIZE, defaultPackage, loadFoodPackages, package
 export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string; option_id: string | null; package_id: string | null; price_estimate: number | null };
 // package_id set: quantity = packages at home. null: quantity = weeks of servings (PANTRY_SERVINGS_WITHOUT_SIZE).
 export type PantryItem = { id: string; food_id: string; quantity: number; package_id: string | null };
-export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null; name?: string | null };
+export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null; name?: string | null; is_favorite: boolean };
 export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string; zip_code: string };
 // addCost = price of one add (1 serving a day for the whole plan). fitsBudget = that add fits what's left.
 export type { FoodSuggestion };
@@ -32,7 +32,7 @@ export type FoodPreferences = Record<string, boolean>;
 
 const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id), option_id: r.food_option_id == null ? null : String(r.food_option_id) , package_id: r.food_package_id == null ? null : String(r.food_package_id), price_estimate: r.price_estimate == null ? null : Number(r.price_estimate) });
 const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), package_id: r.food_package_id == null ? null : String(r.food_package_id) });
-const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at, name: r.name });
+const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at, name: r.name, is_favorite: r.is_favorite ?? false });
 
 export const CM_PER_INCH = 2.54;
 export const LB_PER_KG = 2.20462;
@@ -138,6 +138,7 @@ type WorkspaceValue = {
   addTripToPlan: (trip: Trip) => Promise<void>;
   deleteTrip: (trip: Trip) => () => void;
   renameTrip: (trip: Trip, name: string) => Promise<void>;
+  toggleTripFavorite: (trip: Trip) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -888,6 +889,27 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     else setTrips(prev => prev.map(t => t.id === trip.id ? toTrip(data) : t));
   }
 
+  async function toggleTripFavorite(trip: Trip) {
+    if (trip.status !== 'completed') return;
+
+    const { data, error } = await supabase
+      .from('shopping_list')
+      .update({ is_favorite: !trip.is_favorite } as never)
+      .eq('shopping_list_id', Number(trip.id))
+      .eq('status', 'completed')
+      .select()
+      .maybeSingle();
+
+    if (error || !data) {
+      fail(error?.message || 'Could not update favorite');
+      return;
+    }
+
+    setTrips(prev =>
+      prev.map(t => t.id === trip.id ? toTrip(data) : t)
+    );
+  }
+
   function deleteTrip(trip: Trip) {
     if (trip.status !== 'completed') return () => {};
     const tripItems = items.filter(i => i.trip_id === trip.id);
@@ -956,7 +978,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     addFood, addFoods, updateQuantity, removeItem, undoPurchase, saveTripSettings,
     addPantry, removePantry,
     pantryCheckDue: needsPantryCheck(!!active, pantry.length), pantryCheckOpen, finishPantryCheck, startPlan,
-    saveProfile, finishTrip, addTripToPlan, deleteTrip, renameTrip, signOut,
+    saveProfile, finishTrip, addTripToPlan, deleteTrip, renameTrip, toggleTripFavorite, signOut,
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;
