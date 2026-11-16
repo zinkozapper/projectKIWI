@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { foodById, foods, searchFoods, type Food } from '@/lib/foods';
 import { useWorkspace } from './context';
 import { FoodFinder } from './food-finder';
+import { CloseMatchNote } from './close-match-note';
+import { useCloseMatches } from '@/hooks/use-close-matches';
 import { LIMITS } from '@/lib/validation';
 
 const MAX_PICKS = 8;
@@ -37,6 +39,9 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
   const [finderQuery, setFinderQuery] = useState('');
   const picks = usePantryPicks();
   const results = searchFoods(foods, query, 8);
+  // No exact match: show close matches (synonyms, look-alike spellings, then AI picks) instead.
+  const closeMatches = useCloseMatches(query, !results.length);
+  const shown = results.length ? results : closeMatches.foods;
   const has = (id: string) => pantry.some(p => p.food_id === id);
 
   function close(next: boolean) {
@@ -77,10 +82,11 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
           <input aria-label="Search foods to add to your pantry" maxLength={LIMITS.search} value={query} onChange={e => setQuery(e.target.value)} placeholder="Search foods, like rice or eggs…" autoFocus />
         </div>
 
+        {query.trim() && !results.length && <CloseMatchNote query={query} close={closeMatches} />}
         {query.trim() && (
-          results.length ? (
+          shown.length ? (
             <div className="pantry-results">
-              {results.map(f => {
+              {shown.map(f => {
                 const added = has(f.id);
                 return (
                   <button type="button" key={f.id} className="search-result" disabled={added} onClick={() => void addPantry(f.id)} aria-label={added ? `${f.name} is in your pantry` : `Add ${f.name} to your pantry`}>
@@ -91,7 +97,7 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
                 );
               })}
             </div>
-          ) : <p className="empty-inline">No match. Try “beans”, “rice”, or “yogurt”.</p>
+          ) : null
         )}
         {query.trim() && (
           <button type="button" className="finder-launch" onClick={openFinder}>
