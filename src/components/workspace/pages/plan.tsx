@@ -62,14 +62,22 @@ export function PlanPage() {
   async function changePreference(foodId: string, foodName: string, liked: boolean) {
     const previousPreference = foodPreferences[foodId];
 
-    const succeeded = await setFoodPreference(foodId, liked);
+    // Clicking the currently selected preference removes it.
+    const removing = previousPreference === liked;
+
+    const succeeded = removing
+      ? await removeFoodPreference(foodId)
+      : await setFoodPreference(foodId, liked);
+
     if (!succeeded) return;
 
     setLastChange({
       foodId,
       foodName,
       previousPreference,
-      message: `Added ${foodName} to ${liked ? 'liked' : 'disliked'} foods.`,
+      message: removing
+        ? `Removed ${foodName} from ${liked ? 'liked' : 'disliked'} foods.`
+        : `Added ${foodName} to ${liked ? 'liked' : 'disliked'} foods.`,
     });
   }
 
