@@ -1,8 +1,8 @@
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { profileFieldErrors } from '@/lib/validation';
+import { profileSaveErrors, type ProfileSaveResult } from '@/lib/profile-autosave';
 import { rankSuggestions, type FoodSuggestion } from '@/lib/nutrient-suggestions';
 import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, type NutrientKey, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
@@ -72,7 +72,6 @@ type WorkspaceValue = {
   periodSpent: number;
   budgetRemaining: number;
   profileDraft: ProfileDraft;
-  profileErrors: string[];
   loading: boolean;
   error: string;
   search: string;
@@ -133,7 +132,8 @@ type WorkspaceValue = {
   pantryCheckOpen: boolean;
   finishPantryCheck: (goneIds: string[] | null) => Promise<void>;
   startPlan: () => Promise<void>;
-  saveProfile: (e: FormEvent) => Promise<void>;
+  // Validates and saves a profile draft; the profile page calls it automatically as the user edits.
+  saveProfile: (draft: ProfileDraft) => Promise<ProfileSaveResult>;
   finishTrip: () => Promise<void>;
   addTripToPlan: (trip: Trip) => Promise<void>;
   deleteTrip: (trip: Trip) => () => void;
@@ -199,7 +199,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     window.addEventListener('kiwi:catalog-food-added', load);
     return () => { cancelled = true; window.removeEventListener('kiwi:catalog-food-added', load); };
   }, []);
-  const [profileErrors, setProfileErrors] = useState<string[]>([]);
   const active = trips.find(t => t.status === 'active');
   // Pantry check dialog: confirmPantry() opens it and resolves with the food ids still at home
   // (or null if the user closes it). creatingTrip stops two adds from starting two trips.
@@ -804,41 +803,25 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     else setPantry(prev => prev.filter(i => i.id !== id));
   }
 
-  async function saveProfile(e: FormEvent) {
-    e.preventDefault();
-    const fieldErrors = profileFieldErrors(profileDraft);
+  async function saveProfile(draft: ProfileDraft): Promise<ProfileSaveResult> {
+    const fieldErrors = profileSaveErrors(draft);
     const invalid = Object.keys(fieldErrors);
-    setProfileErrors(invalid);
-    if (invalid.length) {
-      fail(invalid.length === 1 ? Object.values(fieldErrors)[0]! : 'Please fix the highlighted fields.');
-      return;
-    }
-    const age = Number(profileDraft.age), inchPart = Number(profileDraft.height_in || 0), height = Math.round((Number(profileDraft.height_ft) * 12 + inchPart) * CM_PER_INCH * 10) / 10, weight = Math.round(Number(profileDraft.weight_lb) / LB_PER_KG * 10) / 10, cash = Number(profileDraft.budget), weeks = Number(profileDraft.budget_weeks), start = profileDraft.budget_start;
-    if (age < 18 || age > 100 || inchPart < 0 || inchPart >= 12 || height < 90 || height > 250 || weight < 25 || weight > 350 || cash < 0 || !(BUDGET_WEEK_OPTIONS as readonly number[]).includes(weeks)) {
-      fail('Check your age, height, weight and budget for valid values.');
-      return;
-    }
-    if (!parseDateKey(start) || start > toDateKey(new Date())) {
-      setProfileErrors(['budget_start']);
-      fail('Pick a budget start date that is today or earlier.');
-      return;
-    }
-    if (!/^[0-9]{5}$/.test(profileDraft.zip_code)) {
-      setProfileErrors(['zip_code']);
-      fail('Enter a valid 5-digit ZIP code.');
-      return;
-    }
-    const payload = { user_id: userId, display_name: profileDraft.display_name.trim(), age, height_cm: height, weight_kg: weight, gender: profileDraft.gender, activity: profileDraft.activity, goal: profileDraft.goal, budget: cash, budget_period_weeks: weeks, budget_period_start: start, zip_code: profileDraft.zip_code };
+    if (invalid.length) return { ok: false, fields: invalid, message: invalid.length === 1 ? Object.values(fieldErrors)[0]! : 'Please fix the highlighted fields.' };
+    const age = Number(draft.age), inchPart = Number(draft.height_in || 0), height = Math.round((Number(draft.height_ft) * 12 + inchPart) * CM_PER_INCH * 10) / 10, weight = Math.round(Number(draft.weight_lb) / LB_PER_KG * 10) / 10, cash = Number(draft.budget), weeks = Number(draft.budget_weeks), start = draft.budget_start;
+    // The database only takes heights of 90-250 cm and weights of 25-350 kg.
+    if (height < 90 || height > 250) return { ok: false, fields: ['height_ft'], message: 'Height must be between 3 ft and 8 ft 2 in.' };
+    if (weight < 25 || weight > 350) return { ok: false, fields: ['weight_lb'], message: 'Check your weight.' };
+    const payload = { user_id: userId, display_name: draft.display_name.trim(), age, height_cm: height, weight_kg: weight, gender: draft.gender, activity: draft.activity, goal: draft.goal, budget: cash, budget_period_weeks: weeks, budget_period_start: start, zip_code: draft.zip_code };
     const { data, error } = await supabase.from('profiles').upsert(payload).select().single();
-    if (error) fail(error.message);
-    else {
-      setProfile(data as Profile);
-      setProfileErrors([]);
-      setBudgetWeeks(weeks);
-      setBudgetStart(start);
-      await saveTripSettings(weeks * 7, cash);
-      navigate({ to: '/plan/pantry' });
+    if (error) {
+      fail('Could not save your profile: ' + error.message);
+      return { ok: false, fields: [], message: error.message };
     }
+    setProfile(data as Profile);
+    setBudgetWeeks(weeks);
+    setBudgetStart(start);
+    await saveTripSettings(weeks * 7, cash);
+    return { ok: true };
   }
 
   async function finishTrip() {
@@ -971,7 +954,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
   const value: WorkspaceValue = {
     userId, isFirstSession, firstSessionResolved, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
-    profileDraft, profileErrors, loading, error, search, results, selected,
+    profileDraft, loading, error, search, results, selected,
     pantryTotals, combined, daily, spend, priceOf, optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemEstimate, pantryServings, setPantryQuantity, setPantryPackage, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus,
     foodPreferences, likedFoods, setFoodPreference, removeFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
