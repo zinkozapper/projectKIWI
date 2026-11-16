@@ -42,7 +42,6 @@ export function PlanPage() {
   const navigate = useNavigate();
   const [foodDetails, setFoodDetails] = useState<Food | null>(null);
   const [detailsFromSearch, setDetailsFromSearch] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
   // Prep style picked in the search results before adding (food id -> option id; null = any).
   const [searchPrep, setSearchPrep] = useState<Record<string, string | null>>({});
@@ -265,25 +264,24 @@ export function PlanPage() {
               <div>
                 <h2>Your grocery list</h2>
               </div>
-              <Button onClick={() => setSearchOpen(true)}><Plus size={16} /> Add to list</Button>
             </div>
 
-            <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-              <DialogContent className="pantry-dialog">
-                <DialogHeader>
-                  <DialogTitle>Add to your grocery list</DialogTitle>
-                  <DialogDescription>Search for foods to add to your list.</DialogDescription>
-                </DialogHeader>
+            <div className="list-search">
               <div className="searchbox">
-                <Search size={19} />
+                <Search size={19} aria-hidden="true" />
                 <input
                   aria-label="Search foods"
                   maxLength={LIMITS.search}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search foods, like eggs or spinach…"
-                  autoFocus
+                  onKeyDown={e => { if (e.key === 'Escape') setSearch(''); }}
                 />
+                {search && (
+                  <button type="button" className="searchbox-clear" aria-label="Clear search" onClick={() => setSearch('')}>
+                    <X size={15} aria-hidden="true" />
+                  </button>
+                )}
               </div>
 
               {search.trim() && (
@@ -315,14 +313,12 @@ export function PlanPage() {
                       </div>
                     ))
                     : <p className="empty-inline">No exact match. Try “beans”, “rice”, or “yogurt”.</p>}
-                  <button type="button" className="finder-launch" onClick={() => { setSearchOpen(false); setFinderOpen(true); }}>
+                  <button type="button" className="finder-launch" onClick={() => setFinderOpen(true)}>
                     <Sparkles size={15} aria-hidden="true" /> Can’t find it? Add “{search.trim()}” to Kiwi
                   </button>
                 </div>
               )}
-              <Button onClick={() => setSearchOpen(false)}>Done</Button>
-              </DialogContent>
-            </Dialog>
+            </div>
             <FoodFinder open={finderOpen} onOpenChange={setFinderOpen} initialQuery={search.trim()} onFinished={() => setSearch('')} />
 
             <div className="list-head">

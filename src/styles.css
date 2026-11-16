@@ -388,3 +388,5 @@ input,select,textarea{font-size:16px!important}
 @media (max-width:640px){.pantry-stock-amount{margin-left:0;width:100%}}
 .row-price:has(.price-estimate){width:auto}.row-price .price-estimate{width:60px;height:28px;padding:0 6px;border:1px solid var(--border);border-radius:5px;background:var(--card);color:var(--foreground);font-size:16px;font-weight:600;text-align:right}
 .row-price .price-estimate::placeholder{color:var(--muted-foreground);font-weight:400}
+.list-search{margin-bottom:6px}.list-search .search-results{max-height:420px;overflow-y:auto}
+.searchbox-clear{display:grid;place-items:center;width:26px;height:26px;border:0;border-radius:50%;background:transparent;color:var(--muted-foreground)}.searchbox-clear:hover{background:var(--muted)}
