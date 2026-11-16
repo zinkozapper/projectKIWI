@@ -9,7 +9,8 @@ import { usePhoneLayout } from '@/hooks/use-phone-layout';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLabels, nutrientLimits, NUTRIENTS, type Food, type NutrientKey, type Nutrients } from '@/lib/foods';
 import { NUTRIENT_INFO, searchNutrients } from '@/lib/nutrient-info';
-import { boostTitle } from '@/lib/recommendation-boosts';
+import { boostTitle, MIN_BOOST_PERCENT } from '@/lib/recommendation-boosts';
+import { nutrientGap } from '@/lib/nutrient-suggestions';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
@@ -110,8 +111,17 @@ export function PlanPage() {
     priceOf
   );
 
-  // A nutrient the user asked about takes over the suggestions until they add one of them.
-  const showPairings = !suggestionNutrientChosen && listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
+  // Suggestions are always for one nutrient (the heading names it). Foods that pair with the food just added
+  // come first, but only when they also help that nutrient; the rest are the nutrient's best foods.
+  const focusGap = suggestionNutrient ? nutrientGap(suggestionNutrient, daily, combined, days) : null;
+  const helpsFocus = (f: Food) => {
+    if (!suggestionNutrient || !focusGap) return false;
+    const base = focusGap.remaining > 0 ? focusGap.remaining : focusGap.target;
+    return base > 0 && (Number(f.nutrition[suggestionNutrient]) || 0) / base * 100 >= MIN_BOOST_PERCENT;
+  };
+  const anchorOnList = !suggestionNutrientChosen && listItems.some(item => item.food_id === selected);
+  const focusPairings = anchorOnList ? pairingSuggestions.filter(helpsFocus) : [];
+  const showPairings = focusPairings.length > 0;
 
   // "Recommend foods" (nutrient info popup) and the nutrient search both focus the suggestions on one
   // nutrient and scroll down to them.
@@ -132,9 +142,10 @@ export function PlanPage() {
     const frame = window.requestAnimationFrame(() => suggestionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     return () => window.cancelAnimationFrame(frame);
   }, [scrollRequest]);
-  const recommendedFoods = showPairings ? pairingSuggestions : suggestions.map(suggestion => suggestion.food);
-  const recommendationSource: RecommendationSource = showPairings ? 'pairing' : 'nutrient_gap';
-  const recommendationAnchor = showPairings ? selected : '';
+  const pairingIds = new Set(focusPairings.map(f => f.id));
+  const recommendedFoods = [...focusPairings, ...suggestions.map(suggestion => suggestion.food).filter(f => !pairingIds.has(f.id))].slice(0, 3);
+  const sourceFor = (id: string): RecommendationSource => (pairingIds.has(id) ? 'pairing' : 'nutrient_gap');
+  const anchorFor = (id: string) => (pairingIds.has(id) ? selected : undefined);
 
   useEffect(() => {
     // The phone dialog closes itself; a touch to scroll must not clear it.
@@ -153,14 +164,14 @@ export function PlanPage() {
   useEffect(() => {
     void logRecommendationsShown(
       recommendedFoods.map((food, i): ShownRecommendation => ({
-        source: recommendationSource,
+        source: sourceFor(food.id),
         foodId: food.id,
-        ...(recommendationAnchor ? { anchorFoodId: recommendationAnchor } : {}),
+        ...(pairingIds.has(food.id) ? { anchorFoodId: selected } : {}),
         rank: i + 1,
       })),
       active?.id
     );
-  }, [recommendedFoodIds, recommendationSource, recommendationAnchor]);
+  }, [recommendedFoodIds, showPairings ? selected : '']);
 
   async function addRecommended(source: RecommendationSource, foodId: string, anchorFoodId?: string) {
     const item = await addFood(foodId);
@@ -461,7 +472,7 @@ export function PlanPage() {
           <section className="section-block suggestions-block" ref={suggestionsRef} id="suggestions">
             <div className="section-title">
               <div>
-                <h2>{showPairings || !suggestionNutrient ? 'Suggestions' : `Suggestions for ${suggestionHeading(suggestionNutrient)}`}</h2>
+                <h2>{suggestionNutrient ? `Suggestions for ${suggestionHeading(suggestionNutrient)}` : 'Suggestions'}</h2>
               </div>
               {suggestionNutrientChosen && (
                 <Button variant="ghost" size="sm" onClick={() => setSuggestionFocus(null)}>
@@ -471,8 +482,8 @@ export function PlanPage() {
             </div>
 
             <p className="section-note">
-              {showPairings
-                ? `Pairs well with ${foodById(selected)?.name} and can help fill nutrition gaps.`
+              {suggestionNutrient && showPairings
+                ? `Your next nutrition gap to fill. Foods that pair well with ${foodById(selected)?.name} come first.`
                 : suggestionNutrient
                   ? suggestionNutrientChosen
                     ? `Foods high in ${nutrientLabels[suggestionNutrient].toLowerCase()}. ${NUTRIENT_INFO[suggestionNutrient]}`
@@ -525,7 +536,7 @@ export function PlanPage() {
             <div className="suggestion-grid">
               {recommendedFoods.length
                 ? recommendedFoods.map(f => {
-                  const scored = foodGapScores.find(suggestion => suggestion.food.id === f.id);
+                  const scored = suggestions.find(suggestion => suggestion.food.id === f.id) ?? foodGapScores.find(suggestion => suggestion.food.id === f.id);
                   const boosts = scored?.boosts ?? [];
                   const addCost = oneAddCost(f.id);
                   const overBudget = addCost > 0 && addCost > budgetRemaining;
@@ -539,8 +550,8 @@ export function PlanPage() {
                       role="group"
                       aria-label={`Add ${f.name} to your grocery list`}
                       tabIndex={0}
-                      onClick={() => void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined)}
-                      onKeyDown={e => addFoodOnCardKeyDown(e, () => void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined))}
+                      onClick={() => void addRecommended(sourceFor(f.id), f.id, anchorFor(f.id))}
+                      onKeyDown={e => addFoodOnCardKeyDown(e, () => void addRecommended(sourceFor(f.id), f.id, anchorFor(f.id)))}
                     >
                       <span className="suggestion-emoji">{f.emoji}</span>
                       <div className="suggestion-copy">
@@ -549,7 +560,7 @@ export function PlanPage() {
                         </button>
                         <small>{f.note}</small>
                         <span className="suggestion-price">
-                          {addCost > 0 ? `$${addCost.toFixed(2)} · ${sizeLabel(f.id)}` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''}{boosts.length ? '' : ` · Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
+                          {addCost > 0 ? `$${addCost.toFixed(2)} · ${sizeLabel(f.id)}` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''}{pairingIds.has(f.id) ? ` · Pairs well with ${foodById(selected)?.name ?? 'your list'}` : ''}
                         </span>
                         {boosts.length > 0 && (
                           <ul className="boost-chips" aria-label={`Nutrients ${f.name} helps with`}>
@@ -586,7 +597,7 @@ export function PlanPage() {
                         <Button
                           size="icon"
                           title={`Add ${f.name}`}
-                          onClick={() => void addRecommended(recommendationSource, f.id, recommendationAnchor || undefined)}
+                          onClick={() => void addRecommended(sourceFor(f.id), f.id, anchorFor(f.id))}
                         >
                           <Plus size={16} />
                         </Button>

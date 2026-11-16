@@ -60,22 +60,20 @@ export function PriceEstimate({ foodName, value, per, onSave }: {
     const n = Number(t.replace(/^\$/, ''));
     if (n !== value) onSave(n);
   };
+  // Just a small box in the price column: "est." until the shopper types a price.
   return (
-    <label className="price-estimate" {...stop} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>
-      {value == null ? 'No price · your est.' : 'Your est.'} $
-      <input
-        aria-label={`Your price estimate for ${foodName}, per ${per}`}
-        title={`Kiwi couldn't find a store price. Enter what you expect to pay per ${per}.`}
-        type="text"
-        inputMode="decimal"
-        placeholder="0.00"
-        value={draft}
-        onChange={e => setDraft(e.target.value.replace(/[^0-9.$]/g, '').slice(0, 8))}
-        onBlur={commit}
-        onKeyDown={e => { e.stopPropagation(); if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-        style={{ width: 58, height: 28, padding: '0 6px', border: '1px solid var(--border)', borderRadius: 5, background: 'var(--card)', color: 'var(--foreground)', fontSize: 16 }}
-      />
-      <span aria-hidden="true">/{per}</span>
-    </label>
+    <input
+      className="price-estimate"
+      {...stop}
+      aria-label={`Your price estimate for ${foodName}, per ${per}`}
+      title={`No store price found. Enter what you expect to pay per ${per}.`}
+      type="text"
+      inputMode="decimal"
+      placeholder="est."
+      value={draft}
+      onChange={e => setDraft(e.target.value.replace(/[^0-9.$]/g, '').slice(0, 8))}
+      onBlur={commit}
+      onKeyDown={e => { e.stopPropagation(); if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+    />
   );
 }
