@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, KeyRound, LogOut, Moon, Sun } from 'lucide-react';
+import { ArrowRight, Check, KeyRound, Loader2, LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,25 +16,97 @@ import {
   setTheme,
   type ColorScheme,
 } from '@/lib/theme';
-import { LIMITS, numberKeyGuard, numericText, PROFILE_RANGES, profileFieldErrors, type ProfileFields } from '@/lib/validation';
-import { useWorkspace } from '../context';
+import { LIMITS, numberKeyGuard, numericText, PROFILE_RANGES } from '@/lib/validation';
+import { PROFILE_AUTOSAVE_DELAY_MS, profileDraftKey, profileSaveErrors, type ProfileErrorKey } from '@/lib/profile-autosave';
+import { useWorkspace, type ProfileDraft } from '../context';
 
 type Passkey = { id: string; friendly_name?: string; created_at: string; last_used_at?: string };
+type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'invalid' | 'error';
 
 export function ProfilePage() {
-  const { profileDraft, profileErrors, setProfileDraft, saveProfile, signOut } = useWorkspace();
+  const { profileDraft, setProfileDraft, saveProfile, signOut } = useWorkspace();
   const [passkeys, setPasskeys] = useState<Passkey[]>([]);
   const [passkeyError, setPasskeyError] = useState('');
   const [passkeyBusy, setPasskeyBusy] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [scheme, setScheme] = useState<ColorScheme>('green');
-  // Messages for fields flagged on the last save; they update live as the user fixes them.
-  const fieldErrors = profileFieldErrors(profileDraft);
-  const errorFor = (key: keyof ProfileFields) => (profileErrors.includes(key) ? fieldErrors[key] : undefined);
-  const fieldError = (field: keyof ProfileFields) => {
+
+  // Auto-save: every edit marks its field as touched; once the user pauses (or leaves a field) a valid
+  // draft is saved. Errors only show on fields the user has touched, so a new profile doesn't start red.
+  const [touched, setTouched] = useState<ReadonlySet<string>>(() => new Set());
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [saveError, setSaveError] = useState('');
+  const lastSavedKey = useRef(profileDraftKey(profileDraft));
+  const pending = useRef<{ draft: ProfileDraft; key: string } | null>(null);
+  const timer = useRef<number | undefined>(undefined);
+  const queue = useRef<Promise<void>>(Promise.resolve());
+  // The workspace hands us a new saveProfile on every render; keep the latest in a ref so the
+  // debounce timer isn't restarted each time something else on the page changes.
+  const saveRef = useRef(saveProfile);
+  useEffect(() => { saveRef.current = saveProfile; }, [saveProfile]);
+
+  const fieldErrors = profileSaveErrors(profileDraft);
+  const errorFor = (key: ProfileErrorKey) => (touched.has(key) ? fieldErrors[key] : undefined);
+  const fieldError = (field: ProfileErrorKey) => {
     const message = errorFor(field);
     return message ? <span className="field-error" role="alert">{message}</span> : null;
   };
+
+  function update(patch: Partial<ProfileDraft>) {
+    setProfileDraft({ ...profileDraft, ...patch });
+    setTouched(prev => new Set([...prev, ...Object.keys(patch)]));
+  }
+
+  // Saves run one at a time, in order, so an older save can never land after a newer one.
+  const runPendingSave = useCallback(() => {
+    window.clearTimeout(timer.current);
+    const next = pending.current;
+    pending.current = null;
+    if (!next) return;
+    queue.current = queue.current.then(async () => {
+      if (next.key === lastSavedKey.current) {
+        if (!pending.current) setSaveStatus('saved');
+        return;
+      }
+      setSaveStatus('saving');
+      const result = await saveRef.current(next.draft);
+      if (result.ok) {
+        lastSavedKey.current = next.key;
+        if (!pending.current) setSaveStatus('saved');
+      } else {
+        // lastSavedKey is unchanged, so "Try again" or the next edit retries this draft.
+        setSaveError(result.message);
+        setSaveStatus('error');
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!touched.size) return;
+    const key = profileDraftKey(profileDraft);
+    window.clearTimeout(timer.current);
+    if (Object.keys(profileSaveErrors(profileDraft)).length) {
+      pending.current = null;
+      setSaveStatus('invalid');
+      return;
+    }
+    if (key === lastSavedKey.current) {
+      pending.current = null;
+      setSaveStatus('saved');
+      return;
+    }
+    pending.current = { draft: profileDraft, key };
+    setSaveStatus('pending');
+    timer.current = window.setTimeout(runPendingSave, PROFILE_AUTOSAVE_DELAY_MS);
+  }, [profileDraft, touched, runPendingSave]);
+
+  // Leaving the page doesn't lose the last edit: save it right away.
+  useEffect(() => runPendingSave, [runPendingSave]);
+
+  function retrySave() {
+    pending.current = { draft: profileDraft, key: profileDraftKey(profileDraft) };
+    runPendingSave();
+  }
 
   useEffect(() => {
     const theme = resolveTheme();
@@ -88,38 +160,38 @@ export function ProfilePage() {
         </div>
       </div>
       <div className="profile-layout">
-        <form className="profile-form" onSubmit={saveProfile} onKeyDown={e => {
+        <form className="profile-form" onSubmit={e => { e.preventDefault(); runPendingSave(); }} onBlur={runPendingSave} onKeyDown={e => {
           if (e.key === 'Enter' && e.target instanceof HTMLInputElement) e.preventDefault();
         }}>
           <div className="section-title"><div><h2>Tell us about you</h2></div></div>
           <div className="form-grid">
-            <label className={profileErrors.includes('display_name') ? 'invalid' : ''}>
+            <label className={errorFor('display_name') ? 'invalid' : ''}>
               Your name
-              <input required maxLength={LIMITS.name} autoComplete="given-name" aria-invalid={!!errorFor('display_name')} value={profileDraft.display_name} onChange={e => setProfileDraft({ ...profileDraft, display_name: e.target.value.replace(/\d/g, '') })} placeholder="e.g. Alex" />
+              <input required maxLength={LIMITS.name} autoComplete="given-name" aria-invalid={!!errorFor('display_name')} value={profileDraft.display_name} onChange={e => update({ display_name: e.target.value.replace(/\d/g, '') })} placeholder="e.g. Alex" />
               {fieldError('display_name')}
             </label>
-            <label className={profileErrors.includes('age') ? 'invalid' : ''}>
+            <label className={errorFor('age') ? 'invalid' : ''}>
               Age <small>Used for daily nutrition estimates</small>
-              <input required type="number" inputMode="numeric" min={PROFILE_RANGES.age[0]} max={PROFILE_RANGES.age[1]} step="1" aria-invalid={!!errorFor('age')} onKeyDown={numberKeyGuard(true)} value={profileDraft.age} onChange={e => setProfileDraft({ ...profileDraft, age: numericText(e.target.value, { integer: true, maxLength: 3 }) })} placeholder="e.g. 23" />
+              <input required type="number" inputMode="numeric" min={PROFILE_RANGES.age[0]} max={PROFILE_RANGES.age[1]} step="1" aria-invalid={!!errorFor('age')} onKeyDown={numberKeyGuard(true)} value={profileDraft.age} onChange={e => update({ age: numericText(e.target.value, { integer: true, maxLength: 3 }) })} placeholder="e.g. 23" />
               {fieldError('age')}
             </label>
-            <label className={profileErrors.includes('height_ft') ? 'invalid' : ''}>
+            <label className={errorFor('height_ft') || errorFor('height_in') ? 'invalid' : ''}>
               Height <small>Helps estimate maintenance energy</small>
               <div className="height-inputs">
-                <input required type="number" inputMode="numeric" min={PROFILE_RANGES.height_ft[0]} max={PROFILE_RANGES.height_ft[1]} step="1" aria-label="Feet" aria-invalid={!!errorFor('height_ft')} onKeyDown={numberKeyGuard(true)} value={profileDraft.height_ft} onChange={e => setProfileDraft({ ...profileDraft, height_ft: numericText(e.target.value, { integer: true, maxLength: 1 }) })} placeholder="ft, e.g. 5" />
-                <input type="number" inputMode="numeric" min={PROFILE_RANGES.height_in[0]} max={PROFILE_RANGES.height_in[1]} step="1" aria-label="Inches" aria-invalid={!!errorFor('height_in')} onKeyDown={numberKeyGuard(true)} value={profileDraft.height_in} onChange={e => setProfileDraft({ ...profileDraft, height_in: numericText(e.target.value, { integer: true, maxLength: 2 }) })} placeholder="in, e.g. 7" />
+                <input required type="number" inputMode="numeric" min={PROFILE_RANGES.height_ft[0]} max={PROFILE_RANGES.height_ft[1]} step="1" aria-label="Feet" aria-invalid={!!errorFor('height_ft')} onKeyDown={numberKeyGuard(true)} value={profileDraft.height_ft} onChange={e => update({ height_ft: numericText(e.target.value, { integer: true, maxLength: 1 }) })} placeholder="ft, e.g. 5" />
+                <input type="number" inputMode="numeric" min={PROFILE_RANGES.height_in[0]} max={PROFILE_RANGES.height_in[1]} step="1" aria-label="Inches" aria-invalid={!!errorFor('height_in')} onKeyDown={numberKeyGuard(true)} value={profileDraft.height_in} onChange={e => update({ height_in: numericText(e.target.value, { integer: true, maxLength: 2 }) })} placeholder="in, e.g. 7" />
               </div>
               {fieldError('height_ft')}
               {fieldError('height_in')}
             </label>
-            <label className={profileErrors.includes('weight_lb') ? 'invalid' : ''}>
+            <label className={errorFor('weight_lb') ? 'invalid' : ''}>
               Weight (lb) <small>Helps estimate energy and protein</small>
-              <input required type="number" inputMode="decimal" min={PROFILE_RANGES.weight_lb[0]} max={PROFILE_RANGES.weight_lb[1]} step="0.1" aria-invalid={!!errorFor('weight_lb')} onKeyDown={numberKeyGuard()} value={profileDraft.weight_lb} onChange={e => setProfileDraft({ ...profileDraft, weight_lb: numericText(e.target.value, { maxLength: 5 }) })} placeholder="e.g. 150" />
+              <input required type="number" inputMode="decimal" min={PROFILE_RANGES.weight_lb[0]} max={PROFILE_RANGES.weight_lb[1]} step="0.1" aria-invalid={!!errorFor('weight_lb')} onKeyDown={numberKeyGuard()} value={profileDraft.weight_lb} onChange={e => update({ weight_lb: numericText(e.target.value, { maxLength: 5 }) })} placeholder="e.g. 150" />
               {fieldError('weight_lb')}
             </label>
-            <label className={profileErrors.includes('gender') ? 'invalid' : ''}>
+            <label className={errorFor('gender') ? 'invalid' : ''}>
               Sex used for estimates <small>Some nutrient guidance differs</small>
-              <select required aria-invalid={!!errorFor('gender')} value={profileDraft.gender} onChange={e => setProfileDraft({ ...profileDraft, gender: e.target.value })}>
+              <select required aria-invalid={!!errorFor('gender')} value={profileDraft.gender} onChange={e => update({ gender: e.target.value })}>
                 <option value="">Select one</option>
                 <option value="female">Female</option>
                 <option value="male">Male</option>
@@ -129,7 +201,7 @@ export function ProfilePage() {
             </label>
             <label>
               Activity level <small>Adjusts estimated daily energy</small>
-              <select value={profileDraft.activity} onChange={e => setProfileDraft({ ...profileDraft, activity: e.target.value })}>
+              <select value={profileDraft.activity} onChange={e => update({ activity: e.target.value })}>
                 <option value="low">Mostly sitting</option>
                 <option value="moderate">Somewhat active</option>
                 <option value="high">Very active</option>
@@ -137,24 +209,24 @@ export function ProfilePage() {
             </label>
             <label>
               Food goal <small>You can change this anytime</small>
-              <select value={profileDraft.goal} onChange={e => setProfileDraft({ ...profileDraft, goal: e.target.value })}>
+              <select value={profileDraft.goal} onChange={e => update({ goal: e.target.value })}>
                 <option value="maintain">Eat balanced at maintenance</option>
                 <option value="variety">More variety</option>
                 <option value="convenience">More convenient meals</option>
               </select>
             </label>
-            <label className={profileErrors.includes('zip_code') ? 'invalid' : ''}>
+            <label className={errorFor('zip_code') ? 'invalid' : ''}>
               Shopping ZIP code <small>Used for local prices when available</small>
-              <input required inputMode="numeric" autoComplete="postal-code" maxLength={LIMITS.zip} aria-invalid={!!errorFor('zip_code')} value={profileDraft.zip_code} onChange={e => setProfileDraft({ ...profileDraft, zip_code: numericText(e.target.value, { integer: true, maxLength: LIMITS.zip }) })} />
+              <input required inputMode="numeric" autoComplete="postal-code" maxLength={LIMITS.zip} aria-invalid={!!errorFor('zip_code')} value={profileDraft.zip_code} onChange={e => update({ zip_code: numericText(e.target.value, { integer: true, maxLength: LIMITS.zip }) })} />
               {fieldError('zip_code')}
             </label>
-            <div className={`budget-field${profileErrors.includes('budget') ? ' invalid' : ''}`}>
+            <div className={`budget-field${errorFor('budget') ? ' invalid' : ''}`}>
               <span className="budget-field-label">Budget:</span>
               <div className="budget-control">
                 <div className="budget-amount-group">
                   <label className="budget-amount" htmlFor="profile-budget">
                     <span>$</span>
-                    <input id="profile-budget" required type="number" inputMode="decimal" min={PROFILE_RANGES.budget[0]} max={PROFILE_RANGES.budget[1]} step="0.01" aria-invalid={!!errorFor('budget')} onKeyDown={numberKeyGuard()} value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: numericText(e.target.value, { maxLength: 8 }) })} />
+                    <input id="profile-budget" required type="number" inputMode="decimal" min={PROFILE_RANGES.budget[0]} max={PROFILE_RANGES.budget[1]} step="0.01" aria-invalid={!!errorFor('budget')} onKeyDown={numberKeyGuard()} value={profileDraft.budget} onChange={e => update({ budget: numericText(e.target.value, { maxLength: 8 }) })} />
                   </label>
                   <span className="budget-slash">/</span>
                 </div>
@@ -166,21 +238,35 @@ export function ProfilePage() {
                       variant="ghost"
                       className={profileDraft.budget_weeks === String(weeks) ? 'selected' : ''}
                       aria-pressed={profileDraft.budget_weeks === String(weeks)}
-                      onClick={() => setProfileDraft({ ...profileDraft, budget_weeks: String(weeks) })}
+                      onClick={() => update({ budget_weeks: String(weeks) })}
                     >
                       {budgetWeeksLabel(weeks)}
                     </Button>
                   ))}
                 </div>
-                <label className={`budget-start${profileErrors.includes('budget_start') ? ' invalid' : ''}`} htmlFor="profile-budget-start">
+                <label className={`budget-start${errorFor('budget_start') ? ' invalid' : ''}`} htmlFor="profile-budget-start">
                   <span>starting</span>
-                  <input id="profile-budget-start" type="date" max={toDateKey(new Date())} value={profileDraft.budget_start} onChange={e => setProfileDraft({ ...profileDraft, budget_start: e.target.value })} />
+                  <input id="profile-budget-start" type="date" max={toDateKey(new Date())} value={profileDraft.budget_start} onChange={e => update({ budget_start: e.target.value })} />
                 </label>
               </div>
               {fieldError('budget')}
+              {fieldError('budget_start')}
             </div>
           </div>
-          <Button className="save-profile" type="submit">Save profile <ArrowRight size={16} /></Button>
+          <div className="profile-save-row">
+            <p className={`autosave-status autosave-${saveStatus}`} role="status" aria-live="polite">
+              {saveStatus === 'idle' && 'Changes save automatically.'}
+              {(saveStatus === 'pending' || saveStatus === 'saving') && <><Loader2 size={14} className="autosave-spin" aria-hidden /> Saving…</>}
+              {saveStatus === 'saved' && <><Check size={14} aria-hidden /> All changes saved</>}
+              {saveStatus === 'invalid' && (Object.keys(fieldErrors).some(key => !touched.has(key))
+                ? 'Your profile saves once every required field is filled in.'
+                : 'Fix the highlighted fields and your changes will save.')}
+              {saveStatus === 'error' && <>Couldn't save: {saveError} <Button type="button" variant="link" className="autosave-retry" onClick={retrySave}>Try again</Button></>}
+            </p>
+            <Button asChild variant="outline" className="save-profile">
+              <Link to="/plan/pantry">Go to my pantry <ArrowRight size={16} /></Link>
+            </Button>
+          </div>
         </form>
       </div>
       <section className="section-block passkey-block">
