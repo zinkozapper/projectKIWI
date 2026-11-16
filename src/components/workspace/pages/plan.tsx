@@ -429,8 +429,8 @@ export function PlanPage() {
                       )}
                       <span className="qty-caption">
                         {pkg
-                          ? `${Number(item.quantity) === 1 ? 'pack' : 'packs'} · ${formatAmount(itemServings(item) / days)}/day`
-                          : `/day · ${formatAmount(Number(item.quantity))} total`}
+                          ? `${Number(item.quantity) === 1 ? 'package' : 'packages'} · ${formatAmount(itemServings(item))} servings`
+                          : `${Number(item.quantity) / days === 1 ? 'serving' : 'servings'} a day · ${formatAmount(Number(item.quantity))} for the trip`}
                       </span>
                       <span className="row-price">
                         {storePriced && cost != null

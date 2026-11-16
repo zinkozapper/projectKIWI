@@ -84,7 +84,7 @@ export function PantryPage() {
                           </Button>
                         </div>
                         <small className="qty-caption">
-                          {pkg ? `${q === 1 ? 'pack' : 'packs'} · ` : `${q === 1 ? 'week' : 'weeks'} · `}{formatAmount(pantryServings(item) / days)}/day
+                          {pkg ? `${q === 1 ? 'package' : 'packages'} · ` : `${q === 1 ? 'week' : 'weeks'} · `}{formatAmount(pantryServings(item))} servings
                         </small>
                       </div>
                     </div>

@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 import type { FoodOption } from '@/lib/food-options';
 
 const style: CSSProperties = {
-  height: 28, maxWidth: '100%', padding: '0 6px', border: '1px solid var(--border)', borderRadius: 5,
+  height: 30, maxWidth: '100%', minWidth: 120, margin: '6px 0 2px', padding: '0 28px 0 10px', border: '1px solid var(--border)', borderRadius: 5,
   background: 'var(--card)', color: 'var(--foreground)', fontSize: 12, cursor: 'pointer', justifySelf: 'start',
 };
 const money = (n: number | null) => (n == null ? '' : ` · $${n.toFixed(2)}`);
