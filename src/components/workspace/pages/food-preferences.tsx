@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { foods } from '@/lib/foods';
 import { LIMITS } from '@/lib/validation';
 import { useWorkspace } from '../context';
+import { CloseMatchNote } from '../close-match-note';
+import { useCloseMatches } from '@/hooks/use-close-matches';
 
 type PendingUndo = {
   foodId: string;
@@ -25,6 +27,9 @@ export function FoodPreferencesPage() {
   } = useWorkspace();
 
   const [lastChange, setLastChange] = useState<PendingUndo | null>(null);
+  // No exact match: show close matches (synonyms, look-alike spellings, then AI picks) instead.
+  const close = useCloseMatches(search, !results.length);
+  const shownResults = results.length ? results : close.foods;
 
   // Keep the Undo notification visible for 8 seconds.
   useEffect(() => {
@@ -155,8 +160,8 @@ export function FoodPreferencesPage() {
 
           {search.trim() && (
             <div className="search-results food-preferences-results">
-              {results.length ? (
-                results.map(food => {
+              {!results.length && <CloseMatchNote query={search} close={close} />}
+              {shownResults.map(food => {
                   const preference = foodPreferences[food.id];
 
                   return (
@@ -197,12 +202,7 @@ export function FoodPreferencesPage() {
                       </div>
                     </div>
                   );
-                })
-              ) : (
-                <p className="empty-inline">
-                  No matching foods found. Try another search.
-                </p>
-              )}
+                })}
             </div>
           )}
         </div>

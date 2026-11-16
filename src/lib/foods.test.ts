@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { addFoodToCatalog, foods, searchFoods } from './foods';
+import { addFoodToCatalog, closeFoodMatches, foods, searchFoods } from './foods';
 
 describe('catalog additions', () => {
   it('notifies pricing when a new food is added, but not when an existing row is updated', () => {
@@ -69,5 +69,34 @@ describe('searchFoods', () => {
     ];
 
     expect(searchFoods(catalog, 'spinich')).toEqual([catalog[1], catalog[0]]);
+  });
+});
+
+describe('closeFoodMatches', () => {
+  const catalog = [
+    { name: 'Tofu', category: 'Vegetables' },
+    { name: 'Pasta', category: 'Grains' },
+    { name: 'Sirloin', category: 'Proteins' },
+    { name: 'Ground beef 90/10', category: 'Proteins' },
+    { name: 'Almond Milk', category: 'Dairy' },
+    { name: 'Brown Rice', category: 'Grains' },
+  ];
+  const names = (query: string) => closeFoodMatches(catalog, query).map(food => food.name);
+
+  it('finds look-alike spellings that the exact search misses', () => {
+    expect(searchFoods(catalog, 'tofo')).toEqual([]);
+    expect(names('tofo')).toEqual(['Tofu']);
+    expect(names('brown rise')).toEqual(['Brown Rice']);
+  });
+
+  it('maps synonyms and dishes to catalog foods', () => {
+    expect(names('noodles')).toEqual(['Pasta']);
+    expect(names('burgers')).toEqual(['Ground beef 90/10']);
+    expect(names('oat milk')[0]).toBe('Almond Milk');
+  });
+
+  it('returns nothing when nothing is close', () => {
+    expect(names('xyz')).toEqual([]);
+    expect(names('a')).toEqual([]);
   });
 });

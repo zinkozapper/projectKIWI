@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { usePhoneLayout } from '@/hooks/use-phone-layout';
+import { useCloseMatches } from '@/hooks/use-close-matches';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
 import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLabels, nutrientLimits, NUTRIENTS, type Food, type NutrientKey, type Nutrients } from '@/lib/foods';
 import { NUTRIENT_INFO, searchNutrients } from '@/lib/nutrient-info';
@@ -14,6 +15,7 @@ import { nutrientGap } from '@/lib/nutrient-suggestions';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
+import { CloseMatchNote } from '../close-match-note';
 import { NutrientPanel } from '../nutrient-bar';
 import { PrepSelect } from '../prep-select';
 import { PriceEstimate, SizeSelect } from '../package-controls';
@@ -107,6 +109,9 @@ export function PlanPage() {
     optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemEstimate,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
+  // No exact match: show close matches (synonyms, look-alike spellings, then AI picks) instead.
+  const close = useCloseMatches(search, !results.length);
+  const shownResults = results.length ? results : close.foods;
 
     const pairingSuggestions = getFoodPairings(
     foodById(selected),
@@ -294,8 +299,8 @@ export function PlanPage() {
 
               {search.trim() && (
                 <div className="search-results">
-                  {results.length
-                    ? results.map(f => (
+                  {!results.length && <CloseMatchNote query={search} close={close} />}
+                  {shownResults.map(f => (
                       <div
                         key={f.id}
                         className="search-result food-card-clickable"
@@ -319,8 +324,7 @@ export function PlanPage() {
                           <Plus size={17} />
                         </Button>
                       </div>
-                    ))
-                    : <p className="empty-inline">No exact match. Try “beans”, “rice”, or “yogurt”.</p>}
+                  ))}
                   <button type="button" className="finder-launch" onClick={() => setFinderOpen(true)}>
                     <Sparkles size={15} aria-hidden="true" /> Can’t find it? Add “{search.trim()}” to Kiwi
                   </button>

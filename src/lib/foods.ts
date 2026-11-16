@@ -245,6 +245,169 @@ export function searchFoods<T extends Pick<Food, 'name' | 'category'> & Partial<
   return [...nameMatches, ...aliasMatches, ...typoMatches, ...descriptionMatches, ...categoryMatches].slice(0, limit);
 }
 
+// ---- Close matches: used only when searchFoods finds nothing ----
+// Words people type -> words that appear in Kiwi's food names. Covers synonyms, regional names,
+// dishes and broad groups ("meat", "snack") so a search with no exact match still lands near the
+// right foods. Keys and values are normalized (lowercase, letters and digits).
+const SEARCH_CONCEPTS: Record<string, string[]> = {
+  meat: ['chicken', 'beef', 'pork', 'turkey', 'sirloin', 'chuck', 'ribeye'],
+  steak: ['sirloin', 'ribeye', 'chuck'],
+  beef: ['sirloin', 'chuck', 'ribeye', 'ground beef'],
+  burger: ['ground beef', 'ground turkey'],
+  hamburger: ['ground beef', 'ground turkey'],
+  mince: ['ground beef', 'ground turkey'],
+  poultry: ['chicken', 'turkey'],
+  ham: ['pork'],
+  bacon: ['pork'],
+  sausage: ['pork', 'ground turkey'],
+  lamb: ['sirloin', 'chuck'],
+  fish: ['salmon', 'tuna', 'tilapia', 'sardines'],
+  seafood: ['shrimp', 'oysters', 'salmon', 'tuna', 'tilapia', 'sardines'],
+  cod: ['tilapia', 'salmon'],
+  trout: ['salmon', 'tilapia'],
+  mackerel: ['sardines', 'salmon'],
+  anchovies: ['sardines'],
+  prawn: ['shrimp'],
+  crab: ['shrimp', 'oysters'],
+  lobster: ['shrimp'],
+  clams: ['oysters'],
+  mussels: ['oysters'],
+  scallops: ['shrimp', 'oysters'],
+  noodles: ['pasta'],
+  spaghetti: ['pasta'],
+  macaroni: ['pasta'],
+  penne: ['pasta'],
+  ramen: ['pasta'],
+  toast: ['bread'],
+  sandwich: ['bread', 'bagels'],
+  wrap: ['tortillas'],
+  burrito: ['tortillas', 'black beans', 'rice'],
+  taco: ['tortillas', 'ground beef', 'black beans'],
+  cereal: ['rolled oats'],
+  oatmeal: ['rolled oats'],
+  granola: ['rolled oats'],
+  porridge: ['rolled oats'],
+  grains: ['rice', 'quinoa', 'rolled oats', 'couscous', 'pasta'],
+  carbs: ['rice', 'pasta', 'bread', 'potato', 'quinoa'],
+  berry: ['blueberries', 'raspberries', 'strawberries', 'blackberries', 'mixed berries'],
+  orange: ['mandarin oranges'],
+  clementine: ['mandarin oranges'],
+  tangerine: ['mandarin oranges'],
+  citrus: ['mandarin oranges', 'lemon', 'lime'],
+  melon: ['cantaloupe'],
+  juice: ['acerola juice'],
+  veggies: ['broccoli', 'spinach', 'carrot', 'kale', 'zucchini'],
+  greens: ['spinach', 'kale'],
+  salad: ['spinach', 'kale', 'cucumber', 'tomatoes'],
+  lettuce: ['spinach', 'kale'],
+  pepper: ['red bell pepper'],
+  capsicum: ['red bell pepper'],
+  onion: ['yellow onion'],
+  shallot: ['yellow onion', 'garlic'],
+  squash: ['butternut squash', 'zucchini'],
+  pumpkin: ['butternut squash', 'pumpkin seeds'],
+  courgette: ['zucchini'],
+  fries: ['potato', 'sweet potato'],
+  chips: ['potato'],
+  guacamole: ['avocado'],
+  beans: ['black beans', 'chickpeas', 'lentils', 'edamame'],
+  legumes: ['black beans', 'chickpeas', 'lentils', 'edamame'],
+  hummus: ['chickpeas'],
+  soy: ['tofu', 'edamame', 'soy sauce'],
+  tempeh: ['tofu'],
+  vegan: ['tofu', 'lentils', 'chickpeas', 'black beans', 'almond milk'],
+  vegetarian: ['tofu', 'lentils', 'chickpeas', 'black beans', 'egg'],
+  dairy: ['milk', 'yogurt', 'cheese', 'butter'],
+  yoghurt: ['yogurt'],
+  'oat milk': ['almond milk'],
+  'soy milk': ['almond milk'],
+  'rice milk': ['almond milk'],
+  'coconut milk': ['almond milk'],
+  cream: ['greek yogurt', 'whole milk'],
+  curd: ['cottage cheese'],
+  margarine: ['butter'],
+  nuts: ['walnuts', 'cashews', 'peanuts', 'almond butter'],
+  almonds: ['almond butter', 'almond milk'],
+  seeds: ['chia seeds', 'hemp seeds', 'pumpkin seeds', 'sunflower seeds', 'flax seeds'],
+  linseed: ['flax seeds'],
+  oil: ['olive oil', 'avocado oil'],
+  chocolate: ['dark chocolate', 'cocoa powder'],
+  candy: ['dark chocolate', 'dates'],
+  dessert: ['dark chocolate', 'greek yogurt', 'strawberries'],
+  sweets: ['dark chocolate', 'honey', 'dates'],
+  sugar: ['honey', 'maple syrup'],
+  sweetener: ['honey', 'maple syrup'],
+  syrup: ['maple syrup', 'honey'],
+  snack: ['peanuts', 'cashews', 'walnuts', 'dark chocolate', 'apples', 'bananas'],
+  breakfast: ['rolled oats', 'egg', 'greek yogurt', 'bagels', 'bananas'],
+  vinegar: ['apple cider vinegar'],
+  sauce: ['soy sauce'],
+  fermented: ['kimchi'],
+  pickles: ['kimchi', 'cucumber'],
+  sauerkraut: ['kimchi'],
+  whey: ['protein powder'],
+  shake: ['protein powder'],
+  supplement: ['protein powder'],
+};
+
+// Trigrams the way Postgres pg_trgm builds them: each word padded with two spaces in front and one behind.
+function trigrams(word: string): Set<string> {
+  const padded = `  ${word} `;
+  const grams = new Set<string>();
+  for (let i = 0; i + 3 <= padded.length; i++) grams.add(padded.slice(i, i + 3));
+  return grams;
+}
+
+function trigramSimilarity(left: string, right: string): number {
+  const a = trigrams(left);
+  const b = trigrams(right);
+  let shared = 0;
+  for (const gram of a) if (b.has(gram)) shared++;
+  return shared / (a.size + b.size - shared);
+}
+
+// "berries" -> "berry", "tomatoes" -> "tomato", "beans" -> "bean": good enough for matching food words.
+function singular(word: string): string {
+  if (word.length > 4 && word.endsWith('ies')) return `${word.slice(0, -3)}y`;
+  if (word.length > 4 && /(oes|ches|shes|xes)$/.test(word)) return word.slice(0, -2);
+  if (word.length > 3 && word.endsWith('s') && !word.endsWith('ss')) return word.slice(0, -1);
+  return word;
+}
+
+const CLOSE_MATCH_MIN = 0.34;
+
+// Foods that are close to the query but didn't match it: concept words first (score 1), then names
+// that look alike (pg_trgm-style word similarity, which catches typos like "brocoli" or "tofo").
+export function closeFoodMatches<T extends Pick<Food, 'name' | 'category'>>(catalog: T[], query: string, limit = 6): T[] {
+  const term = normalizeSearchText(query);
+  if (term.length < 2) return [];
+  const queryWords = term.split(' ').map(singular);
+
+  const conceptTargets: string[] = [];
+  for (const key of [term, singular(term), ...queryWords]) {
+    for (const target of SEARCH_CONCEPTS[key] || SEARCH_CONCEPTS[`${key}s`] || []) {
+      if (!conceptTargets.includes(target)) conceptTargets.push(target);
+    }
+  }
+
+  const scored: { food: T; score: number; order: number }[] = [];
+  catalog.forEach((food, index) => {
+    const name = normalizeSearchText(food.name);
+    const nameWords = name.split(' ').map(singular);
+    const conceptAt = conceptTargets.findIndex(target => ` ${name} `.includes(` ${target}`) || name.includes(target));
+    // Each query word against its best name word, averaged: "brown rise" still finds "Brown Rice".
+    const lookAlike = queryWords.reduce((sum, word) => sum + Math.max(...nameWords.map(n => trigramSimilarity(word, n))), 0) / queryWords.length;
+    const whole = trigramSimilarity(term.replace(/ /g, ''), name.replace(/ /g, ''));
+    const score = conceptAt >= 0 ? 2 - conceptAt / 100 : Math.max(lookAlike, whole);
+    if (score >= CLOSE_MATCH_MIN) scored.push({ food, score, order: index });
+  });
+
+  return scored
+    .sort((a, b) => b.score - a.score || a.order - b.order)
+    .slice(0, limit)
+    .map(s => s.food);
+}
+
 export const nutrientKeys: NutrientKey[] = NUTRIENTS.map(n => n.key);
 export const nutrientLabels = Object.fromEntries(NUTRIENTS.map(n => [n.key, n.label])) as Record<NutrientKey, string>;
 export const nutrientUnits = Object.fromEntries(NUTRIENTS.map(n => [n.key, n.unit])) as Record<NutrientKey, string>;
