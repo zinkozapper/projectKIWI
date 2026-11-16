@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { foodById, foods, searchFoods, type Food } from '@/lib/foods';
 import { useWorkspace } from './context';
 import { FoodFinder } from './food-finder';
+import { LIMITS } from '@/lib/validation';
 
 const MAX_PICKS = 8;
 
@@ -73,7 +74,7 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
         <div className="searchbox">
           <Search size={18} aria-hidden="true" />
-          <input aria-label="Search foods to add to your pantry" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search foods, like rice or eggs…" autoFocus />
+          <input aria-label="Search foods to add to your pantry" maxLength={LIMITS.search} value={query} onChange={e => setQuery(e.target.value)} placeholder="Search foods, like rice or eggs…" autoFocus />
         </div>
 
         {query.trim() && (

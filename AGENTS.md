@@ -112,6 +112,15 @@ Users add foods through `src/components/workspace/food-finder.tsx` (opened from 
 - Server env: `FDC_API_KEY`, `ANTHROPIC_API_KEY` (optional `ANTHROPIC_MODEL`), `SUPABASE_SERVICE_ROLE_KEY`. `SUPABASE_URL` falls back to the build-time `VITE_SUPABASE_URL`. Locally, `env.server.ts` reads `.env` directly.
 - Database: migration 0009 adds `food.flavor_profile/food_group/cook_ratio/raw_fdc_id/added_by/needs_review/review_notes`, `user_food_quota` (default limit 10, +10 per admin approval), and `food_import_request` (request log and admin queue), plus the `admin_food_queue`, `admin_resolve_food_request` and `admin_mark_food_reviewed` functions used by `src/components/workspace/food-queue.tsx` on `/admin`.
 
+## Suggestions, nutrient info and validation
+
+- My Plan suggestions work through gaps one nutrient at a time in `NUTRIENT_PRIORITY` (`src/lib/foods.ts`): vitamin A, zinc, omega-3, B12, C, calcium, K, protein, E, iron, magnesium, selenium, folate, thiamin, then the rest. Ranking lives in `src/lib/nutrient-suggestions.ts` (`rankSuggestions`): the focus nutrient's fill, plus 0.35 × other open gaps, so foods covering several gaps win. The budget ordering is unchanged.
+- The "i" button on each nutrient bar (`NutrientInfo` in `nutrient-bar.tsx`) shows the plain-language note from `src/lib/nutrient-info.ts` and a "Recommend foods" button that sets `suggestionFocus` and scrolls to `#suggestions`. Adding a suggestion clears the focus and the priority order resumes. The suggestions block also has a nutrient search (`searchNutrients`).
+- `nutrientLimits` = sodium and omega-6: they are upper limits, never suggestion targets.
+- Form limits and checks live in `src/lib/validation.ts` (`LIMITS`, `PROFILE_RANGES`, `profileFieldErrors`, `numberKeyGuard`). Reuse them instead of new ad hoc checks.
+- Original 100 foods: migration `0017_kiwi_food_icons_descriptions.sql` filled emojis and descriptions. `scripts/usda/5-backfill.mjs` fills their blank (0) nutrient columns from USDA and writes `data/usda/backfill-foods.sql` for review before applying.
+- Package sizes: migration `0019_kiwi_package_sizes.sql` adds `food_package` (max 3 sizes per food or purchase option), `shopping_list_item.food_package_id` / `price_estimate` and `pantry_item.food_package_id`. A row with a size counts packages; without one it counts servings (list) or weeks' worth (pantry). App helpers: `src/lib/food-packages.ts`; AI step: `src/lib/food-import/package-sizes.ts`; backfill: `scripts/kroger/package-sizes-backfill.mjs`.
+
 ## UI and code style
 
 - Reusable shadcn/ui components are in `src/components/ui/`; the shadcn config is `components.json`.

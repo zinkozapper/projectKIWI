@@ -7,7 +7,10 @@ import { getRequest } from '@tanstack/react-start/server';
 import { adminClient } from './env.server';
 import { askClaude } from './claude.server';
 import { fdcDetail, searchFdc } from './usda.server';
-import { priceNewFood, type PricingOutcome } from './price.server';
+import { priceNewFood, priceOptions, type OptionPricing, type PricingOutcome } from './price.server';
+import { chooseSizes } from './package-sizes.server';
+import type { PackageRow } from './package-sizes';
+import { OPTIONS_INSTRUCTIONS, OPTIONS_SCHEMA, averagePrice, cleanOptions, type PurchaseOption } from './purchase-options';
 import {
   EXCLUDE_PREPARED, FLAVOR_TAGS, FOOD_GROUPS, GROUP_RULES, NUTRIENT_COLUMNS, SERVING_CHOICES,
   cleanFlavorTags, computeFood, isFoodGroup, isServingChoice, legacyNutrition, median, pickRawReference, rankCandidates, servingColumns,
@@ -212,7 +215,7 @@ export async function search(input: SearchInput): Promise<SearchResult> {
 
 // ---------- Step 2: add ----------
 
-type EnrichAnswer = { name: string; description: string; emoji: string; categoryId: number; flavorTags: string[]; pairIds: number[]; groceryTerm?: string; groceryMust?: string[] };
+type EnrichAnswer = { name: string; description: string; emoji: string; categoryId: number; flavorTags: string[]; pairIds: number[]; groceryTerm?: string; groceryMust?: string[]; purchaseOptions?: unknown };
 
 const ENRICH_SYSTEM = `You catalog a new grocery food for Kiwi, a nutrition-aware grocery planner. Given the USDA record the shopper chose and Kiwi's existing catalog, return:
 - name: the plain grocery name a shopper would search for (max 40 characters, no USDA jargon like "NFS" or "from dried").
@@ -222,7 +225,8 @@ const ENRICH_SYSTEM = `You catalog a new grocery food for Kiwi, a nutrition-awar
 - flavorTags: 2–4 tags describing its flavor profile, only from: ${FLAVOR_TAGS.join(', ')}.
 - pairIds: 3–6 ids of catalog foods that pair well with it in everyday meals (flavor and meal compatibility). Only use ids from the catalog list; never the food itself.
 - groceryTerm: what to type into a grocery store's search box to find this food as it is bought (2–5 words, plain store wording, e.g. "boneless skinless chicken thighs", "dry red lentils", "frozen mixed berries"). Not organic, no brand names.
-- groceryMust: 1–2 words that any correct product's name must contain (e.g. ["thigh"], ["lentil"], ["berry|berries"]); use "a|b" when either spelling works.`;
+- groceryMust: 1–2 words that any correct product's name must contain (e.g. ["thigh"], ["lentil"], ["berry|berries"]); use "a|b" when either spelling works.
+- ${OPTIONS_INSTRUCTIONS}`;
 
 const ENRICH_TOOL = {
   name: 'catalog_food',
@@ -238,6 +242,7 @@ const ENRICH_TOOL = {
       pairIds: { type: 'array', items: { type: 'integer' }, maxItems: 6 },
       groceryTerm: { type: 'string' },
       groceryMust: { type: 'array', items: { type: 'string' }, maxItems: 2 },
+      purchaseOptions: OPTIONS_SCHEMA,
     },
     required: ['name', 'description', 'emoji', 'categoryId', 'flavorTags', 'pairIds', 'groceryTerm'],
   },
@@ -311,14 +316,17 @@ export async function add(input: AddInput): Promise<AddResult> {
 
   // Store price (Kroger, docs/kroger-price-selection-rules.md): the AI's grocery search term + the same
   // selection rules as the backfill. Runs before the insert so food.price is set; never blocks adding the food.
-  const pricing: PricingOutcome = await priceNewFood({
+  // Purchase options (raw, rotisserie, frozen, canned …), priced alongside the food itself.
+  const options = cleanOptions(ai.purchaseOptions, name);
+  const servingInfo = { food_name: name, food_category_id: categoryId, serving_size, unit, serving_grams: computed.servingGrams, prepared_grams: computed.factor * 100 };
+  const [pricing, optionPricing]: [PricingOutcome, OptionPricing] = await Promise.all([priceNewFood({
     food_name: name,
     food_category_id: categoryId,
     serving_size,
     unit,
     serving_grams: computed.servingGrams,
     search: { term: clip(ai.groceryTerm, 60) || name, must: (ai.groceryMust || []).map(t => clip(t, 30)).filter(Boolean).slice(0, 2) },
-  }, who.id);
+  }, who.id), priceOptions(servingInfo, options, who.id)]);
 
   const row = {
     food_name: name,
@@ -328,7 +336,8 @@ export async function add(input: AddInput): Promise<AddResult> {
     serving_size,
     unit,
     factor: computed.factor,
-    price: pricing.defaultPrice ?? 0,
+    // With purchase options, an item with no option picked costs the average of the options.
+    price: optionPricing.average ?? pricing.defaultPrice ?? 0,
     source: `USDA FDC ${record.dataType} (AI food finder)`,
     fdc_id: record.fdcId,
     raw_fdc_id: raw?.fdcId ?? null,
@@ -353,6 +362,15 @@ export async function add(input: AddInput): Promise<AddResult> {
     const { error: priceError } = await db.from('food_price').upsert(pricing.rows.map(r => ({ ...r, food_id: food.food_id })), { onConflict: 'food_id,location_id' });
     if (priceError) console.error('[food-import] saving price', priceError);
   }
+
+  const savedOptions = await saveOptions(db, food.food_id, options, optionPricing);
+  // Package sizes (as bought): the AI picks up to 3 per option, or for the food itself when it has no options.
+  const servingText = `${serving_size} ${unit} (${Math.round(computed.servingGrams)} g)`;
+  const sizeGroups = savedOptions.length
+    ? savedOptions.map(o => ({ optionId: o.id, label: o.label, cands: optionPricing.sizeCandidates?.[o.index] ?? [] }))
+    : [{ optionId: null as number | null, label: null as string | null, cands: pricing.sizeCandidates ?? [] }];
+  const sizes = await Promise.all(sizeGroups.map(async g => ({ optionId: g.optionId, rows: await chooseSizes(name, g.label, servingText, g.cands) })));
+  await savePackages(db, food.food_id, sizes);
 
   // Pairings go both ways so the partner foods suggest the new one too.
   if (pairIds.length) {
@@ -384,8 +402,35 @@ export async function add(input: AddInput): Promise<AddResult> {
       source: `USDA ${record.dataType}: ${record.description}`,
       price: pricing.forUser,
       priceNote: pricing.note,
+      options: savedOptions.map(o => ({ id: o.id, label: o.label, form: o.form, perServing: optionPricing.userPrices[o.index] ?? null })),
+      optionAverage: averagePrice(optionPricing.userPrices),
     },
   };
+}
+
+// Purchase options and their store prices. A failure here never undoes adding the food: it's logged and the
+// food simply has no options (or unpriced ones).
+async function saveOptions(db: Awaited<ReturnType<typeof adminClient>>, foodId: number, options: PurchaseOption[], pricing: OptionPricing) {
+  if (!options.length) return [];
+  const { data, error } = await db.from('food_option')
+    .insert(options.map((o, i) => ({ ...o, food_id: foodId, price: pricing.defaultPrices[i] ?? 0 })))
+    .select('food_option_id, form, label');
+  if (error || !data) { console.error('[food-import] saving purchase options', error); return []; }
+  const saved = data.map(d => ({ id: Number(d.food_option_id), form: d.form, label: d.label, index: options.findIndex(o => o.form === d.form) }));
+  const priceRows = saved.flatMap(o => (pricing.rows[o.index] ?? []).map(r => ({ ...r, food_option_id: o.id })));
+  if (priceRows.length) {
+    const { error: priceError } = await db.from('food_option_price').upsert(priceRows, { onConflict: 'food_option_id,location_id' });
+    if (priceError) console.error('[food-import] saving purchase option prices', priceError);
+  }
+  return saved.sort((a, b) => a.index - b.index);
+}
+
+// Package sizes (migration 0019). Like the options, a failure is logged and the food just counts servings.
+async function savePackages(db: Awaited<ReturnType<typeof adminClient>>, foodId: number, groups: { optionId: number | null; rows: PackageRow[] }[]) {
+  const rows = groups.flatMap(g => g.rows.map(r => ({ ...r, food_id: foodId, food_option_id: g.optionId })));
+  if (!rows.length) return;
+  const { error } = await (db.from as any)('food_package').insert(rows);
+  if (error) console.error('[food-import] saving package sizes', error);
 }
 
 // ---------- Hand-offs ----------

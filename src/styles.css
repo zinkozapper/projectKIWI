@@ -361,3 +361,28 @@ input,select,textarea{font-size:16px!important}
 .recipe-notice{font-size:13px;color:var(--primary);background:var(--secondary);padding:9px 12px;border-radius:6px;margin:0 0 18px}
 @media(max-width:800px){.recipe-grid{grid-template-columns:1fr}.page-heading .recipe-add{width:100%}}
 .password-field{position:relative;display:flex;align-items:center}.password-field input{width:100%;padding-right:42px}.password-toggle{position:absolute;right:10px;display:flex;align-items:center;justify-content:center;padding:4px;border:0;background:transparent;color:var(--muted-foreground);cursor:pointer}.password-toggle:hover{color:var(--primary)}.password-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px}
+/* Dev 1 (Sprint 3): validation messages, nutrient info popups, nutrient search */
+.field-error{display:block;color:var(--destructive);font-size:11px;font-weight:600}
+.profile-form label.invalid .height-inputs input{border-color:var(--destructive)}
+.plan-budget-progress{grid-template-columns:1fr}
+.nutrient-top .nutrient-name{display:inline-flex;align-items:center;gap:4px;color:var(--foreground);font-size:inherit}
+.nutrient-info-button{display:inline-grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted-foreground);cursor:pointer}
+.nutrient-info-button:hover,.nutrient-info-button[data-state=open]{color:var(--primary);background:var(--secondary)}
+.nutrient-info-pop{display:grid;gap:8px;width:min(280px,calc(100vw - 32px));font-size:13px;line-height:1.5;background:var(--card);color:var(--foreground);border-color:var(--border)}
+.nutrient-info-pop p{margin:0;color:var(--muted-foreground)}
+.nutrient-info-pop button{justify-self:start}
+.nutrient-search{margin:-4px 0 16px}
+.nutrient-search-row{display:flex;align-items:center;gap:6px}
+.nutrient-searchbox{flex:1;height:42px}
+.nutrient-search-help{width:34px;height:34px}
+.nutrient-search-results{display:grid;margin-top:5px;background:var(--card);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow);padding:4px}
+.nutrient-search-result{display:grid;gap:2px;width:100%;padding:9px 10px;border:0;border-bottom:1px solid var(--border);background:transparent;color:inherit;text-align:left;font:inherit;border-radius:4px}
+.nutrient-search-result:last-child{border-bottom:0}
+.nutrient-search-result:hover,.nutrient-search-result:focus-visible{background:var(--muted)}
+.nutrient-search-result strong{font-size:13px}
+.nutrient-search-result small{font-size:12px;color:var(--muted-foreground)}
+.suggestions-block{scroll-margin-top:20px}
+
+/* Pantry stock rows: food, package size and how many (package sizes, migration 0019) */
+.pantry-stock{display:grid;gap:10px}.pantry-stock-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding-bottom:10px;border-bottom:1px solid var(--border)}.pantry-stock-row:last-child{border-bottom:0}.pantry-stock-amount{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-left:auto}.pantry-qty{min-width:28px;text-align:center;font-weight:700;font-size:14px}
+@media (max-width:640px){.pantry-stock-amount{margin-left:0;width:100%}}

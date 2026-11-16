@@ -48,7 +48,7 @@ describe('FoodFinder', () => {
     expect(screen.getByText(/Pairs well with Rice/)).toBeTruthy();
 
     fireEvent.click(screen.getByRole('button', { name: /Add to my list/ }));
-    await waitFor(() => expect(addFood).toHaveBeenCalledWith('101'));
+    await waitFor(() => expect(addFood).toHaveBeenCalledWith('101', 1, null));
   });
 
   it('adds the found food to the pantry when opened from My Pantry', async () => {

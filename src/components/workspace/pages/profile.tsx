@@ -16,6 +16,7 @@ import {
   setTheme,
   type ColorScheme,
 } from '@/lib/theme';
+import { LIMITS, numberKeyGuard, numericText, PROFILE_RANGES, profileFieldErrors, type ProfileFields } from '@/lib/validation';
 import { useWorkspace } from '../context';
 
 type Passkey = { id: string; friendly_name?: string; created_at: string; last_used_at?: string };
@@ -27,6 +28,13 @@ export function ProfilePage() {
   const [passkeyBusy, setPasskeyBusy] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [scheme, setScheme] = useState<ColorScheme>('green');
+  // Messages for fields flagged on the last save; they update live as the user fixes them.
+  const fieldErrors = profileFieldErrors(profileDraft);
+  const errorFor = (key: keyof ProfileFields) => (profileErrors.includes(key) ? fieldErrors[key] : undefined);
+  const fieldError = (field: keyof ProfileFields) => {
+    const message = errorFor(field);
+    return message ? <span className="field-error" role="alert">{message}</span> : null;
+  };
 
   useEffect(() => {
     const theme = resolveTheme();
@@ -87,31 +95,37 @@ export function ProfilePage() {
           <div className="form-grid">
             <label className={profileErrors.includes('display_name') ? 'invalid' : ''}>
               Your name
-              <input value={profileDraft.display_name} onChange={e => setProfileDraft({ ...profileDraft, display_name: e.target.value })} placeholder="e.g. Alex" />
+              <input required maxLength={LIMITS.name} autoComplete="given-name" aria-invalid={!!errorFor('display_name')} value={profileDraft.display_name} onChange={e => setProfileDraft({ ...profileDraft, display_name: e.target.value.replace(/\d/g, '') })} placeholder="e.g. Alex" />
+              {fieldError('display_name')}
             </label>
             <label className={profileErrors.includes('age') ? 'invalid' : ''}>
               Age <small>Used for daily nutrition estimates</small>
-              <input type="number" min="18" max="100" value={profileDraft.age} onChange={e => setProfileDraft({ ...profileDraft, age: e.target.value })} placeholder="e.g. 23" />
+              <input required type="number" inputMode="numeric" min={PROFILE_RANGES.age[0]} max={PROFILE_RANGES.age[1]} step="1" aria-invalid={!!errorFor('age')} onKeyDown={numberKeyGuard(true)} value={profileDraft.age} onChange={e => setProfileDraft({ ...profileDraft, age: numericText(e.target.value, { integer: true, maxLength: 3 }) })} placeholder="e.g. 23" />
+              {fieldError('age')}
             </label>
             <label className={profileErrors.includes('height_ft') ? 'invalid' : ''}>
               Height <small>Helps estimate maintenance energy</small>
               <div className="height-inputs">
-                <input type="number" min="3" max="8" aria-label="Feet" value={profileDraft.height_ft} onChange={e => setProfileDraft({ ...profileDraft, height_ft: e.target.value })} placeholder="ft, e.g. 5" />
-                <input type="number" min="0" max="11" aria-label="Inches" value={profileDraft.height_in} onChange={e => setProfileDraft({ ...profileDraft, height_in: e.target.value })} placeholder="in, e.g. 7" />
+                <input required type="number" inputMode="numeric" min={PROFILE_RANGES.height_ft[0]} max={PROFILE_RANGES.height_ft[1]} step="1" aria-label="Feet" aria-invalid={!!errorFor('height_ft')} onKeyDown={numberKeyGuard(true)} value={profileDraft.height_ft} onChange={e => setProfileDraft({ ...profileDraft, height_ft: numericText(e.target.value, { integer: true, maxLength: 1 }) })} placeholder="ft, e.g. 5" />
+                <input type="number" inputMode="numeric" min={PROFILE_RANGES.height_in[0]} max={PROFILE_RANGES.height_in[1]} step="1" aria-label="Inches" aria-invalid={!!errorFor('height_in')} onKeyDown={numberKeyGuard(true)} value={profileDraft.height_in} onChange={e => setProfileDraft({ ...profileDraft, height_in: numericText(e.target.value, { integer: true, maxLength: 2 }) })} placeholder="in, e.g. 7" />
               </div>
+              {fieldError('height_ft')}
+              {fieldError('height_in')}
             </label>
             <label className={profileErrors.includes('weight_lb') ? 'invalid' : ''}>
               Weight (lb) <small>Helps estimate energy and protein</small>
-              <input type="number" min="55" max="770" value={profileDraft.weight_lb} onChange={e => setProfileDraft({ ...profileDraft, weight_lb: e.target.value })} placeholder="e.g. 150" />
+              <input required type="number" inputMode="decimal" min={PROFILE_RANGES.weight_lb[0]} max={PROFILE_RANGES.weight_lb[1]} step="0.1" aria-invalid={!!errorFor('weight_lb')} onKeyDown={numberKeyGuard()} value={profileDraft.weight_lb} onChange={e => setProfileDraft({ ...profileDraft, weight_lb: numericText(e.target.value, { maxLength: 5 }) })} placeholder="e.g. 150" />
+              {fieldError('weight_lb')}
             </label>
             <label className={profileErrors.includes('gender') ? 'invalid' : ''}>
               Sex used for estimates <small>Some nutrient guidance differs</small>
-              <select value={profileDraft.gender} onChange={e => setProfileDraft({ ...profileDraft, gender: e.target.value })}>
+              <select required aria-invalid={!!errorFor('gender')} value={profileDraft.gender} onChange={e => setProfileDraft({ ...profileDraft, gender: e.target.value })}>
                 <option value="">Select one</option>
                 <option value="female">Female</option>
                 <option value="male">Male</option>
                 <option value="other">Other / prefer another estimate</option>
               </select>
+              {fieldError('gender')}
             </label>
             <label>
               Activity level <small>Adjusts estimated daily energy</small>
@@ -131,7 +145,8 @@ export function ProfilePage() {
             </label>
             <label className={profileErrors.includes('zip_code') ? 'invalid' : ''}>
               Shopping ZIP code <small>Used for local prices when available</small>
-              <input inputMode="numeric" autoComplete="postal-code" maxLength={5} value={profileDraft.zip_code} onChange={e => setProfileDraft({ ...profileDraft, zip_code: e.target.value })} />
+              <input required inputMode="numeric" autoComplete="postal-code" maxLength={LIMITS.zip} aria-invalid={!!errorFor('zip_code')} value={profileDraft.zip_code} onChange={e => setProfileDraft({ ...profileDraft, zip_code: numericText(e.target.value, { integer: true, maxLength: LIMITS.zip }) })} />
+              {fieldError('zip_code')}
             </label>
             <div className={`budget-field${profileErrors.includes('budget') ? ' invalid' : ''}`}>
               <span className="budget-field-label">Budget:</span>
@@ -139,7 +154,7 @@ export function ProfilePage() {
                 <div className="budget-amount-group">
                   <label className="budget-amount" htmlFor="profile-budget">
                     <span>$</span>
-                    <input id="profile-budget" type="number" min="0" value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: e.target.value })} />
+                    <input id="profile-budget" required type="number" inputMode="decimal" min={PROFILE_RANGES.budget[0]} max={PROFILE_RANGES.budget[1]} step="0.01" aria-invalid={!!errorFor('budget')} onKeyDown={numberKeyGuard()} value={profileDraft.budget} onChange={e => setProfileDraft({ ...profileDraft, budget: numericText(e.target.value, { maxLength: 8 }) })} />
                   </label>
                   <span className="budget-slash">/</span>
                 </div>
@@ -162,6 +177,7 @@ export function ProfilePage() {
                   <input id="profile-budget-start" type="date" max={toDateKey(new Date())} value={profileDraft.budget_start} onChange={e => setProfileDraft({ ...profileDraft, budget_start: e.target.value })} />
                 </label>
               </div>
+              {fieldError('budget')}
             </div>
           </div>
           <Button className="save-profile" type="submit">Save profile <ArrowRight size={16} /></Button>

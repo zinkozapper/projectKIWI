@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { selfHosted } from '@/lib/auth-options';
+import { LIMITS, MIN_PASSWORD, passwordError } from '@/lib/validation';
 
 export const Route = createFileRoute('/reset-password')({
   head: () => ({ meta: [{ title: 'Kiwi — Reset your password' }, { name: 'description', content: 'Choose a new password for your Kiwi account.' }] }),
@@ -22,6 +23,11 @@ function ResetPassword() {
   async function submit(e: FormEvent) {
     e.preventDefault();
     setError('');
+    const problem = passwordError(password);
+    if (problem) {
+      setError(problem);
+      return;
+    }
     setNotice('');
     if (password !== confirmPassword) {
       setError("Passwords don't match.");
@@ -45,8 +51,8 @@ function ResetPassword() {
         <section className="login-card login-card-github" aria-labelledby="reset-title">
           <h1 id="reset-title">Choose a new password</h1>
           <form onSubmit={submit} className="login-form">
-            <label>New password<input required type="password" minLength={6} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} /></label>
-            <label>Confirm new password<input required type="password" minLength={6} autoComplete="new-password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} /></label>
+            <label>New password<input required type="password" minLength={MIN_PASSWORD} maxLength={LIMITS.password} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} /></label>
+            <label>Confirm new password<input required type="password" minLength={MIN_PASSWORD} maxLength={LIMITS.password} autoComplete="new-password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} /></label>
             {error && <p className="form-error" role="alert">{error}</p>}
             {notice && <p className="form-success" role="status">{notice}</p>}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'Updating…' : 'Update password'}</Button>

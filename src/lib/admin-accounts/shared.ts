@@ -26,6 +26,7 @@ export function checkAccountInput(input: Partial<AccountInput> | null | undefine
   if (!EMAIL.test(email) || email.length > 254) return 'Enter a valid email address.';
   if (!first) return 'Enter a first name.';
   if (first.length > MAX_NAME || last.length > MAX_NAME) return `Names can be at most ${MAX_NAME} characters.`;
+  if (/\d/.test(first) || /\d/.test(last)) return 'Names can’t contain numbers.';
   if (opts.passwordRequired && !password) return 'Enter a password.';
   if (password && password.length < MIN_PASSWORD) return `Passwords need at least ${MIN_PASSWORD} characters.`;
   return null;

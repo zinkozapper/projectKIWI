@@ -2,10 +2,11 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, nutrientLimits, type Profile } from '@/lib/foods';
+import { profileFieldErrors } from '@/lib/validation';
+import { rankSuggestions, type FoodSuggestion } from '@/lib/nutrient-suggestions';
+import { foods, foodById, searchFoods, totals, addNutrients, targets, nutrientKeys, type NutrientKey, type Profile } from '@/lib/foods';
 import { loadCatalog } from '@/lib/foods';
 import { resetRecommendationImpressions } from '@/lib/recommendation-events';
-import { nutrientBoosts, type NutrientBoost } from '@/lib/recommendation-boosts';
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
 import { useIsAdmin } from '@/lib/admin';
@@ -13,18 +14,24 @@ import { needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pant
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 import { localizedPricingEnabled } from '@/lib/pricing-functions';
 import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
+import { averageOptionPrice, itemOptionPrice, loadFoodOptions, loadLocalOptionPrices, optionPrice, type FoodOption, type OptionCatalog } from '@/lib/food-options';
 import { isFirstAccountSession } from '@/lib/first-session';
+import { PANTRY_SERVINGS_WITHOUT_SIZE, defaultPackage, loadFoodPackages, packagePrice, packagesFor as sizesFor, servingsOf, type FoodPackage, type PackageCatalog } from '@/lib/food-packages';
 
-export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string };
-export type PantryItem = { id: string; food_id: string; quantity: number };
+// option_id: the purchase option (prep style) picked for this item; null = average of the food's options.
+// package_id: the package size bought (migration 0019). Set: quantity = packages. null: quantity = servings.
+// price_estimate: the shopper's own price when Kiwi has none (per package, or per serving without a package).
+export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string; option_id: string | null; package_id: string | null; price_estimate: number | null };
+// package_id set: quantity = packages at home. null: quantity = weeks of servings (PANTRY_SERVINGS_WITHOUT_SIZE).
+export type PantryItem = { id: string; food_id: string; quantity: number; package_id: string | null };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null; name?: string | null };
 export type ProfileDraft = { display_name: string; age: string; height_ft: string; height_in: string; weight_lb: string; gender: string; activity: string; goal: string; budget: string; budget_weeks: string; budget_start: string; zip_code: string };
 // addCost = price of one add (1 serving a day for the whole plan). fitsBudget = that add fits what's left.
-export type FoodSuggestion = { food: typeof foods[number]; score: number; boosts: NutrientBoost[]; addCost: number; fitsBudget: boolean };
+export type { FoodSuggestion };
 export type FoodPreferences = Record<string, boolean>;
 
-const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id) });
-const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity) });
+const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id), option_id: r.food_option_id == null ? null : String(r.food_option_id) , package_id: r.food_package_id == null ? null : String(r.food_package_id), price_estimate: r.price_estimate == null ? null : Number(r.price_estimate) });
+const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), package_id: r.food_package_id == null ? null : String(r.food_package_id) });
 const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at, name: r.name });
 
 export const CM_PER_INCH = 2.54;
@@ -76,12 +83,33 @@ type WorkspaceValue = {
   daily: ReturnType<typeof targets>;
   spend: number;
   priceOf: (id: string) => number | null;
+  // Purchase options ("prep style"). itemPrice = the item's option price, else the options' average, else priceOf.
+  optionsFor: (foodId: string) => FoodOption[];
+  optionPriceOf: (option: FoodOption) => number | null;
+  itemPrice: (item: Item) => number | null;
+  setItemOption: (item: Item, optionId: string | null) => Promise<void>;
+  // Package sizes (one add = one package, spread across the trip). See src/lib/food-packages.ts.
+  packagesFor: (foodId: string, optionId?: string | null) => FoodPackage[];
+  packageOf: (row: { package_id: string | null; food_id: string }) => FoodPackage | undefined;
+  packagePriceOf: (pkg: FoodPackage, optionId?: string | null) => number | null;
+  itemServings: (item: Item) => number;
+  /** What the row costs: store price, else the shopper's estimate, else null (unpriced). */
+  lineCost: (item: Item) => number | null;
+  setItemPackage: (item: Item, packageId: string) => Promise<void>;
+  setItemEstimate: (item: Item, price: number | null) => Promise<void>;
+  pantryServings: (item: PantryItem) => number;
+  setPantryQuantity: (item: PantryItem, quantity: number) => Promise<void>;
+  setPantryPackage: (item: PantryItem, packageId: string) => Promise<void>;
   hasUnpricedBudgetItems: boolean;
   priceStatus: 'none' | 'fresh' | 'stale' | 'unknown';
   priceRefreshUnavailable: boolean;
   biggestGaps: typeof nutrientKeys;
   suggestions: FoodSuggestion[];
   foodGapScores: FoodSuggestion[];
+  // The nutrient the current suggestions are for, and whether the user picked it.
+  suggestionNutrient: NutrientKey | null;
+  suggestionNutrientChosen: boolean;
+  setSuggestionFocus: (nutrient: NutrientKey | null) => void;
   foodPreferences: FoodPreferences;
   likedFoods: typeof foods;
   setFoodPreference: (foodId: string, liked: boolean) => Promise<boolean>;
@@ -91,14 +119,14 @@ type WorkspaceValue = {
   setSelected: (id: string) => void;
   clearError: () => void;
   fail: (message: string) => void;
-  addFood: (id: string, q?: number) => Promise<Item | null>;
+  addFood: (id: string, q?: number, optionId?: string | null) => Promise<Item | null>;
   // Adds several foods at once (recipe ingredients). quantity = total servings. Returns how many were saved.
   addFoods: (entries: { id: string; quantity: number }[]) => Promise<number>;
   updateQuantity: (item: Item, q: number) => Promise<void>;
   removeItem: (item: Item, shop?: boolean) => Promise<void>;
   undoPurchase: (item: Item) => Promise<void>;
   saveTripSettings: (nextDays: number, nextBudget: number) => Promise<void>;
-  addPantry: (id: string) => Promise<void>;
+  addPantry: (id: string, packageId?: string | null) => Promise<void>;
   removePantry: (id: string) => Promise<void>;
   // Pantry check: before a new trip starts, the user confirms what's still at home.
   pantryCheckDue: boolean;
@@ -137,6 +165,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState('1');
+  // Nutrient the user asked suggestions for; null = follow NUTRIENT_PRIORITY.
+  const [suggestionFocus, setSuggestionFocus] = useState<NutrientKey | null>(null);
   const [days, setDays] = useState(7);
   const [budget, setBudget] = useState(75);
   const [budgetWeeks, setBudgetWeeks] = useState(1);
@@ -147,6 +177,27 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [priceStatus, setPriceStatus] = useState<'none' | 'fresh' | 'stale' | 'unknown'>('none');
   const [priceRefreshUnavailable, setPriceRefreshUnavailable] = useState(false);
   const priceSnapshotAt = useRef<string | null>(null);
+  const [foodOptions, setFoodOptions] = useState<OptionCatalog>({});
+  const [localOptionPrices, setLocalOptionPrices] = useState<Record<string, number> | null>(null);
+  const [packageCatalog, setPackageCatalog] = useState<PackageCatalog>({});
+
+  // Package sizes for the whole catalog; reloaded when the AI food finder adds a food (it brings its sizes).
+  useEffect(() => {
+    let cancelled = false;
+    const load = () => loadFoodPackages().then(p => { if (!cancelled) setPackageCatalog(p); }).catch(e => console.error('Could not load package sizes:', e));
+    void load();
+    window.addEventListener('kiwi:catalog-food-added', load);
+    return () => { cancelled = true; window.removeEventListener('kiwi:catalog-food-added', load); };
+  }, []);
+
+  // Purchase options for the whole catalog; reloaded when the AI food finder adds a food (it may bring options).
+  useEffect(() => {
+    let cancelled = false;
+    const load = () => loadFoodOptions().then(o => { if (!cancelled) setFoodOptions(o); }).catch(e => console.error('Could not load purchase options:', e));
+    void load();
+    window.addEventListener('kiwi:catalog-food-added', load);
+    return () => { cancelled = true; window.removeEventListener('kiwi:catalog-food-added', load); };
+  }, []);
   const [profileErrors, setProfileErrors] = useState<string[]>([]);
   const active = trips.find(t => t.status === 'active');
   // Pantry check dialog: confirmPantry() opens it and resolves with the food ids still at home
@@ -277,6 +328,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     setPricingMode('loading');
     setLocalizedPrices(null);
+    setLocalOptionPrices(null);
     setPriceStatus('none');
     setPriceRefreshUnavailable(false);
     priceSnapshotAt.current = null;
@@ -308,6 +360,9 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         if (!before.error && !statusError && before.data !== snapshotAt) return;
         if (!cancelled) {
           setLocalizedPrices(Object.fromEntries(rows.map(row => [String(row.food_id), Number(row.price_per_serving)])));
+          void loadLocalOptionPrices(mapping.location_id)
+            .then(p => { if (!cancelled) setLocalOptionPrices(p); })
+            .catch(e => console.error('Could not load option prices:', e));
           priceSnapshotAt.current = statusError ? null : snapshotAt;
           setPriceStatus(priceFreshness(priceSnapshotAt.current));
         }
@@ -330,10 +385,22 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const listItems = items.filter(i => i.trip_id === active?.id && !i.purchased);
   const purchased = items.filter(i => i.trip_id === active?.id && i.purchased);
-  // A pantry food counts as 1 serving a day for the whole plan, whatever quantity is stored:
-  // the pantry tracks what's at home, not how much of it.
-  const pantryTotals = useMemo(() => totals(pantry.map(p => ({ food_id: p.food_id, quantity: days }))), [pantry, days]);
-  const combined = useMemo(() => addNutrients(totals(listItems), pantryTotals), [listItems, pantryTotals]);
+  // Bought as packages: a list item's or pantry food's servings are spread across the plan's days
+  // (a 4-serving pack on a 7-day plan = 4/7 of a serving a day). Older rows without a size count servings.
+  const packageById = useMemo(() => new Map(Object.values(packageCatalog).flat().map(p => [p.id, p])), [packageCatalog]);
+  const packageOf = (row: { package_id: string | null; food_id: string }) => (row.package_id ? packageById.get(row.package_id) : undefined);
+  const packagesFor = (foodId: string, optionId?: string | null) => sizesFor(packageCatalog, foodId, optionId, foodOptions[foodId] ?? []);
+  const itemServings = (item: Item) => servingsOf(Number(item.quantity), packageOf(item));
+  const pantryServings = (item: PantryItem) => {
+    const pkg = packageOf(item);
+    return pkg ? Number(item.quantity) * pkg.servings : Number(item.quantity) * PANTRY_SERVINGS_WITHOUT_SIZE;
+  };
+  const pantryTotals = useMemo(() => totals(pantry.map(p => ({ food_id: p.food_id, quantity: pantryServings(p) }))),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pantry, packageById]);
+  const combined = useMemo(() => addNutrients(totals(listItems.map(i => ({ food_id: i.food_id, quantity: itemServings(i) }))), pantryTotals),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [listItems, pantryTotals, packageById]);
   const daily = targets(profile);
   // OKR 2: save a nutrient goal snapshot when the pantry, plan length or targets change (migration 0007).
   // Waits a moment so adding several pantry foods in a row saves one snapshot, not one per click.
@@ -346,8 +413,23 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     // daily is rebuilt every render from profile, so profile stands in for it here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, userId, pantryId, profile, pantry, pantryTotals, days]);
-  const priceOf = (id: string) => resolvedPrice(foodById(id)?.price, localizedPrices?.[id], pricingMode);
-  const cost = (list: Item[]) => list.reduce((sum, i) => sum + (priceOf(i.food_id) ?? 0) * Number(i.quantity), 0);
+  const basePrice = (id: string) => resolvedPrice(foodById(id)?.price, localizedPrices?.[id], pricingMode);
+  // A food sold several ways (purchase options) costs the average of its priced options unless an option is picked.
+  const priceOf = (id: string) => averageOptionPrice(foodOptions[id], localOptionPrices, pricingMode) ?? basePrice(id);
+  const optionsFor = (foodId: string) => foodOptions[foodId] ?? [];
+  const optionPriceOf = (option: FoodOption) => optionPrice(option, localOptionPrices, pricingMode);
+  const itemPrice = (item: Item) => itemOptionPrice(item.option_id, foodOptions[item.food_id], localOptionPrices, pricingMode, basePrice(item.food_id));
+  const packagePriceOf = (pkg: FoodPackage, optionId?: string | null) =>
+    packagePrice(pkg, itemOptionPrice(optionId ?? pkg.optionId, foodOptions[pkg.foodId], localOptionPrices, pricingMode, basePrice(pkg.foodId)));
+  // Store price first; with none, the shopper's estimate (per package, or per serving without a package).
+  const lineCost = (item: Item): number | null => {
+    const per = itemPrice(item);
+    if (per != null) return per * itemServings(item);
+    const pkg = packageOf(item);
+    if (pkg && pkg.price > 0) return pkg.price * Number(item.quantity);
+    return item.price_estimate != null ? item.price_estimate * Number(item.quantity) : null;
+  };
+  const cost = (list: Item[]) => list.reduce((sum, i) => sum + (lineCost(i) ?? 0), 0);
   // spend = what is still on the current list (planned, not bought yet).
   const spend = cost(listItems);
 
@@ -358,50 +440,24 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const budgetPeriod = currentBudgetPeriod(budgetStart, budgetWeeks);
   const periodTripIds = new Set(trips.filter(t => t.status === 'active' || (t.status === 'completed' && isInBudgetPeriod(t.completed_at, budgetPeriod))).map(t => t.id));
   const periodSpent = cost(items.filter(i => i.purchased && periodTripIds.has(i.trip_id)));
-  const hasUnpricedBudgetItems = [...listItems, ...items.filter(i => i.purchased && periodTripIds.has(i.trip_id))].some(i => priceOf(i.food_id) === null);
+  const hasUnpricedBudgetItems = [...listItems, ...items.filter(i => i.purchased && periodTripIds.has(i.trip_id))].some(i => lineCost(i) === null);
   const budgetRemaining = budget - periodSpent - spend;
 
   const available = foods.filter(f => !listItems.some(i => i.food_id === f.id) && !pantry.some(i => i.food_id === f.id));
-  const biggestGaps = [...nutrientKeys].filter(k => k !== 'calories' && !nutrientLimits.has(k) && daily[k] > 0).sort((a, b) => combined[a] / days / daily[a] - combined[b] / days / daily[b]);
-
-  // Suggestions never disappear for budget reasons. Foods whose add fits the remaining budget come
-  // first, ranked by how much they close the biggest gaps; the rest follow ranked by gap-filling per
-  // dollar. Over budget, nothing fits, so every suggestion is the cheapest way to fill the gaps.
+  // Suggestions: one nutrient at a time in priority order (src/lib/nutrient-suggestions.ts), or the
+  // nutrient the user picked from a nutrient's info popup or the nutrient search.
+  // One add = one package of the food's default size (or a serving a day for the trip when it has no sizes).
   const addCostOf = (food: typeof foods[number]) => {
-    const price = Number(priceOf(food.id));
-    return Number.isFinite(price) && price > 0 ? price * days : 0;
+    const pkg = defaultPackage(packagesFor(food.id));
+    const price = pkg ? Number(packagePriceOf(pkg)) : Number(priceOf(food.id)) * days;
+    return Number.isFinite(price) && price > 0 ? price : 0;
   };
-  const knownCosts = available.map(addCostOf).filter(c => c > 0).sort((a, b) => a - b);
-  const typicalCost = knownCosts[Math.floor(knownCosts.length / 2)] || 1;
-  const valueOf = (s: FoodSuggestion) => s.score / (s.addCost || typicalCost);
-
-  const foodGapScores: FoodSuggestion[] = available.map(food => {
-    const relevantGaps = biggestGaps.slice(0, 4).map(k => {
-      const target = daily[k];
-      const intake = combined[k] / days;
-      const remaining = Math.max(0, target - intake);
-      const amount = Math.max(0, Number(food.nutrition[k]) || 0);
-      const percentage = remaining > 0 ? Math.min(100, Math.round(amount / remaining * 100)) : 0;
-      const impact = remaining > 0 ? (remaining / target) * Math.min(amount / remaining, 1) : 0;
-      return { key: k, percentage, impact, amount };
-    }).filter(g => g.amount > 0 && g.impact > 0).sort((a, b) => b.impact - a.impact);
-
-    const baseScore = relevantGaps.reduce((total, gap) => total + gap.impact, 0);
-    const liked = foodPreferences[food.id];
-    const score = baseScore * (liked === true ? 1.25 : liked === false ? 0.75 : 1);
-    const boosts = nutrientBoosts(relevantGaps);
-
-    const addCost = addCostOf(food);
-    // Unknown price (0): fits while there's budget left, ranked at a typical cost once over.
-    const fitsBudget = addCost > 0 ? addCost <= budgetRemaining : budgetRemaining > 0;
-    return { food, score, boosts, addCost, fitsBudget };
-    // Only suggest foods that fill at least MIN_BOOST_PERCENT of some gap, so every card has a chip.
-  }).filter(s => s.score > 0 && s.boosts.length > 0).sort((a, b) => {
-    if (a.fitsBudget !== b.fitsBudget) return a.fitsBudget ? -1 : 1;
-    return a.fitsBudget ? b.score - a.score : valueOf(b) - valueOf(a);
-  });
-
-  const suggestions = foodGapScores.slice(0, 2);
+  const ranked = rankSuggestions({ available, daily, combined, days, preferences: foodPreferences, chosen: suggestionFocus, addCostOf, budgetRemaining });
+  const biggestGaps = ranked.openGaps;
+  const foodGapScores = ranked.gapScores;
+  const suggestions = ranked.suggestions;
+  const suggestionNutrient = ranked.nutrient;
+  const suggestionNutrientChosen = ranked.chosen;
   const likedFoods = foods.filter(food => foodPreferences[food.id] === true);
 
   const results = searchFoods(foods, search);
@@ -536,21 +592,26 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
   // q = servings per day. One add puts 1 serving a day on the list for the whole plan (7 servings on a
   // 7-day plan, 14 on a 14-day plan). shopping_list_item.quantity stores the total servings to buy.
   // Returns the saved list row (or null on failure) so callers like recommendation tracking can link to it.
-  async function addFood(id: string, perDay = 1): Promise<Item | null> {
-    if (!Number.isFinite(perDay) || perDay <= 0) {
+  // optionId: the prep style picked when adding (undefined = keep the item's current pick; null = no preference).
+  // One add = `count` packages of the food's default size for the picked option, as it's sold. A food with no
+  // sizes (or an older list row without one) falls back to `count` servings a day for the whole trip.
+  async function addFood(id: string, count = 1, optionId?: string | null): Promise<Item | null> {
+    if (!Number.isFinite(count) || count <= 0) {
       fail('Enter a quantity greater than zero.');
       return null;
     }
-    const q = perDay * days;
     // Starting a new trip: confirm the pantry first. Closing the check cancels the add.
     if (!active && !(await confirmPantry())) return null;
     const tripId = await ensureTrip();
     if (!tripId) return null;
     const food = foodById(id);
     const existing = items.find(i => i.trip_id === tripId && i.food_id === id && !i.purchased);
+    const pkg = defaultPackage(packagesFor(id, optionId !== undefined ? optionId : existing?.option_id));
+    const inPackages = existing ? !!existing.package_id : !!pkg;
+    const q = inPackages ? count : count * days;
     let saved: Item | null = null;
     if (existing) {
-      const { data, error } = await supabase.from('shopping_list_item').update({ quantity: Number(existing.quantity) + q }).eq('shopping_list_item_id', Number(existing.id)).select().single();
+      const { data, error } = await supabase.from('shopping_list_item').update({ quantity: Number(existing.quantity) + q, ...(optionId !== undefined ? { food_option_id: optionId == null ? null : Number(optionId) } : {}) }).eq('shopping_list_item_id', Number(existing.id)).select().single();
       if (error) fail(error.message);
       else {
         const row = toItem(data);
@@ -558,7 +619,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
         setItems(prev => prev.map(i => i.id === existing.id ? row : i));
       }
     } else {
-      const { data, error } = await supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(id), quantity: q, unit: food?.unit ?? null }).select().single();
+      const { data, error } = await supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(id), quantity: q, unit: food?.unit ?? null, food_option_id: optionId ? Number(optionId) : null, ...(pkg ? { food_package_id: Number(pkg.id) } : {}) } as any).select().single();
       if (error) fail(error.message);
       else {
         const row = toItem(data);
@@ -568,6 +629,58 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     }
     setSelected(id);
     return saved;
+  }
+
+  // Change an item's prep style (purchase option). null = no preference (priced at the options' average).
+  async function setItemOption(item: Item, optionId: string | null) {
+    const before = item;
+    // Sizes belong to an option, so switching option switches to its default size (same number of packages).
+    // If the new option has no sizes, the packages turn into the same number of servings.
+    const oldPkg = packageOf(item);
+    const nextPkg = defaultPackage(packagesFor(item.food_id, optionId));
+    const patch: Partial<Item> = { option_id: optionId };
+    if (oldPkg && nextPkg && nextPkg.id !== oldPkg.id) patch.package_id = nextPkg.id;
+    if (oldPkg && !nextPkg) { patch.package_id = null; patch.quantity = Number(item.quantity) * oldPkg.servings; }
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, ...patch } : i));
+    const { error } = await supabase.from('shopping_list_item').update({
+      food_option_id: optionId == null ? null : Number(optionId),
+      ...('package_id' in patch ? { food_package_id: patch.package_id == null ? null : Number(patch.package_id) } : {}),
+      ...('quantity' in patch ? { quantity: patch.quantity } : {}),
+    } as any).eq('shopping_list_item_id', Number(item.id));
+    if (error) {
+      setItems(prev => prev.map(i => i.id === item.id ? before : i));
+      fail(error.message);
+    }
+  }
+
+  // Change a list item's package size; the number of packages stays the same.
+  async function setItemPackage(item: Item, packageId: string) {
+    const before = item;
+    const patch: Partial<Item> = { package_id: packageId };
+    // An older row counted in servings becomes one package.
+    if (!item.package_id) patch.quantity = 1;
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, ...patch } : i));
+    const { error } = await supabase.from('shopping_list_item').update({ food_package_id: Number(packageId), ...(patch.quantity != null ? { quantity: patch.quantity } : {}) } as any).eq('shopping_list_item_id', Number(item.id));
+    if (error) {
+      setItems(prev => prev.map(i => i.id === item.id ? before : i));
+      fail(error.message);
+    }
+  }
+
+  // The shopper's own price for an item Kiwi can't price (null clears it).
+  async function setItemEstimate(item: Item, price: number | null) {
+    if (price != null && (!Number.isFinite(price) || price <= 0 || price > 1000)) {
+      fail('Enter a price between $0.01 and $1,000.');
+      return;
+    }
+    const before = item;
+    const value = price == null ? null : Math.round(price * 100) / 100;
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, price_estimate: value } : i));
+    const { error } = await supabase.from('shopping_list_item').update({ price_estimate: value } as any).eq('shopping_list_item_id', Number(item.id));
+    if (error) {
+      setItems(prev => prev.map(i => i.id === item.id ? before : i));
+      fail(error.message);
+    }
   }
 
   // One pantry check and one trip for the whole batch; addFood in a loop would ask again for each food,
@@ -641,11 +754,38 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     }
   }
 
-  async function addPantry(id: string) {
-    if (pantry.some(i => i.food_id === id) || !pantryId) return;
-    const { data, error } = await supabase.from('pantry_item').insert({ pantry_id: pantryId, food_id: Number(id), quantity: 1, unit: foodById(id)?.unit ?? null }).select().single();
+  // Adds one package (default size) to the pantry; adding a food that's already there adds another package.
+  async function addPantry(id: string, packageId?: string | null) {
+    if (!pantryId) return;
+    const pkgId = packageId === undefined ? defaultPackage(packagesFor(id))?.id ?? null : packageId;
+    const existing = pantry.find(i => i.food_id === id && i.package_id === pkgId);
+    if (existing) return setPantryQuantity(existing, Number(existing.quantity) + 1);
+    if (pkgId == null && pantry.some(i => i.food_id === id)) return;
+    const { data, error } = await supabase.from('pantry_item').insert({ pantry_id: pantryId, food_id: Number(id), quantity: 1, unit: foodById(id)?.unit ?? null, food_package_id: pkgId == null ? null : Number(pkgId) } as any).select().single();
     if (error) fail(error.message);
     else setPantry(prev => [...prev, toPantry(data)]);
+  }
+
+  // How many packages (or weeks' worth, without a size) are at home. 0 or less removes the food.
+  async function setPantryQuantity(item: PantryItem, quantity: number) {
+    if (!Number.isFinite(quantity)) return;
+    if (quantity <= 0) return removePantry(item.id);
+    const q = Math.min(99, Math.round(quantity * 100) / 100);
+    setPantry(prev => prev.map(p => p.id === item.id ? { ...p, quantity: q } : p));
+    const { error } = await supabase.from('pantry_item').update({ quantity: q }).eq('pantry_item_id', Number(item.id));
+    if (error) {
+      setPantry(prev => prev.map(p => p.id === item.id ? item : p));
+      fail(error.message);
+    }
+  }
+
+  async function setPantryPackage(item: PantryItem, packageId: string) {
+    setPantry(prev => prev.map(p => p.id === item.id ? { ...p, package_id: packageId } : p));
+    const { error } = await supabase.from('pantry_item').update({ food_package_id: Number(packageId) } as any).eq('pantry_item_id', Number(item.id));
+    if (error) {
+      setPantry(prev => prev.map(p => p.id === item.id ? item : p));
+      fail(error.message);
+    }
   }
 
   async function removePantry(id: string) {
@@ -656,10 +796,11 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
 
   async function saveProfile(e: FormEvent) {
     e.preventDefault();
-    const missing = ['display_name', 'age', 'height_ft', 'weight_lb', 'gender', 'budget'].filter(key => !profileDraft[key as keyof typeof profileDraft]);
-    setProfileErrors(missing);
-    if (missing.length) {
-      fail('Please fill in the highlighted fields.');
+    const fieldErrors = profileFieldErrors(profileDraft);
+    const invalid = Object.keys(fieldErrors);
+    setProfileErrors(invalid);
+    if (invalid.length) {
+      fail(invalid.length === 1 ? Object.values(fieldErrors)[0]! : 'Please fix the highlighted fields.');
       return;
     }
     const age = Number(profileDraft.age), inchPart = Number(profileDraft.height_in || 0), height = Math.round((Number(profileDraft.height_ft) * 12 + inchPart) * CM_PER_INCH * 10) / 10, weight = Math.round(Number(profileDraft.weight_lb) / LB_PER_KG * 10) / 10, cash = Number(profileDraft.budget), weeks = Number(profileDraft.budget_weeks), start = profileDraft.budget_start;
@@ -698,14 +839,35 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
       return;
     }
     setTrips(prev => prev.map(t => t.id === active.id ? toTrip(data) : t));
-    // Everything bought goes into the pantry and stays there until the user removes it.
-    const bought = [...new Set(purchased.map(i => i.food_id))].filter(id => !pantry.some(p => p.food_id === id));
-    if (bought.length && pantryId) {
-      const { data: added, error: pantryError } = await supabase.from('pantry_item')
-        .insert(bought.map(id => ({ pantry_id: pantryId, food_id: Number(id), quantity: 1, unit: foodById(id)?.unit ?? null })))
-        .select();
-      if (pantryError) fail('Trip saved, but your pantry could not be updated: ' + pantryError.message);
-      else setPantry(prev => [...prev, ...(added || []).map(toPantry)]);
+    // Everything bought goes into the pantry as it was bought (packages of a size) and stays until the user
+    // uses it up. Same food and size already at home: the packages add up. Older rows bought in servings
+    // become weeks' worth (PANTRY_SERVINGS_WITHOUT_SIZE servings each).
+    if (purchased.length && pantryId) {
+      const bump = new Map<string, number>();
+      const fresh = new Map<string, { food_id: string; package_id: string | null; quantity: number }>();
+      for (const i of purchased) {
+        const qty = i.package_id ? Number(i.quantity) : Math.max(1, Math.round(Number(i.quantity) / PANTRY_SERVINGS_WITHOUT_SIZE * 10) / 10);
+        const home = pantry.find(p => p.food_id === i.food_id && p.package_id === i.package_id);
+        if (home) { bump.set(home.id, (bump.get(home.id) ?? Number(home.quantity)) + qty); continue; }
+        if (!i.package_id && pantry.some(p => p.food_id === i.food_id)) continue;
+        const key = `${i.food_id}:${i.package_id ?? ''}`;
+        const row = fresh.get(key);
+        fresh.set(key, { food_id: i.food_id, package_id: i.package_id, quantity: (row?.quantity ?? 0) + qty });
+      }
+      const failed: string[] = [];
+      for (const [id, quantity] of bump) {
+        const { error: e } = await supabase.from('pantry_item').update({ quantity }).eq('pantry_item_id', Number(id));
+        if (e) failed.push(e.message);
+        else setPantry(prev => prev.map(p => p.id === id ? { ...p, quantity } : p));
+      }
+      if (fresh.size) {
+        const { data: added, error: pantryError } = await supabase.from('pantry_item')
+          .insert([...fresh.values()].map(r => ({ pantry_id: pantryId, food_id: Number(r.food_id), quantity: r.quantity, unit: foodById(r.food_id)?.unit ?? null, food_package_id: r.package_id == null ? null : Number(r.package_id) })) as any)
+          .select();
+        if (pantryError) failed.push(pantryError.message);
+        else setPantry(prev => [...prev, ...(added || []).map(toPantry)]);
+      }
+      if (failed.length) fail('Trip saved, but your pantry could not be updated: ' + failed[0]);
     }
     navigate({ to: '/plan/history' });
   }
@@ -742,10 +904,11 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     if (!tripId) return;
     const current = items.filter(i => i.trip_id === tripId && !i.purchased).map(i => ({ ...i }));
     for (const item of items.filter(i => i.trip_id === trip.id)) {
-      const existing = current.find(i => i.food_id === item.food_id);
+      // Rows only merge when they count the same way (same package size, or both in servings).
+      const existing = current.find(i => i.food_id === item.food_id && i.package_id === item.package_id);
       const query = existing
         ? supabase.from('shopping_list_item').update({ quantity: existing.quantity + item.quantity }).eq('shopping_list_item_id', Number(existing.id))
-        : supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(item.food_id), quantity: item.quantity, unit: foodById(item.food_id)?.unit ?? null });
+        : supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(item.food_id), quantity: item.quantity, unit: foodById(item.food_id)?.unit ?? null, food_option_id: item.option_id == null ? null : Number(item.option_id), food_package_id: item.package_id == null ? null : Number(item.package_id) } as any);
       const { data, error } = await query.select().single();
       if (error || !data) {
         fail('Some items could not be added to your plan: ' + (error?.message || 'Please try again.'));
@@ -778,7 +941,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     userId, isFirstSession, firstSessionResolved, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, profileErrors, loading, error, search, results, selected,
-    pantryTotals, combined, daily, spend, priceOf, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores,
+    pantryTotals, combined, daily, spend, priceOf, optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemEstimate, pantryServings, setPantryQuantity, setPantryPackage, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus,
     foodPreferences, likedFoods, setFoodPreference, removeFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, addFoods, updateQuantity, removeItem, undoPurchase, saveTripSettings,

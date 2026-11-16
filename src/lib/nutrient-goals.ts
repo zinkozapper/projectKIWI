@@ -48,9 +48,9 @@ export function evaluateNutrientGoals(pantryTotals: Nutrients, daily: Nutrients,
 }
 
 // Same pantry foods, plan length and targets = same snapshot, so reloading the app doesn't add rows.
-// Quantities are left out: the pantry only tracks which foods are at home.
-export function pantrySignature(pantry: { food_id: string; quantity: number }[], daily: Nutrients, days: number) {
-  const items = [...new Set(pantry.map(i => i.food_id))].sort().join(',');
+// Quantities count: pantry foods are packages whose servings are spread across the plan.
+export function pantrySignature(pantry: { food_id: string; quantity: number; package_id?: string | null }[], daily: Nutrients, days: number) {
+  const items = pantry.map(i => `${i.food_id}:${i.package_id ?? ''}x${Number(i.quantity)}`).sort().join(',');
   const targets = nutrientKeys.map(k => Number(daily[k]) || 0).join(',');
   return `${items}|${days}|${targets}`;
 }

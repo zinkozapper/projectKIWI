@@ -10,6 +10,7 @@ import { adminDeleteAccount } from '@/lib/admin-accounts/functions';
 import { AccountDialog } from '../account-dialog';
 import { useWorkspace } from '../context';
 import { FoodQueue } from '../food-queue';
+import { LIMITS } from '@/lib/validation';
 
 const filters: { id: UserFilter; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -263,7 +264,7 @@ export function AdminPage() {
         <div className="admin-toolbar">
           <div className="searchbox">
             <Search size={19} />
-            <input aria-label="Search users" placeholder="Search by name or email" value={query} onChange={e => setQuery(e.target.value)} />
+            <input aria-label="Search users" placeholder="Search by name or email" maxLength={LIMITS.search} value={query} onChange={e => setQuery(e.target.value)} />
           </div>
           <div className="segmented" role="group" aria-label="Filter users">
             {filters.map(f => (

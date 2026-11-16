@@ -7,6 +7,7 @@ import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Eye, EyeOff, KeyRound, Leaf } from 'lucide-react';
+import { emailError, LIMITS } from '@/lib/validation';
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -54,8 +55,9 @@ function Login() {
     e.preventDefault();
     setError('');
 
-    if (!email.trim() || !password) {
-      setError('Enter your email and password to sign in.');
+    const problem = !email.trim() || !password ? 'Enter your email and password to sign in.' : emailError(email);
+    if (problem) {
+      setError(problem);
       setShake(false);
       requestAnimationFrame(() => setShake(true));
       window.setTimeout(() => setShake(false), 350);
@@ -137,6 +139,7 @@ function Login() {
               Email address
               <input
                 type="email"
+                maxLength={LIMITS.email}
                 autoComplete="username"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -157,6 +160,7 @@ function Login() {
                 id="login-password"
                 className="login-password-input"
                 type={showPassword ? 'text' : 'password'}
+                maxLength={LIMITS.password}
                 autoComplete="current-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}

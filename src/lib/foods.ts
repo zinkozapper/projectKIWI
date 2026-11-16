@@ -44,7 +44,16 @@ export const nutrientGroups: { group: NutrientGroup; label: string }[] = [
 ];
 
 // Upper limits rather than goals: the bar warns when over, and gap suggestions skip them.
-export const nutrientLimits = new Set<NutrientKey>(['sodium']);
+// Omega-6's "target" is the adequate intake, used as a ceiling: most diets get too much, not too little.
+export const nutrientLimits = new Set<NutrientKey>(['sodium', 'omega6']);
+
+// Order in which suggestions work through nutrition gaps: one nutrient at a time, starting with the
+// nutrients most often short in young adults' diets. The first 14 are the product owner's order; the
+// rest follow by how commonly they run low. Calories and the upper limits never drive suggestions.
+export const NUTRIENT_PRIORITY: NutrientKey[] = [
+  'vitaminA', 'zinc', 'omega3', 'vitaminB12', 'vitaminC', 'calcium', 'vitaminK', 'protein', 'vitaminE', 'iron', 'magnesium', 'selenium', 'folate', 'thiamin',
+  'fiber', 'potassium', 'choline', 'vitaminB6', 'riboflavin', 'niacin', 'copper', 'phosphorus', 'carbs', 'fat',
+];
 
 // Small amounts (B vitamins, omega-3) need decimals; everything else reads better as whole numbers.
 export function formatAmount(n: number) {

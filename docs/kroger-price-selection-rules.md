@@ -64,6 +64,30 @@ Serving grams come from the food's `serving_size`/`unit` (oz, g) or, for cup/tbs
 - Flag national-brand fallbacks, density conversions, per-lb produce and count conversions.
 - Exactly one selected product per food; foods with none or several are reported and not loaded.
 
+## Purchase options ("prep styles")
+
+How a food is sold — chicken breast: Raw, Rotisserie, Frozen, Canned. Code: `src/lib/food-import/purchase-options.ts` (AI instructions, cleanup, pricing input), tables `food_option`, `food_option_price`, `shopping_list_item.food_option_id` (migration `0018_kiwi_food_options.sql`).
+
+1. **Which options.** Claude lists the forms most stores actually sell, **at most one per form**: fresh, frozen, canned, dried, ready_to_eat. Options are general: never brands, package sizes or two kinds of the same form. The form Kiwi's nutrients describe comes first. A food sold only one way (oil, honey, eggs, milk) gets no options; fewer than 2 options are dropped.
+2. **Search.** Each option has its own search term and must-words. It is searched in the aisle for its form (frozen → Frozen; canned → Canned & Packaged …; fresh → the food group's categories), and the form's words are allowed past the group's excludes (meat normally excludes "cooked" and "rotisserie"; produce excludes "frozen" and "canned"). Everything else in sections 2–2b applies: store brand first, no organic unless it's the only choice, regular price, backup stores. The food's own per-food rules in `price-rules.json` are not used for its options.
+3. **Same serving.** Every option is priced for the food's serving:
+   - `as_bought` (raw, frozen raw, dried): the raw/dry serving grams, like the food.
+   - `prepared` (rotisserie, canned meat or beans, cooked rice cups): the cooked weight of that serving, `factor × 100` g (4 oz raw chicken ≈ 94 g cooked).
+   - Canned foods packed in liquid count only the drained share of the can (`package_yield` 0.6).
+   - Items sold per item with no weight (a rotisserie chicken) use Claude's estimate of edible grams per item (`unit_grams`, ≈ 700 g).
+4. **Prices.** `food_option.price` is the default store's price per serving; `food_option_price` holds every store's. A list item with an option picked costs that option's price; with none picked (or an unpriced one), the **average of the priced options**. `food.price` is set to that average so the rest of the app agrees. Nutrients are the food's own for every option.
+5. **Existing foods.** `scripts/kroger/options-backfill.mjs --ai` asks Claude for each food's options (review `data/kroger/<zip>/options.json`), then `--price` prices them and writes `options.csv` + `options.sql`. Foods without a cook ratio whose nutrients are for a cooked/canned form (e.g. Black Beans) price a dried option on the same gram serving; review those rows.
+
+## Package sizes ("as bought")
+
+A food is added to the list the way it's sold: one package. Code: `src/lib/food-import/package-sizes.ts` (candidates, AI instructions, cleanup, fixed-rule fallback), `src/lib/food-packages.ts` (the app), table `food_package`, `shopping_list_item.food_package_id` / `price_estimate`, `pantry_item.food_package_id` (migration `0019_kiwi_package_sizes.sql`).
+
+1. **Candidates.** The eligible products from the search that found the food's (or option's) pick, in the same brand tier (store brand stays store brand; the next tier is added only when the best tier has a single size). One product per distinct package size, the cheapest per serving, smallest first, at most 12.
+2. **AI picks.** Claude picks **1–3** sizes, everyday size first, with a short label ("1 lb", "3 lb family pack", "15 oz can"). Products sold by weight get a number of pounds instead. Unknown picks are dropped. If Claude errors or takes over 15 s, the rules pick: best value per serving first, then the smallest and largest.
+3. **Servings.** `servings = package price ÷ price per serving` (× pounds for weight-priced items), so a size's servings use the same serving as the nutrients and price. In the app, one package's servings are spread across the trip (4 servings on a 7-day plan = 4/7 of a serving a day); pantry packages work the same way.
+4. **Prices.** A package costs the shopper's store price per serving × its servings (so localized prices still apply), else its own shelf price. With no price at all, the list row asks the shopper for an estimate (`price_estimate`) and the budget uses it.
+5. **Existing foods.** Migration 0019 seeded one size per priced food from `food_price`. `node --env-file=.env scripts/kroger/package-sizes-backfill.mjs` adds the AI-picked sizes (per option once options exist) and writes `data/kroger/<zip>/package-sizes.json` (review) + `package-sizes.sql`. It fills the same 3 slots per food/option, so list and pantry rows pointing at a size keep working.
+
 ## Running it
 
 ```bash

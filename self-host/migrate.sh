@@ -26,6 +26,8 @@ done
 for file in "$root/drizzle/migrations/0011_kiwi_trip_name.sql" "$root/drizzle/migrations/0012_kiwi_price_refresh.sql" "$root/drizzle/migrations/0013_kiwi_price_freshness.sql" "$root/drizzle/migrations/0014_kiwi_first_session.sql" "$root/drizzle/migrations/0015_kiwi_saved_recipes.sql" "$root/drizzle/migrations/0016_kiwi_popular_recipes.sql" "$root/supabase/seed.sql"; do
   test -r "$file" || { echo "Missing required file: $file" >&2; exit 1; }
 done
+test -r "$root/drizzle/migrations/0018_kiwi_food_options.sql" || { echo "Missing required file: $root/drizzle/migrations/0018_kiwi_food_options.sql" >&2; exit 1; }
+test -r "$root/drizzle/migrations/0019_kiwi_package_sizes.sql" || { echo "Missing required file: $root/drizzle/migrations/0019_kiwi_package_sizes.sql" >&2; exit 1; }
 
 cat > "$tmp" <<'SQL'
 \set ON_ERROR_STOP on
@@ -65,6 +67,8 @@ printf '%s %s\n' 20260101000028 "$root/drizzle/migrations/0013_kiwi_price_freshn
 printf '%s %s\n' 20260101000030 "$root/drizzle/migrations/0014_kiwi_first_session.sql" >> "$list"
 printf '%s %s\n' 20260101000032 "$root/drizzle/migrations/0015_kiwi_saved_recipes.sql" >> "$list"
 printf '%s %s\n' 20260101000034 "$root/drizzle/migrations/0016_kiwi_popular_recipes.sql" >> "$list"
+printf '%s %s\n' 20260101000038 "$root/drizzle/migrations/0018_kiwi_food_options.sql" >> "$list"
+printf '%s %s\n' 20260101000040 "$root/drizzle/migrations/0019_kiwi_package_sizes.sql" >> "$list"
 LC_ALL=C sort -o "$list" "$list"
 while read -r version file; do
   add_manifest "$version" "$file"

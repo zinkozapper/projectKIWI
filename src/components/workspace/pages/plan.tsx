@@ -1,17 +1,33 @@
 
-import { useEffect, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, ChefHat, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2, Undo2 } from 'lucide-react';
+import { ArrowRight, ChefHat, CircleHelp, House, Minus, Plus, Search, ShoppingBasket, Sparkles, ThumbsDown, ThumbsUp, Trash2, Undo2, X } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { usePhoneLayout } from '@/hooks/use-phone-layout';
 import { budgetWeeksLabel, daysLeftInPeriod, formatBudgetPeriod } from '@/lib/budget-period';
-import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLimits, NUTRIENTS, type Food, type Nutrients } from '@/lib/foods';
+import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLabels, nutrientLimits, NUTRIENTS, type Food, type NutrientKey, type Nutrients } from '@/lib/foods';
+import { NUTRIENT_INFO, searchNutrients } from '@/lib/nutrient-info';
 import { boostTitle } from '@/lib/recommendation-boosts';
 import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
 import { NutrientPanel } from '../nutrient-bar';
+import { PrepSelect } from '../prep-select';
+import { PriceEstimate, SizeSelect } from '../package-controls';
+import { defaultPackage, packageCaption } from '@/lib/food-packages';
+import { LIMITS, numberKeyGuard } from '@/lib/validation';
+
+// "Suggestions for vitamin A", "for zinc", "for omega-3 (ALA)": vitamins keep their capital letter.
+const suggestionHeading = (k: NutrientKey) => {
+  const label = nutrientLabels[k];
+  return /^Vitamin /.test(label) ? label.replace(/^Vitamin/, 'vitamin') : label.charAt(0).toLowerCase() + label.slice(1);
+};
+
+// More than this many servings of one food a day is almost certainly a typo.
+const MAX_SERVINGS_PER_DAY = 10;
+const MAX_PACKAGES = 20;
 
 const perDay = (n: Nutrients, days: number) => Object.fromEntries(nutrientKeys.map(k => [k, n[k] / days])) as Nutrients;
 
@@ -27,6 +43,8 @@ export function PlanPage() {
   const [detailsFromSearch, setDetailsFromSearch] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [finderOpen, setFinderOpen] = useState(false);
+  // Prep style picked in the search results before adding (food id -> option id; null = any).
+  const [searchPrep, setSearchPrep] = useState<Record<string, string | null>>({});
   const [lastChange, setLastChange] = useState<{
     foodId: string;
     foodName: string;
@@ -76,8 +94,9 @@ export function PlanPage() {
 
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
-    suggestions, foodGapScores, foodPreferences, setFoodPreference, removeFoodPreference, setSearch, setSelected, fail,
+    suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus, foodPreferences, setFoodPreference, removeFoodPreference, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, isFirstSession, priceOf, hasUnpricedBudgetItems,
+    optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemEstimate,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
 
@@ -91,7 +110,28 @@ export function PlanPage() {
     priceOf
   );
 
-  const showPairings = listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
+  // A nutrient the user asked about takes over the suggestions until they add one of them.
+  const showPairings = !suggestionNutrientChosen && listItems.some(item => item.food_id === selected) && pairingSuggestions.length > 0;
+
+  // "Recommend foods" (nutrient info popup) and the nutrient search both focus the suggestions on one
+  // nutrient and scroll down to them.
+  const suggestionsRef = useRef<HTMLElement>(null);
+  const [nutrientQuery, setNutrientQuery] = useState('');
+  const [scrollRequest, setScrollRequest] = useState(0);
+  const nutrientMatches = searchNutrients(nutrientQuery).filter(k => k !== 'calories' && !nutrientLimits.has(k));
+  function recommendFor(nutrient: NutrientKey) {
+    setSuggestionFocus(nutrient);
+    setNutrientQuery('');
+    setFoodDetails(null);
+    setDetailsFromSearch(false);
+    setScrollRequest(n => n + 1);
+  }
+  useEffect(() => {
+    if (!scrollRequest) return;
+    // Wait a frame so a closing dialog or popover doesn't fight the scroll.
+    const frame = window.requestAnimationFrame(() => suggestionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [scrollRequest]);
   const recommendedFoods = showPairings ? pairingSuggestions : suggestions.map(suggestion => suggestion.food);
   const recommendationSource: RecommendationSource = showPairings ? 'pairing' : 'nutrient_gap';
   const recommendationAnchor = showPairings ? selected : '';
@@ -124,18 +164,36 @@ export function PlanPage() {
 
   async function addRecommended(source: RecommendationSource, foodId: string, anchorFoodId?: string) {
     const item = await addFood(foodId);
+    // After picking a suggestion for a nutrient they asked about, go back to the priority order.
+    if (item && source === 'nutrient_gap' && suggestionNutrientChosen) setSuggestionFocus(null);
     if (item) void logRecommendationAdded({ source, foodId, anchorFoodId }, item.trip_id, item.id);
   }
 
-  // Bar: solid = already bought this period, light = planned on the current list.
   const used = periodSpent + spend;
-  const pct = (n: number) => (budget ? Math.min(100, n / budget * 100) : 0);
   const daysLeft = daysLeftInPeriod(budgetPeriod);
 
   const planPerDay = perDay(combined, days);
   const goalNutrients = NUTRIENTS.filter(n => !nutrientLimits.has(n.key));
   const goalsMet = goalNutrients.filter(n => planPerDay[n.key] >= daily[n.key]).length;
-  const planNutritionNote = `Daily average across ${days} days from your pantry plus your list. Each + adds 1 serving a day; pantry foods count as 1 serving a day.`;
+  const planNutritionNote = `Daily average across ${days} days from your pantry plus your list. Each + adds a package as it's sold, and its servings are spread across the ${days} days, like the pantry's.`;
+  // What one + adds: "3 lb · 12 servings · $8.97", or the per-serving price for a food with no sizes.
+  const addLabel = (foodId: string, optionId?: string | null) => {
+    const pkg = defaultPackage(packagesFor(foodId, optionId));
+    if (pkg) {
+      const price = packagePriceOf(pkg, optionId);
+      return `${packageCaption(pkg)}${price != null ? ` · $${price.toFixed(2)}` : ' · Price unknown'}`;
+    }
+    const per = priceOf(foodId);
+    return per != null ? `$${per.toFixed(2)} a serving` : 'Price unknown';
+  };
+  const sizeLabel = (foodId: string) => {
+    const pkg = defaultPackage(packagesFor(foodId));
+    return pkg ? packageCaption(pkg) : `1 serving a day for ${days} days`;
+  };
+  const oneAddCost = (foodId: string) => {
+    const pkg = defaultPackage(packagesFor(foodId));
+    return pkg ? packagePriceOf(pkg) ?? 0 : (priceOf(foodId) ?? 0) * days;
+  };
   const planNutritionFoot = 'Based on approximate package nutrition. Actual needs and portions may vary.';
 
   return (
@@ -164,11 +222,6 @@ export function PlanPage() {
           <small className="plan-budget-detail">
             ${periodSpent.toFixed(2)} bought + ${spend.toFixed(2)} planned · {budgetRemaining >= 0 ? `$${budgetRemaining.toFixed(2)} left` : `$${(-budgetRemaining).toFixed(2)} over`} · {daysLeft} {daysLeft === 1 ? 'day' : 'days'} left
           </small>
-          <Link to="/profile">Edit</Link>
-        </div>
-        <div className="track budget-track">
-          <div className={used > budget ? 'fill warning' : 'fill'} style={{ width: `${pct(periodSpent)}%` }} />
-          <div className={used > budget ? 'fill planned warning' : 'fill planned'} style={{ width: `${Math.max(0, pct(used) - pct(periodSpent))}%` }} />
         </div>
       </div>}
 
@@ -189,7 +242,7 @@ export function PlanPage() {
             <small>{goalsMet} of {goalNutrients.length} daily targets met</small>
           </summary>
           <p>{planNutritionNote}</p>
-          <NutrientPanel values={planPerDay} base={perDay(pantryTotals, days)} targets={daily} />
+          <NutrientPanel values={planPerDay} base={perDay(pantryTotals, days)} targets={daily} onRecommend={recommendFor} />
           <div className="nutrition-foot">{planNutritionFoot}</div>
         </details>
       )}
@@ -214,6 +267,7 @@ export function PlanPage() {
                 <Search size={19} />
                 <input
                   aria-label="Search foods"
+                  maxLength={LIMITS.search}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search foods, like eggs or spinach…"
@@ -232,17 +286,19 @@ export function PlanPage() {
                         role="group"
                         aria-label={`Add ${f.name} to your grocery list`}
                         tabIndex={0}
-                        onClick={() => void addFood(f.id)}
-                        onKeyDown={e => addFoodOnCardKeyDown(e, () => void addFood(f.id))}
+                        onClick={() => void addFood(f.id, 1, searchPrep[f.id])}
+                        onKeyDown={e => addFoodOnCardKeyDown(e, () => void addFood(f.id, 1, searchPrep[f.id]))}
                       >
                         <span className="food-emoji">{f.emoji}</span>
                         <div>
                           <button type="button" className="food-name-button" aria-label={`Show nutrition for ${f.name}`} onClick={e => { e.stopPropagation(); setDetailsFromSearch(true); setFoodDetails(f); }}>
                             <strong>{f.name}</strong>
                           </button>
-                          <small>{f.category} · {priceOf(f.id) != null ? `$${priceOf(f.id)!.toFixed(2)} / ${f.unit}` : 'Price unknown'}{inPantry(f.id) && <span className="in-pantry-note"> · In your pantry</span>}</small>
+                          <small>{f.category} · {addLabel(f.id, searchPrep[f.id])}{inPantry(f.id) && <span className="in-pantry-note"> · In your pantry</span>}</small>
+                          <PrepSelect foodName={f.name} options={optionsFor(f.id)} value={searchPrep[f.id] ?? null} average={priceOf(f.id)} priceOf={optionPriceOf}
+                            onChange={id => setSearchPrep(prev => ({ ...prev, [f.id]: id }))} />
                         </div>
-                        <Button size="icon" title={`Add ${f.name}`} onClick={e => { e.stopPropagation(); void addFood(f.id); }}>
+                        <Button size="icon" title={`Add ${f.name}`} onClick={e => { e.stopPropagation(); void addFood(f.id, 1, searchPrep[f.id]); }}>
                           <Plus size={17} />
                         </Button>
                       </div>
@@ -268,6 +324,10 @@ export function PlanPage() {
                 {listItems.map(item => {
                   const f = foodById(item.food_id);
                   if (!f) return null;
+                  const pkg = packageOf(item);
+                  const cost = lineCost(item);
+                  // A store price wins; the estimate box only shows while Kiwi has none.
+                  const storePriced = itemPrice(item) != null || (pkg?.price ?? 0) > 0;
 
                   return (
                     <div
@@ -280,8 +340,45 @@ export function PlanPage() {
                       <div className="food-description">
                         <strong>{f.name}</strong>
                         <small>{inPantry(f.id) && <span className="in-pantry-note">Already in your pantry · </span>}{f.note}</small>
+                        <PrepSelect foodName={f.name} options={optionsFor(f.id)} value={item.option_id} average={priceOf(f.id)} priceOf={optionPriceOf}
+                          onChange={id => void setItemOption(item, id)} />
+                        <SizeSelect foodName={f.name} packages={packagesFor(f.id, item.option_id)} value={item.package_id}
+                          priceOf={p => packagePriceOf(p, item.option_id)} onChange={id => void setItemPackage(item, id)} />
                       </div>
-                      {/* quantity is total servings; the control works in servings per day across the plan. */}
+                      {pkg ? (
+                        // Bought as packages: quantity = packages; their servings are spread across the trip.
+                        <div className="qty-control" onClick={e => e.stopPropagation()}>
+                          <Button size="icon" variant="ghost" title="One less package" onClick={() => {
+                            const next = Number(item.quantity) - 1;
+                            if (next > 0) updateQuantity(item, next);
+                            else removeItem(item);
+                          }}>
+                            <Minus size={13} />
+                          </Button>
+                          <input
+                            aria-label={`${f.name} packages`}
+                            type="number"
+                            inputMode="numeric"
+                            min="1"
+                            max={MAX_PACKAGES}
+                            step="1"
+                            onKeyDown={numberKeyGuard(true)}
+                            value={Number(item.quantity)}
+                            onChange={e => {
+                              if (e.target.value === '') return;
+                              const q = Number(e.target.value);
+                              if (!Number.isInteger(q) || q < 1) fail('Packages must be a whole number, 1 or more.');
+                              else if (q > MAX_PACKAGES) fail(`That’s more than ${MAX_PACKAGES} packages. Pick a smaller number.`);
+                              else updateQuantity(item, q);
+                            }}
+                          />
+                          <Button size="icon" variant="ghost" title="One more package" disabled={Number(item.quantity) >= MAX_PACKAGES}
+                            onClick={() => updateQuantity(item, Number(item.quantity) + 1)}>
+                            <Plus size={13} />
+                          </Button>
+                        </div>
+                      ) : (
+                      /* Older rows and foods with no sizes: quantity is total servings, shown per day across the plan. */
                       <div className="qty-control per-day" onClick={e => e.stopPropagation()}>
                         <Button
                           size="icon"
@@ -298,27 +395,40 @@ export function PlanPage() {
                         <input
                           aria-label={`${f.name} servings per day`}
                           type="number"
+                          inputMode="numeric"
                           min="1"
+                          max={MAX_SERVINGS_PER_DAY}
                           step="1"
+                          onKeyDown={numberKeyGuard(true)}
                           value={Number(formatAmount(Number(item.quantity) / days).replace(/,/g, ''))}
                           onChange={e => {
+                            if (e.target.value === '') return;
                             const q = Number(e.target.value);
-                            if (q > 0) updateQuantity(item, q * days);
-                            else fail('Servings per day must be a positive number.');
+                            if (!Number.isInteger(q) || q < 1) fail('Servings per day must be a whole number, 1 or more.');
+                            else if (q > MAX_SERVINGS_PER_DAY) fail(`That’s more than ${MAX_SERVINGS_PER_DAY} servings a day. Pick a smaller number.`);
+                            else updateQuantity(item, q * days);
                           }}
                         />
                         <Button
                           size="icon"
                           variant="ghost"
                           title="One more serving a day"
+                          disabled={Number(item.quantity) / days >= MAX_SERVINGS_PER_DAY}
                           onClick={() => updateQuantity(item, Number(item.quantity) + days)}
                         >
                           <Plus size={13} />
                         </Button>
                       </div>
-                      <span className="qty-caption">/day · {formatAmount(Number(item.quantity))} total</span>
+                      )}
+                      <span className="qty-caption">
+                        {pkg
+                          ? `${Number(item.quantity) === 1 ? 'pack' : 'packs'} · ${formatAmount(itemServings(item) / days)}/day`
+                          : `/day · ${formatAmount(Number(item.quantity))} total`}
+                      </span>
                       <span className="row-price">
-                        {priceOf(f.id) != null ? `$${(priceOf(f.id)! * item.quantity).toFixed(2)}` : 'Price unknown'}
+                        {storePriced && cost != null
+                          ? `$${cost.toFixed(2)}`
+                          : <PriceEstimate foodName={f.name} value={item.price_estimate} per={pkg ? 'package' : 'serving'} onSave={v => void setItemEstimate(item, v)} />}
                       </span>
                       <Button
                         size="icon"
@@ -348,25 +458,76 @@ export function PlanPage() {
             </div>
           </section>
 
-          <section className="section-block suggestions-block">
+          <section className="section-block suggestions-block" ref={suggestionsRef} id="suggestions">
             <div className="section-title">
               <div>
-                <h2>Suggestions</h2>
+                <h2>{showPairings || !suggestionNutrient ? 'Suggestions' : `Suggestions for ${suggestionHeading(suggestionNutrient)}`}</h2>
               </div>
+              {suggestionNutrientChosen && (
+                <Button variant="ghost" size="sm" onClick={() => setSuggestionFocus(null)}>
+                  <X size={14} aria-hidden="true" /> Back to top gaps
+                </Button>
+              )}
             </div>
 
             <p className="section-note">
               {showPairings
                 ? `Pairs well with ${foodById(selected)?.name} and can help fill nutrition gaps.`
-                : 'Foods that can help fill nutrition gaps.'}
+                : suggestionNutrient
+                  ? suggestionNutrientChosen
+                    ? `Foods high in ${nutrientLabels[suggestionNutrient].toLowerCase()}. ${NUTRIENT_INFO[suggestionNutrient]}`
+                    : `Your next nutrition gap to fill. Foods that also help with other gaps come first.`
+                  : 'Foods that can help fill nutrition gaps.'}
             </p>
+
+            <div className="nutrient-search">
+              <div className="nutrient-search-row">
+                <div className="searchbox nutrient-searchbox">
+                  <Search size={17} aria-hidden="true" />
+                  <input
+                    aria-label="Find foods by nutrient"
+                    maxLength={30}
+                    value={nutrientQuery}
+                    onChange={e => setNutrientQuery(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && nutrientMatches[0]) { e.preventDefault(); recommendFor(nutrientMatches[0]); }
+                      if (e.key === 'Escape') setNutrientQuery('');
+                    }}
+                    placeholder="Find foods by nutrient, like iron or vitamin C"
+                  />
+                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button type="button" className="nutrient-info-button nutrient-search-help" aria-label="How does nutrient search work?">
+                      <CircleHelp size={18} aria-hidden="true" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="nutrient-info-pop" align="end">
+                    <strong>Search by nutrient</strong>
+                    <p>Type a nutrient, like iron, calcium or vitamin C. Pick it, and the suggestions below show foods that have a lot of it.</p>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              {nutrientQuery.trim() && (
+                <div className="nutrient-search-results" role="list" aria-label="Matching nutrients">
+                  {nutrientMatches.length
+                    ? nutrientMatches.map(k => (
+                      <button type="button" role="listitem" key={k} className="nutrient-search-result" onClick={() => recommendFor(k)}>
+                        <strong>{nutrientLabels[k]}</strong>
+                        <small>{NUTRIENT_INFO[k]}</small>
+                      </button>
+                    ))
+                    : <p className="empty-inline">No nutrient matches “{nutrientQuery.trim()}”. Try iron, zinc or vitamin A.</p>}
+                </div>
+              )}
+            </div>
 
             <div className="suggestion-grid">
               {recommendedFoods.length
                 ? recommendedFoods.map(f => {
                   const scored = foodGapScores.find(suggestion => suggestion.food.id === f.id);
                   const boosts = scored?.boosts ?? [];
-                  const addCost = (priceOf(f.id) ?? 0) * days;
+                  const addCost = oneAddCost(f.id);
                   const overBudget = addCost > 0 && addCost > budgetRemaining;
                   const preference = foodPreferences[f.id];
 
@@ -388,7 +549,7 @@ export function PlanPage() {
                         </button>
                         <small>{f.note}</small>
                         <span className="suggestion-price">
-                          {addCost > 0 ? `$${addCost.toFixed(2)} for ${days} days` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''}{boosts.length ? '' : ` · Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
+                          {addCost > 0 ? `$${addCost.toFixed(2)} · ${sizeLabel(f.id)}` : 'Price unknown'}{overBudget ? ' · Over budget, best value' : ''}{boosts.length ? '' : ` · Pairs well with ${foodById(selected)?.name ?? 'your list'}`}
                         </span>
                         {boosts.length > 0 && (
                           <ul className="boost-chips" aria-label={`Nutrients ${f.name} helps with`}>
@@ -435,7 +596,9 @@ export function PlanPage() {
                 })
                 : (
                   <p className="empty-inline">
-                    No suggestions right now.
+                    {suggestionNutrientChosen && suggestionNutrient
+                      ? `No foods left to suggest for ${nutrientLabels[suggestionNutrient].toLowerCase()}. Everything high in it is already on your list or in your pantry.`
+                      : 'No suggestions right now.'}
                   </p>
                 )}
             </div>
@@ -451,8 +614,8 @@ export function PlanPage() {
                 ? 'Nutrition per listed serving, compared with your daily targets.'
                 : planNutritionNote}</p>
               {foodDetails
-                ? <NutrientPanel values={foodDetails.nutrition} targets={daily} />
-                : <NutrientPanel values={planPerDay} base={perDay(pantryTotals, days)} targets={daily} />}
+                ? <NutrientPanel values={foodDetails.nutrition} targets={daily} onRecommend={recommendFor} />
+                : <NutrientPanel values={planPerDay} base={perDay(pantryTotals, days)} targets={daily} onRecommend={recommendFor} />}
               <div className="nutrition-foot">
                 {foodDetails
                   ? 'Approximate nutrition for the listed serving. Actual values may vary.'
@@ -472,7 +635,7 @@ export function PlanPage() {
                   <DialogTitle>{foodDetails.emoji} {foodDetails.name}</DialogTitle>
                   <DialogDescription>Nutrition per listed serving, compared with your daily targets.</DialogDescription>
                 </DialogHeader>
-                <NutrientPanel values={foodDetails.nutrition} targets={daily} />
+                <NutrientPanel values={foodDetails.nutrition} targets={daily} onRecommend={recommendFor} />
                 <div className="nutrition-foot">Approximate nutrition for the listed serving. Actual values may vary.</div>
               </>
             )}

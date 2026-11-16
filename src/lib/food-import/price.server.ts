@@ -6,6 +6,8 @@
 import { adminClient, env } from './env.server';
 import { krogerClient, type KrogerClient, type KrogerStore } from './kroger.server';
 import { RULES, isStoreBrand, type PriceFood } from './pricing';
+import { averagePrice, optionPriceFood, type PurchaseOption, type ServingInfo } from './purchase-options';
+import { sizeCandidates, type SizeCandidate } from './package-sizes';
 
 export type FoodPriceRow = {
   location_id: string;
@@ -32,10 +34,13 @@ export type PricingOutcome = {
   /** What the shopper sees: their own store's price, or why there isn't one. */
   forUser: { zip: string; store: string; product: string; perServing: number; flags: string[] } | null;
   note: string | null;
+  /** Products from the default store's winning search, for the AI's package sizes (package-sizes.ts). */
+  sizeCandidates: SizeCandidate[];
 };
 
 const round4 = (n: number) => Math.round(n * 10000) / 10000;
 const PRICE_TIMEOUT_MS = 20_000;
+const OPTION_TIMEOUT_MS = 25_000;
 let client: KrogerClient | null = null;
 const kroger = () => (client ??= krogerClient(async () => ({ id: await env('KROGER_CLIENT_ID'), secret: await env('KROGER_CLIENT_SECRET') })));
 
@@ -65,6 +70,9 @@ async function priceAtZip(db: Db, food: PriceFood, zip: string) {
   if (!hit.best || !hit.store) return { zip, home, hit: null };
   if (hit.store.location_id !== home.location_id) await saveStore(db, hit.store);
   const b = hit.best;
+  // Every eligible product from the search that found the pick: the AI chooses package sizes from these.
+  const winning = hit.tried.find(t => t.store === hit.store && t.spec === hit.spec);
+  const sizes = winning ? sizeCandidates(winning.result.scored) : [];
   const flags = [...(b.flags ?? []), ...(hit.store.location_id !== home.location_id ? [`from backup store: ${hit.store.name}`] : [])];
   const row: FoodPriceRow = {
     location_id: home.location_id,
@@ -74,11 +82,11 @@ async function priceAtZip(db: Db, food: PriceFood, zip: string) {
     package_grams: b.package_grams ?? null, serving_grams: b.priced_g ?? (Number(food.serving_grams) || 1),
     price_per_serving: round4(b.price_per_serving ?? 0), store_brand: isStoreBrand(b), flags: flags.join('; ') || null,
   };
-  return { zip, home, hit: { row, storeName: hit.store.name, flags } };
+  return { zip, home, hit: { row, storeName: hit.store.name, flags, sizes } };
 }
 
 export async function priceNewFood(food: PriceFood, userId: string): Promise<PricingOutcome> {
-  const none = (note: string): PricingOutcome => ({ rows: [], defaultPrice: null, forUser: null, note });
+  const none = (note: string): PricingOutcome => ({ rows: [], defaultPrice: null, forUser: null, note, sizeCandidates: [] });
   try {
     if (!(await env('KROGER_CLIENT_ID')) || !(await env('KROGER_CLIENT_SECRET'))) return none('Store prices aren’t set up yet.');
     const db = await adminClient();
@@ -99,9 +107,61 @@ export async function priceNewFood(food: PriceFood, userId: string): Promise<Pri
         ? { zip: userZip, store: mine.hit.storeName, product: [mine.hit.row.brand, mine.hit.row.description].filter(Boolean).join(' · ') || mine.hit.row.product_id, perServing: mine.hit.row.price_per_serving, flags: mine.hit.flags }
         : null,
       note: mine?.home ? (mine.hit ? null : `No matching product at ${mine.home.name} or nearby stores.`) : `No Kroger-family store near ${userZip}.`,
+      sizeCandidates: dflt?.hit?.sizes ?? [],
     };
   } catch (e) {
     console.error('[food-import] pricing', e);
     return none('Store prices couldn’t be checked right now.');
   }
 }
+
+// ---------- purchase options ----------
+
+export type OptionPricing = {
+  /** Per option (same order as the input): its food_option_price rows, keyed by the ZIP's home store. */
+  rows: FoodPriceRow[][];
+  /** Per option: price per serving at the default ZIP's store -> food_option.price. */
+  defaultPrices: (number | null)[];
+  /** Per option: price per serving at the shopper's store, for the summary. */
+  userPrices: (number | null)[];
+  /** Average of the priced options at the default store -> food.price. */
+  average: number | null;
+  /** Per option: products for the AI's package sizes (default store). */
+  sizeCandidates: SizeCandidate[][];
+};
+
+/**
+ * Price each purchase option (raw, rotisserie, frozen, canned …) at the shopper's store and the default store,
+ * with the same rules as the food itself. Like priceNewFood it never throws and has its own time cap.
+ */
+export async function priceOptions(serving: ServingInfo, options: PurchaseOption[], userId: string): Promise<OptionPricing> {
+  const empty: OptionPricing = { rows: options.map(() => []), defaultPrices: options.map(() => null), userPrices: options.map(() => null), average: null, sizeCandidates: options.map(() => []) };
+  if (!options.length) return empty;
+  try {
+    if (!(await env('KROGER_CLIENT_ID')) || !(await env('KROGER_CLIENT_SECRET'))) return empty;
+    const db = await adminClient();
+    const { data: profile } = await db.from('profiles').select('zip_code').eq('user_id', userId).maybeSingle();
+    const userZip = /^\d{5}$/.test(profile?.zip_code ?? '') ? String(profile?.zip_code) : RULES.defaultZip;
+    const zips = [...new Set([userZip, RULES.defaultZip])];
+    const work = Promise.all(options.map(async o => {
+      const food = optionPriceFood(serving, o);
+      const results = await Promise.all(zips.map(z => priceAtZip(db, food, z)));
+      const at = (zip: string) => results.find(r => r.zip === zip)?.hit?.row ?? null;
+      return {
+        rows: [...new Map(results.flatMap(r => (r.hit ? [r.hit.row] : [])).map(r => [r.location_id, r])).values()],
+        dflt: at(RULES.defaultZip)?.price_per_serving ?? null,
+        user: at(userZip)?.price_per_serving ?? null,
+        sizes: results.find(r => r.zip === RULES.defaultZip)?.hit?.sizes ?? [],
+      };
+    }));
+    const timeout = new Promise<'timeout'>(resolve => setTimeout(() => resolve('timeout'), OPTION_TIMEOUT_MS));
+    const done = await Promise.race([work, timeout]);
+    if (done === 'timeout') return empty;
+    const defaultPrices = done.map(d => (d.dflt == null ? null : Math.round(d.dflt * 100) / 100));
+    return { rows: done.map(d => d.rows), defaultPrices, userPrices: done.map(d => d.user), average: averagePrice(defaultPrices), sizeCandidates: done.map(d => d.sizes) };
+  } catch (e) {
+    console.error('[food-import] option pricing', e);
+    return empty;
+  }
+}
+

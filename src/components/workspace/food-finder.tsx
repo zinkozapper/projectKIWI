@@ -8,7 +8,10 @@ import {
 } from '@/lib/food-import/functions';
 import { GROUP_RULES } from '@/lib/food-import/rules';
 import { HOW_BOUGHT, type AddResult, type FinderOption, type FinderStatus, type HowBought, type SearchResult } from '@/lib/food-import/shared';
+import { LIMITS } from '@/lib/validation';
 import { useWorkspace } from './context';
+import { PrepSelect } from './prep-select';
+import type { FoodOption } from '@/lib/food-options';
 
 type Step = 'form' | 'options' | 'done' | 'sent' | 'limit';
 
@@ -35,7 +38,9 @@ async function call<T>(p: Promise<Result<T>>): Promise<T> {
 export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest = null, onFinished, target = 'list' }: Props) {
   const { addFood, listItems, addPantry, pantry } = useWorkspace();
   const toPantry = target === 'pantry';
-  const addTo = (id: string) => (toPantry ? addPantry(id) : addFood(id).then(() => undefined));
+  const addTo = (id: string, optionId?: string | null) => (toPantry ? addPantry(id) : addFood(id, 1, optionId).then(() => undefined));
+  // Prep style picked on the "added" card (food id + option id; null = any).
+  const [prep, setPrep] = useState<{ food: string; option: string | null } | null>(null);
   const [step, setStep] = useState<Step>('form');
   const [busy, setBusy] = useState('');
   const [pending, setPending] = useState<number | null>(null);
@@ -185,7 +190,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
         {enabled && step === 'form' && (
           <form className="finder-section" onSubmit={submitForm}>
             <label className="control-label" htmlFor="finder-query">Food</label>
-            <input id="finder-query" className="finder-input" maxLength={80} autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder="e.g. black lentils, gala apple, frozen edamame" />
+            <input id="finder-query" className="finder-input" maxLength={LIMITS.search} autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder="e.g. black lentils, gala apple, frozen edamame" />
             <span className="control-label" id="finder-how">How do you buy it?</span>
             <div className="finder-choices" role="group" aria-labelledby="finder-how">
               {HOW_BOUGHT.map(h => (
@@ -250,7 +255,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
             <details className="finder-nomatch" open={result.noGoodMatch}>
               <summary>None of these?</summary>
               <form className="finder-inline" onSubmit={e => { e.preventDefault(); void search(); }}>
-                <input aria-label="Search again" className="finder-input" maxLength={80} value={query} onChange={e => setQuery(e.target.value)} />
+                <input aria-label="Search again" className="finder-input" maxLength={LIMITS.search} value={query} onChange={e => setQuery(e.target.value)} />
                 <Button type="submit" variant="outline" disabled={!!busy}>Search again</Button>
               </form>
               {!adminRequest && (
@@ -287,18 +292,37 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
                     {summary.pairs.length > 0 && <>Pairs well with {summary.pairs.join(', ')}.</>}
                   </p>
                 )}
-                <p className="section-note finder-done-meta">
-                  {summary.price
-                    ? <>About <strong>${summary.price.perServing.toFixed(2)}</strong> per {summary.serving} at {summary.price.store} ({summary.price.product}).</>
-                    : <>{summary.priceNote ?? 'No store price yet.'} It’ll show as unpriced for now.</>}
-                </p>
+                {summary.options && summary.options.length >= 2 ? (
+                  <p className="section-note finder-done-meta">
+                    Sold as {summary.options.map(o => `${o.label}${o.perServing != null ? ` ($${o.perServing.toFixed(2)})` : ''}`).join(', ')} per {summary.serving}
+                    {summary.optionAverage != null && <>, about <strong>${summary.optionAverage.toFixed(2)}</strong> if you don’t pick one</>}.
+                  </p>
+                ) : (
+                  <p className="section-note finder-done-meta">
+                    {summary.price
+                      ? <>About <strong>${summary.price.perServing.toFixed(2)}</strong> per {summary.serving} at {summary.price.store} ({summary.price.product}).</>
+                      : <>{summary.priceNote ?? 'No store price yet.'} It’ll show as unpriced for now.</>}
+                  </p>
+                )}
                 <p className="section-note finder-done-meta">{summary.source}{summary.needsReview ? ' · An admin will double-check its numbers.' : ''}</p>
               </>
             )}
             <div className="finder-actions">
               {!adminRequest && (alreadyThere
                 ? <Button variant="outline" disabled><Check size={16} /> {toPantry ? 'In your pantry' : 'On your list'}</Button>
-                : <Button onClick={() => void addTo(added.id)}><Plus size={16} /> {toPantry ? 'Add to my pantry' : 'Add to my list'}</Button>)}
+                : <>
+                  {!toPantry && summary?.options && (
+                    <PrepSelect
+                      foodName={added.food.food_name}
+                      options={summary.options.map((o, i): FoodOption => ({ id: String(o.id), foodId: added.id, form: o.form, label: o.label, price: o.perServing ?? 0, sort: i }))}
+                      value={prep?.food === added.id ? prep.option : null}
+                      average={summary.optionAverage ?? null}
+                      priceOf={o => (o.price > 0 ? o.price : null)}
+                      onChange={option => setPrep({ food: added.id, option })}
+                    />
+                  )}
+                  <Button onClick={() => void addTo(added.id, prep?.food === added.id ? prep.option : null)}><Plus size={16} /> {toPantry ? 'Add to my pantry' : 'Add to my list'}</Button>
+                </>)}
               <Button variant="ghost" onClick={() => close(false)}>Done</Button>
             </div>
           </div>

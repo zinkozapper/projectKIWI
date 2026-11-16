@@ -364,6 +364,138 @@ export type Database = {
           },
         ]
       }
+      food_option: {
+        Row: {
+          basis: string
+          created_at: string
+          food_id: number
+          food_option_id: number
+          form: string
+          label: string
+          must: string[]
+          package_yield: number
+          price: number
+          search_term: string
+          sort_order: number
+          unit_grams: number | null
+        }
+        Insert: {
+          basis?: string
+          created_at?: string
+          food_id: number
+          food_option_id?: number
+          form: string
+          label: string
+          must?: string[]
+          package_yield?: number
+          price?: number
+          search_term: string
+          sort_order?: number
+          unit_grams?: number | null
+        }
+        Update: {
+          basis?: string
+          created_at?: string
+          food_id?: number
+          food_option_id?: number
+          form?: string
+          label?: string
+          must?: string[]
+          package_yield?: number
+          price?: number
+          search_term?: string
+          sort_order?: number
+          unit_grams?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_option_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "food"
+            referencedColumns: ["food_id"]
+          },
+        ]
+      }
+      food_option_price: {
+        Row: {
+          brand: string | null
+          description: string | null
+          fetched_at: string
+          flags: string | null
+          food_option_id: number
+          location_id: string
+          package_grams: number | null
+          package_price: number
+          package_size: string | null
+          price_per_serving: number
+          product_id: string
+          serving_grams: number
+          sold_by: string | null
+          source_location_id: string | null
+          store_brand: boolean
+          upc: string | null
+        }
+        Insert: {
+          brand?: string | null
+          description?: string | null
+          fetched_at?: string
+          flags?: string | null
+          food_option_id: number
+          location_id: string
+          package_grams?: number | null
+          package_price: number
+          package_size?: string | null
+          price_per_serving: number
+          product_id: string
+          serving_grams: number
+          sold_by?: string | null
+          source_location_id?: string | null
+          store_brand?: boolean
+          upc?: string | null
+        }
+        Update: {
+          brand?: string | null
+          description?: string | null
+          fetched_at?: string
+          flags?: string | null
+          food_option_id?: number
+          location_id?: string
+          package_grams?: number | null
+          package_price?: number
+          package_size?: string | null
+          price_per_serving?: number
+          product_id?: string
+          serving_grams?: number
+          sold_by?: string | null
+          source_location_id?: string | null
+          store_brand?: boolean
+          upc?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_option_price_food_option_id_fkey"
+            columns: ["food_option_id"]
+            isOneToOne: false
+            referencedRelation: "food_option"
+            referencedColumns: ["food_option_id"]
+          },
+          {
+            foreignKeyName: "food_option_price_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "kroger_store"
+            referencedColumns: ["location_id"]
+          },
+          {
+            foreignKeyName: "food_option_price_source_location_id_fkey"
+            columns: ["source_location_id"]
+            isOneToOne: false
+            referencedRelation: "kroger_store"
+            referencedColumns: ["location_id"]
+          },
+        ]
+      }
       food_preferences: {
         Row: {
           user_id: string
@@ -853,6 +985,7 @@ export type Database = {
       shopping_list_item: {
         Row: {
           food_id: number
+          food_option_id: number | null
           is_purchased: boolean
           quantity: number
           shopping_list_id: number
@@ -861,6 +994,7 @@ export type Database = {
         }
         Insert: {
           food_id: number
+          food_option_id?: number | null
           is_purchased?: boolean
           quantity?: number
           shopping_list_id: number
@@ -869,6 +1003,7 @@ export type Database = {
         }
         Update: {
           food_id?: number
+          food_option_id?: number | null
           is_purchased?: boolean
           quantity?: number
           shopping_list_id?: number
@@ -876,6 +1011,13 @@ export type Database = {
           unit?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "shopping_list_item_food_option_id_fkey"
+            columns: ["food_option_id"]
+            isOneToOne: false
+            referencedRelation: "food_option"
+            referencedColumns: ["food_option_id"]
+          },
           {
             foreignKeyName: "shopping_list_item_food_id_fkey"
             columns: ["food_id"]

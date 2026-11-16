@@ -60,6 +60,8 @@ Users can add foods that aren't in Kiwi's catalog. From the plan page, choose **
 5. **Kiwi computes the nutrients.** Code, not the AI, converts the record to what you buy, using the serving set by the food-group rules. For cooked foods it also finds the matching raw or dry record and uses the raw-to-cooked calorie ratio. It takes sodium from the raw record so cooking salt isn't counted, and compares the ratio with similar foods already in Kiwi.
 6. **AI catalogs it.** Claude names the food and picks its emoji, category, flavor profile (from a fixed list of 16 tags) and pairings (only foods already in Kiwi). It also writes the grocery-store search term for the food. The server drops anything outside those lists.
 7. **Priced.** The server looks up the user's ZIP (profile, default 84601 downtown Provo) and its nearest Kroger-family store (Smith's in Utah), searches it with Claude's term and picks a product with Kiwi's price rules ([docs/kroger-price-selection-rules.md](docs/kroger-price-selection-rules.md)): store brand, not organic, regular price, scaled to the same as-bought serving as the nutrients. If the store has nothing, up to 3 larger nearby stores are tried. The food is priced at the user's store and at the default store (`food.price`); no price never blocks adding the food.
+   - **Purchase options.** In the same cataloging step, Claude lists the general ways the food is sold, at most one per form (fresh, frozen, canned, dried, ready to eat), e.g. chicken breast: Raw, Rotisserie, Frozen, Canned. Each option is priced the same way, on the same serving (cooked weight for ready-to-eat and canned forms, drained weight for canned). On the plan, each list item has a prep-style dropdown; with none picked, it costs the average of the priced options (`food.price` holds that average). Foods sold only one way get no dropdown.
+   - **Package sizes (as bought).** From the products the store search already found, Claude picks up to 3 package sizes shoppers choose between (e.g. "1 lb", "3 lb family pack"), per purchase option, or for the food itself when it has none. Each size's servings come from its price and the per-serving price, so cost and nutrition stay on the same serving. If Claude fails or is slow, fixed rules pick the best-value, smallest and largest sizes.
 8. **Saved.** The food is added for everyone, with pairings linked both ways so "Pairs well with" suggests it too. The user sees a summary and can add it to their list. If the food already exists, Kiwi uses the existing one. Foods the workflow wasn't sure about are flagged for an admin to double-check on `/admin`.
 
 ### Level 1 Data Flow Diagram
@@ -73,8 +75,9 @@ flowchart TB
     P2(("2.0 Search &<br/>rank USDA records"))
     P3(("3.0 AI selects<br/>options"))
     P4(("4.0 Compute nutrients<br/>& scale to purchase"))
-    P5(("5.0 AI catalogs:<br/>name, tags, pairings,<br/>grocery search term"))
-    P6(("6.0 Price at the<br/>user's store"))
+    P5(("5.0 AI catalogs:<br/>name, tags, pairings,<br/>search term, purchase options"))
+    P6(("6.0 Price food & options<br/>at the user's store"))
+    P9(("6.1 AI picks up to 3<br/>package sizes"))
     P7(("7.0 Save food,<br/>price & pairings"))
     P8(("8.0 Admin<br/>review"))
 
@@ -89,6 +92,8 @@ flowchart TB
     D5[("D5 profiles")]
     D6[("D6 zip_store / kroger_store")]
     D7[("D7 food_price")]
+    D8[("D8 food_option / food_option_price")]
+    D9[("D9 food_package")]
 
     U -->|"food name, how bought, notes"| P1
     D3 -->|"food limit"| P1
@@ -104,16 +109,21 @@ flowchart TB
     D1 -->|"group cooking ratios, catalog"| P4
     P4 -->|"per-serving nutrients, flags"| P5
     D4 -->|"categories"| P5
-    P5 <-->|"record + catalog / name, category, tags, pairings, search term"| AI
-    P5 -->|"cataloged food, serving grams"| P6
+    P5 <-->|"record + catalog / name, category, tags, pairings, search term, purchase options"| AI
+    P5 -->|"cataloged food, purchase options, serving grams"| P6
     D5 -->|"user's ZIP"| P6
     D6 <-->|"cached store for ZIP / newly found store"| P6
     P6 <-->|"ZIP, search term / nearest + larger stores, products, regular prices"| KR
-    P6 -->|"price per serving, flags"| P7
-    P7 -->|"new food + default price + two-way pairings"| D1
+    P6 -->|"price per serving for the food and each option, flags"| P7
+    P6 -->|"eligible store products (sizes, prices)"| P9
+    P9 <-->|"products / up to 3 sizes + labels"| AI
+    P9 -->|"package sizes: label, servings, price"| P7
+    P7 -->|"package sizes"| D9
+    P7 -->|"new food + default (average) price + two-way pairings"| D1
+    P7 -->|"purchase options + their store prices"| D8
     P7 -->|"store prices"| D7
     P7 -->|"status: added"| D2
-    P7 -->|"summary with store price"| U
+    P7 -->|"summary with store price and option prices"| U
     U -->|"no match: send to admin / ask for 10 more"| D2
     D2 -->|"pending requests, flagged foods"| P8
     A -->|"approve / decline / find it"| P8

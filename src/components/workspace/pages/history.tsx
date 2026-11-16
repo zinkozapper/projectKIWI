@@ -6,7 +6,7 @@ import { foodById, formatAmount } from '@/lib/foods';
 import { useWorkspace } from '../context';
 
 export function HistoryPage() {
-  const { trips, items, addTripToPlan, deleteTrip, renameTrip, priceOf } = useWorkspace();
+  const { trips, items, addTripToPlan, deleteTrip, renameTrip, lineCost, packageOf } = useWorkspace();
   const [undo, setUndo] = useState<{ restore: () => void; index: number } | null>(null);
   const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
   const completed = trips.filter(t => t.status === 'completed');
@@ -35,7 +35,7 @@ export function HistoryPage() {
                       if (e.key === 'Escape') setEditing(null);
                     }} />
                   ) : <button className="history-name" type="button" title="Rename trip" aria-label={`Rename ${t.name || `${t.days}-day grocery trip`}`} onClick={() => setEditing({ id: t.id, name: t.name || `${t.days}-day grocery trip` })}>{t.name || `${t.days}-day grocery trip`}</button>}</h2>
-                  <p>{tripItems.length} items · est. ${tripItems.reduce((s, i) => s + (priceOf(i.food_id) ?? 0) * i.quantity, 0).toFixed(2)}{tripItems.some(i => priceOf(i.food_id) === null) && ' · Partial estimate; some prices unknown'}</p>
+                  <p>{tripItems.length} items · est. ${tripItems.reduce((s, i) => s + (lineCost(i) ?? 0), 0).toFixed(2)}{tripItems.some(i => lineCost(i) === null) && ' · Partial estimate; some prices unknown'}</p>
                 </div>
               </div>
               <details className="history-details">
@@ -46,8 +46,8 @@ export function HistoryPage() {
                   return (
                     <li className="history-item" key={item.id}>
                       <span className="shop-food-emoji" aria-hidden="true">{food?.emoji ?? '🛒'}</span>
-                      <span className="shop-cart-name">{food?.name ?? 'Unavailable food'}<small>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'}{food && ` · ${formatAmount(food.servings)} ${food.unit} each`}</small></span>
-                      {food && <span className="shop-item-price">{priceOf(food.id) != null ? `$${(priceOf(food.id)! * item.quantity).toFixed(2)}` : 'Price unknown'}<small>estimated</small></span>}
+                      <span className="shop-cart-name">{food?.name ?? 'Unavailable food'}<small>{packageOf(item) ? `${Number(item.quantity)} × ${packageOf(item)!.label}` : <>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'}{food && ` · ${formatAmount(food.servings)} ${food.unit} each`}</>}</small></span>
+                      {food && <span className="shop-item-price">{lineCost(item) != null ? `$${lineCost(item)!.toFixed(2)}` : 'Price unknown'}<small>estimated</small></span>}
                     </li>
                   );
                 })}

@@ -75,5 +75,9 @@ export type AddResult = {
     /** The shopper's store price per serving (Kroger), or null with priceNote saying why. */
     price: { zip: string; store: string; product: string; perServing: number; flags: string[] } | null;
     priceNote: string | null;
+    /** How the food is sold (raw, rotisserie, frozen, canned …) with the shopper's store price per serving. */
+    options?: { id: number; label: string; form: string; perServing: number | null }[];
+    /** Average of the priced options: what a list item with no option picked costs per serving. */
+    optionAverage?: number | null;
   } | null;
 };

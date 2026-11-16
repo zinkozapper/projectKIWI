@@ -24,3 +24,8 @@ it('includes the saved recipes migration after the first-session migration', () 
   expect(script).toContain('20260101000032 "$root/drizzle/migrations/0015_kiwi_saved_recipes.sql"');
   expect(script).toContain('20260101000034 "$root/drizzle/migrations/0016_kiwi_popular_recipes.sql"');
 });
+
+it('includes the purchase options migration after the recipe migrations', () => {
+  const script = readFileSync('self-host/migrate.sh', 'utf8');
+  expect(script).toContain('20260101000038 "$root/drizzle/migrations/0018_kiwi_food_options.sql"');
+});

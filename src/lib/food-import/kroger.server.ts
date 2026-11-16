@@ -1,6 +1,7 @@
 // Kroger Products + Locations API (https://developer.kroger.com, scope product.compact). Server-only.
 // No app imports, so the backfill script (scripts/kroger) can use it too: credentials come in as a getter.
 import { RULES, foodRules, foodSpecs, isStoreBrand, rankCandidates, type Candidate, type PriceFood, type Ranked, type Spec } from './pricing.ts';
+import { optionPriceFood, type PurchaseOption, type ServingInfo } from './purchase-options.ts';
 
 const API = 'https://api.kroger.com/v1';
 
@@ -128,3 +129,24 @@ export async function collectPrices(client: KrogerClient, foods: PriceFood[], ho
   }
   return { prices, stores: [...stores.values()] };
 }
+
+/** A purchase option row joined with its food's serving (what the price worker reads from the database). */
+export type OptionToPrice = ServingInfo & Pick<PurchaseOption, 'form' | 'search_term' | 'must' | 'basis' | 'package_yield'> & { food_option_id: number; unit_grams?: number | null };
+
+/** Store prices for purchase options (same rules and backup stores as collectPrices). Failures propagate. */
+export async function collectOptionPrices(client: KrogerClient, options: OptionToPrice[], home: KrogerStore, zip: string) {
+  let alternates: Promise<KrogerStore[]> | undefined;
+  const moreStores = () => (alternates ??= client.alternateStores(zip, home.location_id));
+  const prices = [], stores = new Map<string, KrogerStore>();
+  for (const option of options) {
+    const food = optionPriceFood(option, { ...option, package_yield: Number(option.package_yield) || 1, must: option.must ?? [] });
+    const { best, store } = await client.priceFood(food, home, moreStores);
+    if (!best || !store) continue;
+    const backup = store.location_id !== home.location_id;
+    if (backup) stores.set(store.location_id, store);
+    const flags = [...(best.flags || []), ...(backup ? [`from backup store: ${store.name}`] : [])];
+    prices.push({ food_option_id: option.food_option_id, location_id: home.location_id, source_location_id: backup ? store.location_id : null, product_id: best.product_id, upc: best.upc || null, brand: best.brand || null, description: best.description || null, package_size: best.size || null, sold_by: best.sold_by || null, package_price: best.regular, package_grams: best.package_grams ?? null, serving_grams: best.priced_g || Number(option.serving_grams) || 1, price_per_serving: best.price_per_serving, store_brand: isStoreBrand(best), flags: flags.join('; ') || null });
+  }
+  return { prices, stores: [...stores.values()] };
+}
+

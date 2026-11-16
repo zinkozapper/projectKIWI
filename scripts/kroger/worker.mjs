@@ -1,6 +1,6 @@
 // Run as a separate long-lived process: node --env-file=.env scripts/kroger/worker.mjs
 import postgres from 'postgres';
-import { collectPrices, krogerClient } from '../../src/lib/food-import/kroger.server.ts';
+import { collectOptionPrices, collectPrices, krogerClient } from '../../src/lib/food-import/kroger.server.ts';
 
 const { DATABASE_URL, KROGER_CLIENT_ID, KROGER_CLIENT_SECRET } = process.env;
 if (!DATABASE_URL || !KROGER_CLIENT_ID || !KROGER_CLIENT_SECRET) throw new Error('DATABASE_URL, KROGER_CLIENT_ID and KROGER_CLIENT_SECRET are required');
@@ -27,6 +27,10 @@ async function refresh(zip) {
   }
   const foods = await sql`select food_id, food_name, food_category_id, serving_size, unit, factor * 100 / coalesce(nullif(cook_ratio, 0), 1) as serving_grams from public.food order by food_id`;
   const { prices, stores } = await collectPrices(client, foods, store, zip);
+  // Purchase options (raw, rotisserie, frozen, canned …) are refreshed with the rest of the store's snapshot.
+  const options = await sql`select o.food_option_id, o.form, o.search_term, o.must, o.basis, o.package_yield::float as package_yield, o.unit_grams::float as unit_grams, f.food_name, f.food_category_id, f.serving_size, f.unit, f.factor * 100 / coalesce(nullif(f.cook_ratio, 0), 1) as serving_grams, f.factor * 100 as prepared_grams from public.food_option o join public.food f using (food_id) order by o.food_option_id`;
+  const optionResult = await collectOptionPrices(client, options, store, zip);
+  for (const s of optionResult.stores) if (!stores.some(x => x.location_id === s.location_id)) stores.push(s);
   // Publish an entire successful snapshot at once: failures never erase the previous prices.
   await sql.begin(async tx => {
     for (const { departments, ...storeRow } of [store, ...stores]) {
@@ -34,6 +38,8 @@ async function refresh(zip) {
     }
     await tx`delete from public.food_price where location_id = ${store.location_id}`;
     if (prices.length) await tx`insert into public.food_price ${tx(prices)}`;
+    await tx`delete from public.food_option_price where location_id = ${store.location_id}`;
+    if (optionResult.prices.length) await tx`insert into public.food_option_price ${tx(optionResult.prices)}`;
     await tx`insert into public.zip_store (zip_code, location_id, fetched_at) values (${zip}, ${store.location_id}, now()) on conflict (zip_code) do update set location_id = excluded.location_id, fetched_at = now()`;
     await tx`insert into public.price_store_refresh (location_id, completed_at, catalog_revision) values (${store.location_id}, ${snapshot.started_at}, ${snapshot.revision}) on conflict (location_id) do update set completed_at = excluded.completed_at, catalog_revision = excluded.catalog_revision`;
   });

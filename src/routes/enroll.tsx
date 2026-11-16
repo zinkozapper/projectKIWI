@@ -7,6 +7,7 @@ import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Eye, EyeOff, Leaf } from 'lucide-react';
+import { emailError, LIMITS, MIN_PASSWORD, passwordError } from '@/lib/validation';
 
 export const Route = createFileRoute('/enroll')({
   head: () => ({ meta: [{ title: 'Kiwi — Create your account' }, { name: 'description', content: 'Create a Kiwi account and start planning affordable, balanced groceries.' }, { property: 'og:title', content: 'Kiwi — Create your account' }, { property: 'og:description', content: 'Start planning groceries that fit your week.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }),
@@ -32,10 +33,15 @@ function Enroll() {
     e.preventDefault();
     setError('');
     setNotice('');
+    const problem = emailError(email) ?? passwordError(password);
+    if (problem) {
+      setError(problem);
+      return;
+    }
     setBusy(true);
     try {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.trim(),
         password,
         options: { emailRedirectTo: window.location.origin },
       });
@@ -63,7 +69,7 @@ function Enroll() {
         <section className="login-card login-card-github" aria-labelledby="enroll-title">
           <h1 id="enroll-title">Create your Kiwi account</h1>
           <form onSubmit={submit} className="login-form">
-            <label>Email address<input required type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} /></label>
+            <label>Email address<input required type="email" autoComplete="email" maxLength={LIMITS.email} value={email} onChange={e => setEmail(e.target.value)} /></label>
 
             <label>Password</label>
             <div className="password-field">
@@ -71,7 +77,8 @@ function Enroll() {
                 required
                 className="login-password-input"
                 type={showPassword ? 'text' : 'password'}
-                minLength={6}
+                minLength={MIN_PASSWORD}
+                maxLength={LIMITS.password}
                 autoComplete="new-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}

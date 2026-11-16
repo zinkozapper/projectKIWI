@@ -65,12 +65,12 @@ describe('recordNutrientSnapshot', () => {
     expect(insert).toHaveBeenCalledTimes(1);
     expect(insert.mock.calls[0]?.[0]).toMatchObject({ user_id: 'u1', pantry_id: 5, plan_days: 7, pantry_food_ids: [3], nutrients_total: 3 });
 
-    // Quantity alone doesn't change the pantry (it only tracks which foods are at home)...
+    // More packages of the same food change what's covered, so they're a new snapshot...
     await recordNutrientSnapshot(input(2));
-    expect(insert).toHaveBeenCalledTimes(1);
-    // ...a different food does.
-    await recordNutrientSnapshot(input(1, '4'));
     expect(insert).toHaveBeenCalledTimes(2);
+    // ...and so does a different food.
+    await recordNutrientSnapshot(input(1, '4'));
+    expect(insert).toHaveBeenCalledTimes(3);
   });
 
   it('skips the first save when it matches the last snapshot in the database', async () => {
