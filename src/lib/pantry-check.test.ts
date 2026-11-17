@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { itemsToRepeat, needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from './pantry-check';
+import { itemsToRepeat, needsPantryCheck, shouldAskPantryCheck, splitPantryCheck, stillHaveFoodIds } from './pantry-check';
 
 const pantry = [
   { id: 'p1', food_id: 'rice' },
@@ -12,6 +12,15 @@ describe('pantry check', () => {
     expect(needsPantryCheck(false, 3)).toBe(true);
     expect(needsPantryCheck(true, 3)).toBe(false);
     expect(needsPantryCheck(false, 0)).toBe(false);
+  });
+
+  it('asks at most once per trip, and never while a trip is active', () => {
+    const base = { hasActiveTrip: false, alreadyChecked: false, firstSession: false, pantryCount: 3 };
+    expect(shouldAskPantryCheck(base)).toBe(true);
+    expect(shouldAskPantryCheck({ ...base, alreadyChecked: true })).toBe(false);
+    expect(shouldAskPantryCheck({ ...base, hasActiveTrip: true })).toBe(false);
+    expect(shouldAskPantryCheck({ ...base, firstSession: true })).toBe(false);
+    expect(shouldAskPantryCheck({ ...base, pantryCount: 0 })).toBe(false);
   });
 
   it('keeps everything the user did not mark as gone', () => {

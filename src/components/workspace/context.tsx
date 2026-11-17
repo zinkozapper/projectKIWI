@@ -10,7 +10,7 @@ import { resetRecommendationImpressions } from '@/lib/recommendation-events';
 import { logAppOpen } from '@/lib/login-events';
 import { recordNutrientSnapshot, resetNutrientSnapshots } from '@/lib/nutrient-goals';
 import { useIsAdmin } from '@/lib/admin';
-import { needsPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pantry-check';
+import { needsPantryCheck, shouldAskPantryCheck, splitPantryCheck, stillHaveFoodIds } from '@/lib/pantry-check';
 import { BUDGET_WEEK_OPTIONS, currentBudgetPeriod, isInBudgetPeriod, normalizeBudgetWeeks, parseDateKey, toDateKey, type BudgetPeriod } from '@/lib/budget-period';
 import { localizedPricingEnabled } from '@/lib/pricing-functions';
 import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
@@ -231,10 +231,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, []);
   const active = trips.find(t => t.status === 'active');
   // Pantry check dialog: confirmPantry() opens it and resolves with the food ids still at home
-  // (or null if the user closes it). creatingTrip stops two adds from starting two trips.
+  // (or null if saving failed). creatingTrip stops two adds from starting two trips.
+  // pantryChecked: the check was answered or closed for the trip being planned, so it isn't asked again
+  // until that trip is finished.
   const [pantryCheckOpen, setPantryCheckOpen] = useState(false);
   const pantryCheckWaiters = useRef<((stillHave: Set<string> | null) => void)[]>([]);
   const creatingTrip = useRef<Promise<string | null> | null>(null);
+  const pantryChecked = useRef(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
@@ -597,24 +600,29 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
   }
 
   // Asks the user what's still in the pantry before a new trip starts. Resolves with the food ids
-  // still at home, or null if they close the dialog without confirming. With an empty pantry
-  // there is nothing to ask, so it resolves right away.
+  // still at home, or null if saving their answer failed. It asks once per trip: with an empty pantry,
+  // an active trip, or a check already answered or closed, it resolves right away.
   function confirmPantry(): Promise<Set<string> | null> {
-    if (isFirstSession) return Promise.resolve(stillHaveFoodIds(pantry));
-    if (!pantry.length) return Promise.resolve(new Set());
+    if (!shouldAskPantryCheck({ hasActiveTrip: !!active || !!creatingTrip.current, alreadyChecked: pantryChecked.current, firstSession: isFirstSession, pantryCount: pantry.length })) {
+      return Promise.resolve(stillHaveFoodIds(pantry));
+    }
     return new Promise(resolve => {
       pantryCheckWaiters.current.push(resolve);
       setPantryCheckOpen(true);
     });
   }
 
-  // Called by the dialog. goneIds = pantry_item ids marked gone; null = closed without confirming.
+  // Called by the dialog. goneIds = pantry_item ids marked gone; null = closed without answering.
+  // Closing it skips the check (everything counts as still at home) and the add goes ahead: the user is
+  // already planning, so the dialog shouldn't block them or come back on the next add.
   async function finishPantryCheck(goneIds: string[] | null) {
     const waiters = pantryCheckWaiters.current;
     pantryCheckWaiters.current = [];
     setPantryCheckOpen(false);
     if (goneIds === null) {
-      waiters.forEach(w => w(null));
+      pantryChecked.current = true;
+      const stillHave = stillHaveFoodIds(pantry);
+      waiters.forEach(w => w(stillHave));
       return;
     }
     const { keep, remove } = splitPantryCheck(pantry, goneIds);
@@ -628,11 +636,12 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
       // Changing the pantry also saves a new OKR 2 nutrient snapshot (effect above).
       setPantry(keep);
     }
+    pantryChecked.current = true;
     const stillHave = stillHaveFoodIds(keep);
     waiters.forEach(w => w(stillHave));
   }
 
-  // "Check pantry" on My Plan: confirm the pantry, then start the trip so the check isn't asked again.
+  // "Update pantry" on My Plan: confirm the pantry, then start the trip so the check isn't asked again.
   async function startPlan() {
     if (active) return;
     const stillHave = await confirmPantry();
@@ -901,6 +910,8 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
       fail(error.message);
       return;
     }
+    // The next trip gets its own pantry check.
+    pantryChecked.current = false;
     setTrips(prev => prev.map(t => t.id === active.id ? toTrip(data) : t));
     // Everything bought goes into the pantry as it was bought (packages of a size) and stays until the user
     // uses it up. Same food and size already at home: the packages add up. Older rows bought in servings

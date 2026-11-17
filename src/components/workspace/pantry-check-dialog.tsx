@@ -5,7 +5,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { foodById } from '@/lib/foods';
 import { useWorkspace } from './context';
 
-// Shown before a new shopping trip starts. Every pantry food starts as "Still have"; the user taps
+// Shown once when the user starts a new shopping trip (first add). Closing it skips the check and the add
+// still goes through. Every pantry food starts as "Still have"; the user taps
 // the ones that are gone or used up. Foods still at home keep counting toward My Plan's nutrition
 // and aren't suggested again.
 export function PantryCheckDialog() {
@@ -47,7 +48,7 @@ export function PantryCheckDialog() {
         <DialogHeader>
           <DialogTitle>What’s still in your pantry?</DialogTitle>
           <DialogDescription>
-            Before you plan this trip, tap anything that’s gone or used up. Foods you still have count toward your nutrition and won’t be added to your list again.
+            Tap anything that’s gone or used up. Foods you still have count toward your nutrition and won’t be added to your list again.
           </DialogDescription>
         </DialogHeader>
 
@@ -76,7 +77,7 @@ export function PantryCheckDialog() {
         <DialogFooter className="pantry-check-footer">
           <small>{stillHave} still at home{gone.size ? ` · ${gone.size} gone` : ''}</small>
           <Button onClick={() => void confirm()} disabled={saving}>
-            {saving ? 'Saving…' : gone.size ? 'Update pantry and plan' : 'All still here, start planning'}
+            {saving ? 'Saving…' : gone.size ? 'Update pantry' : 'All still here'}
           </Button>
         </DialogFooter>
       </DialogContent>

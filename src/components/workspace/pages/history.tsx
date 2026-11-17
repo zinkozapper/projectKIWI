@@ -11,6 +11,7 @@ export function HistoryPage() {
   const {
     trips,
     items,
+    listItems,
     addTripToPlan,
     deleteTrip,
     renameTrip,
@@ -222,9 +223,10 @@ export function HistoryPage() {
               <History size={30} />
               <h2>Your history starts here</h2>
               <p>Finish a grocery trip and it’ll show up here for easy repeats.</p>
+              {/* Someone with a list in progress is already planning: send them back to it instead. */}
               <Button asChild>
                 <Link to="/plan">
-                  Start planning <ArrowRight size={16} />
+                  {listItems.length ? 'Back to my plan' : 'Start planning'} <ArrowRight size={16} />
                 </Link>
               </Button>
             </div>

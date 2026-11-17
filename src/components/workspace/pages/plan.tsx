@@ -257,10 +257,10 @@ export function PlanPage() {
       {pantryCheckDue && !isFirstSession && (
         <div className="pantry-check-banner">
           <div>
-            <strong>New trip? Check your pantry first.</strong>
+            <strong>Used anything up since your last trip?</strong>
             <small>You have {pantry.length} {pantry.length === 1 ? 'food' : 'foods'} at home. Mark anything that’s gone so your plan counts what you still have and doesn’t suggest buying it again.</small>
           </div>
-          <Button variant="outline" onClick={() => void startPlan()}><House size={16} /> Check pantry</Button>
+          <Button variant="outline" onClick={() => void startPlan()}><House size={16} /> Update pantry</Button>
         </div>
       )}
 

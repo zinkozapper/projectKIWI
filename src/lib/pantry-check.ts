@@ -11,6 +11,13 @@ export function needsPantryCheck(hasActiveTrip: boolean, pantryCount: number): b
   return !hasActiveTrip && pantryCount > 0;
 }
 
+// The check dialog opens at most once per trip. Once the user has answered it or closed it, later adds
+// go straight through, even from a click handler that still sees "no active trip" from an older render.
+// Users are already planning when they add a food, so asking again would just get in the way.
+export function shouldAskPantryCheck(opts: { hasActiveTrip: boolean; alreadyChecked: boolean; firstSession: boolean; pantryCount: number }): boolean {
+  return !opts.firstSession && !opts.alreadyChecked && needsPantryCheck(opts.hasActiveTrip, opts.pantryCount);
+}
+
 // goneIds are pantry_item ids the user marked as gone or used up.
 export function splitPantryCheck<T extends PantryCheckItem>(pantry: T[], goneIds: Iterable<string>) {
   const gone = new Set(goneIds);
