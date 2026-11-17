@@ -5,7 +5,7 @@ vi.mock('@/integrations/supabase/client', () => ({
   supabase: { from: vi.fn(() => ({ upsert })) },
 }));
 
-import { logRecommendationAdded, logRecommendationsShown, resetRecommendationImpressions } from './recommendation-events';
+import { logRecommendationAdded, logRecommendationDismissed, logRecommendationsShown, resetRecommendationImpressions } from './recommendation-events';
 
 const rowsOf = (call: number) => upsert.mock.calls[call]![0] as Record<string, unknown>[];
 
@@ -47,5 +47,13 @@ describe('recommendation events', () => {
   it('ignores an add that was never shown', async () => {
     await logRecommendationAdded({ source: 'nutrient_gap', foodId: '8' }, '9', '42');
     expect(upsert).not.toHaveBeenCalled();
+  });
+
+  it('links a thumbs-down dismiss to the shown impression', async () => {
+    await logRecommendationsShown([{ source: 'nutrient_gap', foodId: '4', rank: 2 }], '9');
+    const shownId = rowsOf(0)[0]!['impression_id'];
+
+    await logRecommendationDismissed({ source: 'nutrient_gap', foodId: '4' }, '9');
+    expect(rowsOf(1)[0]).toMatchObject({ impression_id: shownId, event_type: 'dismissed', food_id: 4, shopping_list_id: 9 });
   });
 });

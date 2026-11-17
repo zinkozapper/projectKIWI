@@ -12,7 +12,7 @@ import { foodById, formatAmount, getFoodPairings, nutrientKeys, nutrientLabels, 
 import { NUTRIENT_INFO, searchNutrients } from '@/lib/nutrient-info';
 import { boostTitle, MIN_BOOST_PERCENT } from '@/lib/recommendation-boosts';
 import { nutrientGap } from '@/lib/nutrient-suggestions';
-import { logRecommendationAdded, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
+import { logRecommendationAdded, logRecommendationDismissed, logRecommendationsShown, type RecommendationSource, type ShownRecommendation } from '@/lib/recommendation-events';
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
 import { CloseMatchNote } from '../close-match-note';
@@ -72,6 +72,11 @@ export function PlanPage() {
       : await setFoodPreference(foodId, liked);
 
     if (!succeeded) return;
+
+    // A thumbs-down on a shown suggestion takes it out of the suggestions; count it as dismissed (OKR 1).
+    if (!liked && !removing && recommendedFoods.some(f => f.id === foodId)) {
+      void logRecommendationDismissed({ source: sourceFor(foodId), foodId, anchorFoodId: anchorFor(foodId) }, active?.id);
+    }
 
     setLastChange({
       foodId,
