@@ -156,7 +156,7 @@ export function ProfilePage() {
       <div className="page-heading">
         <div>
           <h1>Your profile</h1>
-          <p>A few details help us make your grocery plan more useful.</p>
+          <p>This information allows us to create grocery plans and food recommendations that better fit your needs and goals.</p>
         </div>
       </div>
       <div className="profile-layout">
@@ -208,7 +208,7 @@ export function ProfilePage() {
               </select>
             </label>
             <label>
-              Food goal <small>You can change this anytime</small>
+              Food goal <small>Helps tailor calorie recommendations to your goal</small>
               <select value={profileDraft.goal} onChange={e => update({ goal: e.target.value })}>
                 <option value="maintain">Eat balanced at maintenance</option>
                 <option value="weight_loss">Weight loss</option>
