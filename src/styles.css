@@ -474,3 +474,19 @@ html.keyboard-open .pantry-results{max-height:max(140px,calc(var(--vv-height,100
 html.keyboard-open .list-search .search-results{max-height:max(180px,calc(var(--vv-height,100dvh) - 90px));overscroll-behavior:contain}
 html.keyboard-open .nutrient-search-results{max-height:max(160px,calc(var(--vv-height,100dvh) - 130px));overflow-y:auto;overscroll-behavior:contain}
 }
+
+/* Budget period selector on phones: amount, period and start date as three even full-width rows */
+@media(max-width:550px){
+.budget-control{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;width:100%}
+.budget-amount-group{display:block}
+.budget-slash{display:none}
+.profile-form .budget-amount{height:46px;padding:0 13px;gap:6px}
+.profile-form .budget-amount>span{font-size:16px;font-weight:700;line-height:1}
+.profile-form .budget-amount input{flex:1;min-width:0;width:auto;height:44px}
+.budget-control .segmented{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:3px;border-radius:6px}
+.budget-control .segmented button{height:40px;padding:0 4px;font-size:14px;font-weight:600}
+.budget-control .segmented button:not(.selected):hover{background:transparent}
+.profile-form .budget-start{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;font-size:14px}
+.profile-form .budget-start input{width:100%;min-width:0;height:46px;-webkit-appearance:none;appearance:none;text-align:left}
+.profile-form .budget-start input::-webkit-date-and-time-value{text-align:left}
+}
