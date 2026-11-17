@@ -759,7 +759,11 @@ export function targets(profile: Profile | null): Nutrients {
     high: 1.725,
   }[profile?.activity as 'low' | 'moderate' | 'high'] || 1.375;
 
-  const calories = Math.round(base * activityMultiplier);
+  const maintenanceCalories = Math.round(base * activityMultiplier);
+  const calories = Math.max(
+    1500,
+    maintenanceCalories - (profile?.goal === 'weight_loss' ? 300 : 0)
+  );  
 
   const over30 = age >= 31;
   const over50 = age >= 51;

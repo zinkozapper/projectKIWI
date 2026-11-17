@@ -211,6 +211,7 @@ export function ProfilePage() {
               Food goal <small>You can change this anytime</small>
               <select value={profileDraft.goal} onChange={e => update({ goal: e.target.value })}>
                 <option value="maintain">Eat balanced at maintenance</option>
+                <option value="weight_loss">Weight loss</option>
                 <option value="variety">More variety</option>
                 <option value="convenience">More convenient meals</option>
               </select>
@@ -284,7 +285,7 @@ export function ProfilePage() {
           </Button>
         </div> 
       </section>
-      
+
       <section className="section-block passkey-block">
         <div className="section-title">
           <div>
