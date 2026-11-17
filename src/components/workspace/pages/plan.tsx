@@ -300,7 +300,7 @@ export function PlanPage() {
               </div>
             </div>
 
-            <div className="list-search">
+            <div className="list-search" data-keyboard-anchor="top">
               <div className="searchbox">
                 <Search size={19} aria-hidden="true" />
                 <input
@@ -533,7 +533,7 @@ export function PlanPage() {
                   : 'Foods that can help fill nutrition gaps.'}
             </p>
 
-            <div className="nutrient-search">
+            <div className="nutrient-search" data-keyboard-anchor="top">
               <div className="nutrient-search-row">
                 <div className="searchbox nutrient-searchbox">
                   <Search size={17} aria-hidden="true" />

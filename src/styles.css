@@ -459,3 +459,18 @@ input,select,textarea{font-size:16px!important}
 .kiwi-banner-action>*{flex:1}
 }
 .pantry-hint-banner{margin:0 0 16px}
+
+/* Phone keyboard (src/lib/mobile-keyboard.ts): while typing, keep the field and its results in the
+   visible area above the keyboard. --vv-height/--vv-top are the visible area; html.keyboard-open is
+   set while a text field has focus on a touch screen. */
+html.keyboard-open .mobile-nav{display:none}
+html.keyboard-open .undo-bar{top:calc(var(--vv-top,0px) + 8px);bottom:auto}
+html.keyboard-open .shopping-experience .shop-finish-button{position:static}
+[data-keyboard-anchor="top"]{scroll-margin-top:12px}
+input,textarea{scroll-margin-block:16px}
+@media(max-width:800px){
+html.keyboard-open .kiwi-dialog{top:calc(var(--vv-top,0px) + 8px);--tw-translate-y:0px;max-height:calc(var(--vv-height,100dvh) - 16px);overflow-y:auto;overscroll-behavior:contain}
+html.keyboard-open .pantry-results{max-height:max(140px,calc(var(--vv-height,100dvh) * .45))}
+html.keyboard-open .list-search .search-results{max-height:max(180px,calc(var(--vv-height,100dvh) - 90px));overscroll-behavior:contain}
+html.keyboard-open .nutrient-search-results{max-height:max(160px,calc(var(--vv-height,100dvh) - 130px));overflow-y:auto;overscroll-behavior:contain}
+}

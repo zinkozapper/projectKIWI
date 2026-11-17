@@ -7,10 +7,11 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 
 import appCss from "../styles.css?url";
 import { themeBootScript } from "@/lib/theme";
+import { installMobileKeyboard } from "@/lib/mobile-keyboard";
 
 function NotFoundComponent() {
   return (
@@ -72,7 +73,8 @@ export const Route = createRootRouteWithContext<{}>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // resizes-content: Android shrinks the page above the on-screen keyboard instead of covering it.
+      { name: "viewport", content: "width=device-width, initial-scale=1, interactive-widget=resizes-content" },
       { title: "Kiwi — Simple grocery planning" },
       { name: "description", content: "Plan affordable groceries around your nutrition needs, without tracking every meal." },
       { name: "author", content: "Kiwi" },
@@ -113,5 +115,7 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  // Keeps the field being typed in visible above the phone keyboard (src/lib/mobile-keyboard.ts).
+  useEffect(() => installMobileKeyboard(), []);
   return <Outlet />;
 }
