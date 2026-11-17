@@ -109,7 +109,7 @@ export function PlanPage() {
 
   const {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
-    suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus, foodPreferences, setFoodPreference, removeFoodPreference, setSearch, setSelected, fail,
+    suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus, foodPreferences, likedFoods, setFoodPreference, removeFoodPreference, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, isFirstSession, priceOf, hasUnpricedBudgetItems,
     optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemCustom, customOf, setItemEstimate,
   } = useWorkspace();
@@ -117,6 +117,7 @@ export function PlanPage() {
   // No exact match: show close matches (synonyms, look-alike spellings, then AI picks) instead.
   const close = useCloseMatches(search, !results.length);
   const shownResults = results.length ? results : close.foods;
+  const likedCount = likedFoods.length;
 
     const pairingSuggestions = getFoodPairings(
     foodById(selected),
@@ -493,11 +494,18 @@ export function PlanPage() {
               <div>
                 <h2>{suggestionNutrient ? `Suggestions for ${suggestionHeading(suggestionNutrient)}` : 'Suggestions'}</h2>
               </div>
-              {suggestionNutrientChosen && (
-                <Button variant="ghost" size="sm" onClick={() => setSuggestionFocus(null)}>
-                  <X size={14} aria-hidden="true" /> Back to top gaps
+              <div className="suggestions-title-actions">
+                {suggestionNutrientChosen && (
+                  <Button variant="ghost" size="sm" onClick={() => setSuggestionFocus(null)}>
+                    <X size={14} aria-hidden="true" /> Back to top gaps
+                  </Button>
+                )}
+                <Button asChild variant="ghost" size="sm" className="liked-foods-link">
+                  <Link to="/food-preferences" title="See and edit the foods you liked or disliked">
+                    <ThumbsUp size={14} aria-hidden="true" /> Liked foods{likedCount > 0 ? ` (${likedCount})` : ''}
+                  </Link>
                 </Button>
-              )}
+              </div>
             </div>
 
             <p className="section-note">
@@ -675,13 +683,18 @@ export function PlanPage() {
       {lastChange && (
         <div className="undo-bar" role="status">
           <span>{lastChange.message}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => void undoPreferenceChange()}
-          >
-            <Undo2 size={15} aria-hidden="true" /> Undo
-          </Button>
+          <div className="undo-bar-actions">
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/food-preferences">View</Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => void undoPreferenceChange()}
+            >
+              <Undo2 size={15} aria-hidden="true" /> Undo
+            </Button>
+          </div>
         </div>
       )}
       {listItems.length > 0 && (

@@ -273,14 +273,14 @@ export function ProfilePage() {
       <section className="section-block passkey-block">
         <div className="section-title" style={{ alignItems: 'center' }}>
           <div>
-            <h2>Food preferences</h2>
+            <h2>Liked foods</h2>
             <p className="section-note">
-              Manage the foods KIWI recommends based on what you like.
+              See and change the foods you liked or disliked.
             </p>
           </div>
           <Button asChild variant="outline">
             <Link to="/food-preferences">
-              Manage foods <ArrowRight size={16} />
+              Liked foods <ArrowRight size={16} />
             </Link>
           </Button>
         </div> 

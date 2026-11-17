@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Search, ThumbsDown, ThumbsUp, Undo2, X } from 'lucide-react';
+import { Search, ThumbsDown, ThumbsUp, Undo2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foods } from '@/lib/foods';
 import { LIMITS } from '@/lib/validation';
@@ -97,34 +96,145 @@ export function FoodPreferencesPage() {
     }
   }
 
-  const likedFoods = foods.filter(
-    food => foodPreferences[String(food.id)] === true
-  );
+  const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
 
-  const dislikedFoods = foods.filter(
-    food => foodPreferences[String(food.id)] === false
-  );
+  const likedFoods = foods
+    .filter(food => foodPreferences[String(food.id)] === true)
+    .sort(byName);
+
+  const dislikedFoods = foods
+    .filter(food => foodPreferences[String(food.id)] === false)
+    .sort(byName);
 
   return (
     <>
       <div className="page-heading">
         <div>
-          <h1>Food preferences</h1>
-          <p>Manage which foods KIWI recommends to you.</p>
+          <h1>Liked foods</h1>
+          <p>
+            See and change the foods you liked or disliked. Tap the thumbs on a
+            suggestion in My plan to add more.
+          </p>
+        </div>
+      </div>
+
+      <section className="section-block suggestions-block">
+        <div className="section-title">
+          <div>
+            <h2>Liked</h2>
+          </div>
+          <span className="count-pill">
+            {likedFoods.length} {likedFoods.length === 1 ? 'food' : 'foods'}
+          </span>
         </div>
 
-        <Button asChild variant="outline">
-          <Link to="/profile">
-            <ArrowLeft size={16} /> Back to profile
-          </Link>
-        </Button>
-      </div>
+        <p className="section-note">
+          KIWI will prioritize recommending these foods.
+        </p>
+
+        <div className="suggestion-grid">
+          {likedFoods.length ? likedFoods.map(food => (
+            <div className="suggestion" key={food.id}>
+              <span className="suggestion-emoji">{food.emoji}</span>
+
+              <div className="suggestion-copy">
+                <strong>{food.name}</strong>
+                <small>{food.note}</small>
+              </div>
+
+              <div className="suggestion-actions">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  title={`Move ${food.name} to disliked`}
+                  aria-label={`Move ${food.name} to disliked`}
+                  onClick={() =>
+                    void changePreference(String(food.id), food.name, false)
+                  }
+                >
+                  <ThumbsDown size={16} />
+                </Button>
+
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  title={`Remove ${food.name} from this list`}
+                  aria-label={`Remove ${food.name} from this list`}
+                  onClick={() =>
+                    void removePreference(String(food.id), food.name)
+                  }
+                >
+                  <X size={16} />
+                </Button>
+              </div>
+            </div>
+          )) : (
+            <p className="empty-inline">No liked foods yet. Tap the thumbs up on a suggestion, or search below.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="section-block suggestions-block">
+        <div className="section-title">
+          <div>
+            <h2>Disliked</h2>
+          </div>
+          <span className="count-pill">
+            {dislikedFoods.length} {dislikedFoods.length === 1 ? 'food' : 'foods'}
+          </span>
+        </div>
+
+        <p className="section-note">
+          KIWI won't suggest these foods. Remove one to see it again.
+        </p>
+
+        <div className="suggestion-grid">
+          {dislikedFoods.length ? dislikedFoods.map(food => (
+            <div className="suggestion" key={food.id}>
+              <span className="suggestion-emoji">{food.emoji}</span>
+
+              <div className="suggestion-copy">
+                <strong>{food.name}</strong>
+                <small>{food.note}</small>
+              </div>
+
+              <div className="suggestion-actions">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  title={`Move ${food.name} to liked`}
+                  aria-label={`Move ${food.name} to liked`}
+                  onClick={() =>
+                    void changePreference(String(food.id), food.name, true)
+                  }
+                >
+                  <ThumbsUp size={16} />
+                </Button>
+
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  title={`Remove ${food.name} from this list`}
+                  aria-label={`Remove ${food.name} from this list`}
+                  onClick={() =>
+                    void removePreference(String(food.id), food.name)
+                  }
+                >
+                  <X size={16} />
+                </Button>
+              </div>
+            </div>
+          )) : (
+            <p className="empty-inline">You haven't disliked any foods yet.</p>
+          )}
+        </div>
+      </section>
 
       {/* Search for any food to like or dislike */}
       <section className="section-block suggestions-block">
         <div className="section-title">
           <div>
-            <h2>Find foods</h2>
+            <h2>Add more foods</h2>
           </div>
         </div>
 
@@ -204,114 +314,6 @@ export function FoodPreferencesPage() {
                   );
                 })}
             </div>
-          )}
-        </div>
-      </section>
-
-      <section className="section-block suggestions-block">
-        <div className="section-title">
-          <div>
-            <h2>Liked foods</h2>
-          </div>
-          <span className="count-pill">
-            {likedFoods.length} {likedFoods.length === 1 ? 'food' : 'foods'}
-          </span>
-        </div>
-
-        <p className="section-note">
-          KIWI will prioritize recommending these foods.
-        </p>
-
-        <div className="suggestion-grid">
-          {likedFoods.length ? likedFoods.map(food => (
-            <div className="suggestion" key={food.id}>
-              <span className="suggestion-emoji">{food.emoji}</span>
-
-              <div className="suggestion-copy">
-                <strong>{food.name}</strong>
-                <small>{food.note}</small>
-              </div>
-
-              <div className="suggestion-actions">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  title={`Dislike ${food.name}`}
-                  onClick={() =>
-                    void changePreference(String(food.id), food.name, false)
-                  }
-                >
-                  <ThumbsDown size={16} />
-                </Button>
-
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  title={`Remove ${food.name} preference`}
-                  onClick={() =>
-                    void removePreference(String(food.id), food.name)
-                  }
-                >
-                  <X size={16} />
-                </Button>
-              </div>
-            </div>
-          )) : (
-            <p className="empty-inline">You haven't liked any foods yet.</p>
-          )}
-        </div>
-      </section>
-
-      <section className="section-block suggestions-block">
-        <div className="section-title">
-          <div>
-            <h2>Disliked foods</h2>
-          </div>
-          <span className="count-pill">
-            {dislikedFoods.length} {dislikedFoods.length === 1 ? 'food' : 'foods'}
-          </span>
-        </div>
-
-        <p className="section-note">
-          KIWI will prioritize recommending these foods less often.
-        </p>
-
-        <div className="suggestion-grid">
-          {dislikedFoods.length ? dislikedFoods.map(food => (
-            <div className="suggestion" key={food.id}>
-              <span className="suggestion-emoji">{food.emoji}</span>
-
-              <div className="suggestion-copy">
-                <strong>{food.name}</strong>
-                <small>{food.note}</small>
-              </div>
-
-              <div className="suggestion-actions">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  title={`Like ${food.name}`}
-                  onClick={() =>
-                    void changePreference(String(food.id), food.name, true)
-                  }
-                >
-                  <ThumbsUp size={16} />
-                </Button>
-
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  title={`Remove ${food.name} preference`}
-                  onClick={() =>
-                    void removePreference(String(food.id), food.name)
-                  }
-                >
-                  <X size={16} />
-                </Button>
-              </div>
-            </div>
-          )) : (
-            <p className="empty-inline">You haven't disliked any foods yet.</p>
           )}
         </div>
       </section>

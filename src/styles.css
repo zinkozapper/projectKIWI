@@ -428,3 +428,8 @@ input,select,textarea{font-size:16px!important}
 .list-search .finder-launch{order:-1;bottom:auto;top:-5px;margin:0 0 4px;border-top:0;border-bottom:1px solid var(--border);border-radius:4px 4px 0 0;min-height:44px}
 .pantry-search-area .finder-launch{order:-1;min-height:44px}
 }
+
+/* Liked foods: link beside the Suggestions heading, and View beside Undo */
+.suggestions-title-actions{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.liked-foods-link{color:var(--primary);gap:6px}
+.undo-bar-actions{display:flex;align-items:center;gap:2px;flex:none}

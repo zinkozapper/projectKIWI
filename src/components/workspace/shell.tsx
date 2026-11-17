@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState } from '@tanstack/react-router';
-import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShieldCheck, ShoppingBasket } from 'lucide-react';
+import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShieldCheck, ShoppingBasket, ThumbsUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 import { PantryCheckDialog } from './pantry-check-dialog';
@@ -12,6 +12,10 @@ const nav = [
   { id: 'history', label: 'History', mobileLabel: 'History', to: '/plan/history', icon: History },
 ] as const;
 
+// Sidebar only: the phone bar is already full, so phones reach this page from the Suggestions
+// heading on My plan and from Profile.
+const likesNav = { id: 'likes', label: 'Liked foods', mobileLabel: 'Likes', to: '/food-preferences', icon: ThumbsUp } as const;
+
 // Only shown to accounts in public.app_admin (migration 0007). The page and its data are checked
 // again in the database, so hiding the button is a convenience, not the security boundary.
 const adminNav = { id: 'admin', label: 'Admin', mobileLabel: 'Admin', to: '/admin', icon: ShieldCheck } as const;
@@ -23,6 +27,7 @@ export function WorkspaceShell() {
   const pathname = useRouterState({ select: s => s.location.pathname });
 
   const items = isAdmin ? [...nav, adminNav] : nav;
+  const sideItems = isAdmin ? [...nav, likesNav, adminNav] : [...nav, likesNav];
 
   const loadFailed = error === 'Could not load content';
 
@@ -31,7 +36,7 @@ export function WorkspaceShell() {
       <aside className="sidebar">
         <Link to="/plan" className="brand workspace-brand"><span className="brand-icon"><Leaf size={21} strokeWidth={2.5} /></span><span>kiwi<span className="brand-dot">.</span></span></Link>
         <nav className="side-nav">
-          {items.map(({ id, label, to, icon: Icon }) => (
+          {sideItems.map(({ id, label, to, icon: Icon }) => (
             <Button key={id} asChild variant="ghost" className={isHere(pathname, to) ? 'nav-item active' : 'nav-item'}>
               <Link to={to} activeOptions={{ exact: true }}>
                 <Icon size={18} />
