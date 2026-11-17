@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Check, CheckCircle2, Database, LoaderCircle, Plus, Send, Sparkles, X } from 'lucide-react';
+import { Check, Database, LoaderCircle, Plus, Send, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { addFoodToCatalog } from '@/lib/foods';
@@ -12,6 +12,7 @@ import { LIMITS } from '@/lib/validation';
 import { useWorkspace } from './context';
 import { PrepSelect } from './prep-select';
 import type { FoodOption } from '@/lib/food-options';
+import { Banner } from '@/components/workspace/banner';
 
 type Step = 'form' | 'options' | 'done' | 'sent' | 'limit';
 
@@ -167,16 +168,16 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
           </DialogDescription>
         </DialogHeader>
 
-        {error && <div className="form-error" role="alert">{error}</div>}
+        {error && <Banner tone="error" className="compact" title={error} />}
         {busy && <div className="content-loading finder-busy" role="status"><LoaderCircle size={16} className="spin" aria-hidden="true" /> {busy}</div>}
 
         {enabled === null && <p role="status">Checking food finder availability…</p>}
-        {enabled === false && <p role="status">The food finder is not configured on this server.</p>}
+        {enabled === false && <Banner tone="warning" role="status" title="The food finder is not configured on this server." />}
         {enabled && step === 'limit' && status && (
           <div className="finder-section">
             <p>You’ve added <strong>{status.added}</strong> foods, your current limit. An admin can approve 10 more.</p>
             {status.quotaPending ? (
-              <p className="form-success" role="status"><CheckCircle2 size={16} aria-hidden="true" /> Request sent. You’ll be able to add more once an admin approves it.</p>
+              <Banner tone="success" title="Request sent">You can add more foods once an admin approves it.</Banner>
             ) : (
               <>
                 <label className="control-label" htmlFor="finder-more-note">Note for the admin (optional)</label>
@@ -274,10 +275,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
 
         {step === 'done' && added && (
           <div className="finder-section finder-done">
-            <p className="form-success" role="status">
-              <CheckCircle2 size={18} aria-hidden="true" /> {added.food.emoji} <strong>{added.food.food_name}</strong>
-              {added.alreadyExisted ? ' was already in Kiwi.' : ' is now in Kiwi for everyone.'}
-            </p>
+            <Banner tone="success" title={`${added.food.emoji} ${added.food.food_name}${added.alreadyExisted ? ' was already in Kiwi.' : ' is now in Kiwi for everyone.'}`} />
             {summary && (
               <>
                 <div className="finder-nutrients" aria-label={`Nutrients per ${summary.serving}`}>
@@ -330,7 +328,7 @@ export function FoodFinder({ open, onOpenChange, initialQuery = '', adminRequest
 
         {step === 'sent' && (
           <div className="finder-section">
-            <p className="form-success" role="status"><CheckCircle2 size={18} aria-hidden="true" /> Sent. An admin will look for “{query}” and add it.</p>
+            <Banner tone="success" title="Request sent">An admin will look for “{query}” and add it.</Banner>
             <div className="finder-actions"><Button variant="ghost" onClick={() => close(false)}>Done</Button></div>
           </div>
         )}

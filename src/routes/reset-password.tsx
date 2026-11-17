@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { selfHosted } from '@/lib/auth-options';
 import { LIMITS, MIN_PASSWORD, passwordError } from '@/lib/validation';
+import { Banner } from '@/components/workspace/banner';
 
 export const Route = createFileRoute('/reset-password')({
   head: () => ({ meta: [{ title: 'Kiwi — Reset your password' }, { name: 'description', content: 'Choose a new password for your Kiwi account.' }] }),
@@ -53,8 +54,8 @@ function ResetPassword() {
           <form onSubmit={submit} className="login-form">
             <label>New password<input required type="password" minLength={MIN_PASSWORD} maxLength={LIMITS.password} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} /></label>
             <label>Confirm new password<input required type="password" minLength={MIN_PASSWORD} maxLength={LIMITS.password} autoComplete="new-password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} /></label>
-            {error && <p className="form-error" role="alert">{error}</p>}
-            {notice && <p className="form-success" role="status">{notice}</p>}
+            {error && <Banner tone="error" className="compact" title={error} />}
+            {notice && <Banner tone="success" className="compact" title={notice} />}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'Updating…' : 'Update password'}</Button>
           </form>
           {!selfHosted && <div className="enroll-cta"><span>Link expired? <Link to="/forgot-password">Request a new one</Link></span></div>}

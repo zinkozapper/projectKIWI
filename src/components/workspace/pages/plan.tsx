@@ -16,6 +16,7 @@ import { logRecommendationAdded, logRecommendationDismissed, logRecommendationsS
 import { useWorkspace } from '../context';
 import { FoodFinder } from '../food-finder';
 import { CloseMatchNote } from '../close-match-note';
+import { Banner } from '../banner';
 import { NutrientPanel } from '../nutrient-bar';
 import { PrepSelect } from '../prep-select';
 import { PriceEstimate, SizeSelect } from '../package-controls';
@@ -228,10 +229,13 @@ export function PlanPage() {
   return (
     <>
       {!profile && !isFirstSession && (
-        <p className="section-note">
-          You're currently using default nutrition estimates. Complete your profile
-          using the account button to get nutrition goals personalized to you.
-        </p>
+        <Banner
+          className="page-banner"
+          title="Your nutrition goals are generic"
+          action={<Button asChild><Link to="/profile">Complete profile <ArrowRight size={16} /></Link></Button>}
+        >
+          Kiwi is using default estimates. Fill in your profile to get goals made for you.
+        </Banner>
       )}
 
       <div className="page-heading">
@@ -255,13 +259,24 @@ export function PlanPage() {
       </div>}
 
       {pantryCheckDue && !isFirstSession && (
-        <div className="pantry-check-banner">
-          <div>
-            <strong>Used anything up since your last trip?</strong>
-            <small>You have {pantry.length} {pantry.length === 1 ? 'food' : 'foods'} at home. Mark anything that’s gone so your plan counts what you still have and doesn’t suggest buying it again.</small>
-          </div>
-          <Button variant="outline" onClick={() => void startPlan()}><House size={16} /> Update pantry</Button>
-        </div>
+        <Banner
+          className="page-banner"
+          title="Used anything up since your last trip?"
+          action={<Button onClick={() => void startPlan()}><House size={16} /> Update pantry</Button>}
+        >
+          You have {pantry.length} {pantry.length === 1 ? 'food' : 'foods'} at home. Mark what’s gone so your plan counts only what you still have.
+        </Banner>
+      )}
+
+      {budgetRemaining < 0 && !isFirstSession && (
+        <Banner
+          tone="warning"
+          className="page-banner"
+          title={`You’re $${(-budgetRemaining).toFixed(2)} over budget`}
+          action={<Button asChild variant="outline"><Link to="/profile">Change budget</Link></Button>}
+        >
+          Remove a few items from your list, or raise your budget in your profile.
+        </Banner>
       )}
 
       {isPhone && (

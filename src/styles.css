@@ -433,3 +433,29 @@ input,select,textarea{font-size:16px!important}
 .suggestions-title-actions{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
 .liked-foods-link{color:var(--primary);gap:6px}
 .undo-bar-actions{display:flex;align-items:center;gap:2px;flex:none}
+
+/* Banners: big, bold messages people actually read (src/components/workspace/banner.tsx) */
+.kiwi-banner{--tone:var(--primary);display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px 14px;margin:0;padding:14px 16px;border:1px solid color-mix(in srgb,var(--tone) 40%,var(--border));border-left:6px solid var(--tone);border-radius:8px;background:color-mix(in srgb,var(--tone) 11%,var(--card));color:var(--foreground);font-size:15px;line-height:1.45;text-align:left}
+.kiwi-banner-success{--tone:var(--primary)}
+.kiwi-banner-warning{--tone:var(--orange)}
+.kiwi-banner-error{--tone:var(--destructive)}
+.kiwi-banner-icon{flex:none;margin-top:1px;color:var(--tone)}
+.kiwi-banner-warning .kiwi-banner-icon{color:color-mix(in srgb,var(--orange) 70%,var(--foreground))}
+.kiwi-banner-body{flex:1 1 220px;min-width:0;display:grid;gap:3px}
+.kiwi-banner-title{font-size:16px;font-weight:800;line-height:1.35}
+.kiwi-banner-text{font-size:14px;color:var(--foreground)}
+.kiwi-banner-text a,.kiwi-banner-title a{color:inherit;font-weight:800;text-decoration:underline}
+.kiwi-banner-action{flex:none;align-self:center;display:flex;gap:8px;flex-wrap:wrap}
+.kiwi-banner-close{flex:none;display:grid;place-items:center;width:32px;height:32px;margin:-5px -6px -5px 0;border:0;border-radius:6px;background:transparent;color:var(--foreground)}
+.kiwi-banner-close:hover{background:color-mix(in srgb,var(--tone) 18%,transparent)}
+.kiwi-banner.page-banner{margin:0 0 22px}
+.kiwi-banner.compact{padding:10px 12px;font-size:14px}
+.kiwi-banner.compact .kiwi-banner-title{font-size:15px}
+.search-results .kiwi-banner{margin:4px 4px 6px}
+.kiwi-banner.toast-banner{position:fixed;z-index:20;right:22px;top:85px;width:min(460px,calc(100% - 32px));box-shadow:var(--shadow)}
+@media(max-width:800px){
+.kiwi-banner.toast-banner{right:16px;left:16px;width:auto;top:72px}
+.kiwi-banner-action{flex:1 1 100%}
+.kiwi-banner-action>*{flex:1}
+}
+.pantry-hint-banner{margin:0 0 16px}

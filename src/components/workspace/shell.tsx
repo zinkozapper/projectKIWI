@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 import { PantryCheckDialog } from './pantry-check-dialog';
 import { PriceNotice } from './price-notice';
+import { Banner } from './banner';
 
 const nav = [
   { id: 'plan', label: 'My plan', mobileLabel: 'Plan', to: '/plan', icon: ClipboardList },
@@ -57,7 +58,9 @@ export function WorkspaceShell() {
             <span className="avatar">{(profile?.display_name || 'K').charAt(0).toUpperCase()}</span>
           </Link>
         </header>
-        {error && <div className={loadFailed ? 'toast-error load-error' : 'toast-error'} role="alert">{error}{!loadFailed && <Button variant="ghost" size="icon" onClick={clearError}>×</Button>}</div>}
+        {error && (loadFailed
+          ? <Banner tone="error" className="toast-banner" title="Couldn’t load your content">Check your connection, then refresh the page.</Banner>
+          : <Banner tone="error" className="toast-banner" title={error} onDismiss={clearError} />)}
         <main className="workspace">
           {loading && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading content…</div>}
           <PriceNotice status={priceStatus} refreshUnavailable={priceRefreshUnavailable} />

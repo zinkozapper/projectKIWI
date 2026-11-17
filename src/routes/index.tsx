@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Eye, EyeOff, KeyRound, Leaf } from 'lucide-react';
 import { emailError, LIMITS } from '@/lib/validation';
+import { Banner } from '@/components/workspace/banner';
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -184,7 +185,7 @@ function Login() {
               Remember me
             </label>
 
-            {error && <p className="form-error" role="alert">{error}</p>}
+            {error && <Banner tone="error" className="compact" title={error} />}
 
             <Button className="login-submit" disabled={busy} type="submit">
               {busy ? 'One moment…' : 'Sign in'}

@@ -10,6 +10,7 @@ import {
 } from '@/lib/recipes/shared';
 import { deleteRecipe, loadPopularRecipes, loadSavedRecipes, saveRecipe, setRecipeFoodGroups } from '@/lib/recipes/store';
 import { useWorkspace } from '../context';
+import { Banner } from '../banner';
 
 type Picks = Record<string, Set<number>>;
 
@@ -277,7 +278,7 @@ export function RecipesPage() {
         </Button>
       </div>
 
-      {notice && <p className="recipe-notice" role="status">{notice}</p>}
+      {notice && <Banner tone="success" className="page-banner" title={notice} onDismiss={() => setNotice('')} />}
 
       <section className="section-block recipe-section list">
         <div className="section-title">
@@ -287,8 +288,8 @@ export function RecipesPage() {
             {asking === 'list' ? 'Thinking…' : suggested.list.length ? 'Suggest 3 more' : 'Suggest recipes from my list'}
           </Button>
         </div>
-        {nothingToCook && <p className="section-note">Add foods to <Link to="/plan">your grocery list</Link> first.</p>}
-        {askError.list && <p className="recipe-error" role="alert">{askError.list}</p>}
+        {nothingToCook && <Banner className="compact" title="Your grocery list is empty" action={<Button asChild variant="outline"><Link to="/plan">Add foods</Link></Button>}>Add foods to your list first, then Kiwi can suggest recipes from it.</Banner>}
+        {askError.list && <Banner tone="error" className="compact" title={askError.list} />}
         {suggested.list.length > 0 && (
           <div className="recipe-grid">
             {suggested.list.map((r, index) => card(`list:${index}:${recipeKey(r)}`, r, { mode: 'list', index }))}
@@ -309,7 +310,7 @@ export function RecipesPage() {
             {popular.length ? 'Most saved by Kiwi users.' : 'No saved recipes yet. Get new ideas and save the ones you like.'}
           </p>
         )}
-        {askError.popular && <p className="recipe-error" role="alert">{askError.popular}</p>}
+        {askError.popular && <Banner tone="error" className="compact" title={askError.popular} />}
         {(popular.length > 0 || suggested.popular.length > 0) && (
           <div className="recipe-grid">
             {popular.map(r => card(`top:${recipeKey(r)}`, r, { saves: r.saves }))}

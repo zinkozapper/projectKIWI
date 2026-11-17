@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
 import { Eye, EyeOff, Leaf } from 'lucide-react';
 import { emailError, LIMITS, MIN_PASSWORD, passwordError } from '@/lib/validation';
+import { Banner } from '@/components/workspace/banner';
 
 export const Route = createFileRoute('/enroll')({
   head: () => ({ meta: [{ title: 'Kiwi — Create your account' }, { name: 'description', content: 'Create a Kiwi account and start planning affordable, balanced groceries.' }, { property: 'og:title', content: 'Kiwi — Create your account' }, { property: 'og:description', content: 'Start planning groceries that fit your week.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }),
@@ -93,8 +94,8 @@ function Enroll() {
               </button>
             </div>
 
-            {error && <p className="form-error" role="alert">{error}</p>}
-            {notice && <p className="form-success" role="status">{notice}</p>}
+            {error && <Banner tone="error" className="compact" title={error} />}
+            {notice && <Banner tone="success" className="compact" title={notice} />}
             <Button className="login-submit" disabled={busy} type="submit">{busy ? 'One moment…' : 'Create account'}</Button>
           </form>
           {googleSignInEnabled && (

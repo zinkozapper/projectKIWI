@@ -6,6 +6,7 @@ import { foodById, nutrientKeys, type Food, type Nutrients } from '@/lib/foods';
 import { useWorkspace } from '../context';
 import { NutrientPanel } from '../nutrient-bar';
 import { PantryAddDialog } from '../pantry-add-dialog';
+import { Banner } from '../banner';
 import { SizeSelect } from '../package-controls';
 import { formatAmount } from '@/lib/foods';
 import { packageNoun, servingsText } from '@/lib/food-packages';
@@ -41,10 +42,13 @@ export function PantryPage() {
   return (
     <>
       {!profile && !isFirstSession && (
-        <p className="section-note">
-          You're currently using default nutrition estimates. Complete your profile
-          using the account button to get nutrition goals personalized to you.
-        </p>
+        <Banner
+          className="page-banner"
+          title="Your nutrition goals are generic"
+          action={<Button asChild><Link to="/profile">Complete profile <ArrowRight size={16} /></Link></Button>}
+        >
+          Kiwi is using default estimates. Fill in your profile to get goals made for you.
+        </Banner>
       )}
       
       <div className="page-heading">
@@ -62,7 +66,9 @@ export function PantryPage() {
           </div>
           {stocked.length ? (
             <>
-              <p className="pantry-hint">Set how many packages you have; their servings are spread across your {days}-day plan. Used it up? Tap the name to mark it gone.</p>
+              <Banner className="compact pantry-hint-banner" title="Used something up? Tap its name to mark it gone.">
+                Set how many packages you have. Their servings are spread across your {days}-day plan.
+              </Banner>
               <div className="pantry-stock">
                 {stocked.map(({ item, food }) => {
                   const pkg = packageOf(item);

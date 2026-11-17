@@ -11,6 +11,7 @@ import { AccountDialog } from '../account-dialog';
 import { useWorkspace } from '../context';
 import { FoodQueue } from '../food-queue';
 import { LIMITS } from '@/lib/validation';
+import { Banner } from '@/components/workspace/banner';
 
 const filters: { id: UserFilter; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -154,8 +155,8 @@ export function AdminPage() {
         </Button>
       </div>
 
-      {error && <div className="form-error admin-error" role="alert">{error}</div>}
-      {notice && !error && <div className="form-success admin-error" role="status">{notice}</div>}
+      {error && <Banner tone="error" className="compact page-banner" title={error} />}
+      {notice && !error && <Banner tone="success" className="compact page-banner" title={notice} />}
 
       {!dash && loading && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading dashboard…</div>}
 

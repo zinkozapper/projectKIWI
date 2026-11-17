@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import type { AdminUser } from '@/lib/admin';
 import { adminCreateAccount, adminUpdateAccount } from '@/lib/admin-accounts/functions';
 import { checkAccountInput, MAX_NAME, MIN_PASSWORD } from '@/lib/admin-accounts/shared';
+import { Banner } from '@/components/workspace/banner';
 
 // Add a new account (account = null) or edit an existing one from the admin user list.
 export function AccountDialog({ open, account, onClose, onSaved }: {
@@ -91,7 +92,7 @@ export function AccountDialog({ open, account, onClose, onSaved }: {
               Make this account an admin
             </label>
           )}
-          {error && <p className="form-error" role="alert">{error}</p>}
+          {error && <Banner tone="error" className="compact" title={error} />}
           <div className="account-actions">
             <Button type="button" variant="ghost" onClick={onClose} disabled={busy}>Cancel</Button>
             <Button type="submit" disabled={busy}>

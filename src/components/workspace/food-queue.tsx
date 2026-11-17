@@ -3,6 +3,7 @@ import { Check, LoaderCircle, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { FoodFinder } from './food-finder';
+import { Banner } from '@/components/workspace/banner';
 
 // Admin queue for the AI food finder (migration 0009): requests for more adds, "no good match" requests,
 // and new foods the workflow flagged for review.
@@ -65,7 +66,7 @@ export function FoodQueue() {
         <span className="count-pill">{queue?.pending.length ?? 0} waiting</span>
       </div>
       <p className="section-note">From the AI food finder: requests for 10 more foods, foods the workflow couldn’t match, and new foods flagged for a check.</p>
-      {error && <div className="form-error" role="alert">{error}</div>}
+      {error && <Banner tone="error" className="compact" title={error} />}
       {loading && !queue && <div className="content-loading" role="status"><LoaderCircle size={16} aria-hidden="true" /> Loading requests…</div>}
 
       {queue && (

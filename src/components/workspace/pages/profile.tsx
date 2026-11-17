@@ -19,6 +19,7 @@ import {
 import { LIMITS, numberKeyGuard, numericText, PROFILE_RANGES } from '@/lib/validation';
 import { PROFILE_AUTOSAVE_DELAY_MS, profileDraftKey, profileSaveErrors, type ProfileErrorKey } from '@/lib/profile-autosave';
 import { useWorkspace, type ProfileDraft } from '../context';
+import { Banner } from '@/components/workspace/banner';
 
 type Passkey = { id: string; friendly_name?: string; created_at: string; last_used_at?: string };
 type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'invalid' | 'error';
@@ -300,7 +301,7 @@ export function ProfilePage() {
             <div><h3>Passkeys</h3><p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p></div>
             <Button onClick={addPasskey} disabled={passkeyBusy}><KeyRound size={16} /> {passkeyBusy ? 'Waiting…' : 'Add a passkey'}</Button>
           </div>
-          {passkeyError && <p className="form-error" role="alert">{passkeyError}</p>}
+          {passkeyError && <Banner tone="error" className="compact" title={passkeyError} />}
           {passkeys.length ? passkeys.map(p => (
             <div className="history-row passkey-row" key={p.id}>
               <div>
