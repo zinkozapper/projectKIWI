@@ -16,6 +16,7 @@ import { localizedPricingEnabled } from '@/lib/pricing-functions';
 import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
 import { averageOptionPrice, itemOptionPrice, loadFoodOptions, loadLocalOptionPrices, optionPrice, resolveOptionId, type FoodOption, type OptionCatalog } from '@/lib/food-options';
 import { isFirstAccountSession } from '@/lib/first-session';
+import { createQuantitySync, type QuantitySync } from '@/lib/quantity-sync';
 import { PANTRY_SERVINGS_WITHOUT_SIZE, customAmount, defaultPackage, isCustomUnit, type CustomAmount, type CustomUnit, loadFoodPackages, packagePrice, packagesFor as sizesFor, servingsOf, type FoodPackage, type PackageCatalog } from '@/lib/food-packages';
 
 // option_id: the purchase option (prep style) picked for this item; null = average of the food's options.
@@ -159,6 +160,32 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [pantry, setPantry] = useState<PantryItem[]>([]);
+  // List +/- taps show at once; the save runs in the background (src/lib/quantity-sync.ts).
+  const quantitySync = useRef<QuantitySync | null>(null);
+  if (!quantitySync.current) {
+    quantitySync.current = createQuantitySync({
+      delayMs: 400,
+      save: async (id, quantity) => {
+        const { error } = await supabase.from('shopping_list_item').update({ quantity }).eq('shopping_list_item_id', Number(id));
+        if (error) fail('Could not save the amount: ' + error.message);
+        return !error;
+      },
+      onRevert: (id, quantity) => setItems(prev => prev.map(i => i.id === id ? { ...i, quantity } : i)),
+    });
+  }
+  const qtySync = quantitySync.current;
+  // Send any waiting amounts before the tab is hidden or closed.
+  useEffect(() => {
+    const flush = () => { if (document.visibilityState === 'hidden') void qtySync.flushAll(); };
+    const flushNow = () => void qtySync.flushAll();
+    document.addEventListener('visibilitychange', flush);
+    window.addEventListener('pagehide', flushNow);
+    return () => {
+      document.removeEventListener('visibilitychange', flush);
+      window.removeEventListener('pagehide', flushNow);
+      void qtySync.flushAll();
+    };
+  }, [qtySync]);
   const [foodPreferences, setFoodPreferences] = useState<FoodPreferences>({});
   const [userId, setUserId] = useState('');
   const [isFirstSession, setIsFirstSession] = useState(false);
@@ -629,6 +656,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     if (!tripId) return null;
     const food = foodById(id);
     const existing = items.find(i => i.trip_id === tripId && i.food_id === id && !i.purchased);
+    if (existing) await qtySync.flush(existing.id);
     const pkg = defaultPackage(packagesFor(id, optionId !== undefined ? optionId : existing?.option_id));
     const inPackages = existing ? !!existing.package_id : !!pkg;
     const q = inPackages ? count : count * days;
@@ -656,6 +684,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
 
   // Change an item's prep style (purchase option). null = no preference (priced at the options' average).
   async function setItemOption(item: Item, optionId: string | null) {
+    await qtySync.flush(item.id);
     const before = item;
     // Sizes belong to an option, so switching option switches to its default size (same number of packages).
     // If the new option has no sizes, the packages turn into the same number of servings.
@@ -678,6 +707,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
 
   // Change a list item's package size; the number of packages stays the same.
   async function setItemPackage(item: Item, packageId: string) {
+    await qtySync.flush(item.id);
     const before = item;
     const patch: Partial<Item> = { package_id: packageId, custom_amount: null, custom_unit: null };
     // An older row counted in servings becomes one package.
@@ -694,6 +724,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
   async function setItemCustom(item: Item, amount: number, unit: CustomUnit) {
     const c = customAmount(packagesFor(item.food_id, item.option_id), amount, unit);
     if ('error' in c) { fail(c.error); return; }
+    await qtySync.flush(item.id);
     const before = item;
     const value = Math.round(amount * 100) / 100;
     const patch: Partial<Item> = { package_id: c.reference.id, custom_amount: value, custom_unit: unit, ...(item.package_id ? {} : { quantity: 1 }) };
@@ -729,6 +760,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     if (!active && !(await confirmPantry())) return 0;
     const tripId = await ensureTrip();
     if (!tripId) return 0;
+    await qtySync.flushAll();
     let saved = 0;
     const updated: Item[] = [];
     const fresh: { id: string; quantity: number }[] = [];
@@ -759,20 +791,28 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
       fail('Quantity must be a positive number.');
       return;
     }
-    const { data, error } = await supabase.from('shopping_list_item').update({ quantity: q }).eq('shopping_list_item_id', Number(item.id)).select().single();
-    if (error) fail(error.message);
-    else setItems(prev => prev.map(i => i.id === item.id ? toItem(data) : i));
+    // Show it now; the save follows a moment later (one write for a burst of taps).
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, quantity: q } : i));
+    qtySync.set(item.id, q, Number(item.quantity));
   }
 
   async function removeItem(item: Item, shop = false) {
     if (shop) {
+      await qtySync.flush(item.id);
       const { data, error } = await supabase.from('shopping_list_item').update({ is_purchased: true }).eq('shopping_list_item_id', Number(item.id)).select().single();
       if (error) fail(error.message);
       else setItems(prev => prev.map(i => i.id === item.id ? toItem(data) : i));
     } else {
+      // Gone from the list right away; put back if the delete fails.
+      qtySync.cancel(item.id);
+      await qtySync.flush(item.id);
+      const index = items.findIndex(i => i.id === item.id);
+      setItems(prev => prev.filter(i => i.id !== item.id));
       const { error } = await supabase.from('shopping_list_item').delete().eq('shopping_list_item_id', Number(item.id));
-      if (error) fail(error.message);
-      else setItems(prev => prev.filter(i => i.id !== item.id));
+      if (error) {
+        fail(error.message);
+        setItems(prev => prev.some(i => i.id === item.id) ? prev : [...prev.slice(0, Math.max(0, index)), item, ...prev.slice(Math.max(0, index))]);
+      }
     }
   }
 
@@ -855,6 +895,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
 
   async function finishTrip() {
     if (!active) return;
+    await qtySync.flushAll();
     const { data, error } = await supabase.from('shopping_list').update({ status: 'completed', completed_at: new Date().toISOString() }).eq('shopping_list_id', Number(active.id)).select().single();
     if (error) {
       fail(error.message);
@@ -945,6 +986,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     if (!active && !(await confirmPantry())) return;
     const tripId = await ensureTrip();
     if (!tripId) return;
+    await qtySync.flushAll();
     const current = items.filter(i => i.trip_id === tripId && !i.purchased).map(i => ({ ...i }));
     for (const item of items.filter(i => i.trip_id === trip.id)) {
       // Rows only merge when they count the same way (same package size, or both in servings).
