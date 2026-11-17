@@ -416,3 +416,15 @@ input,select,textarea{font-size:16px!important}
 .autosave-spin{animation:autosave-spin 1s linear infinite}
 @keyframes autosave-spin{to{transform:rotate(360deg)}}
 @media(max-width:550px){.profile-save-row{flex-direction:column;align-items:stretch}}
+
+/* "Add to Kiwi" (AI food import) link: always in view next to search results.
+   Desktop: pinned to the bottom of the scrolling results. Phones: moved to the top,
+   because the keyboard covers the bottom half and the results box scrolls on its own. */
+.list-search .search-results{display:flex;flex-direction:column}.list-search .search-results>*{flex-shrink:0}
+.list-search .finder-launch{position:sticky;bottom:-5px;z-index:1;background:var(--card)}
+.pantry-search-area{display:flex;flex-direction:column;gap:6px;min-width:0}
+.pantry-search-area .finder-launch{margin-top:0;border:1px solid var(--border);border-radius:6px}
+@media(max-width:800px){
+.list-search .finder-launch{order:-1;bottom:auto;top:-5px;margin:0 0 4px;border-top:0;border-bottom:1px solid var(--border);border-radius:4px 4px 0 0;min-height:44px}
+.pantry-search-area .finder-launch{order:-1;min-height:44px}
+}

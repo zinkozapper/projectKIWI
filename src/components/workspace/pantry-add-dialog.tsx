@@ -84,25 +84,26 @@ export function PantryAddDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
         {query.trim() && !results.length && <CloseMatchNote query={query} close={closeMatches} />}
         {query.trim() && (
-          shown.length ? (
-            <div className="pantry-results">
-              {shown.map(f => {
-                const added = has(f.id);
-                return (
-                  <button type="button" key={f.id} className="search-result" disabled={added} onClick={() => void addPantry(f.id)} aria-label={added ? `${f.name} is in your pantry` : `Add ${f.name} to your pantry`}>
-                    <span className="food-emoji" aria-hidden="true">{f.emoji}</span>
-                    <div><strong>{f.name}</strong><small>{f.category}</small></div>
-                    {added ? <span className="in-pantry"><Check size={14} aria-hidden="true" /> In pantry</span> : <Plus size={17} aria-hidden="true" />}
-                  </button>
-                );
-              })}
-            </div>
-          ) : null
-        )}
-        {query.trim() && (
-          <button type="button" className="finder-launch" onClick={openFinder}>
-            <Sparkles size={15} aria-hidden="true" /> Can’t find it? Add “{query.trim()}” to Kiwi
-          </button>
+          // Results and the "Add to Kiwi" link share one box so the link can sit on top on phones.
+          <div className="pantry-search-area">
+            {shown.length > 0 && (
+              <div className="pantry-results">
+                {shown.map(f => {
+                  const added = has(f.id);
+                  return (
+                    <button type="button" key={f.id} className="search-result" disabled={added} onClick={() => void addPantry(f.id)} aria-label={added ? `${f.name} is in your pantry` : `Add ${f.name} to your pantry`}>
+                      <span className="food-emoji" aria-hidden="true">{f.emoji}</span>
+                      <div><strong>{f.name}</strong><small>{f.category}</small></div>
+                      {added ? <span className="in-pantry"><Check size={14} aria-hidden="true" /> In pantry</span> : <Plus size={17} aria-hidden="true" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <button type="button" className="finder-launch" onClick={openFinder}>
+              <Sparkles size={15} aria-hidden="true" /> {shown.length ? 'Not what you want?' : 'Can’t find it?'} Add “{query.trim()}” to Kiwi
+            </button>
+          </div>
         )}
 
         <DialogFooter>

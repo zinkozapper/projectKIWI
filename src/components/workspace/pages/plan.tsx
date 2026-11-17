@@ -331,7 +331,7 @@ export function PlanPage() {
                       </div>
                   ))}
                   <button type="button" className="finder-launch" onClick={() => setFinderOpen(true)}>
-                    <Sparkles size={15} aria-hidden="true" /> Can’t find it? Add “{search.trim()}” to Kiwi
+                    <Sparkles size={15} aria-hidden="true" /> {shownResults.length ? 'Not what you want?' : 'Can’t find it?'} Add “{search.trim()}” to Kiwi
                   </button>
                 </div>
               )}
