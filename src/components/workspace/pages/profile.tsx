@@ -273,23 +273,27 @@ export function ProfilePage() {
         <div className="section-title" style={{ alignItems: 'center' }}>
           <div>
             <h2>Food preferences</h2>
+            <p className="section-note">
+              Manage the foods KIWI recommends based on what you like.
+            </p>
           </div>
           <Button asChild variant="outline">
             <Link to="/food-preferences">
               Manage foods <ArrowRight size={16} />
             </Link>
           </Button>
-        </div>
-
-        <p className="section-note">
-          Manage the foods KIWI recommends based on what you like.
-        </p>
+        </div> 
       </section>
+      
       <section className="section-block passkey-block">
         <div className="section-title">
-          <div><h2>Security</h2></div>
+          <div>
+            <h2>Security</h2>
+            <p className="section-note">
+              Manage how you sign in, your password, and this device.
+            </p>
+          </div>
         </div>
-        <p className="section-note">Manage how you sign in, your password, and this device.</p>
         {passkeysEnabled && <div className="security-row">
           <div className="security-row-header">
             <div><h3>Passkeys</h3><p className="section-note">Sign in with Face ID, Touch ID, Windows Hello, or a security key.</p></div>
