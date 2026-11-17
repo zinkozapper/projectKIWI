@@ -1029,7 +1029,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     setFoodPreferences({});
     setUserId('');
     setIsFirstSession(false);
-    // Keep the saved theme and color scheme: they belong to this device, not the account.
+    // Keep this browser's copy of the theme so the sign-in page doesn't flash; the account copy loads on next sign-in.
     navigate({ to: '/', replace: true });
   }
 

@@ -51,14 +51,23 @@ export function setTheme(theme: Theme) {
   applyTheme(theme);
 }
 
-export function getStoredScheme(): ColorScheme {
-  if (typeof window === 'undefined') return DEFAULT_SCHEME;
+export const isTheme = (value: unknown): value is Theme => value === 'light' || value === 'dark';
+export const isColorSchemeValue = (value: unknown): value is ColorScheme =>
+  typeof value === 'string' && isColorScheme(value);
+
+// The scheme this browser has saved, or null when the user never picked one here.
+export function getSavedScheme(): ColorScheme | null {
+  if (typeof window === 'undefined') return null;
   try {
     const value = window.localStorage.getItem(SCHEME_STORAGE_KEY);
-    return isColorScheme(value) ? value : DEFAULT_SCHEME;
+    return isColorScheme(value) ? value : null;
   } catch {
-    return DEFAULT_SCHEME;
+    return null;
   }
+}
+
+export function getStoredScheme(): ColorScheme {
+  return getSavedScheme() ?? DEFAULT_SCHEME;
 }
 
 export function applyScheme(scheme: ColorScheme) {

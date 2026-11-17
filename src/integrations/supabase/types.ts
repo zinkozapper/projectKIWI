@@ -733,11 +733,13 @@ export type Database = {
           budget: number
           budget_period_start: string
           budget_period_weeks: number
+          color_scheme: string | null
           created_at: string
           display_name: string
           gender: string | null
           goal: string
           height_cm: number | null
+          theme: string | null
           user_id: string
           weight_kg: number | null
           zip_code: string
@@ -748,11 +750,13 @@ export type Database = {
           budget?: number
           budget_period_start?: string
           budget_period_weeks?: number
+          color_scheme?: string | null
           created_at?: string
           display_name?: string
           gender?: string | null
           goal?: string
           height_cm?: number | null
+          theme?: string | null
           user_id: string
           weight_kg?: number | null
           zip_code?: string
@@ -763,11 +767,13 @@ export type Database = {
           budget?: number
           budget_period_start?: string
           budget_period_weeks?: number
+          color_scheme?: string | null
           created_at?: string
           display_name?: string
           gender?: string | null
           goal?: string
           height_cm?: number | null
+          theme?: string | null
           user_id?: string
           weight_kg?: number | null
           zip_code?: string

@@ -16,6 +16,7 @@ import {
   setTheme,
   type ColorScheme,
 } from '@/lib/theme';
+import { saveThemeToAccount, THEME_SYNCED_EVENT } from '@/lib/theme-sync';
 import { LIMITS, numberKeyGuard, numericText, PROFILE_RANGES } from '@/lib/validation';
 import { PROFILE_AUTOSAVE_DELAY_MS, profileDraftKey, profileSaveErrors, type ProfileErrorKey } from '@/lib/profile-autosave';
 import { useWorkspace, type ProfileDraft } from '../context';
@@ -25,7 +26,7 @@ type Passkey = { id: string; friendly_name?: string; created_at: string; last_us
 type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'invalid' | 'error';
 
 export function ProfilePage() {
-  const { profileDraft, setProfileDraft, saveProfile, signOut } = useWorkspace();
+  const { userId, profileDraft, setProfileDraft, saveProfile, signOut } = useWorkspace();
   const [passkeys, setPasskeys] = useState<Passkey[]>([]);
   const [passkeyError, setPasskeyError] = useState('');
   const [passkeyBusy, setPasskeyBusy] = useState(false);
@@ -110,12 +111,18 @@ export function ProfilePage() {
   }
 
   useEffect(() => {
-    const theme = resolveTheme();
-    applyTheme(theme);
-    setDarkMode(theme === 'dark');
-    const storedScheme = getStoredScheme();
-    applyScheme(storedScheme);
-    setScheme(storedScheme);
+    const showSaved = () => {
+      const theme = resolveTheme();
+      applyTheme(theme);
+      setDarkMode(theme === 'dark');
+      const storedScheme = getStoredScheme();
+      applyScheme(storedScheme);
+      setScheme(storedScheme);
+    };
+    showSaved();
+    // The account's theme can arrive just after this page opens; show it when it does.
+    window.addEventListener(THEME_SYNCED_EVENT, showSaved);
+    return () => window.removeEventListener(THEME_SYNCED_EVENT, showSaved);
   }, []);
 
   useEffect(() => {
@@ -128,12 +135,15 @@ export function ProfilePage() {
 
   function changeTheme(next: boolean) {
     setDarkMode(next);
-    setTheme(next ? 'dark' : 'light');
+    const theme = next ? 'dark' : 'light';
+    setTheme(theme);
+    void saveThemeToAccount(userId, { theme }).catch(() => {});
   }
 
   function changeScheme(next: ColorScheme) {
     setScheme(next);
     setColorScheme(next);
+    void saveThemeToAccount(userId, { color_scheme: next }).catch(() => {});
   }
 
   async function addPasskey() {
@@ -335,7 +345,7 @@ export function ProfilePage() {
             <label htmlFor="dark-mode">Dark mode</label>
           </div>
         </div>
-        <p className="section-note">Turn on dark mode and pick a color scheme. Your choices are saved on this device.</p>
+        <p className="section-note">Turn on dark mode and pick a color scheme. Your choices are saved to your account, so they follow you to any device.</p>
         <div className="scheme-picker" role="group" aria-label="Color scheme">
           {COLOR_SCHEMES.map(option => (
             <button

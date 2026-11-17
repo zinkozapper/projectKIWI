@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { WorkspaceProvider } from '@/components/workspace/context';
 import { WorkspaceShell } from '@/components/workspace/shell';
 import { applyScheme, applyTheme, getStoredScheme, resolveTheme } from '@/lib/theme';
+import { syncThemeFromAccount } from '@/lib/theme-sync';
 export const Route = createFileRoute('/_authenticated')({
   component: AuthenticatedLayout,
 });
@@ -21,6 +22,8 @@ function AuthenticatedLayout() {
       }
       applyTheme(resolveTheme());
       applyScheme(getStoredScheme());
+      // Then load the theme saved on the account, so it matches on every device.
+      void syncThemeFromAccount(data.session.user.id).catch(() => {});
     });
     return () => { active = false; };
   }, [navigate]);
