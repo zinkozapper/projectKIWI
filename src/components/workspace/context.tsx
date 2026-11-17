@@ -16,12 +16,13 @@ import { localizedPricingEnabled } from '@/lib/pricing-functions';
 import { priceFreshness, resolvedPrice } from '@/lib/resolved-prices';
 import { averageOptionPrice, itemOptionPrice, loadFoodOptions, loadLocalOptionPrices, optionPrice, resolveOptionId, type FoodOption, type OptionCatalog } from '@/lib/food-options';
 import { isFirstAccountSession } from '@/lib/first-session';
-import { PANTRY_SERVINGS_WITHOUT_SIZE, defaultPackage, loadFoodPackages, packagePrice, packagesFor as sizesFor, servingsOf, type FoodPackage, type PackageCatalog } from '@/lib/food-packages';
+import { PANTRY_SERVINGS_WITHOUT_SIZE, customAmount, defaultPackage, isCustomUnit, type CustomAmount, type CustomUnit, loadFoodPackages, packagePrice, packagesFor as sizesFor, servingsOf, type FoodPackage, type PackageCatalog } from '@/lib/food-packages';
 
 // option_id: the purchase option (prep style) picked for this item; null = average of the food's options.
 // package_id: the package size bought (migration 0019). Set: quantity = packages. null: quantity = servings.
 // price_estimate: the shopper's own price when Kiwi has none (per package, or per serving without a package).
-export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string; option_id: string | null; package_id: string | null; price_estimate: number | null };
+// custom_amount/custom_unit: the shopper's own amount ("3 lb"); package_id then points at the store size it scales from.
+export type Item = { id: string; food_id: string; quantity: number; purchased: boolean; trip_id: string; option_id: string | null; package_id: string | null; price_estimate: number | null; custom_amount: number | null; custom_unit: CustomUnit | null };
 // package_id set: quantity = packages at home. null: quantity = weeks of servings (PANTRY_SERVINGS_WITHOUT_SIZE).
 export type PantryItem = { id: string; food_id: string; quantity: number; package_id: string | null };
 export type Trip = { id: string; days: number; budget: number; status: string; created_at: string; completed_at: string | null; name?: string | null; is_favorite: boolean };
@@ -30,7 +31,7 @@ export type ProfileDraft = { display_name: string; age: string; height_ft: strin
 export type { FoodSuggestion };
 export type FoodPreferences = Record<string, boolean>;
 
-const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id), option_id: r.food_option_id == null ? null : String(r.food_option_id) , package_id: r.food_package_id == null ? null : String(r.food_package_id), price_estimate: r.price_estimate == null ? null : Number(r.price_estimate) });
+const toItem = (r: any): Item => ({ id: String(r.shopping_list_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), purchased: r.is_purchased, trip_id: String(r.shopping_list_id), option_id: r.food_option_id == null ? null : String(r.food_option_id) , package_id: r.food_package_id == null ? null : String(r.food_package_id), price_estimate: r.price_estimate == null ? null : Number(r.price_estimate), custom_amount: r.custom_amount == null ? null : Number(r.custom_amount), custom_unit: isCustomUnit(r.custom_unit) ? r.custom_unit : null });
 const toPantry = (r: any): PantryItem => ({ id: String(r.pantry_item_id), food_id: String(r.food_id), quantity: Number(r.quantity), package_id: r.food_package_id == null ? null : String(r.food_package_id) });
 const toTrip = (r: any): Trip => ({ id: String(r.shopping_list_id), days: r.days, budget: Number(r.budget), status: r.status, created_at: r.created_at, completed_at: r.completed_at, name: r.name, is_favorite: r.is_favorite ?? false });
 
@@ -95,6 +96,8 @@ type WorkspaceValue = {
   /** What the row costs: store price, else the shopper's estimate, else null (unpriced). */
   lineCost: (item: Item) => number | null;
   setItemPackage: (item: Item, packageId: string) => Promise<void>;
+  setItemCustom: (item: Item, amount: number, unit: CustomUnit) => Promise<void>;
+  customOf: (item: Item) => CustomAmount | null;
   setItemEstimate: (item: Item, price: number | null) => Promise<void>;
   pantryServings: (item: PantryItem) => number;
   setPantryQuantity: (item: PantryItem, quantity: number) => Promise<void>;
@@ -391,7 +394,16 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const packageOf = (row: { package_id: string | null; food_id: string }) => (row.package_id ? packageById.get(row.package_id) : undefined);
   // Sizes of the item's style: its pick, else the food's default (most whole) style.
   const packagesFor = (foodId: string, optionId?: string | null) => sizesFor(packageCatalog, foodId, resolveOptionId(optionId, foodOptions[foodId]), foodOptions[foodId] ?? []);
-  const itemServings = (item: Item) => servingsOf(Number(item.quantity), packageOf(item));
+  // A custom amount, priced and counted from the store size it scales from (food-packages.ts).
+  const customOf = (item: Item): CustomAmount | null => {
+    if (item.custom_amount == null || !item.custom_unit || !packageOf(item)) return null;
+    const c = customAmount(packagesFor(item.food_id, item.option_id), item.custom_amount, item.custom_unit);
+    return 'error' in c ? null : c;
+  };
+  const itemServings = (item: Item) => {
+    const custom = customOf(item);
+    return custom ? Number(item.quantity) * custom.servings : servingsOf(Number(item.quantity), packageOf(item));
+  };
   const pantryServings = (item: PantryItem) => {
     const pkg = packageOf(item);
     return pkg ? Number(item.quantity) * pkg.servings : Number(item.quantity) * PANTRY_SERVINGS_WITHOUT_SIZE;
@@ -430,7 +442,9 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // (per package, or per serving without a package).
   const lineCost = (item: Item): number | null => {
     const itemPkg = packageOf(item);
-    const pkgPrice = itemPkg ? packagePriceOf(itemPkg, item.option_id) : null;
+    const custom = customOf(item);
+    const refPrice = custom ? packagePriceOf(custom.reference, item.option_id) : itemPkg ? packagePriceOf(itemPkg, item.option_id) : null;
+    const pkgPrice = refPrice == null ? null : refPrice * (custom ? custom.scale : 1);
     if (pkgPrice != null) return pkgPrice * Number(item.quantity);
     const per = itemPrice(item);
     if (per != null) return per * itemServings(item);
@@ -647,12 +661,12 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     // If the new option has no sizes, the packages turn into the same number of servings.
     const oldPkg = packageOf(item);
     const nextPkg = defaultPackage(packagesFor(item.food_id, optionId));
-    const patch: Partial<Item> = { option_id: optionId };
+    const patch: Partial<Item> = { option_id: optionId, custom_amount: null, custom_unit: null };
     if (oldPkg && nextPkg && nextPkg.id !== oldPkg.id) patch.package_id = nextPkg.id;
     if (oldPkg && !nextPkg) { patch.package_id = null; patch.quantity = Number(item.quantity) * oldPkg.servings; }
     setItems(prev => prev.map(i => i.id === item.id ? { ...i, ...patch } : i));
     const { error } = await supabase.from('shopping_list_item').update({
-      food_option_id: optionId == null ? null : Number(optionId),
+      food_option_id: optionId == null ? null : Number(optionId), custom_amount: null, custom_unit: null,
       ...('package_id' in patch ? { food_package_id: patch.package_id == null ? null : Number(patch.package_id) } : {}),
       ...('quantity' in patch ? { quantity: patch.quantity } : {}),
     } as any).eq('shopping_list_item_id', Number(item.id));
@@ -665,11 +679,26 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
   // Change a list item's package size; the number of packages stays the same.
   async function setItemPackage(item: Item, packageId: string) {
     const before = item;
-    const patch: Partial<Item> = { package_id: packageId };
+    const patch: Partial<Item> = { package_id: packageId, custom_amount: null, custom_unit: null };
     // An older row counted in servings becomes one package.
     if (!item.package_id) patch.quantity = 1;
     setItems(prev => prev.map(i => i.id === item.id ? { ...i, ...patch } : i));
-    const { error } = await supabase.from('shopping_list_item').update({ food_package_id: Number(packageId), ...(patch.quantity != null ? { quantity: patch.quantity } : {}) } as any).eq('shopping_list_item_id', Number(item.id));
+    const { error } = await supabase.from('shopping_list_item').update({ food_package_id: Number(packageId), custom_amount: null, custom_unit: null, ...(patch.quantity != null ? { quantity: patch.quantity } : {}) } as any).eq('shopping_list_item_id', Number(item.id));
+    if (error) {
+      setItems(prev => prev.map(i => i.id === item.id ? before : i));
+      fail(error.message);
+    }
+  }
+
+  // The shopper's own amount ("3 lb"): saved with the store size it scales from; quantity stays the multiplier.
+  async function setItemCustom(item: Item, amount: number, unit: CustomUnit) {
+    const c = customAmount(packagesFor(item.food_id, item.option_id), amount, unit);
+    if ('error' in c) { fail(c.error); return; }
+    const before = item;
+    const value = Math.round(amount * 100) / 100;
+    const patch: Partial<Item> = { package_id: c.reference.id, custom_amount: value, custom_unit: unit, ...(item.package_id ? {} : { quantity: 1 }) };
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, ...patch } : i));
+    const { error } = await supabase.from('shopping_list_item').update({ food_package_id: Number(c.reference.id), custom_amount: value, custom_unit: unit, ...('quantity' in patch ? { quantity: patch.quantity } : {}) } as any).eq('shopping_list_item_id', Number(item.id));
     if (error) {
       setItems(prev => prev.map(i => i.id === item.id ? before : i));
       fail(error.message);
@@ -919,10 +948,10 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     const current = items.filter(i => i.trip_id === tripId && !i.purchased).map(i => ({ ...i }));
     for (const item of items.filter(i => i.trip_id === trip.id)) {
       // Rows only merge when they count the same way (same package size, or both in servings).
-      const existing = current.find(i => i.food_id === item.food_id && i.package_id === item.package_id);
+      const existing = current.find(i => i.food_id === item.food_id && i.package_id === item.package_id && i.custom_amount === item.custom_amount && i.custom_unit === item.custom_unit);
       const query = existing
         ? supabase.from('shopping_list_item').update({ quantity: existing.quantity + item.quantity }).eq('shopping_list_item_id', Number(existing.id))
-        : supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(item.food_id), quantity: item.quantity, unit: foodById(item.food_id)?.unit ?? null, food_option_id: item.option_id == null ? null : Number(item.option_id), food_package_id: item.package_id == null ? null : Number(item.package_id) } as any);
+        : supabase.from('shopping_list_item').insert({ shopping_list_id: Number(tripId), food_id: Number(item.food_id), quantity: item.quantity, unit: foodById(item.food_id)?.unit ?? null, food_option_id: item.option_id == null ? null : Number(item.option_id), food_package_id: item.package_id == null ? null : Number(item.package_id), custom_amount: item.custom_amount, custom_unit: item.custom_unit } as any);
       const { data, error } = await query.select().single();
       if (error || !data) {
         fail('Some items could not be added to your plan: ' + (error?.message || 'Please try again.'));
@@ -955,7 +984,7 @@ async function removeFoodPreference(foodId: string): Promise<boolean> {
     userId, isFirstSession, firstSessionResolved, isAdmin, profile, trips, items, pantry, active, listItems, purchased, days, budget,
     budgetPeriod, periodSpent, budgetRemaining,
     profileDraft, loading, error, search, results, selected,
-    pantryTotals, combined, daily, spend, priceOf, optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemEstimate, pantryServings, setPantryQuantity, setPantryPackage, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus,
+    pantryTotals, combined, daily, spend, priceOf, optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemCustom, customOf, setItemEstimate, pantryServings, setPantryQuantity, setPantryPackage, hasUnpricedBudgetItems, priceStatus, priceRefreshUnavailable, biggestGaps, suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus,
     foodPreferences, likedFoods, setFoodPreference, removeFoodPreference,
     setProfileDraft, setSearch, setSelected, clearError, fail,
     addFood, addFoods, updateQuantity, removeItem, undoPurchase, saveTripSettings,

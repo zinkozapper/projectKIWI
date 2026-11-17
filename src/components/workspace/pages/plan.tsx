@@ -19,7 +19,7 @@ import { CloseMatchNote } from '../close-match-note';
 import { NutrientPanel } from '../nutrient-bar';
 import { PrepSelect } from '../prep-select';
 import { PriceEstimate, SizeSelect } from '../package-controls';
-import { defaultPackage, packageCaption, packageNoun, servingsText } from '@/lib/food-packages';
+import { customLabel, customUnitsFor, defaultPackage, packageCaption, packageNoun, servingsText } from '@/lib/food-packages';
 import { LIMITS, numberKeyGuard } from '@/lib/validation';
 
 // "Suggestions for vitamin A", "for zinc", "for omega-3 (ALA)": vitamins keep their capital letter.
@@ -106,7 +106,7 @@ export function PlanPage() {
     days, budget, budgetPeriod, periodSpent, budgetRemaining, search, selected, results, listItems, pantry, combined, pantryTotals, daily, spend, active,
     suggestions, foodGapScores, suggestionNutrient, suggestionNutrientChosen, setSuggestionFocus, foodPreferences, setFoodPreference, removeFoodPreference, setSearch, setSelected, fail,
     addFood, updateQuantity, removeItem, pantryCheckDue, startPlan, profile, isFirstSession, priceOf, hasUnpricedBudgetItems,
-    optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemEstimate,
+    optionsFor, optionPriceOf, itemPrice, setItemOption, packagesFor, packageOf, packagePriceOf, itemServings, lineCost, setItemPackage, setItemCustom, customOf, setItemEstimate,
   } = useWorkspace();
   const inPantry = (foodId: string) => pantry.some(p => p.food_id === foodId);
   // No exact match: show close matches (synonyms, look-alike spellings, then AI picks) instead.
@@ -345,6 +345,7 @@ export function PlanPage() {
                   if (!f) return null;
                   const pkg = packageOf(item);
                   const cost = lineCost(item);
+                  const custom = item.custom_amount != null && item.custom_unit && customOf(item) ? { amount: item.custom_amount, unit: item.custom_unit } : null;
                   // A store price wins; the estimate box only shows while Kiwi has none.
                   const storePriced = itemPrice(item) != null || (pkg?.price ?? 0) > 0;
 
@@ -362,8 +363,11 @@ export function PlanPage() {
                         <div className="row-selects">
                           <PrepSelect foodName={f.name} options={optionsFor(f.id)} value={item.option_id} average={priceOf(f.id)} priceOf={optionPriceOf}
                             onChange={id => void setItemOption(item, id)} />
-                          <SizeSelect foodName={f.name} packages={packagesFor(f.id, item.option_id)} value={item.package_id}
-                            priceOf={p => packagePriceOf(p, item.option_id)} onChange={id => void setItemPackage(item, id)} />
+                          <SizeSelect foodName={f.name} packages={packagesFor(f.id, item.option_id)} value={item.package_id} autoDefault
+                            priceOf={p => packagePriceOf(p, item.option_id)} onChange={id => void setItemPackage(item, id)}
+                            custom={custom} customUnits={customUnitsFor(packagesFor(f.id, item.option_id))}
+                            customPrice={custom && cost != null ? cost / Number(item.quantity) : null}
+                            onCustom={(amount, unit) => void setItemCustom(item, amount, unit)} />
                         </div>
                       </div>
                       {pkg ? (
@@ -443,7 +447,7 @@ export function PlanPage() {
                       )}
                       <span className="qty-caption">
                         {pkg
-                          ? `${packageNoun(pkg, Number(item.quantity))} · ${servingsText(itemServings(item), formatAmount)}`
+                          ? `${custom ? `${Number(item.quantity) === 1 ? '' : `${Number(item.quantity)} × `}${customLabel(custom.amount, custom.unit)}` : packageNoun(pkg, Number(item.quantity))} · ${servingsText(itemServings(item), formatAmount)}`
                           : `${Number(item.quantity) / days === 1 ? 'serving' : 'servings'} a day · ${formatAmount(Number(item.quantity))} for the trip`}
                       </span>
                       <span className="row-price">

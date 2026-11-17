@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { customLabel } from '@/lib/food-packages';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { foodById, formatAmount } from '@/lib/foods';
@@ -10,7 +11,7 @@ export function ShopPage() {
   const amountLabel = (item: (typeof listItems)[number], food: { servings: number; unit: string }) => {
     const pkg = packageOf(item);
     const q = Number(item.quantity);
-    return pkg ? `${q} × ${pkg.label}` : `${formatAmount(q)} ${q === 1 ? 'serving' : 'servings'} · ${formatAmount(food.servings)} ${food.unit} each`;
+    return pkg ? `${q} × ${item.custom_amount != null && item.custom_unit ? customLabel(item.custom_amount, item.custom_unit) : pkg.label}` : `${formatAmount(q)} ${q === 1 ? 'serving' : 'servings'} · ${formatAmount(food.servings)} ${food.unit} each`;
   };
   // The prep style picked on the plan (rotisserie, canned …), shown so the shopper grabs the right one.
   const prepLabel = (item: (typeof listItems)[number]) => optionsFor(item.food_id).find(o => o.id === item.option_id)?.label;

@@ -1,5 +1,6 @@
 
 import { Link } from '@tanstack/react-router';
+import { customLabel } from '@/lib/food-packages';
 import { useState } from 'react';
 import { ArrowRight, BookmarkPlus, History, Star, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -137,7 +138,7 @@ export function HistoryPage() {
                     {food?.name ?? 'Unavailable food'}
                     <small>
                       {packageOf(item)
-                        ? `${Number(item.quantity)} × ${packageOf(item)!.label}`
+                        ? `${Number(item.quantity)} × ${item.custom_amount != null && item.custom_unit ? customLabel(item.custom_amount, item.custom_unit) : packageOf(item)!.label}`
                         : <>{formatAmount(Number(item.quantity))} {Number(item.quantity) === 1 ? 'serving' : 'servings'}{food && ` · ${formatAmount(food.servings)} ${food.unit} each`}</>}
                     </small>
                   </span>
