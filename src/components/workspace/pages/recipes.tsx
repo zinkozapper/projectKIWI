@@ -80,35 +80,44 @@ export function RecipesPage() {
     setPicks(prev => Object.fromEntries(Object.entries(prev).filter(([k]) => !k.startsWith(`${mode}:`))));
   }
 
-  async function addNeeded(key: string, r: Recipe) {
+  // Puts the recipe's unticked Kiwi foods on the list. Returns how many foods went on.
+  async function addMissing(key: string, r: Recipe) {
     const have = haveFor(key, r);
     const needed = stillNeeded(r, have);
     const entries = listEntries(needed);
-    if (!entries.length) return;
-    setAdding(key);
+    if (!entries.length) return 0;
     const count = await addFoods(entries);
-    setAdding('');
-    if (count) {
-      setNotice(`Added ${count} ${count === 1 ? 'food' : 'foods'} for ${r.title} to your list.`);
-      // Added foods are now on the list, so tick them.
-      setPicks(prev => ({ ...prev, [key]: new Set([...have, ...r.ingredients.flatMap((i, n) => (needed.includes(i) ? [n] : []))]) }));
-    }
+    // Added foods are now on the list, so tick them.
+    if (count) setPicks(prev => ({ ...prev, [key]: new Set([...have, ...r.ingredients.flatMap((i, n) => (needed.includes(i) ? [n] : []))]) }));
+    return count;
   }
 
-  async function save(r: Recipe) {
-    const key = recipeKey(r);
+  const foodsText = (n: number) => `${n} missing ${n === 1 ? 'food' : 'foods'}`;
+
+  async function addNeeded(key: string, r: Recipe) {
+    setAdding(key);
+    const count = await addMissing(key, r);
+    setAdding('');
+    if (count) setNotice(`Added ${foodsText(count)} for ${r.title} to your list.`);
+  }
+
+  // Adding (saving) a recipe also puts the ingredients the user doesn't have on the list.
+  async function save(key: string, r: Recipe) {
     setSavingKey(key);
+    setNotice('');
     try {
       const row = await saveRecipe(userId, r);
       setSaved(prev => [row, ...prev]);
-      setNotice(`Saved ${r.title}.`);
       // A save changes the counts.
       void loadPopularRecipes().then(setPopular);
     } catch (e) {
       fail('Could not save the recipe: ' + errorText(e));
-    } finally {
       setSavingKey('');
+      return;
     }
+    const count = await addMissing(key, r);
+    setSavingKey('');
+    setNotice(count ? `Saved ${r.title} and added ${foodsText(count)} to your list.` : `Saved ${r.title}.`);
   }
 
   async function toggleSavedGroup(r: SavedRecipe, g: FoodGroup) {
@@ -184,8 +193,14 @@ export function RecipesPage() {
           {extra.saved
             ? <Button size="icon" variant="ghost" title={`Delete ${r.title}`} aria-label={`Delete ${r.title}`} onClick={() => void remove(extra.saved!)}><Trash2 size={16} /></Button>
             : (
-              <Button variant={isSaved ? 'secondary' : 'outline'} disabled={isSaved || savingKey === key} onClick={() => void save(r)}>
-                {isSaved ? <><BookmarkCheck size={16} /> Saved</> : <><Bookmark size={16} /> Save</>}
+              <Button
+                variant={isSaved ? 'secondary' : 'outline'}
+                disabled={isSaved || !!savingKey}
+                title={isSaved || !toAdd ? undefined : `Save and add ${toAdd} missing to my list`}
+                onClick={() => void save(key, r)}
+              >
+                {savingKey === key ? <LoaderCircle size={16} className="spin" /> : isSaved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+                {isSaved ? 'Saved' : 'Save'}
               </Button>
             )}
         </header>
