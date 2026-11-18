@@ -6,7 +6,8 @@ import { googleSignInEnabled, selfHosted } from '@/lib/auth-options';
 import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
-import { Eye, EyeOff, Leaf } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
+import { BrandMark } from '@/components/brand-mark';
 import { emailError, LIMITS, MIN_PASSWORD, passwordError } from '@/lib/validation';
 import { Banner } from '@/components/workspace/banner';
 
@@ -65,7 +66,7 @@ function Enroll() {
   return (
     <div className="login-page">
       <div className="login-panel">
-        <div className="brand brand-large"><span className="brand-icon"><Leaf size={23} strokeWidth={2.5} /></span><span>kiwi<span className="brand-dot">.</span></span></div>
+        <div className="brand brand-large"><BrandMark /><span>kiwi<span className="brand-dot">.</span></span></div>
         <p className="login-tagline">Eat Healthy. Live Happy</p>
         <section className="login-card login-card-github" aria-labelledby="enroll-title">
           <h1 id="enroll-title">Create your Kiwi account</h1>

@@ -6,7 +6,8 @@ import { googleSignInEnabled, passkeysEnabled, selfHosted } from '@/lib/auth-opt
 import { signedInDestination } from '@/lib/first-session';
 import { Button } from '@/components/ui/button';
 import groceries from '@/assets/kiwi-groceries.webp';
-import { Eye, EyeOff, KeyRound, Leaf } from 'lucide-react';
+import { Eye, EyeOff, KeyRound } from 'lucide-react';
+import { BrandMark } from '@/components/brand-mark';
 import { emailError, LIMITS } from '@/lib/validation';
 import { Banner } from '@/components/workspace/banner';
 
@@ -124,9 +125,7 @@ function Login() {
     <div className="login-page">
       <div className="login-panel">
         <div className="brand brand-large">
-          <span className="brand-icon">
-            <Leaf size={23} strokeWidth={2.5} />
-          </span>
+          <BrandMark />
           <span>kiwi<span className="brand-dot">.</span></span>
         </div>
 

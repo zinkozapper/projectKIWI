@@ -1,5 +1,6 @@
 import { Link, Outlet, useRouterState } from '@tanstack/react-router';
-import { ClipboardList, History, House, Leaf, LoaderCircle, LogOut, ShieldCheck, ShoppingBasket, ThumbsUp } from 'lucide-react';
+import { ClipboardList, History, House, LoaderCircle, LogOut, ShieldCheck, ShoppingBasket, ThumbsUp } from 'lucide-react';
+import { BrandMark } from '@/components/brand-mark';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './context';
 import { PantryCheckDialog } from './pantry-check-dialog';
@@ -35,7 +36,7 @@ export function WorkspaceShell() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <Link to="/plan" className="brand workspace-brand"><span className="brand-icon"><Leaf size={21} strokeWidth={2.5} /></span><span>kiwi<span className="brand-dot">.</span></span></Link>
+        <Link to="/plan" className="brand workspace-brand"><BrandMark /><span>kiwi<span className="brand-dot">.</span></span></Link>
         <nav className="side-nav">
           {sideItems.map(({ id, label, to, icon: Icon }) => (
             <Button key={id} asChild variant="ghost" className={isHere(pathname, to) ? 'nav-item active' : 'nav-item'}>
@@ -53,7 +54,7 @@ export function WorkspaceShell() {
       </aside>
       <div className="app-main">
         <header className="topbar">
-          <Link to="/plan" className="mobile-brand brand workspace-brand"><span className="brand-icon"><Leaf size={18} /></span><span>kiwi<span className="brand-dot">.</span></span></Link>
+          <Link to="/plan" className="mobile-brand brand workspace-brand"><BrandMark /><span>kiwi<span className="brand-dot">.</span></span></Link>
           <Link to="/profile" className="topbar-user" aria-label="Open profile">
             <span className="avatar">{(profile?.display_name || 'K').charAt(0).toUpperCase()}</span>
           </Link>

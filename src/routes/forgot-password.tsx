@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useState, type FormEvent } from 'react';
-import { Leaf } from 'lucide-react';
+import { BrandMark } from '@/components/brand-mark';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import groceries from '@/assets/kiwi-groceries.webp';
@@ -40,7 +40,7 @@ function ForgotPassword() {
   return (
     <div className="login-page">
       <div className="login-panel">
-        <div className="brand brand-large"><span className="brand-icon"><Leaf size={23} strokeWidth={2.5} /></span><span>kiwi<span className="brand-dot">.</span></span></div>
+        <div className="brand brand-large"><BrandMark /><span>kiwi<span className="brand-dot">.</span></span></div>
         <p className="login-tagline">Eat Healthy. Live Happy</p>
         <section className="login-card login-card-github" aria-labelledby="forgot-title">
           <h1 id="forgot-title">Reset your password</h1>

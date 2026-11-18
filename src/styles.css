@@ -491,5 +491,9 @@ html.keyboard-open .nutrient-search-results{max-height:max(160px,calc(var(--vv-h
 .profile-form .budget-start input::-webkit-date-and-time-value{text-align:left}
 }
 
-/* Admin trend tables: headers stay on one line; if a table is still too wide it scrolls inside its card instead of spilling out. */
+/* Admin trend tables: long headers wrap, and if a table is still too wide it scrolls inside its card instead of spilling out. */
 .admin-trends>.admin-card{min-width:0;overflow-x:auto}
+.admin-table.compact th{white-space:normal;vertical-align:bottom}
+
+/* Kiwi bird brand mark (replaces the tilted leaf tile) */
+.brand-icon.brand-bird{width:44px;height:44px;background:none;border-radius:0;transform:none;color:inherit}.brand-bird svg{display:block;width:100%;height:100%}.brand-large .brand-icon.brand-bird{width:50px;height:50px}.mobile-brand .brand-icon.brand-bird{width:36px;height:36px}
