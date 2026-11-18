@@ -491,6 +491,5 @@ html.keyboard-open .nutrient-search-results{max-height:max(160px,calc(var(--vv-h
 .profile-form .budget-start input::-webkit-date-and-time-value{text-align:left}
 }
 
-/* Admin trend tables: long headers wrap, and if a table is still too wide it scrolls inside its card instead of spilling out. */
+/* Admin trend tables: headers stay on one line; if a table is still too wide it scrolls inside its card instead of spilling out. */
 .admin-trends>.admin-card{min-width:0;overflow-x:auto}
-.admin-table.compact th{white-space:normal;vertical-align:bottom}

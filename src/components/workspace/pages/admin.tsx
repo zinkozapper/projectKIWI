@@ -232,10 +232,10 @@ export function AdminPage() {
           <div className="admin-trends">
             <section className="admin-card">
               <div className="section-title"><h2>Daily history</h2></div>
-              <p className="section-note">Saved each night by the scheduled jobs. Refresh recomputes today.</p>
+              <p className="section-note">Goals met is OKR 2, Frequent is OKR 3, Churn is OKR 4. Saved each night by the scheduled jobs. Refresh recomputes today.</p>
               {history.length ? (
                 <table className="admin-table compact">
-                  <thead><tr><th>Day</th><th>Goals met (OKR 2)</th><th>Frequent (OKR 3)</th><th>Churn (OKR 4)</th></tr></thead>
+                  <thead><tr><th>Day</th><th title="OKR 2">Goals met</th><th title="OKR 3">Frequent</th><th title="OKR 4">Churn</th></tr></thead>
                   <tbody>{history.map(h => <tr key={h.as_of}><td>{shortDate(h.as_of)}</td><td>{formatPct(h.nutrients)}</td><td>{formatPct(h.frequent)}</td><td>{formatPct(h.churn)}</td></tr>)}</tbody>
                 </table>
               ) : <div className="empty-state">No snapshots yet.</div>}
